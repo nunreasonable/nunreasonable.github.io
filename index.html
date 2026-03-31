@@ -564,6 +564,7 @@
         }
 
         if (!state || !state.isPlaying) {
+          const idleMessage = state && state.message ? state.message : "Spotify status idle";
           left.innerHTML = `
             <span class="now-playing-left">
               <img
@@ -573,7 +574,7 @@
               />
               <span class="now-playing-text">
                 <span class="now-playing-title">Not listening right now</span>
-                <span class="now-playing-subtitle">Spotify status idle</span>
+                <span class="now-playing-subtitle">${idleMessage}</span>
               </span>
             </span>
           `;
@@ -605,33 +606,82 @@
 
         const payload = await response.json();
         if (!payload.success || !payload.data) {
-          return { isPlaying: false };
+          const errorMessage =
+            payload.error && payload.error.message
+              ? payload.error.message
+              : "Spotify status unavailable";
+          return { isPlaying: false, message: errorMessage };
         }
 
         const data = payload.data;
         const spotifyOnlyMode = !profileData.spotify || profileData.spotify.onlySpotify !== false;
 
-        if (spotifyOnlyMode && data.listening_to_spotify !== true) {
+        function parseSpotifyState(rawSpotify) {
+          if (!rawSpotify) {
+            return null;
+          }
+
+          const trackUrl = rawSpotify.track_id
+            ? `https://open.spotify.com/track/${rawSpotify.track_id}`
+            : "https://open.spotify.com";
+
+          return {
+            isPlaying: true,
+            title: rawSpotify.song || "Unknown song",
+            artist: rawSpotify.artist || "Unknown artist",
+            album: rawSpotify.album || "",
+            imageUrl:
+              rawSpotify.album_art_url || "https://i.scdn.co/image/ab67616d00001e02a0f8b88f0a2b2b3d92d8f57f",
+            trackUrl
+          };
+        }
+
+        function parseSpotifyActivity(activities) {
+          if (!Array.isArray(activities)) {
+            return null;
+          }
+
+          const spotifyActivity = activities.find((activity) => {
+            const name = typeof activity.name === "string" ? activity.name.toLowerCase() : "";
+            return name === "spotify";
+          });
+
+          if (!spotifyActivity) {
+            return null;
+          }
+
+          const details = spotifyActivity.details || "Unknown song";
+          const state = spotifyActivity.state || "Unknown artist";
+          const album = spotifyActivity.assets?.large_text || "";
+          const syncId = spotifyActivity.sync_id || "";
+          const largeImage = spotifyActivity.assets?.large_image || "";
+          const imageId = largeImage.startsWith("spotify:") ? largeImage.slice(8) : "";
+
+          return {
+            isPlaying: true,
+            title: details,
+            artist: state,
+            album,
+            imageUrl: imageId
+              ? `https://i.scdn.co/image/${imageId}`
+              : "https://i.scdn.co/image/ab67616d00001e02a0f8b88f0a2b2b3d92d8f57f",
+            trackUrl: syncId ? `https://open.spotify.com/track/${syncId}` : "https://open.spotify.com"
+          };
+        }
+
+        const directSpotifyState = parseSpotifyState(data.spotify);
+        const activitySpotifyState = parseSpotifyActivity(data.activities);
+        const spotifyState = directSpotifyState || activitySpotifyState;
+
+        if (!spotifyState) {
           return { isPlaying: false };
         }
 
-        if (!data.spotify) {
+        if (spotifyOnlyMode && data.listening_to_spotify === false && !activitySpotifyState) {
           return { isPlaying: false };
         }
 
-        const spotify = data.spotify;
-        const trackUrl = spotify.track_id
-          ? `https://open.spotify.com/track/${spotify.track_id}`
-          : "https://open.spotify.com";
-
-        return {
-          isPlaying: true,
-          title: spotify.song || "Unknown song",
-          artist: spotify.artist || "Unknown artist",
-          album: spotify.album || "",
-          imageUrl: spotify.album_art_url || "https://i.scdn.co/image/ab67616d00001e02a0f8b88f0a2b2b3d92d8f57f",
-          trackUrl
-        };
+        return spotifyState;
       }
 
       async function refreshNowPlaying() {
