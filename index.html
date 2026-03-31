@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Meet daeeseD</title>
+    <link rel="icon" type="image/svg+xml" href="./163762b92dafb24a12c1ce5b7080bd1e.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-start: #0c1117;
+        --bg-end: #111a24;
+        --card: rgba(11, 17, 24, 0.76);
+        --card-border: rgba(130, 182, 230, 0.25);
+        --text: #e7eef7;
+        --muted: #9caac0;
+        --accent: #f2b84a;
+        --accent-2: #6fd0de;
+        --button-bg: rgba(255, 255, 255, 0.07);
+        --button-hover: rgba(255, 255, 255, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        font-family: "Space Grotesk", sans-serif;
+        color: var(--text);
+        background: radial-gradient(
+            circle at 20% 15%,
+            rgba(242, 184, 74, 0.2) 0,
+            rgba(242, 184, 74, 0) 38%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(111, 208, 222, 0.22) 0,
+            rgba(111, 208, 222, 0) 35%
+          ),
+          linear-gradient(155deg, var(--bg-start), var(--bg-end));
+        display: grid;
+        place-items: center;
+        overflow-x: hidden;
+      }
+
+      .noise {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.08;
+        background-image: radial-gradient(#ffffff 0.45px, transparent 0.45px);
+        background-size: 2px 2px;
+      }
+
+      .halo {
+        position: fixed;
+        border-radius: 999px;
+        filter: blur(42px);
+        opacity: 0.38;
+        pointer-events: none;
+        animation: float 12s ease-in-out infinite;
+      }
+
+      .halo-1 {
+        width: 260px;
+        height: 260px;
+        top: -90px;
+        left: -80px;
+        background: #e9a939;
+      }
+
+      .halo-2 {
+        width: 220px;
+        height: 220px;
+        right: -70px;
+        bottom: -50px;
+        background: #5ec4d1;
+        animation-delay: -6s;
+      }
+
+      .site {
+        width: min(620px, 92vw);
+        margin: 24px auto;
+        position: relative;
+        z-index: 2;
+        animation: fade-in 0.75s ease both;
+      }
+
+      .card {
+        border: 1px solid var(--card-border);
+        border-radius: 22px;
+        background: var(--card);
+        backdrop-filter: blur(12px);
+        padding: 28px 22px;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+      }
+
+      .top {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .avatar {
+        width: 78px;
+        height: 78px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(255, 255, 255, 0.28);
+      }
+
+      .name-wrap {
+        min-width: 0;
+      }
+
+      .name {
+        margin: 0;
+        font-family: "Bebas Neue", sans-serif;
+        letter-spacing: 1px;
+        font-size: clamp(2.1rem, 3.5vw, 2.8rem);
+        line-height: 0.92;
+      }
+
+      .handle {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      .bio {
+        margin: 18px 0 8px;
+        color: #d2deee;
+        line-height: 1.52;
+      }
+
+      .badges {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 16px 0 0;
+        padding: 0;
+      }
+
+      .badges li {
+        font-size: 0.83rem;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        padding: 6px 10px;
+        border-radius: 999px;
+        color: #d9e7f9;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .section-title {
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 24px 2px 10px;
+      }
+
+      .links {
+        display: grid;
+        gap: 10px;
+      }
+
+      .link-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-decoration: none;
+        cursor: pointer;
+        color: var(--text);
+        padding: 12px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        background: var(--button-bg);
+        transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+        transform: translateY(14px);
+        opacity: 0;
+        animation: slide-up 0.45s ease forwards;
+      }
+
+      .link-btn:hover {
+        background: var(--button-hover);
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-1px);
+      }
+
+      .link-btn .left {
+        font-weight: 600;
+      }
+
+      .link-btn .right {
+        color: var(--accent-2);
+        font-size: 0.83rem;
+      }
+
+      .socials {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .socials a {
+        text-decoration: none;
+        color: var(--text);
+        cursor: pointer;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .socials a:hover {
+        border-color: rgba(255, 255, 255, 0.28);
+      }
+
+      .footer {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 0.83rem;
+        text-align: center;
+      }
+
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slide-up {
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0);
+        }
+
+        50% {
+          transform: translate(10px, -12px);
+        }
+      }
+
+      @media (max-width: 640px) {
+        .card {
+          padding: 20px 16px;
+          border-radius: 16px;
+        }
+
+        .top {
+          align-items: flex-start;
+        }
+
+        .avatar {
+          width: 66px;
+          height: 66px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="noise"></div>
+    <div class="halo halo-1"></div>
+    <div class="halo halo-2"></div>
+
+    <main class="site">
+      <article class="card">
+        <section class="top">
+          <img
+            class="avatar"
+            id="avatar"
+            src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=256&auto=format&fit=crop"
+            alt="Profile avatar"
+          />
+          <div class="name-wrap">
+            <h1 class="name" id="displayName">DAEESE</h1>
+            <p class="handle" id="handle">@daeese</p>
+          </div>
+        </section>
+
+        <p class="bio" id="bio">
+          Designer/developer crafting interfaces that feel alive. Building digital things,
+          collecting inspiration, and sharing work in public.
+        </p>
+
+        <ul class="badges" id="badges"></ul>
+
+        <p class="section-title">Main Links</p>
+        <div class="links" id="mainLinks"></div>
+
+        <p class="section-title">Socials</p>
+        <div class="socials" id="socialLinks"></div>
+      </article>
+
+      <p class="footer" id="footerText">online now</p>
+    </main>
+
+    <script>
+      const profileData = {
+        name: "daeese",
+        handle: "@daeese",
+        bio: "Like... I do C# and JS... That's all ig, ah yes! I'm learning Assembly..",
+        avatar:
+          "/home/rafael/Downloads/pfp.jpg",
+        badges: ["C#", "JavaScript", "GMT-3"],
+        links: [
+          { label: "Contact Me", href: "mailto:rafaelpasquarrela@gmail.com", tag: "E-Mail" },
+          { label: "Now Playing", href: "https://open.spotify.com", tag: "Music" }
+        ],
+        socials: [
+          { label: "GitHub", href: "https://github.com/nunreasonable" },
+          { label: "Discord", href: "https://discord.com/users/1402344358199689348" }
+        ],
+        footer: "Last updated March 2026"
+      };
+
+      document.title = profileData.name;
+      document.getElementById("avatar").src = profileData.avatar;
+      document.getElementById("displayName").textContent = profileData.name;
+      document.getElementById("handle").textContent = profileData.handle;
+      document.getElementById("bio").textContent = profileData.bio;
+      document.getElementById("footerText").textContent = profileData.footer;
+
+      function normalizeUrl(rawUrl) {
+        if (!rawUrl) {
+          return "";
+        }
+
+        const trimmed = rawUrl.trim();
+        const hasProtocol = /^(https?:\/\/|mailto:|tel:)/i.test(trimmed);
+        return hasProtocol ? trimmed : `https://${trimmed}`;
+      }
+
+      function openProfileLink(rawUrl) {
+        const safeUrl = normalizeUrl(rawUrl);
+        if (!safeUrl) {
+          return;
+        }
+
+        if (/^(mailto:|tel:)/i.test(safeUrl)) {
+          window.location.href = safeUrl;
+          return;
+        }
+
+        window.open(safeUrl, "_blank", "noopener,noreferrer");
+      }
+
+      const badgesEl = document.getElementById("badges");
+      profileData.badges.forEach((badge) => {
+        const item = document.createElement("li");
+        item.textContent = badge;
+        badgesEl.appendChild(item);
+      });
+
+      const linksEl = document.getElementById("mainLinks");
+      profileData.links.forEach((link, i) => {
+        const a = document.createElement("a");
+        a.className = "link-btn";
+        a.href = normalizeUrl(link.href) || "#";
+        a.dataset.url = link.href;
+        a.target = "_blank";
+        a.rel = "noreferrer noopener";
+        a.style.animationDelay = `${100 + i * 75}ms`;
+        a.innerHTML = `<span class="left">${link.label}</span><span class="right">${link.tag}</span>`;
+        linksEl.appendChild(a);
+      });
+
+      linksEl.addEventListener("click", (event) => {
+        const linkButton = event.target.closest(".link-btn");
+        if (!linkButton) {
+          return;
+        }
+
+        event.preventDefault();
+        openProfileLink(linkButton.dataset.url);
+      });
+
+      const socialsEl = document.getElementById("socialLinks");
+      profileData.socials.forEach((social) => {
+        const a = document.createElement("a");
+        a.href = normalizeUrl(social.href) || "#";
+        a.dataset.url = social.href;
+        a.target = "_blank";
+        a.rel = "noreferrer noopener";
+        a.textContent = social.label;
+        socialsEl.appendChild(a);
+      });
+
+      socialsEl.addEventListener("click", (event) => {
+        const socialLink = event.target.closest("a");
+        if (!socialLink) {
+          return;
+        }
+
+        event.preventDefault();
+        openProfileLink(socialLink.dataset.url);
+      });
+    </script>
+  </body>
+</html>
