@@ -33,6 +33,8 @@
       body {
         margin: 0;
         min-height: 100%;
+        width: 100%;
+        overflow-x: clip;
       }
 
       body {
@@ -91,7 +93,9 @@
 
       .site {
         width: min(620px, 92vw);
+        max-width: 100%;
         margin: 24px auto;
+        padding: 0 8px;
         position: relative;
         z-index: 2;
         animation: fade-in 0.75s ease both;
@@ -103,6 +107,8 @@
         background: var(--card);
         backdrop-filter: blur(12px);
         padding: 28px 22px;
+        width: 100%;
+        overflow: clip;
         box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
       }
 
@@ -201,12 +207,17 @@
       .links {
         display: grid;
         gap: 10px;
+        min-width: 0;
       }
 
       .link-btn {
-        display: flex;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
-        justify-content: space-between;
+        column-gap: 12px;
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
         text-decoration: none;
         cursor: pointer;
         color: var(--text);
@@ -227,6 +238,8 @@
       }
 
       .link-btn .left {
+        display: block;
+        flex: 1 1 auto;
         font-weight: 600;
         min-width: 0;
         overflow: hidden;
@@ -238,6 +251,8 @@
         display: flex;
         align-items: center;
         gap: 10px;
+        width: 100%;
+        max-width: 100%;
         min-width: 0;
       }
 
@@ -252,20 +267,39 @@
 
       .now-playing-text {
         display: flex;
+        flex: 1 1 auto;
         flex-direction: column;
         min-width: 0;
       }
 
       .now-playing-title {
+        display: block;
         font-weight: 600;
+        max-width: 100%;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
 
+      .now-playing-title-inner {
+        display: inline-block;
+        white-space: nowrap;
+        transform: translateX(0);
+      }
+
+      .now-playing-title.is-scrolling {
+        text-overflow: clip;
+      }
+
+      .now-playing-title.is-scrolling .now-playing-title-inner {
+        animation: marquee-x var(--marquee-duration, 8s) linear infinite alternate;
+      }
+
       .now-playing-subtitle {
+        display: block;
         font-size: 0.8rem;
         color: var(--muted);
+        max-width: 100%;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -280,6 +314,7 @@
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
+        min-width: 0;
       }
 
       .projects {
@@ -364,7 +399,23 @@
         }
       }
 
+      @keyframes marquee-x {
+        from {
+          transform: translateX(0);
+        }
+
+        to {
+          transform: translateX(calc(-1 * var(--marquee-distance, 0px)));
+        }
+      }
+
       @media (max-width: 640px) {
+        .site {
+          width: min(620px, 100vw);
+          margin: 14px auto;
+          padding: 0 10px;
+        }
+
         .card {
           padding: 20px 16px;
           border-radius: 16px;
@@ -377,6 +428,46 @@
         .avatar {
           width: 66px;
           height: 66px;
+        }
+
+        .tabs {
+          margin: 20px 0 10px;
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .tab-btn {
+          width: 100%;
+          padding: 9px 8px;
+          font-size: 0.75rem;
+          text-align: center;
+        }
+
+        .link-btn {
+          padding: 11px 12px;
+          gap: 10px;
+          align-items: flex-start;
+        }
+
+        .link-btn .right {
+          flex-shrink: 0;
+          font-size: 0.77rem;
+          white-space: nowrap;
+          padding-top: 2px;
+        }
+
+        .now-playing-cover {
+          width: 34px;
+          height: 34px;
+        }
+
+        .socials {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .socials a {
+          text-align: center;
         }
       }
     </style>
@@ -547,8 +638,33 @@
       });
 
       function formatNowPlayingLabel(trackTitle, artistName) {
-        const full = `Now Playing: ${trackTitle} - ${artistName}`;
-        return full.length > 72 ? `${full.slice(0, 69)}...` : full;
+        return `Now Playing: ${trackTitle} - ${artistName}`;
+      }
+
+      function refreshNowPlayingTitleFit() {
+        const titleEl = linksEl.querySelector('[data-link-id="nowPlaying"] .now-playing-title');
+        if (!titleEl) {
+          return;
+        }
+
+        const innerEl = titleEl.querySelector(".now-playing-title-inner");
+        if (!innerEl) {
+          return;
+        }
+
+        titleEl.classList.remove("is-scrolling");
+        titleEl.style.removeProperty("--marquee-distance");
+        titleEl.style.removeProperty("--marquee-duration");
+
+        const overflowAmount = Math.ceil(innerEl.scrollWidth - titleEl.clientWidth);
+        if (overflowAmount <= 4) {
+          return;
+        }
+
+        const durationSeconds = Math.min(18, Math.max(6, overflowAmount / 24));
+        titleEl.style.setProperty("--marquee-distance", `${overflowAmount}px`);
+        titleEl.style.setProperty("--marquee-duration", `${durationSeconds}s`);
+        titleEl.classList.add("is-scrolling");
       }
 
       function setNowPlayingState(state) {
@@ -573,7 +689,7 @@
                 alt="No track artwork"
               />
               <span class="now-playing-text">
-                <span class="now-playing-title">Not listening right now</span>
+                <span class="now-playing-title"><span class="now-playing-title-inner">Not listening right now</span></span>
                 <span class="now-playing-subtitle">${idleMessage}</span>
               </span>
             </span>
@@ -581,6 +697,7 @@
           right.textContent = "Spotify";
           nowPlayingLink.dataset.url = "https://open.spotify.com";
           nowPlayingLink.href = "https://open.spotify.com";
+          refreshNowPlayingTitleFit();
           return;
         }
 
@@ -588,7 +705,7 @@
           <span class="now-playing-left">
             <img class="now-playing-cover" src="${state.imageUrl}" alt="Album artwork" />
             <span class="now-playing-text">
-              <span class="now-playing-title">${formatNowPlayingLabel(state.title, state.artist)}</span>
+              <span class="now-playing-title"><span class="now-playing-title-inner">${formatNowPlayingLabel(state.title, state.artist)}</span></span>
               <span class="now-playing-subtitle">${state.album || "Live on Spotify"}</span>
             </span>
           </span>
@@ -596,6 +713,7 @@
         right.textContent = "Live";
         nowPlayingLink.dataset.url = state.trackUrl;
         nowPlayingLink.href = state.trackUrl;
+        refreshNowPlayingTitleFit();
       }
 
       async function fetchNowPlayingFromLanyard(discordUserId) {
@@ -700,6 +818,10 @@
 
       refreshNowPlaying();
       setInterval(refreshNowPlaying, profileData.spotify.refreshMs || 30000);
+
+      window.addEventListener("resize", () => {
+        refreshNowPlayingTitleFit();
+      });
 
       linksEl.addEventListener("click", (event) => {
         const linkButton = event.target.closest(".link-btn");
