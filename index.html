@@ -13,14 +13,14 @@
     />
     <style>
       :root {
-        --bg-start: #0c1117;
-        --bg-end: #111a24;
-        --card: rgba(11, 17, 24, 0.76);
-        --card-border: rgba(130, 182, 230, 0.25);
+        --bg-start: #800026;
+        --bg-end: #20000c;
+        --card: rgba(0, 0, 0, 0.685);
+        --card-border: rgba(189, 0, 104, 0.342);
         --text: #e7eef7;
         --muted: #9caac0;
-        --accent: #f2b84a;
-        --accent-2: #6fd0de;
+        --accent: #9e002f;
+        --accent-2: #440114;
         --button-bg: rgba(255, 255, 255, 0.07);
         --button-hover: rgba(255, 255, 255, 0.14);
       }
@@ -40,12 +40,12 @@
         color: var(--text);
         background: radial-gradient(
             circle at 20% 15%,
-            rgba(242, 184, 74, 0.2) 0,
+            rgba(0, 0, 0, 0.336) 0,
             rgba(242, 184, 74, 0) 38%
           ),
           radial-gradient(
             circle at 80% 80%,
-            rgba(111, 208, 222, 0.22) 0,
+            rgba(0, 0, 0, 0.384) 0,
             rgba(111, 208, 222, 0) 35%
           ),
           linear-gradient(155deg, var(--bg-start), var(--bg-end));
@@ -77,7 +77,7 @@
         height: 260px;
         top: -90px;
         left: -80px;
-        background: #e9a939;
+        background: #080000b2;
       }
 
       .halo-2 {
@@ -85,7 +85,7 @@
         height: 220px;
         right: -70px;
         bottom: -50px;
-        background: #5ec4d1;
+        background: #00000088;
         animation-delay: -6s;
       }
 
@@ -170,6 +170,34 @@
         margin: 24px 2px 10px;
       }
 
+      .tabs {
+        display: flex;
+        gap: 8px;
+        margin: 24px 0 12px;
+      }
+
+      .tab-btn {
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 0.82rem;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background 160ms ease, border-color 160ms ease;
+      }
+
+      .tab-btn[aria-selected="true"] {
+        background: rgba(255, 255, 255, 0.14);
+        border-color: rgba(255, 255, 255, 0.35);
+      }
+
+      .tab-panel[hidden] {
+        display: none;
+      }
+
       .links {
         display: grid;
         gap: 10px;
@@ -200,6 +228,47 @@
 
       .link-btn .left {
         font-weight: 600;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .now-playing-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .now-playing-cover {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+      }
+
+      .now-playing-text {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .now-playing-title {
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .now-playing-subtitle {
+        font-size: 0.8rem;
+        color: var(--muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .link-btn .right {
@@ -211,6 +280,36 @@
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
+      }
+
+      .projects {
+        display: grid;
+        gap: 10px;
+      }
+
+      .project-card {
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 12px;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .project-title {
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      .project-desc {
+        margin: 6px 0 0;
+        color: #d2deee;
+        font-size: 0.93rem;
+        line-height: 1.4;
+      }
+
+      .project-links-empty {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.9rem;
       }
 
       .socials a {
@@ -309,8 +408,44 @@
 
         <ul class="badges" id="badges"></ul>
 
-        <p class="section-title">Main Links</p>
-        <div class="links" id="mainLinks"></div>
+        <div class="tabs" role="tablist" aria-label="Content Tabs">
+          <button
+            class="tab-btn"
+            id="tab-links"
+            role="tab"
+            aria-controls="panel-links"
+            aria-selected="true"
+          >
+            Main Links
+          </button>
+          <button
+            class="tab-btn"
+            id="tab-projects"
+            role="tab"
+            aria-controls="panel-projects"
+            aria-selected="false"
+          >
+            Projects
+          </button>
+        </div>
+
+        <section class="tab-panel" id="panel-links" role="tabpanel" aria-labelledby="tab-links">
+          <p class="section-title">Main Links</p>
+          <div class="links" id="mainLinks"></div>
+        </section>
+
+        <section
+          class="tab-panel"
+          id="panel-projects"
+          role="tabpanel"
+          aria-labelledby="tab-projects"
+          hidden
+        >
+          <p class="section-title">Projects</p>
+          <div class="projects" id="projectsList"></div>
+          <p class="section-title">Project Links</p>
+          <div class="links" id="projectLinks"></div>
+        </section>
 
         <p class="section-title">Socials</p>
         <div class="socials" id="socialLinks"></div>
@@ -328,7 +463,24 @@
         badges: ["C#", "JavaScript", "GMT-3"],
         links: [
           { label: "Contact Me", href: "mailto:rafaelpasquarella@gmail.com", tag: "E-Mail" },
-          { label: "Now Playing", href: "https://open.spotify.com", tag: "Music" }
+          { id: "nowPlaying", label: "Now Playing", href: "https://open.spotify.com", tag: "Spotify" }
+        ],
+        spotify: {
+          discordUserId: "1402344358199689348",
+          refreshMs: 30000,
+          onlySpotify: true
+        },
+        projects: [
+          {
+            title: "cornwallCORE Discord Application",
+            description: "Utility and Automation discord bot for 32nd Regt. of Foot in https://discord.gg/constantes.",
+            href: "https://discord.com/oauth2/authorize?client_id=1482173872848507062"
+          },
+          {
+            title: "Soon...",
+            description: ":p",
+            href: ""
+          }
         ],
         socials: [
           { label: "GitHub", href: "https://github.com/nunreasonable" },
@@ -386,12 +538,118 @@
         a.className = "link-btn";
         a.href = normalizeUrl(link.href) || "#";
         a.dataset.url = link.href;
+        a.dataset.linkId = link.id || "";
         a.target = "_blank";
         a.rel = "noreferrer noopener";
         a.style.animationDelay = `${100 + i * 75}ms`;
         a.innerHTML = `<span class="left">${link.label}</span><span class="right">${link.tag}</span>`;
         linksEl.appendChild(a);
       });
+
+      function formatNowPlayingLabel(trackTitle, artistName) {
+        const full = `Now Playing: ${trackTitle} - ${artistName}`;
+        return full.length > 72 ? `${full.slice(0, 69)}...` : full;
+      }
+
+      function setNowPlayingState(state) {
+        const nowPlayingLink = linksEl.querySelector('[data-link-id="nowPlaying"]');
+        if (!nowPlayingLink) {
+          return;
+        }
+
+        const left = nowPlayingLink.querySelector(".left");
+        const right = nowPlayingLink.querySelector(".right");
+        if (!left || !right) {
+          return;
+        }
+
+        if (!state || !state.isPlaying) {
+          left.innerHTML = `
+            <span class="now-playing-left">
+              <img
+                class="now-playing-cover"
+                src="https://i.scdn.co/image/ab67616d00001e02a0f8b88f0a2b2b3d92d8f57f"
+                alt="No track artwork"
+              />
+              <span class="now-playing-text">
+                <span class="now-playing-title">Not listening right now</span>
+                <span class="now-playing-subtitle">Spotify status idle</span>
+              </span>
+            </span>
+          `;
+          right.textContent = "Spotify";
+          nowPlayingLink.dataset.url = "https://open.spotify.com";
+          nowPlayingLink.href = "https://open.spotify.com";
+          return;
+        }
+
+        left.innerHTML = `
+          <span class="now-playing-left">
+            <img class="now-playing-cover" src="${state.imageUrl}" alt="Album artwork" />
+            <span class="now-playing-text">
+              <span class="now-playing-title">${formatNowPlayingLabel(state.title, state.artist)}</span>
+              <span class="now-playing-subtitle">${state.album || "Live on Spotify"}</span>
+            </span>
+          </span>
+        `;
+        right.textContent = "Live";
+        nowPlayingLink.dataset.url = state.trackUrl;
+        nowPlayingLink.href = state.trackUrl;
+      }
+
+      async function fetchNowPlayingFromLanyard(discordUserId) {
+        const response = await fetch(`https://api.lanyard.rest/v1/users/${encodeURIComponent(discordUserId)}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch Lanyard status.");
+        }
+
+        const payload = await response.json();
+        if (!payload.success || !payload.data) {
+          return { isPlaying: false };
+        }
+
+        const data = payload.data;
+        const spotifyOnlyMode = !profileData.spotify || profileData.spotify.onlySpotify !== false;
+
+        if (spotifyOnlyMode && data.listening_to_spotify !== true) {
+          return { isPlaying: false };
+        }
+
+        if (!data.spotify) {
+          return { isPlaying: false };
+        }
+
+        const spotify = data.spotify;
+        const trackUrl = spotify.track_id
+          ? `https://open.spotify.com/track/${spotify.track_id}`
+          : "https://open.spotify.com";
+
+        return {
+          isPlaying: true,
+          title: spotify.song || "Unknown song",
+          artist: spotify.artist || "Unknown artist",
+          album: spotify.album || "",
+          imageUrl: spotify.album_art_url || "https://i.scdn.co/image/ab67616d00001e02a0f8b88f0a2b2b3d92d8f57f",
+          trackUrl
+        };
+      }
+
+      async function refreshNowPlaying() {
+        if (!profileData.spotify || !profileData.spotify.discordUserId) {
+          setNowPlayingState({ isPlaying: false });
+          return;
+        }
+
+        try {
+          const state = await fetchNowPlayingFromLanyard(profileData.spotify.discordUserId);
+          setNowPlayingState(state);
+        } catch (error) {
+          setNowPlayingState({ isPlaying: false });
+        }
+      }
+
+      refreshNowPlaying();
+      setInterval(refreshNowPlaying, profileData.spotify.refreshMs || 30000);
 
       linksEl.addEventListener("click", (event) => {
         const linkButton = event.target.closest(".link-btn");
@@ -401,6 +659,67 @@
 
         event.preventDefault();
         openProfileLink(linkButton.dataset.url);
+      });
+
+      const projectsEl = document.getElementById("projectsList");
+      profileData.projects.forEach((project) => {
+        const card = document.createElement("article");
+        card.className = "project-card";
+        card.innerHTML = `<h3 class="project-title">${project.title}</h3><p class="project-desc">${project.description}</p>`;
+        projectsEl.appendChild(card);
+      });
+
+      const projectLinksEl = document.getElementById("projectLinks");
+      const projectsWithLinks = profileData.projects.filter((project) => project.href && project.href.trim());
+
+      if (projectsWithLinks.length === 0) {
+        const emptyText = document.createElement("p");
+        emptyText.className = "project-links-empty";
+        emptyText.textContent = "Add project URLs in profileData.projects to show them here.";
+        projectLinksEl.appendChild(emptyText);
+      } else {
+        projectsWithLinks.forEach((project, i) => {
+          const a = document.createElement("a");
+          a.className = "link-btn";
+          a.href = normalizeUrl(project.href) || "#";
+          a.dataset.url = project.href;
+          a.target = "_blank";
+          a.rel = "noreferrer noopener";
+          a.style.animationDelay = `${100 + i * 75}ms`;
+          a.innerHTML = `<span class="left">${project.title}</span><span class="right">Open</span>`;
+          projectLinksEl.appendChild(a);
+        });
+      }
+
+      projectLinksEl.addEventListener("click", (event) => {
+        const linkButton = event.target.closest(".link-btn");
+        if (!linkButton) {
+          return;
+        }
+
+        event.preventDefault();
+        openProfileLink(linkButton.dataset.url);
+      });
+
+      const tabButtons = document.querySelectorAll(".tab-btn");
+      const tabPanels = document.querySelectorAll(".tab-panel");
+
+      function setActiveTab(tabId) {
+        tabButtons.forEach((button) => {
+          const isSelected = button.id === tabId;
+          button.setAttribute("aria-selected", isSelected ? "true" : "false");
+        });
+
+        tabPanels.forEach((panel) => {
+          const shouldShow = panel.getAttribute("aria-labelledby") === tabId;
+          panel.hidden = !shouldShow;
+        });
+      }
+
+      tabButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          setActiveTab(button.id);
+        });
       });
 
       const socialsEl = document.getElementById("socialLinks");
