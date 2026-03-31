@@ -324,8 +324,7 @@
         name: "daeese",
         handle: "@daeese",
         bio: "Like... I do C# and JS... That's all ig, ah yes! I'm learning Assembly..",
-        avatar:
-          "$HOME/Downloads/pfp.jpg",
+        avatar: "./163762b92dafb24a12c1ce5b7080bd1e.jpg",
         badges: ["C#", "JavaScript", "GMT-3"],
         links: [
           { label: "Contact Me", href: "mailto:rafaelpasquarella@gmail.com", tag: "E-Mail" },
@@ -339,7 +338,12 @@
       };
 
       document.title = profileData.name;
-      document.getElementById("avatar").src = profileData.avatar;
+      const avatarEl = document.getElementById("avatar");
+      avatarEl.src = profileData.avatar;
+      avatarEl.addEventListener("error", () => {
+        avatarEl.src =
+          "https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=256&auto=format&fit=crop";
+      });
       document.getElementById("displayName").textContent = profileData.name;
       document.getElementById("handle").textContent = profileData.handle;
       document.getElementById("bio").textContent = profileData.bio;
