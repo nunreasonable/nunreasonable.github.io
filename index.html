@@ -13,12 +13,11 @@
     />
     <style>
       :root {
-        --bg-start: #800026;
-        --bg-end: #20000c;
-        --website-bg-image: none;
+        --bg-start: #040203;
+        --bg-mid: #0b0408;
+        --bg-end: #1d0813;
         --card: rgba(0, 0, 0, 0.685);
         --card-border: rgba(189, 0, 104, 0.342);
-        --card-bg-image: none;
         --text: #e7eef7;
         --muted: #9caac0;
         --accent: #9e002f;
@@ -45,67 +44,23 @@
       body {
         font-family: "Space Grotesk", sans-serif;
         color: var(--text);
-        background: var(--website-bg-image), radial-gradient(
-            circle at 20% 15%,
-            rgba(0, 0, 0, 0.336) 0,
-            rgba(242, 184, 74, 0) 38%
+        background: radial-gradient(
+            circle at 16% 14%,
+            rgba(145, 28, 74, 0.22) 0,
+            rgba(145, 28, 74, 0) 40%
           ),
           radial-gradient(
-            circle at 80% 80%,
-            rgba(0, 0, 0, 0.384) 0,
-            rgba(111, 208, 222, 0) 35%
+            circle at 84% 84%,
+            rgba(78, 15, 39, 0.16) 0,
+            rgba(78, 15, 39, 0) 46%
           ),
-          linear-gradient(155deg, var(--bg-start), var(--bg-end));
-        background-size: cover, auto, auto, auto;
-        background-position: center, auto, auto, auto;
+          linear-gradient(160deg, var(--bg-start) 0%, var(--bg-mid) 64%, var(--bg-end) 100%);
+        background-size: auto, auto, auto;
+        background-position: auto, auto, auto;
         background-attachment: fixed;
         display: grid;
         place-items: center;
         overflow-x: hidden;
-      }
-
-      body.has-video-bg {
-        background: radial-gradient(
-            circle at 20% 15%,
-            rgba(0, 0, 0, 0.2) 0,
-            rgba(242, 184, 74, 0) 40%
-          ),
-          radial-gradient(
-            circle at 80% 80%,
-            rgba(0, 0, 0, 0.24) 0,
-            rgba(111, 208, 222, 0) 36%
-          ),
-          linear-gradient(155deg, rgba(22, 3, 10, 0.5), rgba(10, 2, 6, 0.68));
-      }
-
-      .video-bg {
-        position: fixed;
-        inset: 0;
-        z-index: 0;
-        overflow: hidden;
-        pointer-events: none;
-        background-color: #050505;
-      }
-
-      .video-bg video {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 100vw;
-        height: 56.25vw;
-        min-width: 177.78vh;
-        min-height: 100vh;
-        transform: translate(-50%, -50%);
-        border: 0;
-        object-fit: cover;
-        filter: brightness(0.7) saturate(1.15) contrast(1.05);
-      }
-
-      .video-bg.loading::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4));
       }
 
       .noise {
@@ -218,9 +173,6 @@
         border: 1px solid var(--card-border);
         border-radius: 22px;
         background: var(--card);
-        background-image: var(--card-bg-image);
-        background-size: cover;
-        background-position: center;
         backdrop-filter: blur(12px);
         padding: 28px 22px;
         width: 100%;
@@ -572,23 +524,23 @@
         }
       }
 
-        .player-modal {
+      .player-modal {
         display: none;
         position: fixed;
         inset: 0;
-        background: var(--website-bg-image), radial-gradient(
-            circle at 20% 15%,
-            rgba(0, 0, 0, 0.336) 0,
-            rgba(242, 184, 74, 0) 38%
+        background: radial-gradient(
+            circle at 16% 14%,
+            rgba(145, 28, 74, 0.22) 0,
+            rgba(145, 28, 74, 0) 40%
           ),
           radial-gradient(
-            circle at 80% 80%,
-            rgba(0, 0, 0, 0.384) 0,
-            rgba(111, 208, 222, 0) 35%
+            circle at 84% 84%,
+            rgba(78, 15, 39, 0.16) 0,
+            rgba(78, 15, 39, 0) 46%
           ),
-          linear-gradient(155deg, var(--bg-start), var(--bg-end));
-        background-size: cover, auto, auto, auto;
-        background-position: center, auto, auto, auto;
+          linear-gradient(160deg, var(--bg-start) 0%, var(--bg-mid) 64%, var(--bg-end) 100%);
+        background-size: auto, auto, auto;
+        background-position: auto, auto, auto;
         background-attachment: fixed;
         z-index: 1000;
         place-items: center;
@@ -861,12 +813,6 @@
     </style>
   </head>
   <body>
-    <div class="video-bg" id="videoBg" hidden>
-      <video id="videoBgVideo" autoplay muted loop playsinline preload="auto">
-        <source src="./videoplayback.mp4" type="video/mp4" />
-      </video>
-    </div>
-
     <div class="noise"></div>
     <div class="halo halo-1"></div>
     <div class="halo halo-2"></div>
@@ -991,7 +937,6 @@
       const blurOverlay = document.getElementById("blurOverlay");
       blurOverlay.addEventListener("click", () => {
         playSFX('click');
-        backgroundVideoEl.play().catch(() => {});
         blurOverlay.style.opacity = "0";
         blurOverlay.style.pointerEvents = "none";
         window.setTimeout(() => {
@@ -1004,9 +949,6 @@
         handle: "@daeese",
         bio: "Junior on C# and JavaScript, timezone is GMT-3 or UTC-3, working on cornwallCORE which you may check on my 'Projects' tab. I also play NW on roblox which... is kinda concerning. I'm open to commissions, just reach me through discord or the email, make sure to identify yourself... speacially on discord.",
         avatar: "./lal.jpg",
-        backgroundImage: "", // Set your custom background image URL here
-        websiteBackgroundImage: "./bg.jpg", // Website/body background image
-        cardBackgroundImage: "", // Card background image (leave empty for transparent)
         badges: ["C#", "JavaScript", "GMT-3", "Gooba"],
         links: [
           { label: "Contact Me", href: "mailto:rafaelpasquarella@gmail.com", tag: "E-Mail" },
@@ -1037,33 +979,6 @@
       };
 
       document.title = profileData.name;
-
-      const backgroundVideoEl = document.getElementById("videoBgVideo");
-      const videoBgEl = document.getElementById("videoBg");
-
-      function applyVideoBackground() {
-        if (!videoBgEl || !backgroundVideoEl) {
-          return false;
-        }
-
-        videoBgEl.hidden = false;
-        document.body.classList.add("has-video-bg");
-        backgroundVideoEl.play().catch(() => {});
-        return true;
-      }
-
-      let isVideoBackgroundActive = applyVideoBackground();
-      
-      // Apply website background image if provided
-      if (!isVideoBackgroundActive && profileData.websiteBackgroundImage) {
-        document.documentElement.style.setProperty("--website-bg-image", `url('${profileData.websiteBackgroundImage}')`);
-      }
-      
-      // Apply card background image if provided
-      if (profileData.cardBackgroundImage) {
-        const mainCard = document.getElementById("mainCard");
-        mainCard.style.setProperty("--card-bg-image", `url('${profileData.cardBackgroundImage}')`);
-      }
       
       const avatarEl = document.getElementById("avatar");
       // Load avatar from profile data if available
