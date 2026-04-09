@@ -15,8 +15,10 @@
       :root {
         --bg-start: #800026;
         --bg-end: #20000c;
+        --website-bg-image: none;
         --card: rgba(0, 0, 0, 0.685);
         --card-border: rgba(189, 0, 104, 0.342);
+        --card-bg-image: none;
         --text: #e7eef7;
         --muted: #9caac0;
         --accent: #9e002f;
@@ -35,12 +37,15 @@
         min-height: 100%;
         width: 100%;
         overflow-x: clip;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        image-rendering: -webkit-optimize-contrast;
       }
 
       body {
         font-family: "Space Grotesk", sans-serif;
         color: var(--text);
-        background: radial-gradient(
+        background: var(--website-bg-image), radial-gradient(
             circle at 20% 15%,
             rgba(0, 0, 0, 0.336) 0,
             rgba(242, 184, 74, 0) 38%
@@ -51,14 +56,62 @@
             rgba(111, 208, 222, 0) 35%
           ),
           linear-gradient(155deg, var(--bg-start), var(--bg-end));
+        background-size: cover, auto, auto, auto;
+        background-position: center, auto, auto, auto;
+        background-attachment: fixed;
         display: grid;
         place-items: center;
         overflow-x: hidden;
       }
 
+      body.has-video-bg {
+        background: radial-gradient(
+            circle at 20% 15%,
+            rgba(0, 0, 0, 0.2) 0,
+            rgba(242, 184, 74, 0) 40%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(0, 0, 0, 0.24) 0,
+            rgba(111, 208, 222, 0) 36%
+          ),
+          linear-gradient(155deg, rgba(22, 3, 10, 0.5), rgba(10, 2, 6, 0.68));
+      }
+
+      .video-bg {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        overflow: hidden;
+        pointer-events: none;
+        background-color: #050505;
+      }
+
+      .video-bg video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100vw;
+        height: 56.25vw;
+        min-width: 177.78vh;
+        min-height: 100vh;
+        transform: translate(-50%, -50%);
+        border: 0;
+        object-fit: cover;
+        filter: brightness(0.7) saturate(1.15) contrast(1.05);
+      }
+
+      .video-bg.loading::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4));
+      }
+
       .noise {
         position: fixed;
         inset: 0;
+        z-index: 1;
         pointer-events: none;
         opacity: 0.08;
         background-image: radial-gradient(#ffffff 0.45px, transparent 0.45px);
@@ -67,6 +120,7 @@
 
       .halo {
         position: fixed;
+        z-index: 1;
         border-radius: 999px;
         filter: blur(42px);
         opacity: 0.38;
@@ -91,6 +145,65 @@
         animation-delay: -6s;
       }
 
+      .blur-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(16, 6, 10, 0.28);
+        backdrop-filter: blur(22px) saturate(1.25);
+        -webkit-backdrop-filter: blur(22px) saturate(1.25);
+        z-index: 999;
+        display: grid;
+        place-items: center;
+        pointer-events: all;
+        cursor: pointer;
+        transition: opacity 220ms ease, background-color 220ms ease, backdrop-filter 220ms ease;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      }
+
+      .blur-overlay.hidden {
+        display: none;
+      }
+
+      .blur-overlay:active {
+        background: rgba(16, 6, 10, 0.36);
+      }
+
+      .blur-overlay::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.14),
+          rgba(255, 255, 255, 0.02) 42%,
+          rgba(255, 255, 255, 0.08) 100%
+        );
+        pointer-events: none;
+      }
+
+      .blur-message {
+        position: relative;
+        text-align: center;
+        color: var(--text);
+        font-size: 1.2rem;
+        letter-spacing: 0.05em;
+        animation: pulse-text 1.5s ease infinite;
+        padding: 14px 18px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+      }
+
+      @keyframes pulse-text {
+        0%, 100% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
       .site {
         width: min(620px, 92vw);
         max-width: 100%;
@@ -105,6 +218,9 @@
         border: 1px solid var(--card-border);
         border-radius: 22px;
         background: var(--card);
+        background-image: var(--card-bg-image);
+        background-size: cover;
+        background-position: center;
         backdrop-filter: blur(12px);
         padding: 28px 22px;
         width: 100%;
@@ -112,18 +228,39 @@
         box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
       }
 
+      .card-wrapper {
+        width: 100%;
+      }
+
       .top {
         display: flex;
+        flex-direction: column;
         align-items: center;
         gap: 14px;
+        text-align: center;
       }
 
       .avatar {
-        width: 78px;
-        height: 78px;
+        width: 110px;
+        height: 110px;
         border-radius: 50%;
         object-fit: cover;
-        border: 2px solid rgba(255, 255, 255, 0.28);
+        border: 3px solid rgba(255, 255, 255, 0.28);
+        margin-top: 0;
+        z-index: 50;
+        image-rendering: -webkit-optimize-contrast;
+        filter: contrast(1.05) brightness(1.02) saturate(1.1);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        position: relative;
+      }
+
+      .name-handle-wrap {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        justify-content: center;
+        width: 100%;
       }
 
       .name-wrap {
@@ -142,6 +279,30 @@
         margin: 4px 0 0;
         color: var(--muted);
         font-weight: 500;
+      }
+
+      .socials-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      .socials-inline a {
+        text-decoration: none;
+        color: var(--text);
+        cursor: pointer;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 0.8rem;
+        background: rgba(255, 255, 255, 0.05);
+        transition: background 160ms ease, border-color 160ms ease;
+      }
+
+      .socials-inline a:hover {
+        border-color: rgba(255, 255, 255, 0.28);
+        background: rgba(255, 255, 255, 0.08);
       }
 
       .bio {
@@ -262,6 +423,8 @@
         border-radius: 8px;
         object-fit: cover;
         flex-shrink: 0;
+          image-rendering: -webkit-optimize-contrast;
+          filter: contrast(1.05) brightness(1.02) saturate(1.1);
         border: 1px solid rgba(255, 255, 255, 0.14);
       }
 
@@ -409,11 +572,11 @@
         }
       }
 
-      .player-modal {
+        .player-modal {
         display: none;
         position: fixed;
         inset: 0;
-        background: radial-gradient(
+        background: var(--website-bg-image), radial-gradient(
             circle at 20% 15%,
             rgba(0, 0, 0, 0.336) 0,
             rgba(242, 184, 74, 0) 38%
@@ -424,6 +587,9 @@
             rgba(111, 208, 222, 0) 35%
           ),
           linear-gradient(155deg, var(--bg-start), var(--bg-end));
+        background-size: cover, auto, auto, auto;
+        background-position: center, auto, auto, auto;
+        background-attachment: fixed;
         z-index: 1000;
         place-items: center;
         animation: fade-in 0.3s ease both;
@@ -477,6 +643,10 @@
         border: 2px solid rgba(255, 255, 255, 0.14);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         animation: spin 20s linear infinite;
+        image-rendering: -webkit-optimize-contrast;
+        filter: contrast(1.08) brightness(1.02) saturate(1.15);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
       }
 
       @keyframes spin {
@@ -610,13 +780,25 @@
         }
 
         .top {
-          align-items: flex-start;
+          align-items: center;
         }
 
         .avatar {
-          width: 66px;
-          height: 66px;
+          width: 90px;
+          height: 90px;
+          margin-top: -55px;
         }
+
+        .name-handle-wrap {
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .socials-inline {
+          width: 100%;
+        }
+
+
 
         .tabs {
           margin: 20px 0 10px;
@@ -679,9 +861,19 @@
     </style>
   </head>
   <body>
+    <div class="video-bg" id="videoBg" hidden>
+      <video id="videoBgVideo" autoplay muted loop playsinline preload="auto">
+        <source src="./videoplayback.mp4" type="video/mp4" />
+      </video>
+    </div>
+
     <div class="noise"></div>
     <div class="halo halo-1"></div>
     <div class="halo halo-2"></div>
+
+    <div class="blur-overlay" id="blurOverlay">
+      <div class="blur-message">click to enter</div>
+    </div>
 
     <div class="player-modal" id="playerModal">
       <div class="player-modal-content">
@@ -702,69 +894,71 @@
     </div>
 
     <main class="site">
-      <article class="card">
-        <section class="top">
-          <img
-            class="avatar"
-            id="avatar"
-            src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=256&auto=format&fit=crop"
-            alt="Profile avatar"
-          />
-          <div class="name-wrap">
-            <h1 class="name" id="displayName">DAEESE</h1>
-            <p class="handle" id="handle">@daeese</p>
+      <div class="card-wrapper">
+        <article class="card" id="mainCard">
+          <section class="top">
+            <img
+              class="avatar"
+              id="avatar"
+              src="./lal.jpg"
+              alt="Profile avatar"
+            />
+            <div class="name-handle-wrap">
+              <div class="name-wrap">
+                <h1 class="name" id="displayName">DAEESE</h1>
+                <p class="handle" id="handle">@daeese</p>
+              </div>
+              <div class="socials-inline" id="socialLinksInline"></div>
+            </div>
+          </section>
+
+          <p class="bio" id="bio">
+            Designer/developer crafting interfaces that feel alive. Building digital things,
+            collecting inspiration, and sharing work in public.
+          </p>
+
+          <ul class="badges" id="badges"></ul>
+
+          <div class="tabs" role="tablist" aria-label="Content Tabs">
+            <button
+              class="tab-btn"
+              id="tab-links"
+              role="tab"
+              aria-controls="panel-links"
+              aria-selected="true"
+            >
+              Main Links
+            </button>
+            <button
+              class="tab-btn"
+              id="tab-projects"
+              role="tab"
+              aria-controls="panel-projects"
+              aria-selected="false"
+            >
+              Projects
+            </button>
           </div>
-        </section>
 
-        <p class="bio" id="bio">
-          Designer/developer crafting interfaces that feel alive. Building digital things,
-          collecting inspiration, and sharing work in public.
-        </p>
+          <section class="tab-panel" id="panel-links" role="tabpanel" aria-labelledby="tab-links">
+            <p class="section-title">Main Links</p>
+            <div class="links" id="mainLinks"></div>
+          </section>
 
-        <ul class="badges" id="badges"></ul>
-
-        <div class="tabs" role="tablist" aria-label="Content Tabs">
-          <button
-            class="tab-btn"
-            id="tab-links"
-            role="tab"
-            aria-controls="panel-links"
-            aria-selected="true"
+          <section
+            class="tab-panel"
+            id="panel-projects"
+            role="tabpanel"
+            aria-labelledby="tab-projects"
+            hidden
           >
-            Main Links
-          </button>
-          <button
-            class="tab-btn"
-            id="tab-projects"
-            role="tab"
-            aria-controls="panel-projects"
-            aria-selected="false"
-          >
-            Projects
-          </button>
-        </div>
-
-        <section class="tab-panel" id="panel-links" role="tabpanel" aria-labelledby="tab-links">
-          <p class="section-title">Main Links</p>
-          <div class="links" id="mainLinks"></div>
-        </section>
-
-        <section
-          class="tab-panel"
-          id="panel-projects"
-          role="tabpanel"
-          aria-labelledby="tab-projects"
-          hidden
-        >
-          <p class="section-title">Projects</p>
-          <div class="projects" id="projectsList"></div>
-          <p class="section-title">Project Links</p>
-          <div class="links" id="projectLinks"></div>
-        </section>
-
-        <p class="section-title">Socials</p>
-        <div class="socials" id="socialLinks"></div>
-      </article>
+            <p class="section-title">Projects</p>
+            <div class="projects" id="projectsList"></div>
+            <p class="section-title">Project Links</p>
+            <div class="links" id="projectLinks"></div>
+          </section>
+        </article>
+      </div>
 
       <p class="footer" id="footerText">online now</p>
     </main>
@@ -793,11 +987,26 @@
         else if (type === 'hover') playBeep(700, 50, 0.15);
       }
 
+      // Blur overlay handler
+      const blurOverlay = document.getElementById("blurOverlay");
+      blurOverlay.addEventListener("click", () => {
+        playSFX('click');
+        backgroundVideoEl.play().catch(() => {});
+        blurOverlay.style.opacity = "0";
+        blurOverlay.style.pointerEvents = "none";
+        window.setTimeout(() => {
+          blurOverlay.classList.add("hidden");
+        }, 220);
+      });
+
       const profileData = {
         name: "daeese",
         handle: "@daeese",
         bio: "Junior on C# and JavaScript, timezone is GMT-3 or UTC-3, working on cornwallCORE which you may check on my 'Projects' tab. I also play NW on roblox which... is kinda concerning. I'm open to commissions, just reach me through discord or the email, make sure to identify yourself... speacially on discord.",
         avatar: "./lal.jpg",
+        backgroundImage: "./bg.jpg", // Set your custom background image URL here
+        websiteBackgroundImage: "./bgg.web", // Website/body background image
+        cardBackgroundImage: "", // Card background image (leave empty for transparent)
         badges: ["C#", "JavaScript", "GMT-3", "Gooba"],
         links: [
           { label: "Contact Me", href: "mailto:rafaelpasquarella@gmail.com", tag: "E-Mail" },
@@ -824,12 +1033,43 @@
           { label: "GitHub", href: "https://github.com/nunreasonable" },
           { label: "Discord", href: "https://discord.com/users/1402344358199689348" }
         ],
-        footer: "Last updated March 2026"
+        footer: "Last updated April 2026"
       };
 
       document.title = profileData.name;
+
+      const backgroundVideoEl = document.getElementById("videoBgVideo");
+      const videoBgEl = document.getElementById("videoBg");
+
+      function applyVideoBackground() {
+        if (!videoBgEl || !backgroundVideoEl) {
+          return false;
+        }
+
+        videoBgEl.hidden = false;
+        document.body.classList.add("has-video-bg");
+        backgroundVideoEl.play().catch(() => {});
+        return true;
+      }
+
+      let isVideoBackgroundActive = applyVideoBackground();
+      
+      // Apply website background image if provided
+      if (!isVideoBackgroundActive && profileData.websiteBackgroundImage) {
+        document.documentElement.style.setProperty("--website-bg-image", `url('${profileData.websiteBackgroundImage}')`);
+      }
+      
+      // Apply card background image if provided
+      if (profileData.cardBackgroundImage) {
+        const mainCard = document.getElementById("mainCard");
+        mainCard.style.setProperty("--card-bg-image", `url('${profileData.cardBackgroundImage}')`);
+      }
+      
       const avatarEl = document.getElementById("avatar");
-      avatarEl.src = profileData.avatar;
+      // Load avatar from profile data if available
+      if (profileData.avatar) {
+        avatarEl.src = profileData.avatar;
+      }
       avatarEl.addEventListener("error", () => {
         avatarEl.src =
           "https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=256&auto=format&fit=crop";
@@ -1211,24 +1451,27 @@
         });
       });
 
-      const socialsEl = document.getElementById("socialLinks");
+      const socialsInlineEl = document.getElementById("socialLinksInline");
+      
       profileData.socials.forEach((social) => {
-        const a = document.createElement("a");
-        a.href = normalizeUrl(social.href) || "#";
-        a.dataset.url = social.href;
-        a.target = "_blank";
-        a.rel = "noreferrer noopener";
-        a.textContent = social.label;
-        socialsEl.appendChild(a);
+        // Inline socials (beside name)
+        const aInline = document.createElement("a");
+        aInline.href = normalizeUrl(social.href) || "#";
+        aInline.dataset.url = social.href;
+        aInline.target = "_blank";
+        aInline.rel = "noreferrer noopener";
+        aInline.textContent = social.label;
+        socialsInlineEl.appendChild(aInline);
       });
 
-      socialsEl.addEventListener("click", (event) => {
+      socialsInlineEl.addEventListener("click", (event) => {
         const socialLink = event.target.closest("a");
         if (!socialLink) {
           return;
         }
 
         event.preventDefault();
+        playSFX('click');
         openProfileLink(socialLink.dataset.url);
       });
     </script>
