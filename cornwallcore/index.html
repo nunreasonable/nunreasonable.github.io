@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>CornwallCORE Bot</title>
+		<meta
+			name="description"
+			content="CornwallCORE is a Discord bot for the 32nd 'The Cornwall' Regiment of Foot community."
+		/>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			:root {
+				color-scheme: dark;
+				--bg: #0b1f44;
+				--bg-2: #142f63;
+				--panel: rgba(12, 28, 61, 0.9);
+				--panel-strong: rgba(9, 22, 51, 0.98);
+				--line: rgba(255, 255, 255, 0.16);
+				--line-strong: rgba(255, 255, 255, 0.28);
+				--text: #f6f8fc;
+				--muted: #d5ddee;
+				--accent: #cf142b;
+				--accent-2: #ffffff;
+				--accent-3: #1f4aa8;
+				--shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+				--radius: 22px;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			html {
+				scroll-behavior: smooth;
+			}
+
+			body {
+				margin: 0;
+				min-height: 100vh;
+				color: var(--text);
+				font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+				background:
+					radial-gradient(circle at top left, rgba(207, 20, 43, 0.22), transparent 28%),
+					radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.12), transparent 34%),
+					linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
+			}
+
+			.shell {
+				width: min(1080px, calc(100% - 24px));
+				margin: 0 auto;
+				padding: 18px 0 28px;
+			}
+
+			.topbar {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 12px;
+				justify-content: space-between;
+				align-items: center;
+				border: 1px solid var(--line);
+				border-radius: 18px;
+				padding: 14px 16px;
+				background: var(--panel);
+				border-color: rgba(255, 255, 255, 0.2);
+				box-shadow: var(--shadow);
+				margin-bottom: 16px;
+			}
+
+			.brand {
+				display: flex;
+				flex-direction: column;
+				gap: 3px;
+			}
+
+			.brand-title {
+				margin: 0;
+				font-size: 1rem;
+				letter-spacing: 0.02em;
+			}
+
+			.brand-meta {
+				margin: 0;
+				color: var(--muted);
+				font-size: 0.92rem;
+			}
+
+			.actions {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+			}
+
+			.button {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				padding: 10px 14px;
+				border: 1px solid var(--line);
+				border-radius: 999px;
+				color: var(--text);
+				text-decoration: none;
+				background: rgba(255, 255, 255, 0.04);
+				transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+			}
+
+			.button:hover,
+			.button:focus-visible {
+				background: rgba(255, 255, 255, 0.12);
+				border-color: var(--line-strong);
+				outline: none;
+				transform: translateY(-1px);
+			}
+
+			.button.primary {
+				background: linear-gradient(135deg, rgba(207, 20, 43, 0.28), rgba(31, 74, 168, 0.28));
+				border-color: rgba(255, 255, 255, 0.28);
+				font-weight: 700;
+			}
+
+			.hero {
+				display: grid;
+				grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.95fr);
+				gap: 16px;
+				align-items: stretch;
+			}
+
+			.card {
+				border: 1px solid var(--line);
+				border-radius: var(--radius);
+				background: var(--panel);
+				border-color: rgba(255, 255, 255, 0.2);
+				box-shadow: var(--shadow);
+				overflow: hidden;
+			}
+
+			.intro {
+				padding: 28px;
+			}
+
+			.eyebrow {
+				margin: 0 0 12px;
+				text-transform: uppercase;
+				letter-spacing: 0.18em;
+				font-size: 0.74rem;
+				color: var(--accent-2);
+			}
+
+			.title {
+				margin: 0;
+				font-size: clamp(2.4rem, 5vw, 4.2rem);
+				line-height: 0.95;
+				letter-spacing: -0.04em;
+			}
+
+			.subtitle {
+				margin: 14px 0 0;
+				color: #d3deec;
+				font-size: 1.03rem;
+				line-height: 1.6;
+				max-width: 62ch;
+			}
+
+			.pill-row {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+				margin-top: 20px;
+			}
+
+			.pill {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				padding: 9px 12px;
+				border-radius: 999px;
+				border: 1px solid rgba(255, 255, 255, 0.12);
+				background: rgba(255, 255, 255, 0.04);
+				color: #dce7f3;
+				font-size: 0.88rem;
+			}
+
+			.panel {
+				padding: 22px;
+				background: linear-gradient(180deg, var(--panel-strong) 0%, rgba(15, 23, 42, 0.88) 100%);
+				border-color: rgba(255, 255, 255, 0.18);
+			}
+
+			.bot-pfp {
+				width: 72px;
+				height: 72px;
+				border-radius: 999px;
+				object-fit: cover;
+				border: 1px solid rgba(255, 255, 255, 0.16);
+				box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
+				margin-bottom: 16px;
+				background: rgba(255, 255, 255, 0.05);
+			}
+
+			.panel h2,
+			.section h2 {
+				margin: 0 0 10px;
+				font-size: 1.02rem;
+			}
+
+			.panel p,
+			.section p {
+				margin: 0;
+				color: var(--muted);
+				line-height: 1.55;
+			}
+
+			.invite-box {
+				margin-top: 18px;
+				padding: 16px;
+				border-radius: 18px;
+				border: 1px solid rgba(192, 132, 252, 0.22);
+				background: linear-gradient(135deg, rgba(207, 20, 43, 0.14), rgba(31, 74, 168, 0.14));
+			}
+
+			.invite-label {
+				margin: 0 0 6px;
+				color: #f0e9ff;
+				font-size: 0.85rem;
+				text-transform: uppercase;
+				letter-spacing: 0.12em;
+			}
+
+			.invite-link {
+				word-break: break-word;
+				color: #d7f0ff;
+				font-size: 0.92rem;
+			}
+
+			.section-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 16px;
+				margin-top: 16px;
+			}
+
+			.section {
+				padding: 18px;
+			}
+
+			.section ul {
+				margin: 12px 0 0;
+				padding-left: 18px;
+				color: #d3deec;
+				line-height: 1.6;
+			}
+
+			.section li + li {
+				margin-top: 8px;
+			}
+
+			.footer {
+				margin-top: 16px;
+				color: var(--muted);
+				font-size: 0.84rem;
+				text-align: center;
+			}
+
+			@media (max-width: 860px) {
+				.hero,
+				.section-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+
+			@media (max-width: 640px) {
+				.shell {
+					width: min(100% - 14px, 1080px);
+					padding-top: 8px;
+				}
+
+				.topbar,
+				.intro,
+				.panel,
+				.section {
+					padding-left: 16px;
+					padding-right: 16px;
+				}
+
+				.topbar {
+					padding-top: 12px;
+					padding-bottom: 12px;
+				}
+
+				.actions {
+					width: 100%;
+				}
+
+				.button {
+					flex: 1 1 0;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main class="shell">
+			<header class="topbar">
+				<div class="brand">
+					<h1 class="brand-title">Cornwall Bot</h1>
+					<p class="brand-meta">Discord automation for one server only: the 32nd “The Cornwall” Regiment of Foot</p>
+				</div>
+				<div class="actions">
+					<a class="button primary" href="https://discord.com/oauth2/authorize?client_id=1482173872848507062&scope=bot%20applications.commands" target="_blank" rel="noreferrer noopener">Add to Discord</a>
+					<a class="button" href="./termsofservice/">Terms</a>
+					<a class="button" href="./privacypolicy/">Privacy</a>
+				</div>
+			</header>
+
+			<section class="hero" aria-label="Bot overview">
+				<article class="card intro">
+					<p class="eyebrow">Bot overview</p>
+					<h2 class="title">Built for NWs BA Constantes Third Division, with simple utility and moderation tools.</h2>
+					<p class="subtitle">
+						Cornwall is server-locked and only meant to work for the 32nd “The Cornwall” Regiment
+						of Foot Discord server. It is not a public multi-server bot.
+					</p>
+
+					<div class="pill-row" aria-label="Highlights">
+						<span class="pill">Server locked</span>
+						<span class="pill">Moderation tools</span>
+						<span class="pill">Utility commands</span>
+						<span class="pill">Slash commands</span>
+					</div>
+				</article>
+
+				<aside class="card panel">
+					<img class="bot-pfp" src="../filearchive/cornwallCOREpfp.png" alt="Cornwall bot profile picture" />
+					<h2>Quick action</h2>
+					<p>
+						The button below will invite the bot to your server, however i must tell you that IT WILL NOT WORK outside of it's main server. I will not look to patch that, this website was made as a showcase not for you to add it to yourself. This invite should be used by Rulecy's BA General Staff only.
+					</p>
+					<div class="actions" style="margin-top: 16px;">
+						<a class="button primary" href="https://discord.com/oauth2/authorize?client_id=1482173872848507062&scope=bot%20applications.commands" target="_blank" rel="noreferrer noopener">Add to Discord</a>
+					</div>
+				</aside>
+			</section>
+
+			<section class="section-grid" aria-label="More information">
+				<article class="card section">
+					<h2>What it does</h2>
+					<p>Small, focused automation for the approved server.</p>
+					<ul>
+						<li>Utility commands for the server staff and members.</li>
+						<li>Slash-command based interaction.</li>
+						<li>Kept intentionally minimal.</li>
+					</ul>
+				</article>
+
+				<article class="card section">
+					<h2>Server note</h2>
+					<p>
+						This bot is only meant to work inside the 32nd “The Cornwall” Regiment of Foot
+						Discord server.
+					</p>
+					<ul>
+						<li>Not for public multi-server use</li>
+						<li>Invite only for the approved server</li>
+						<li>Keep the deployment scope narrow</li>
+					</ul>
+				</article>
+			</section>
+
+			<p class="footer">Cornwall Bot landing page</p>
+		</main>
+	</body>
+</html>
