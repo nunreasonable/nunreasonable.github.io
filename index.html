@@ -902,6 +902,8 @@
             <div class="projects" id="projectsList"></div>
             <p class="section-title">Project Links</p>
             <div class="links" id="projectLinks"></div>
+            <p class="section-title">Policy Sites</p>
+            <div class="links" id="policyLinks"></div>
           </section>
         </article>
       </div>
@@ -974,6 +976,10 @@
         socials: [
           { label: "GitHub", href: "https://github.com/nunreasonable" },
           { label: "Discord", href: "https://discord.com/users/1402344358199689348" }
+        ],
+        policyLinks: [
+          { label: "Terms of Service", href: "https://cornwall.daeese.me/termsofservice", tag: "Cornwall" },
+          { label: "Privacy Policy", href: "https://cornwallcore.daeese.me/privacypolicy", tag: "Cornwall" }
         ],
         footer: "Last updated April 2026"
       };
@@ -1336,6 +1342,29 @@
       }
 
       projectLinksEl.addEventListener("click", (event) => {
+        const linkButton = event.target.closest(".link-btn");
+        if (!linkButton) {
+          return;
+        }
+
+        event.preventDefault();
+        openProfileLink(linkButton.dataset.url);
+      });
+
+      const policyLinksEl = document.getElementById("policyLinks");
+      profileData.policyLinks.forEach((link, i) => {
+        const a = document.createElement("a");
+        a.className = "link-btn";
+        a.href = normalizeUrl(link.href) || "#";
+        a.dataset.url = link.href;
+        a.target = "_blank";
+        a.rel = "noreferrer noopener";
+        a.style.animationDelay = `${100 + i * 75}ms`;
+        a.innerHTML = `<span class="left">${link.label}</span><span class="right">${link.tag}</span>`;
+        policyLinksEl.appendChild(a);
+      });
+
+      policyLinksEl.addEventListener("click", (event) => {
         const linkButton = event.target.closest(".link-btn");
         if (!linkButton) {
           return;

@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Cornwall Discord Bot Terms of Service</title>
+		<meta
+			name="description"
+			content="Terms of Service for the Cornwall Discord Bot used by the 32nd 'The Cornwall' Regiment of Foot community."
+		/>
+		<link rel="canonical" href="https://cornwall.daeese.me/termsofservice" />
+		<style>
+			:root {
+				--bg: #0d1117;
+				--bg-2: #131926;
+				--panel: rgba(17, 24, 39, 0.88);
+				--panel-strong: rgba(15, 23, 42, 0.97);
+				--line: rgba(148, 163, 184, 0.18);
+				--line-strong: rgba(148, 163, 184, 0.3);
+				--text: #e5eef8;
+				--muted: #a8b3c5;
+				--accent: #c084fc;
+				--accent-2: #7dd3fc;
+				--accent-3: #f59e0b;
+				--shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+				--radius: 22px;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			html {
+				scroll-behavior: smooth;
+			}
+
+			body {
+				margin: 0;
+				min-height: 100vh;
+				color: var(--text);
+				font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+				background:
+					radial-gradient(circle at top left, rgba(192, 132, 252, 0.18), transparent 30%),
+					radial-gradient(circle at 85% 15%, rgba(125, 211, 252, 0.14), transparent 26%),
+					linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
+			}
+
+			body::before {
+				content: "";
+				position: fixed;
+				inset: 0;
+				pointer-events: none;
+				opacity: 0.07;
+				background-image: radial-gradient(rgba(255, 255, 255, 0.7) 0.5px, transparent 0.5px);
+				background-size: 18px 18px;
+			}
+
+			a {
+				color: inherit;
+			}
+
+			.shell {
+				width: min(1120px, calc(100% - 32px));
+				margin: 0 auto;
+				padding: 24px 0 56px;
+			}
+
+			.hero {
+				position: relative;
+				overflow: clip;
+				border: 1px solid var(--line);
+				border-radius: calc(var(--radius) + 8px);
+				background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.86));
+				box-shadow: var(--shadow);
+			}
+
+			.hero-inner {
+				display: grid;
+				gap: 20px;
+				padding: 28px;
+			}
+
+			.eyebrow {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				width: fit-content;
+				padding: 7px 12px;
+				border: 1px solid var(--line);
+				border-radius: 999px;
+				background: rgba(255, 255, 255, 0.04);
+				color: var(--muted);
+				font-size: 0.85rem;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+			}
+
+			.eyebrow::before {
+				content: "";
+				width: 8px;
+				height: 8px;
+				border-radius: 999px;
+				background: linear-gradient(135deg, var(--accent), var(--accent-2));
+				box-shadow: 0 0 0 4px rgba(192, 132, 252, 0.12);
+			}
+
+			h1,
+			h2,
+			h3,
+			p,
+			ul,
+			ol {
+				margin: 0;
+			}
+
+			h1 {
+				font-size: clamp(2.3rem, 6vw, 4.2rem);
+				line-height: 0.95;
+				letter-spacing: -0.04em;
+				max-width: 11ch;
+			}
+
+			.lede {
+				max-width: 72ch;
+				color: var(--muted);
+				font-size: 1.02rem;
+				line-height: 1.7;
+			}
+
+			.meta-row {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+				align-items: center;
+			}
+
+			.pill,
+			.button {
+				border: 1px solid var(--line);
+				border-radius: 999px;
+				background: rgba(255, 255, 255, 0.04);
+			}
+
+			.pill {
+				padding: 8px 12px;
+				color: var(--muted);
+				font-size: 0.9rem;
+			}
+
+			.button {
+				padding: 10px 14px;
+				color: var(--text);
+				cursor: pointer;
+				font: inherit;
+				transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+			}
+
+			.button:hover,
+			.button:focus-visible {
+				transform: translateY(-1px);
+				border-color: var(--line-strong);
+				background: rgba(255, 255, 255, 0.08);
+				outline: none;
+			}
+
+			.toolbar {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+			}
+
+			.layout {
+				display: grid;
+				grid-template-columns: 280px minmax(0, 1fr);
+				gap: 18px;
+				margin-top: 18px;
+				align-items: start;
+			}
+
+			.toc,
+			.content {
+				border: 1px solid var(--line);
+				border-radius: var(--radius);
+				background: var(--panel);
+				box-shadow: var(--shadow);
+				backdrop-filter: blur(14px);
+			}
+
+			.toc {
+				position: sticky;
+				top: 18px;
+				padding: 18px;
+			}
+
+			.toc h2 {
+				font-size: 1rem;
+				margin-bottom: 12px;
+				letter-spacing: 0.01em;
+			}
+
+			.toc nav {
+				display: grid;
+				gap: 8px;
+			}
+
+			.toc a {
+				text-decoration: none;
+				color: var(--muted);
+				border: 1px solid transparent;
+				border-radius: 14px;
+				padding: 10px 12px;
+				transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+			}
+
+			.toc a:hover,
+			.toc a:focus-visible,
+			.toc a.active {
+				color: var(--text);
+				background: rgba(255, 255, 255, 0.06);
+				border-color: var(--line);
+				outline: none;
+			}
+
+			.content {
+				padding: 8px;
+			}
+
+			.section {
+				padding: 18px;
+				border-radius: 18px;
+				border: 1px solid transparent;
+			}
+
+			.section + .section {
+				margin-top: 6px;
+			}
+
+			.section:target {
+				border-color: rgba(125, 211, 252, 0.36);
+				background: rgba(125, 211, 252, 0.05);
+			}
+
+			.section h2 {
+				font-size: 1.3rem;
+				margin-bottom: 12px;
+			}
+
+			.section h3 {
+				margin: 18px 0 8px;
+				font-size: 1.02rem;
+				color: #f2f6fb;
+			}
+
+			.section p,
+			.section li {
+				color: var(--muted);
+				line-height: 1.7;
+			}
+
+			.section ul,
+			.section ol {
+				padding-left: 20px;
+				display: grid;
+				gap: 8px;
+			}
+
+			.callout {
+				margin-top: 14px;
+				padding: 14px 16px;
+				border-radius: 16px;
+				border: 1px solid rgba(125, 211, 252, 0.22);
+				background: rgba(125, 211, 252, 0.06);
+				color: #dbeafe;
+			}
+
+			.cards {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 12px;
+				margin-top: 14px;
+			}
+
+			.card {
+				padding: 14px 15px;
+				border-radius: 16px;
+				border: 1px solid var(--line);
+				background: rgba(255, 255, 255, 0.04);
+			}
+
+			.card strong {
+				display: block;
+				margin-bottom: 6px;
+				color: var(--text);
+			}
+
+			details {
+				margin-top: 14px;
+				border: 1px solid var(--line);
+				border-radius: 16px;
+				background: rgba(255, 255, 255, 0.03);
+				overflow: clip;
+			}
+
+			summary {
+				list-style: none;
+				cursor: pointer;
+				padding: 14px 16px;
+				font-weight: 600;
+				color: var(--text);
+			}
+
+			summary::-webkit-details-marker {
+				display: none;
+			}
+
+			details .details-body {
+				padding: 0 16px 16px;
+			}
+
+			.footer {
+				margin-top: 18px;
+				padding: 18px 4px 0;
+				color: var(--muted);
+				font-size: 0.95rem;
+			}
+
+			.footer a {
+				color: var(--text);
+				text-decoration: none;
+			}
+
+			.footer a:hover {
+				text-decoration: underline;
+			}
+
+			@media (max-width: 920px) {
+				.layout {
+					grid-template-columns: 1fr;
+				}
+
+				.toc {
+					position: relative;
+					top: 0;
+				}
+			}
+
+			@media (max-width: 640px) {
+				.shell {
+					width: min(100% - 20px, 1120px);
+					padding-top: 12px;
+				}
+
+				.hero-inner,
+				.section,
+				.toc {
+					padding: 16px;
+				}
+
+				.cards {
+					grid-template-columns: 1fr;
+				}
+
+				h1 {
+					max-width: 100%;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main class="shell">
+			<section class="hero" aria-labelledby="page-title">
+				<div class="hero-inner">
+					<div class="eyebrow">Cornwall Discord Bot</div>
+					<div>
+						<h1 id="page-title">Terms of Service</h1>
+						<p class="lede">
+							These terms explain how the Cornwall Discord Bot may be used within the 32nd "The Cornwall"
+							Regiment of Foot community. The page keeps the original policy content intact, but presents it in a
+							cleaner format with quick navigation and a few small interactions.
+						</p>
+					</div>
+					<div class="meta-row" aria-label="Policy metadata">
+						<span class="pill">Last updated: April 1, 2026</span>
+						<span class="pill">Simple interactive policy page</span>
+						<button class="button" id="copy-link" type="button">Copy page link</button>
+						<button class="button" id="toggle-sections" type="button">Collapse all</button>
+					</div>
+					<div class="toolbar" aria-label="Quick actions">
+						<a class="button" href="#agreement">Start reading</a>
+						<a class="button" href="#contact">Contact info</a>
+						<a class="button" href="#changes">Updates</a>
+					</div>
+				</div>
+			</section>
+
+			<section class="layout" aria-label="Terms of service content">
+				<aside class="toc" aria-label="Table of contents">
+					<h2>Contents</h2>
+					<nav>
+						<a href="#agreement">1. Agreement to Terms</a>
+						<a href="#service">2. Description of Service</a>
+						<a href="#use">3. Acceptable Use</a>
+						<a href="#responsibilities">4. User Responsibilities</a>
+						<a href="#storage">5. Message Storage and Reposting</a>
+						<a href="#data">6. Data Collection and Use</a>
+						<a href="#ip">7. Intellectual Property</a>
+						<a href="#availability">8. Service Availability</a>
+						<a href="#liability">9. Limitation of Liability</a>
+						<a href="#privacy">10. Privacy</a>
+						<a href="#termination">11. Termination</a>
+						<a href="#discord">12. Discord Terms</a>
+						<a href="#changes">13. Changes to Terms</a>
+						<a href="#contact">14. Contact Information</a>
+						<a href="#law">15. Governing Law</a>
+					</nav>
+				</aside>
+
+				<article class="content">
+					<section class="section" id="agreement">
+						<h2>1. Agreement to Terms</h2>
+						<p>
+							By using the Cornwall Discord Bot ("the Bot"), you agree to comply with and be bound by these Terms of
+							Service. If you do not agree to these terms, please do not use the Bot.
+						</p>
+					</section>
+
+					<section class="section" id="service">
+						<h2>2. Description of Service</h2>
+						<p>
+							The Cornwall Discord Bot is designed for the 32nd "The Cornwall" Regiment of Foot community and provides
+							tools for communication, enlistment, and regimental management.
+						</p>
+						<div class="cards">
+							<div class="card"><strong>User enlistment</strong><span>ROBLOX verification and onboarding flows.</span></div>
+							<div class="card"><strong>Deployment messaging</strong><span>Direct notices for regiment activity and events.</span></div>
+							<div class="card"><strong>Direct messaging</strong><span>Targeted messaging to roles or users when authorized.</span></div>
+							<div class="card"><strong>Message reposting</strong><span>Temporary storage and reposting of eligible messages.</span></div>
+						</div>
+					</section>
+
+					<section class="section" id="use">
+						<h2>3. Acceptable Use</h2>
+						<p>You agree to use the Bot only for lawful purposes and in accordance with these Terms.</p>
+						<ul>
+							<li>Do not use the Bot for any illegal or unauthorized purpose.</li>
+							<li>Do not attempt to gain unauthorized access to the Bot's systems or data.</li>
+							<li>Do not use the Bot to harass, abuse, or harm other users.</li>
+							<li>Do not spam or flood commands excessively.</li>
+							<li>Do not exploit bugs or vulnerabilities in the Bot.</li>
+							<li>Do not reverse engineer or attempt to extract the Bot's source code.</li>
+						</ul>
+					</section>
+
+					<section class="section" id="responsibilities">
+						<h2>4. User Responsibilities</h2>
+						<details open>
+							<summary>4.1 ROBLOX Verification</summary>
+							<div class="details-body">
+								<ul>
+									<li>Provide accurate ROBLOX username information when using enlistment features.</li>
+									<li>Keep your ROBLOX account secure.</li>
+									<li>False or misleading information may result in removal from regimental systems.</li>
+								</ul>
+							</div>
+						</details>
+						<details>
+							<summary>4.2 Message Content</summary>
+							<div class="details-body">
+								<ul>
+									<li>You are responsible for the content of messages you send through the Bot.</li>
+									<li>The Bot may filter or refuse messages that violate these terms.</li>
+									<li>Prohibited content may be blocked or result in disciplinary action.</li>
+								</ul>
+							</div>
+						</details>
+					</section>
+
+					<section class="section" id="storage">
+						<h2>5. Message Storage and Reposting</h2>
+						<details open>
+							<summary>5.1 Storage Policy</summary>
+							<div class="details-body">
+								<ul>
+									<li>The Bot temporarily stores chat messages in memory for up to 24 hours.</li>
+									<li>Messages are stored solely for the reposting feature.</li>
+									<li>No permanent record of messages is maintained by the Bot.</li>
+								</ul>
+							</div>
+						</details>
+						<details>
+							<summary>5.2 Reposting Feature</summary>
+							<div class="details-body">
+								<ul>
+									<li>Stored messages may be randomly reposted to designated channels.</li>
+									<li>Message reposting is automated and occurs at random intervals.</li>
+									<li>Users can manually trigger reposts using the /repost command.</li>
+									<li>The Bot filters bot messages, system messages, and messages exceeding 2000 characters.</li>
+								</ul>
+							</div>
+						</details>
+					</section>
+
+					<section class="section" id="data">
+						<h2>6. Data Collection and Use</h2>
+						<h3>6.1 Information Collected</h3>
+						<ul>
+							<li>Discord user ID and username for command execution.</li>
+							<li>ROBLOX username for verification purposes.</li>
+							<li>Message content for temporary storage and reposting.</li>
+							<li>Server and channel information for Bot functionality.</li>
+						</ul>
+						<h3>6.2 Data Usage</h3>
+						<ul>
+							<li>Collected data is used solely for Bot functionality and regimental management.</li>
+							<li>No personal data is sold, shared, or used for commercial purposes.</li>
+							<li>ROBLOX verification data is used only for regimental enlistment purposes.</li>
+						</ul>
+					</section>
+
+					<section class="section" id="ip">
+						<h2>7. Intellectual Property</h2>
+						<h3>7.1 Bot Ownership</h3>
+						<p>The Cornwall Discord Bot and its underlying code are the intellectual property of its developers. All rights are reserved.</p>
+						<h3>7.2 User Content</h3>
+						<p>
+							You retain ownership of content you create and send through the Bot. You grant the Bot a limited license
+							to store, process, and repost your content as described in Section 5.
+						</p>
+					</section>
+
+					<section class="section" id="availability">
+						<h2>8. Service Availability</h2>
+						<h3>8.1 No Warranty</h3>
+						<ul>
+							<li>The Bot is provided "as is" without warranties, express or implied.</li>
+							<li>There are no guarantees about service availability, accuracy, security, or compatibility.</li>
+						</ul>
+						<h3>8.2 Service Modifications</h3>
+						<ul>
+							<li>The Bot operators may modify, suspend, or discontinue any feature.</li>
+							<li>These Terms of Service may be updated at any time.</li>
+							<li>Bot functionality may change without prior notice.</li>
+						</ul>
+					</section>
+
+					<section class="section" id="liability">
+						<h2>9. Limitation of Liability</h2>
+						<p>
+							To the maximum extent permitted by law, the Bot operators shall not be liable for indirect, incidental,
+							special, or consequential damages resulting from use of the Bot, service interruptions, data loss, or
+							errors in Bot functionality.
+						</p>
+					</section>
+
+					<section class="section" id="privacy">
+						<h2>10. Privacy</h2>
+						<p>
+							Your privacy is important to us. Please review the Privacy Policy for more detail on how information is
+							collected, used, stored, and protected.
+						</p>
+					</section>
+
+					<section class="section" id="termination">
+						<h2>11. Termination</h2>
+						<h3>11.1 User Termination</h3>
+						<p>You may stop using the Bot at any time.</p>
+						<h3>11.2 Service Termination</h3>
+						<p>The Bot operators may suspend or terminate access if you violate these Terms, engage in abuse, or compromise security.</p>
+					</section>
+
+					<section class="section" id="discord">
+						<h2>12. Discord Terms of Service</h2>
+						<p>
+							Your use of the Bot is also subject to Discord's Terms of Service and Community Guidelines. Violations of
+							Discord's terms may result in action by Discord and by the Bot operators.
+						</p>
+					</section>
+
+					<section class="section" id="changes">
+						<h2>13. Changes to Terms</h2>
+						<p>
+							We reserve the right to modify these Terms of Service at any time. Changes are effective immediately upon
+							posting, and continued use of the Bot constitutes acceptance of those changes.
+						</p>
+					</section>
+
+					<section class="section" id="contact">
+						<h2>14. Contact Information</h2>
+						<p>
+							If you have questions about these Terms of Service, contact the Bot administrators through the official
+							Discord server channels.
+						</p>
+					</section>
+
+					<section class="section" id="law">
+						<h2>15. Governing Law</h2>
+						<p>
+							These Terms of Service are governed by applicable laws, and disputes will be resolved through the
+							appropriate legal channels.
+						</p>
+						<div class="callout">
+							By using the Cornwall Discord Bot, you acknowledge that you have read, understood, and agree to be bound
+							by these Terms of Service.
+						</div>
+					</section>
+				</article>
+			</section>
+
+			<footer class="footer">
+				<p>
+					Need the privacy page too? Open it at <a href="https://cornwallcore.daeese.me/privacypolicy">cornwallcore.daeese.me/privacypolicy</a>.
+				</p>
+			</footer>
+		</main>
+
+		<script>
+			const toggleButton = document.getElementById("toggle-sections");
+			const copyButton = document.getElementById("copy-link");
+			const detailsElements = Array.from(document.querySelectorAll("details"));
+			const tocLinks = Array.from(document.querySelectorAll(".toc a"));
+
+			let expanded = true;
+
+			toggleButton.addEventListener("click", () => {
+				expanded = !expanded;
+				detailsElements.forEach((details) => {
+					details.open = expanded;
+				});
+				toggleButton.textContent = expanded ? "Collapse all" : "Expand all";
+			});
+
+			copyButton.addEventListener("click", async () => {
+				const url = window.location.href;
+				try {
+					await navigator.clipboard.writeText(url);
+					copyButton.textContent = "Link copied";
+				} catch {
+					window.prompt("Copy this page link:", url);
+				}
+
+				window.setTimeout(() => {
+					copyButton.textContent = "Copy page link";
+				}, 1400);
+			});
+
+			const sections = tocLinks
+				.map((link) => document.querySelector(link.getAttribute("href")))
+				.filter(Boolean);
+
+			const observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (!entry.isIntersecting) {
+							return;
+						}
+
+						const activeId = `#${entry.target.id}`;
+						tocLinks.forEach((link) => {
+							link.classList.toggle("active", link.getAttribute("href") === activeId);
+						});
+					});
+				},
+				{ rootMargin: "-35% 0px -55% 0px", threshold: 0.01 }
+			);
+
+			sections.forEach((section) => observer.observe(section));
+		</script>
+	</body>
+</html>
