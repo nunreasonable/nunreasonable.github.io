@@ -665,6 +665,7 @@
         border-radius: 8px;
         height: 6px;
         margin: 0 0 24px;
+        overflow: hidden;
       }
 
       .player-progress-bar {
@@ -672,7 +673,14 @@
         height: 100%;
         border-radius: 8px;
         width: 0%;
-        animation: pulse 0.5s ease infinite;
+      }
+
+      .player-time {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.82rem;
+        color: var(--muted);
+        margin: -14px 0 18px;
       }
 
       @keyframes pulse {
@@ -684,44 +692,48 @@
         }
       }
 
-      .player-controls {
-        display: flex;
-        gap: 16px;
-        justify-content: center;
-        margin-top: 24px;
-      }
-
-      .player-btn {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: var(--text);
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        cursor: pointer;
-        display: flex;
+      .player-listen-btn,
+      .player-listen-btn:link,
+      .player-listen-btn:visited,
+      .player-listen-btn:active {
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.2rem;
-        transition: background 160ms ease, border-color 160ms ease;
-      }
-
-      .player-btn:hover {
-        background: rgba(255, 255, 255, 0.15);
-        border-color: rgba(255, 255, 255, 0.35);
-      }
-
-      .player-btn.play {
-        width: 70px;
-        height: 70px;
+        margin-top: 12px;
+        min-height: 46px;
+        padding: 0 18px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        color: var(--text);
         background: linear-gradient(135deg, var(--accent), var(--accent-2));
-        border-color: rgba(158, 0, 47, 0.5);
-        font-size: 1.6rem;
+        border: 1px solid rgba(158, 0, 47, 0.5);
+        transition: filter 160ms ease, transform 160ms ease;
       }
 
-      .player-btn.play:hover {
-        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      .player-listen-btn:hover {
         filter: brightness(1.1);
+        transform: translateY(-1px);
+      }
+
+      .player-listen-btn.is-idle,
+      .player-listen-btn.is-idle:link,
+      .player-listen-btn.is-idle:visited,
+      .player-listen-btn.is-idle:active {
+        color: #c5d1e6;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+      }
+
+      .player-listen-btn.is-idle:hover {
+        filter: none;
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.28);
+      }
+
+      .player-listen-btn:focus-visible {
+        outline: 2px solid rgba(255, 255, 255, 0.75);
+        outline-offset: 2px;
       }
 
       .click-to-enter {
@@ -865,11 +877,11 @@
         <div class="player-progress">
           <div class="player-progress-bar" id="playerProgressBar"></div>
         </div>
-        <div class="player-controls">
-          <button class="player-btn" id="playerPrevBtn">⏮</button>
-          <button class="player-btn play" id="playerPlayBtn">▶</button>
-          <button class="player-btn" id="playerNextBtn">⏭</button>
+        <div class="player-time">
+          <span id="playerTimeCurrent">0:00</span>
+          <span id="playerTimeTotal">0:00</span>
         </div>
+        <a class="player-listen-btn" id="playerListenBtn" href="https://open.spotify.com" target="_blank" rel="noopener noreferrer">Listen too!</a>
       </div>
     </div>
 
@@ -1113,6 +1125,10 @@
         // Update player modal state
         currentNowPlayingState = state;
 
+        if (playerModal.classList.contains("active")) {
+          updatePlayerDisplay();
+        }
+
         const nowPlayingLink = linksEl.querySelector('[data-link-id="nowPlaying"]');
         if (!nowPlayingLink) {
           return;
@@ -1184,6 +1200,9 @@
             return null;
           }
 
+          const startedAt = Number(rawSpotify.timestamps?.start) || 0;
+          const endsAt = Number(rawSpotify.timestamps?.end) || 0;
+
           const trackUrl = rawSpotify.track_id
             ? `https://open.spotify.com/track/${rawSpotify.track_id}`
             : "https://open.spotify.com";
@@ -1195,7 +1214,9 @@
             album: rawSpotify.album || "",
             imageUrl:
               rawSpotify.album_art_url || "https://i.scdn.co/image/ab67616d00001e02a0f8b88f0a2b2b3d92d8f57f",
-            trackUrl
+            trackUrl,
+            startedAt,
+            endsAt
           };
         }
 
@@ -1219,6 +1240,8 @@
           const syncId = spotifyActivity.sync_id || "";
           const largeImage = spotifyActivity.assets?.large_image || "";
           const imageId = largeImage.startsWith("spotify:") ? largeImage.slice(8) : "";
+          const startedAt = Number(spotifyActivity.timestamps?.start) || 0;
+          const endsAt = Number(spotifyActivity.timestamps?.end) || 0;
 
           return {
             isPlaying: true,
@@ -1228,7 +1251,9 @@
             imageUrl: imageId
               ? `https://i.scdn.co/image/${imageId}`
               : "https://i.scdn.co/image/ab67616d00001e02a0f8b88f0a2b2b3d92d8f57f",
-            trackUrl: syncId ? `https://open.spotify.com/track/${syncId}` : "https://open.spotify.com"
+            trackUrl: syncId ? `https://open.spotify.com/track/${syncId}` : "https://open.spotify.com",
+            startedAt,
+            endsAt
           };
         }
 
@@ -1271,7 +1296,57 @@
       // Player Modal Logic
       const playerModal = document.getElementById("playerModal");
       const playerCloseBtn = document.getElementById("playerCloseBtn");
+      const playerListenBtn = document.getElementById("playerListenBtn");
+      const playerProgressBar = document.getElementById("playerProgressBar");
+      const playerTimeCurrent = document.getElementById("playerTimeCurrent");
+      const playerTimeTotal = document.getElementById("playerTimeTotal");
       let currentNowPlayingState = null;
+      let playerProgressTimer = null;
+
+      function formatTime(ms) {
+        const safeMs = Number.isFinite(ms) ? Math.max(0, ms) : 0;
+        const totalSeconds = Math.floor(safeMs / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes}:${String(seconds).padStart(2, "0")}`;
+      }
+
+      function stopPlayerProgressTimer() {
+        if (playerProgressTimer) {
+          clearInterval(playerProgressTimer);
+          playerProgressTimer = null;
+        }
+      }
+
+      function updatePlayerProgress() {
+        if (
+          !currentNowPlayingState ||
+          !currentNowPlayingState.isPlaying ||
+          !currentNowPlayingState.startedAt ||
+          !currentNowPlayingState.endsAt ||
+          currentNowPlayingState.endsAt <= currentNowPlayingState.startedAt
+        ) {
+          playerProgressBar.style.width = "0%";
+          playerTimeCurrent.textContent = "0:00";
+          playerTimeTotal.textContent = "0:00";
+          return;
+        }
+
+        const total = currentNowPlayingState.endsAt - currentNowPlayingState.startedAt;
+        const elapsed = Date.now() - currentNowPlayingState.startedAt;
+        const clampedElapsed = Math.min(Math.max(elapsed, 0), total);
+        const progressPercent = (clampedElapsed / total) * 100;
+
+        playerProgressBar.style.width = `${progressPercent}%`;
+        playerTimeCurrent.textContent = formatTime(clampedElapsed);
+        playerTimeTotal.textContent = formatTime(total);
+      }
+
+      function startPlayerProgressTimer() {
+        stopPlayerProgressTimer();
+        updatePlayerProgress();
+        playerProgressTimer = setInterval(updatePlayerProgress, 1000);
+      }
 
       function openPlayerModal() {
         playerModal.classList.add("active");
@@ -1280,6 +1355,7 @@
 
       function closePlayerModal() {
         playerModal.classList.remove("active");
+        stopPlayerProgressTimer();
         playSFX('close');
       }
 
@@ -1297,6 +1373,10 @@
           document.getElementById("playerTrackArtist").textContent = "Start listening on Spotify";
           document.getElementById("playerTrackAlbum").textContent = "";
           document.getElementById("playerAlbumArt").src = "https://i.scdn.co/image/ab67616d00001e02a0f8b88f0a2b2b3d92d8f57f";
+          playerListenBtn.href = "https://open.spotify.com";
+          playerListenBtn.classList.add("is-idle");
+          stopPlayerProgressTimer();
+          updatePlayerProgress();
           return;
         }
 
@@ -1304,19 +1384,12 @@
         document.getElementById("playerTrackArtist").textContent = currentNowPlayingState.artist;
         document.getElementById("playerTrackAlbum").textContent = currentNowPlayingState.album || "Live on Spotify";
         document.getElementById("playerAlbumArt").src = currentNowPlayingState.imageUrl;
+        playerListenBtn.href = currentNowPlayingState.trackUrl || "https://open.spotify.com";
+        playerListenBtn.classList.remove("is-idle");
+        startPlayerProgressTimer();
       }
 
-      // Player controls with SFX
-      document.getElementById("playerPlayBtn").addEventListener("click", () => {
-        playSFX('click');
-        window.open("https://open.spotify.com", "_blank", "noopener,noreferrer");
-      });
-
-      document.getElementById("playerPrevBtn").addEventListener("click", () => {
-        playSFX('click');
-      });
-
-      document.getElementById("playerNextBtn").addEventListener("click", () => {
+      playerListenBtn.addEventListener("click", () => {
         playSFX('click');
       });
 
@@ -1339,7 +1412,7 @@
       });
 
       // Hover SFX
-      document.querySelectorAll(".link-btn, .player-btn, .socials a").forEach(el => {
+      document.querySelectorAll(".link-btn, .player-listen-btn, .socials a").forEach(el => {
         el.addEventListener("mouseenter", () => {
           playSFX('hover');
         });
