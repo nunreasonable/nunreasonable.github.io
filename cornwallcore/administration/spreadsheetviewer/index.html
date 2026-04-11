@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Cornwall Core Administration Data View</title>
+		<meta
+			name="description"
+			content="Live administration view for Cornwall Core spreadsheet data."
+		/>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			:root {
+				color-scheme: dark;
+				--bg: #0b1f44;
+				--bg-2: #142f63;
+				--paper: rgba(12, 28, 61, 0.9);
+				--paper-strong: rgba(9, 22, 51, 0.98);
+				--ink: #f6f8fc;
+				--muted: #d5ddee;
+				--line: rgba(255, 255, 255, 0.16);
+				--line-strong: rgba(255, 255, 255, 0.28);
+				--ok: #7df3a8;
+				--error: #ff9da4;
+				--shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			[hidden] {
+				display: none !important;
+			}
+
+			body {
+				margin: 0;
+				min-height: 100vh;
+				font-family: "Space Grotesk", "Segoe UI", sans-serif;
+				color: var(--ink);
+				background:
+					radial-gradient(circle at top left, rgba(207, 20, 43, 0.22), transparent 28%),
+					radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.12), transparent 34%),
+					linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
+			}
+
+			.shell {
+				width: min(1680px, calc(100% - 14px));
+				margin: 18px auto;
+				display: grid;
+				gap: 14px;
+				min-width: 0;
+			}
+
+			.card {
+				background: var(--paper);
+				border: 1px solid var(--line);
+				border-radius: 20px;
+				box-shadow: var(--shadow);
+				min-width: 0;
+			}
+
+			header.card {
+				padding: 20px;
+				display: grid;
+				gap: 12px;
+			}
+
+			.eyebrow {
+				margin: 0;
+				font-size: 0.8rem;
+				text-transform: uppercase;
+				letter-spacing: 0.16em;
+				color: #d3deec;
+			}
+
+			h1 {
+				margin: 0;
+				font-size: clamp(1.8rem, 4.6vw, 3.3rem);
+				line-height: 0.95;
+				letter-spacing: -0.03em;
+			}
+
+			.subtitle {
+				margin: 0;
+				color: var(--muted);
+				line-height: 1.6;
+			}
+
+			.controls {
+				display: grid;
+				grid-template-columns: 1fr auto;
+				gap: 10px;
+			}
+
+			.search {
+				width: 100%;
+				padding: 11px 14px;
+				font: inherit;
+				border-radius: 12px;
+				border: 1px solid var(--line-strong);
+				background: rgba(255, 255, 255, 0.06);
+				color: var(--ink);
+			}
+
+			.search:focus-visible,
+			.button:focus-visible,
+			.sheet-btn:focus-visible {
+				outline: 3px solid rgba(255, 255, 255, 0.26);
+				outline-offset: 1px;
+			}
+
+			.button {
+				border: 1px solid var(--line);
+				background: linear-gradient(135deg, rgba(207, 20, 43, 0.28), rgba(31, 74, 168, 0.28));
+				border-radius: 12px;
+				font: inherit;
+				font-weight: 700;
+				color: var(--ink);
+				padding: 0 14px;
+				cursor: pointer;
+				transition: transform 160ms ease, border-color 160ms ease;
+			}
+
+			.button:hover {
+				transform: translateY(-1px);
+				border-color: var(--line-strong);
+			}
+
+			.meta-row {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+			}
+
+			.pill {
+				font-family: "IBM Plex Mono", monospace;
+				font-size: 0.8rem;
+				padding: 6px 8px;
+				border-radius: 999px;
+				background: rgba(255, 255, 255, 0.06);
+				border: 1px solid var(--line);
+			}
+
+			.data-card {
+				height: min(92vh, 1120px);
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+			}
+
+			.status {
+				padding: 12px 16px 0;
+				font-size: 0.93rem;
+				color: var(--muted);
+			}
+
+			.status.ok {
+				color: var(--ok);
+			}
+
+			.status.error {
+				color: var(--error);
+			}
+
+			.workspace {
+				flex: 1;
+				min-height: 0;
+				display: grid;
+				grid-template-columns: 255px minmax(0, 1fr);
+				margin-top: 10px;
+			}
+
+			.sheet-sidebar {
+				padding: 12px;
+				border-right: 1px solid var(--line);
+				overflow-y: auto;
+				display: grid;
+				align-content: start;
+				gap: 8px;
+				background: rgba(8, 20, 45, 0.55);
+			}
+
+			.sheet-btn {
+				width: 100%;
+				text-align: left;
+				padding: 10px 12px;
+				border-radius: 10px;
+				border: 1px solid var(--line);
+				background: rgba(255, 255, 255, 0.04);
+				color: var(--ink);
+				font: inherit;
+				cursor: pointer;
+				transition: background 140ms ease, border-color 140ms ease;
+			}
+
+			.sheet-btn:hover {
+				background: rgba(255, 255, 255, 0.1);
+				border-color: var(--line-strong);
+			}
+
+			.sheet-btn.active {
+				background: linear-gradient(135deg, rgba(207, 20, 43, 0.24), rgba(31, 74, 168, 0.2));
+				border-color: var(--line-strong);
+				font-weight: 700;
+			}
+
+			.sheet-content {
+				min-width: 0;
+				min-height: 0;
+				display: grid;
+				grid-template-rows: auto auto auto auto minmax(0, 1fr);
+				gap: 10px;
+				padding: 12px;
+			}
+
+			.panel-title {
+				margin: 0;
+				font-size: 1.05rem;
+				font-weight: 700;
+			}
+
+			.viewer-tabs {
+				display: inline-flex;
+				gap: 8px;
+				align-items: center;
+			}
+
+			.viewer-tab-btn {
+				border: 1px solid var(--line);
+				background: rgba(255, 255, 255, 0.06);
+				color: var(--ink);
+				border-radius: 10px;
+				padding: 8px 12px;
+				font: inherit;
+				font-weight: 600;
+				cursor: pointer;
+				transition: background 140ms ease, border-color 140ms ease;
+			}
+
+			.viewer-tab-btn:hover {
+				background: rgba(255, 255, 255, 0.12);
+				border-color: var(--line-strong);
+			}
+
+			.viewer-tab-btn.active {
+				background: linear-gradient(135deg, rgba(207, 20, 43, 0.24), rgba(31, 74, 168, 0.2));
+				border-color: var(--line-strong);
+			}
+
+			.record-find {
+				position: relative;
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) auto auto auto auto auto;
+				gap: 8px;
+				align-items: center;
+				padding: 8px;
+				border: 1px solid var(--line);
+				border-radius: 12px;
+				background: rgba(255, 255, 255, 0.04);
+			}
+
+			.record-help-card {
+				position: absolute;
+				bottom: calc(100% + 8px);
+				right: 0;
+				z-index: 12;
+				width: min(360px, calc(100vw - 44px));
+				padding: 11px 12px;
+				border: 1px solid var(--line);
+				border-radius: 12px;
+				background: rgba(9, 22, 51, 0.96);
+				box-shadow: 0 16px 30px rgba(0, 0, 0, 0.4);
+				backdrop-filter: blur(6px);
+				font-size: 0.82rem;
+				line-height: 1.45;
+				color: var(--muted);
+			}
+
+			.record-help-card::before {
+				content: "";
+				position: absolute;
+				bottom: -7px;
+				right: 30px;
+				width: 12px;
+				height: 12px;
+				background: rgba(9, 22, 51, 0.96);
+				border-right: 1px solid var(--line);
+				border-bottom: 1px solid var(--line);
+				transform: rotate(45deg);
+			}
+
+			.record-help-card p {
+				margin: 0;
+			}
+
+			.record-help-card p + p {
+				margin-top: 6px;
+			}
+
+			.record-find-input {
+				width: 100%;
+				padding: 8px 10px;
+				font: inherit;
+				border-radius: 8px;
+				border: 1px solid var(--line-strong);
+				background: rgba(255, 255, 255, 0.06);
+				color: var(--ink);
+			}
+
+			.record-find-count {
+				font-family: "IBM Plex Mono", monospace;
+				font-size: 0.78rem;
+				color: var(--muted);
+			}
+
+			.record-find-btn {
+				border: 1px solid var(--line);
+				background: rgba(255, 255, 255, 0.06);
+				color: var(--ink);
+				border-radius: 8px;
+				padding: 7px 10px;
+				font: inherit;
+				cursor: pointer;
+			}
+
+			.record-find-btn:hover {
+				background: rgba(255, 255, 255, 0.12);
+				border-color: var(--line-strong);
+			}
+
+			.summary-grid {
+				display: grid;
+				grid-template-columns: repeat(4, minmax(0, 1fr));
+				gap: 8px;
+			}
+
+			.summary-item {
+				padding: 10px;
+				border: 1px solid var(--line);
+				border-radius: 12px;
+				background: rgba(255, 255, 255, 0.04);
+			}
+
+			.summary-label {
+				font-size: 0.75rem;
+				text-transform: uppercase;
+				letter-spacing: 0.08em;
+				color: var(--muted);
+			}
+
+			.summary-value {
+				margin-top: 5px;
+				font-size: 1rem;
+				font-weight: 700;
+			}
+
+			.records-wrap {
+				min-width: 0;
+				min-height: 0;
+				height: 100%;
+				overflow-y: auto;
+				overflow-x: hidden;
+				scrollbar-gutter: stable;
+				overscroll-behavior: contain;
+				padding: 4px;
+				border: 1px solid var(--line);
+				border-radius: 14px;
+				background: rgba(255, 255, 255, 0.03);
+			}
+
+			.records-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+				gap: 8px;
+			}
+
+			.record-card {
+				padding: 10px;
+				border: 1px solid var(--line);
+				border-radius: 10px;
+				background: rgba(8, 20, 45, 0.45);
+			}
+
+			.record-card.match {
+				border-color: rgba(255, 218, 122, 0.7);
+				box-shadow: inset 0 0 0 1px rgba(255, 218, 122, 0.2);
+			}
+
+			.record-card.current {
+				border-color: rgba(255, 218, 122, 1);
+				box-shadow:
+					inset 0 0 0 1px rgba(255, 218, 122, 0.45),
+					0 0 0 1px rgba(255, 218, 122, 0.35);
+			}
+
+			.record-title {
+				margin: 0 0 8px;
+				font-size: 0.84rem;
+				color: var(--muted);
+			}
+
+			.kv-grid {
+				display: grid;
+				gap: 6px;
+			}
+
+			.kv-item {
+				padding: 7px 8px;
+				border-radius: 8px;
+				background: rgba(255, 255, 255, 0.03);
+			}
+
+			.kv-key {
+				display: block;
+				font-size: 0.72rem;
+				letter-spacing: 0.07em;
+				text-transform: uppercase;
+				color: var(--muted);
+			}
+
+			.kv-value {
+				display: block;
+				margin-top: 4px;
+				font-size: 0.88rem;
+				line-height: 1.35;
+				white-space: pre-wrap;
+				word-break: break-word;
+			}
+
+			.table-wrap {
+				min-width: 0;
+				min-height: 0;
+				height: 100%;
+				overflow-x: auto;
+				overflow-y: auto;
+				border-radius: 14px;
+				border: 1px solid var(--line);
+				background: linear-gradient(180deg, var(--paper-strong) 0%, rgba(15, 23, 42, 0.88) 100%);
+			}
+
+			.viewer-stage {
+				min-width: 0;
+				min-height: 0;
+				height: 100%;
+			}
+
+			table {
+				width: max-content;
+				min-width: 100%;
+				border-collapse: collapse;
+				font-size: 0.84rem;
+			}
+
+			thead th {
+				position: sticky;
+				top: 0;
+				z-index: 2;
+				background: rgba(11, 31, 68, 0.96);
+				color: var(--ink);
+				text-align: left;
+				padding: 8px 10px;
+				border-bottom: 1px solid var(--line-strong);
+				border-right: 1px solid var(--line);
+				white-space: nowrap;
+			}
+
+			tbody td {
+				padding: 7px 10px;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+				border-right: 1px solid rgba(255, 255, 255, 0.1);
+				vertical-align: top;
+				white-space: pre-wrap;
+				max-width: 460px;
+				word-break: break-word;
+			}
+
+			tbody tr:nth-child(odd) {
+				background: rgba(255, 255, 255, 0.02);
+			}
+
+			tbody tr:hover {
+				background: rgba(255, 255, 255, 0.08);
+			}
+
+			.empty {
+				padding: 18px 20px;
+				color: var(--muted);
+			}
+
+			@media (max-width: 980px) {
+				.summary-grid {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+				}
+			}
+
+			@media (max-width: 860px) {
+				.shell {
+					width: min(100% - 8px, 1680px);
+					margin-top: 10px;
+				}
+
+				header.card {
+					padding: 16px;
+				}
+
+				.controls {
+					grid-template-columns: 1fr;
+				}
+
+				.workspace {
+					grid-template-columns: 1fr;
+				}
+
+				.sheet-sidebar {
+					border-right: 0;
+					border-bottom: 1px solid var(--line);
+					grid-auto-flow: column;
+					grid-auto-columns: minmax(170px, 1fr);
+					overflow-x: auto;
+					overflow-y: hidden;
+				}
+
+				.sheet-content {
+					grid-template-rows: auto auto auto auto minmax(180px, 1fr);
+				}
+
+				.viewer-tabs {
+					display: grid;
+					grid-template-columns: 1fr 1fr;
+				}
+
+				.record-find {
+					grid-template-columns: 1fr 1fr 1fr;
+				}
+
+				.record-find-input {
+					grid-column: 1 / -1;
+				}
+
+				.record-find-count {
+					justify-self: center;
+				}
+
+				.record-help-card {
+					top: calc(100% + 8px);
+					bottom: auto;
+					left: 0;
+					right: auto;
+					width: min(360px, calc(100vw - 30px));
+					font-size: 0.8rem;
+				}
+
+				.record-help-card::before {
+					top: -7px;
+					bottom: auto;
+					left: 26px;
+					right: auto;
+					border-left: 1px solid var(--line);
+					border-top: 1px solid var(--line);
+					border-right: 0;
+					border-bottom: 0;
+				}
+
+				.button {
+					min-height: 42px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main class="shell">
+			<header class="card">
+				<p class="eyebrow">Administration Sheet Viewer</p>
+				<h1>Visualizador da Planilha Regimental</h1>
+				<p class="subtitle">
+					Mostra informacoes da planilha regimental em tempo real, de forma simplificada para facilitar o entendimento.
+				</p>
+
+				<div class="controls">
+					<input
+						id="searchInput"
+						class="search"
+						type="search"
+						placeholder="Buscar em todas as colunas e linhas..."
+						aria-label="Buscar"
+					/>
+					<button id="refreshBtn" class="button" type="button">Atualizar agora</button>
+				</div>
+
+				<div class="meta-row" aria-live="polite">
+					<span id="sheetCount" class="pill">Abas: 0</span>
+					<span id="rowCount" class="pill">Linhas: 0</span>
+					<span id="columnCount" class="pill">Colunas: 0</span>
+					<span id="lastUpdated" class="pill">Ultima atualizacao: nunca</span>
+				</div>
+			</header>
+
+			<section class="card data-card" aria-label="Spreadsheet data table">
+				<p id="status" class="status">Carregando dados...</p>
+				<div class="workspace">
+					<aside id="sheetSidebar" class="sheet-sidebar" aria-label="Lista de abas"></aside>
+					<div class="sheet-content">
+						<h2 id="currentSheetTitle" class="panel-title">Visao geral</h2>
+						<div id="viewerTabs" class="viewer-tabs" aria-label="Modos de visualizacao">
+							<button id="viewTabRecords" class="viewer-tab-btn" type="button">Registros organizados</button>
+							<button id="viewTabTable" class="viewer-tab-btn" type="button">Celulas da planilha</button>
+						</div>
+						<div id="recordFindBar" class="record-find" hidden>
+							<input
+								id="recordFindInput"
+								class="record-find-input"
+								type="search"
+								placeholder="Buscar palavra-chave dentro dos registros..."
+								aria-label="Buscar nos registros"
+							/>
+							<span id="recordFindCount" class="record-find-count">0/0</span>
+							<button id="recordFindPrev" class="record-find-btn" type="button">Anterior</button>
+							<button id="recordFindNext" class="record-find-btn" type="button">Proximo</button>
+							<button id="recordFindInfo" class="record-find-btn" type="button">Ajuda</button>
+							<button id="recordFindClose" class="record-find-btn" type="button">Fechar</button>
+							<div id="recordFindInfoCard" class="record-help-card" hidden>
+								<p><strong>Atalhos:</strong> Ctrl+F (ou Cmd+F), Enter/Shift+Enter, Esc.</p>
+								<p><strong>Escopo:</strong> somente os cards de registros, nao a tabela inferior.</p>
+							</div>
+						</div>
+						<div id="summaryGrid" class="summary-grid"></div>
+						<div id="viewerStage" class="viewer-stage">
+							<div id="recordsWrap" class="records-wrap" hidden></div>
+							<div id="tableWrap" class="table-wrap">
+								<table id="sheetTable"></table>
+								<div id="emptyState" class="empty" hidden>Nenhum resultado para o filtro atual.</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<script>
+			const SPREADSHEET_ID = "1zME1G3vJ-pwKZ_h6pm7G48qfPQDZQdijCD90j1XSvzs";
+			const DEFAULT_SHEET_GID = "247858763";
+			const KNOWN_SHEETS = [
+				{ gid: "247858763", name: "Settings/Information" },
+				{ gid: "634577384", name: "EVENT FORM" },
+				{ gid: "1169198029", name: "INACTIVITY FORM" },
+				{ gid: "1265948508", name: "EventLogs" },
+				{ gid: "227744936", name: "InactivityLogs" },
+				{ gid: "1678230106", name: "Active Personnel" },
+				{ gid: "827170318", name: "Roster" },
+				{ gid: "1798939993", name: "PERFORMANCE HISTORY" },
+				{ gid: "677829820", name: "Centre" },
+				{ gid: "1182925860", name: "Lights" },
+				{ gid: "1896956474", name: "Grens" }
+			];
+			const AUTO_REFRESH_MS = 30000;
+			const ALL_SHEETS_VALUE = "__all__";
+
+			const tableEl = document.getElementById("sheetTable");
+			const tableWrapEl = document.getElementById("tableWrap");
+			const viewTabRecordsEl = document.getElementById("viewTabRecords");
+			const viewTabTableEl = document.getElementById("viewTabTable");
+			const sheetSidebarEl = document.getElementById("sheetSidebar");
+			const summaryGridEl = document.getElementById("summaryGrid");
+			const recordsWrapEl = document.getElementById("recordsWrap");
+			const recordFindBarEl = document.getElementById("recordFindBar");
+			const recordFindInputEl = document.getElementById("recordFindInput");
+			const recordFindCountEl = document.getElementById("recordFindCount");
+			const recordFindPrevEl = document.getElementById("recordFindPrev");
+			const recordFindNextEl = document.getElementById("recordFindNext");
+			const recordFindInfoEl = document.getElementById("recordFindInfo");
+			const recordFindInfoCardEl = document.getElementById("recordFindInfoCard");
+			const recordFindCloseEl = document.getElementById("recordFindClose");
+			const currentSheetTitleEl = document.getElementById("currentSheetTitle");
+			const statusEl = document.getElementById("status");
+			const searchInputEl = document.getElementById("searchInput");
+			const refreshBtnEl = document.getElementById("refreshBtn");
+			const sheetCountEl = document.getElementById("sheetCount");
+			const rowCountEl = document.getElementById("rowCount");
+			const columnCountEl = document.getElementById("columnCount");
+			const lastUpdatedEl = document.getElementById("lastUpdated");
+			const emptyStateEl = document.getElementById("emptyState");
+
+			let sheetTabs = [];
+			let activeSheetValue = ALL_SHEETS_VALUE;
+			let allHeaders = [];
+			let allRows = [];
+			let recordMatches = [];
+			let activeRecordMatchIndex = -1;
+			let activeViewerMode = "table";
+
+			function columnNameFromIndex(index) {
+				let name = "";
+				let n = index;
+				do {
+					name = String.fromCharCode(65 + (n % 26)) + name;
+					n = Math.floor(n / 26) - 1;
+				} while (n >= 0);
+				return name;
+			}
+
+			function formatCellValue(cell) {
+				if (!cell) {
+					return "";
+				}
+				if (cell.f !== undefined && cell.f !== null) {
+					return String(cell.f);
+				}
+				if (cell.v === undefined || cell.v === null) {
+					return "";
+				}
+				if (typeof cell.v === "string" && /^Date\(/.test(cell.v)) {
+					const dateBits = cell.v.match(/Date\((\d+),(\d+),(\d+)/);
+					if (dateBits) {
+						const year = Number(dateBits[1]);
+						const month = Number(dateBits[2]);
+						const day = Number(dateBits[3]);
+						return new Date(year, month, day).toLocaleDateString();
+					}
+				}
+				return String(cell.v);
+			}
+
+			function setStatus(message, type) {
+				statusEl.textContent = message;
+				statusEl.classList.remove("ok", "error");
+				if (type) {
+					statusEl.classList.add(type);
+				}
+			}
+
+			function escapeHtml(value) {
+				return String(value)
+					.replaceAll("&", "&amp;")
+					.replaceAll("<", "&lt;")
+					.replaceAll(">", "&gt;")
+					.replaceAll('"', "&quot;")
+					.replaceAll("'", "&#39;");
+			}
+
+			async function fetchSheetDataByGid(gid) {
+				return new Promise((resolve, reject) => {
+					const callbackName =
+						"__sheetCb_" + gid + "_" + Date.now() + "_" + Math.floor(Math.random() * 1000000);
+					const script = document.createElement("script");
+
+					function cleanup() {
+						delete window[callbackName];
+						script.remove();
+					}
+
+					window[callbackName] = (data) => {
+						cleanup();
+						if (!data || data.status !== "ok") {
+							reject(new Error("Google Sheets retornou erro para a aba " + gid + "."));
+							return;
+						}
+						if (!data.table || !Array.isArray(data.table.cols) || !Array.isArray(data.table.rows)) {
+							reject(new Error("Dados incompletos recebidos para a aba " + gid + "."));
+							return;
+						}
+						resolve(data.table);
+					};
+
+					script.onerror = () => {
+						cleanup();
+						reject(new Error("Falha de rede ao carregar a aba " + gid + "."));
+					};
+
+					script.src =
+						"https://docs.google.com/spreadsheets/d/" +
+						SPREADSHEET_ID +
+						"/gviz/tq?gid=" +
+						gid +
+						"&tqx=out:json;responseHandler:" +
+						callbackName +
+						"&t=" +
+						Date.now();
+
+					document.head.appendChild(script);
+				});
+			}
+
+			function normalizeTable(table) {
+				const headers = table.cols.map((col, index) => {
+					const cleaned = (col.label || "").trim();
+					return cleaned || columnNameFromIndex(index);
+				});
+
+				const rows = table.rows
+					.map((row) => {
+						const cells = Array.isArray(row.c) ? row.c : [];
+						return headers.map((_, index) => formatCellValue(cells[index]));
+					})
+					.filter((rowValues) => rowValues.some((value) => value.trim() !== ""));
+
+				return { headers, rows };
+			}
+
+			function combineSheetData(tabs, normalizedTables) {
+				const headerSet = new Set();
+				normalizedTables.forEach((table) => {
+					table.headers.forEach((header) => headerSet.add(header));
+				});
+				const mergedHeaders = ["Aba", ...Array.from(headerSet)];
+
+				const mergedRows = [];
+				normalizedTables.forEach((table, index) => {
+					const tabName = tabs[index].name;
+					const positions = new Map(table.headers.map((header, i) => [header, i]));
+					table.rows.forEach((row) => {
+						const mergedRow = [tabName];
+						for (let i = 1; i < mergedHeaders.length; i += 1) {
+							const header = mergedHeaders[i];
+							const sourceIndex = positions.get(header);
+							mergedRow.push(sourceIndex === undefined ? "" : row[sourceIndex] || "");
+						}
+						mergedRows.push(mergedRow);
+					});
+				});
+
+				return { headers: mergedHeaders, rows: mergedRows };
+			}
+
+			function renderSheetButtons(tabs) {
+				sheetSidebarEl.innerHTML = "";
+
+				const allButton = document.createElement("button");
+				allButton.type = "button";
+				allButton.className = "sheet-btn";
+				allButton.dataset.value = ALL_SHEETS_VALUE;
+				allButton.textContent = "Visao consolidada";
+				sheetSidebarEl.appendChild(allButton);
+
+				tabs.forEach((tab) => {
+					const button = document.createElement("button");
+					button.type = "button";
+					button.className = "sheet-btn";
+					button.dataset.value = tab.gid;
+					button.textContent = tab.name;
+					sheetSidebarEl.appendChild(button);
+				});
+
+				sheetCountEl.textContent = "Abas: " + tabs.length;
+				updateActiveSheetButton();
+			}
+
+			function updateActiveSheetButton() {
+				const buttons = sheetSidebarEl.querySelectorAll(".sheet-btn");
+				buttons.forEach((button) => {
+					button.classList.toggle("active", button.dataset.value === activeSheetValue);
+				});
+			}
+
+			function getActiveSheetTitle() {
+				if (activeSheetValue === ALL_SHEETS_VALUE) {
+					return "Visao consolidada de todas as abas";
+				}
+				const tab = sheetTabs.find((item) => item.gid === activeSheetValue);
+				return tab ? "Aba: " + tab.name : "Aba selecionada";
+			}
+
+			function filterRows(rows) {
+				const query = searchInputEl.value.trim().toLowerCase();
+				if (!query) {
+					return rows;
+				}
+				return rows.filter((row) => row.join(" | ").toLowerCase().includes(query));
+			}
+
+			function renderSummary(headers, sourceRows, visibleRows) {
+				const filledCells = visibleRows.reduce((total, row) => {
+					return total + row.filter((cell) => cell && cell.trim() !== "").length;
+				}, 0);
+				const totalCells = visibleRows.length * Math.max(headers.length, 1);
+				const density = totalCells === 0 ? "0%" : Math.round((filledCells / totalCells) * 100) + "%";
+
+				summaryGridEl.innerHTML =
+					'<article class="summary-item"><div class="summary-label">Registros visiveis</div><div class="summary-value">' +
+					escapeHtml(visibleRows.length) +
+					"</div></article>" +
+					'<article class="summary-item"><div class="summary-label">Registros totais</div><div class="summary-value">' +
+					escapeHtml(sourceRows.length) +
+					"</div></article>" +
+					'<article class="summary-item"><div class="summary-label">Colunas</div><div class="summary-value">' +
+					escapeHtml(headers.length) +
+					"</div></article>" +
+					'<article class="summary-item"><div class="summary-label">Densidade de dados</div><div class="summary-value">' +
+					escapeHtml(density) +
+					"</div></article>";
+			}
+
+			function renderRecords(headers, rows) {
+				const rowsToRender = rows;
+
+				if (rowsToRender.length === 0) {
+					recordsWrapEl.innerHTML = '<p class="empty">Nenhum registro com valores para mostrar.</p>';
+					return;
+				}
+
+				let html = '<div class="records-grid">';
+				rowsToRender.forEach((row, rowIndex) => {
+					const filledPairs = [];
+					row.forEach((value, colIndex) => {
+						if (value && value.trim() !== "") {
+							filledPairs.push({ key: headers[colIndex], value });
+						}
+					});
+
+					if (filledPairs.length === 0) {
+						return;
+					}
+
+					html += '<article class="record-card">';
+					html += '<h3 class="record-title">Registro #' + escapeHtml(rowIndex + 1) + "</h3>";
+					html += '<div class="kv-grid">';
+					filledPairs.forEach((pair) => {
+						html += '<div class="kv-item"><span class="kv-key">' + escapeHtml(pair.key) + '</span><span class="kv-value">' + escapeHtml(pair.value) + "</span></div>";
+					});
+					html += "</div></article>";
+				});
+				html += "</div>";
+
+				recordsWrapEl.innerHTML = html;
+				updateRecordFindMatches(false);
+			}
+
+			function focusRecordMatch(nextIndex, shouldScroll) {
+				if (recordMatches.length === 0) {
+					activeRecordMatchIndex = -1;
+					recordFindCountEl.textContent = "0/0";
+					return;
+				}
+
+				const total = recordMatches.length;
+				let normalizedIndex = nextIndex;
+				if (normalizedIndex < 0) {
+					normalizedIndex = total - 1;
+				}
+				if (normalizedIndex >= total) {
+					normalizedIndex = 0;
+				}
+
+				activeRecordMatchIndex = normalizedIndex;
+				recordMatches.forEach((card) => card.classList.remove("current"));
+				const activeCard = recordMatches[activeRecordMatchIndex];
+				activeCard.classList.add("current");
+				recordFindCountEl.textContent = String(activeRecordMatchIndex + 1) + "/" + String(total);
+
+				if (shouldScroll) {
+					activeCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+				}
+			}
+
+			function updateRecordFindMatches(shouldScroll) {
+				const query = recordFindInputEl.value.trim().toLowerCase();
+				const cards = Array.from(recordsWrapEl.querySelectorAll(".record-card"));
+
+				recordMatches = [];
+				activeRecordMatchIndex = -1;
+				cards.forEach((card) => {
+					card.classList.remove("match", "current");
+				});
+
+				if (!query) {
+					recordFindCountEl.textContent = "0/0";
+					return;
+				}
+
+				cards.forEach((card) => {
+					if (card.textContent.toLowerCase().includes(query)) {
+						card.classList.add("match");
+						recordMatches.push(card);
+					}
+				});
+
+				focusRecordMatch(0, shouldScroll);
+			}
+
+			function moveRecordMatch(step) {
+				if (recordMatches.length === 0) {
+					return;
+				}
+				focusRecordMatch(activeRecordMatchIndex + step, true);
+			}
+
+			function openRecordFindBar() {
+				setActiveViewerMode("records");
+				recordFindBarEl.hidden = false;
+				recordFindInfoCardEl.hidden = true;
+				recordFindInputEl.focus();
+				recordFindInputEl.select();
+				updateRecordFindMatches(false);
+			}
+
+			function closeRecordFindBar() {
+				recordFindInputEl.value = "";
+				recordFindBarEl.hidden = true;
+				recordFindInfoCardEl.hidden = true;
+				updateRecordFindMatches(false);
+			}
+
+			function setActiveViewerMode(mode) {
+				const nextMode = mode === "records" ? "records" : "table";
+				activeViewerMode = nextMode;
+
+				const isRecords = nextMode === "records";
+				recordsWrapEl.hidden = !isRecords;
+				tableWrapEl.hidden = isRecords;
+				viewTabRecordsEl.classList.toggle("active", isRecords);
+				viewTabTableEl.classList.toggle("active", !isRecords);
+
+				if (!isRecords) {
+					closeRecordFindBar();
+				}
+			}
+
+			function toggleRecordFindInfoCard() {
+				recordFindInfoCardEl.hidden = !recordFindInfoCardEl.hidden;
+			}
+
+			function renderTable(headers, filteredRows, allRowCount) {
+				rowCountEl.textContent = "Linhas: " + filteredRows.length + " / " + allRowCount;
+				columnCountEl.textContent = "Colunas: " + headers.length;
+
+				if (filteredRows.length === 0) {
+					tableEl.innerHTML = "";
+					emptyStateEl.hidden = false;
+					return;
+				}
+
+				emptyStateEl.hidden = true;
+
+				let html = "<thead><tr>";
+				headers.forEach((header) => {
+					html += "<th>" + escapeHtml(header) + "</th>";
+				});
+				html += "</tr></thead><tbody>";
+
+				filteredRows.forEach((row) => {
+					html += "<tr>";
+					row.forEach((cell) => {
+						html += "<td>" + escapeHtml(cell) + "</td>";
+					});
+					html += "</tr>";
+				});
+
+				html += "</tbody>";
+				tableEl.innerHTML = html;
+			}
+
+			function renderDataViews(headers, sourceRows) {
+				const filteredRows = filterRows(sourceRows);
+				currentSheetTitleEl.textContent = getActiveSheetTitle();
+				renderSummary(headers, sourceRows, filteredRows);
+				renderRecords(headers, filteredRows);
+				renderTable(headers, filteredRows, sourceRows.length);
+			}
+
+			async function loadAndRenderData() {
+				setStatus("Carregando os dados mais recentes da planilha...");
+				try {
+					const selected = activeSheetValue || ALL_SHEETS_VALUE;
+
+					if (selected === ALL_SHEETS_VALUE) {
+						const tables = await Promise.all(sheetTabs.map((tab) => fetchSheetDataByGid(tab.gid)));
+						const normalizedTables = tables.map((table) => normalizeTable(table));
+						const combined = combineSheetData(sheetTabs, normalizedTables);
+						allHeaders = combined.headers;
+						allRows = combined.rows;
+					} else {
+						const table = await fetchSheetDataByGid(selected);
+						const normalized = normalizeTable(table);
+						allHeaders = normalized.headers;
+						allRows = normalized.rows;
+					}
+
+					renderDataViews(allHeaders, allRows);
+
+					const now = new Date();
+					lastUpdatedEl.textContent = "Ultima atualizacao: " + now.toLocaleString();
+					setStatus("Dados sincronizados com sucesso.", "ok");
+				} catch (error) {
+					setStatus(error.message, "error");
+				}
+			}
+
+			searchInputEl.addEventListener("input", () => {
+				renderDataViews(allHeaders, allRows);
+			});
+
+			refreshBtnEl.addEventListener("click", () => {
+				loadAndRenderData();
+			});
+
+			viewTabRecordsEl.addEventListener("click", () => {
+				setActiveViewerMode("records");
+			});
+
+			viewTabTableEl.addEventListener("click", () => {
+				setActiveViewerMode("table");
+			});
+
+			recordFindInputEl.addEventListener("input", () => {
+				updateRecordFindMatches(false);
+			});
+
+			recordFindNextEl.addEventListener("click", () => {
+				moveRecordMatch(1);
+			});
+
+			recordFindPrevEl.addEventListener("click", () => {
+				moveRecordMatch(-1);
+			});
+
+			recordFindCloseEl.addEventListener("click", () => {
+				closeRecordFindBar();
+			});
+
+			recordFindInfoEl.addEventListener("click", () => {
+				toggleRecordFindInfoCard();
+			});
+
+			sheetSidebarEl.addEventListener("click", (event) => {
+				const button = event.target.closest(".sheet-btn");
+				if (!button) {
+					return;
+				}
+				const nextValue = button.dataset.value || ALL_SHEETS_VALUE;
+				if (nextValue === activeSheetValue) {
+					return;
+				}
+				activeSheetValue = nextValue;
+				updateActiveSheetButton();
+				loadAndRenderData();
+			});
+
+			document.addEventListener("keydown", (event) => {
+				const isFindShortcut = (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "f";
+				if (isFindShortcut) {
+					event.preventDefault();
+					openRecordFindBar();
+					return;
+				}
+
+				if (recordFindBarEl.hidden) {
+					return;
+				}
+
+				if (event.key === "Escape") {
+					event.preventDefault();
+					if (!recordFindInfoCardEl.hidden) {
+						recordFindInfoCardEl.hidden = true;
+						return;
+					}
+					closeRecordFindBar();
+					return;
+				}
+
+				if (event.key === "Enter") {
+					event.preventDefault();
+					moveRecordMatch(event.shiftKey ? -1 : 1);
+				}
+			});
+
+			(async () => {
+				setStatus("Preparando as abas...");
+				try {
+					setActiveViewerMode("table");
+					sheetTabs = KNOWN_SHEETS;
+					renderSheetButtons(sheetTabs);
+					await loadAndRenderData();
+					setInterval(loadAndRenderData, AUTO_REFRESH_MS);
+				} catch (error) {
+					sheetTabs = [{ gid: DEFAULT_SHEET_GID, name: "Painel Principal" }];
+					renderSheetButtons(sheetTabs);
+					setStatus(error.message + " Exibindo apenas a aba principal.", "error");
+					await loadAndRenderData();
+					setInterval(loadAndRenderData, AUTO_REFRESH_MS);
+				}
+			})();
+		</script>
+	</body>
+</html>
