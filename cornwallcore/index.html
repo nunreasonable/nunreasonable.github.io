@@ -275,6 +275,35 @@
 				margin-top: 16px;
 			}
 
+			.section.full-width {
+				grid-column: 1 / -1;
+			}
+
+			.section.full-width h2 {
+				font-size: 1.35rem;
+				margin-bottom: 14px;
+			}
+
+			.section.full-width h3 {
+				margin: 16px 0 8px 0;
+				font-size: 1.06rem;
+				color: var(--text);
+				font-weight: 600;
+			}
+
+			.section.full-width ul {
+				margin: 10px 0 0;
+				padding-left: 22px;
+			}
+
+			.section.full-width > ul > li {
+				margin-bottom: 12px;
+			}
+
+			.section.full-width strong {
+				color: var(--text);
+			}
+
 			.section {
 				padding: 18px;
 			}
@@ -420,6 +449,118 @@
 						<li>chebob</li>
 						<li>is the biggest</li>
 						<li>goon to ever live</li>
+					</ul>
+				</article>
+
+				<article class="card section full-width">
+					<h2>Cornwall Discord Bot - Documentation</h2>
+					<p>Discord Bot for the 32nd "The Cornwall" Regiment of Foot with enlistment, deployment and messaging features.</p>
+
+					<h3>Bot Commands</h3>
+
+					<h3>Enlistment & Verification</h3>
+					<ul>
+						<li><strong>/enlistuser</strong> - Enlists a user with automatic ROBLOX verification
+							<ul>
+								<li>Requires: Permission role configured</li>
+								<li>Parameters: user, ROBLOX username</li>
+								<li>Function: Anti-ALT verification + role assignment + nickname + log</li>
+							</ul>
+						</li>
+						<li><strong>/alistar-se</strong> - Self-enlistment with interactive form
+							<ul>
+								<li>Specific channel required</li>
+								<li>Function: Complete form + automatic ROBLOX verification</li>
+							</ul>
+						</li>
+					</ul>
+
+					<h3>Spreadsheet & Information</h3>
+					<ul>
+						<li><strong>/checkspreadsheetinfo</strong> - Queries regimental spreadsheet information
+							<ul>
+								<li>Parameter: username in spreadsheet</li>
+								<li>Function: Searches data in spreadsheet Roster tab</li>
+							</ul>
+						</li>
+					</ul>
+
+					<h3>Messages & Communications</h3>
+					<ul>
+						<li><strong>/deployment</strong> - Sends deployment message
+							<ul>
+								<li>Requires: Permission role configured</li>
+								<li>Parameter: game code</li>
+								<li>Function: Embed with roles ping + access buttons</li>
+							</ul>
+						</li>
+						<li><strong>/dmrole</strong> - Sends DM to role/user (with code)
+							<ul>
+								<li>Requires: Permission role configured</li>
+								<li>Parameters: role/user, code, message</li>
+								<li>Limit: 500 members per execution</li>
+							</ul>
+						</li>
+						<li><strong>/dmrolemsg</strong> - Sends DM to role/user (without code)
+							<ul>
+								<li>Requires: Permission role configured</li>
+								<li>Parameters: role/user, message</li>
+								<li>Limit: 500 members per execution</li>
+							</ul>
+						</li>
+					</ul>
+
+					<h3>Repost System</h3>
+					<ul>
+						<li><strong>/messages</strong> - Checks message storage status
+							<ul>
+								<li>Function: System statistics and progress</li>
+							</ul>
+						</li>
+						<li><strong>/repost</strong> - Reposts random stored message
+							<ul>
+								<li>Requires: Minimum of stored messages</li>
+								<li>Cooldown: 2 hours after manual use</li>
+							</ul>
+						</li>
+					</ul>
+
+					<h3>Utilities</h3>
+					<ul>
+						<li><strong>/ping</strong> - Tests bot latency
+							<ul>
+								<li>Function: Returns response time in ms</li>
+							</ul>
+						</li>
+					</ul>
+
+					<h3>Administration Commands</h3>
+					<ul>
+						<li><strong>vsfdliliane</strong> - Special restricted command
+							<ul>
+								<li>Requires: Specific user ID</li>
+								<li>Function: Custom responses</li>
+							</ul>
+						</li>
+					</ul>
+
+					<h3>Configuration</h3>
+					<p>The bot uses the <code>config.json</code> file for configurations of:</p>
+					<ul>
+						<li>Channel and role IDs</li>
+						<li>Spreadsheet URLs and links</li>
+						<li>Command permissions</li>
+						<li>Custom messages</li>
+						<li>Blocked terms list and automatic blacklist response</li>
+					</ul>
+					<p><strong>Note:</strong> the bot now uses the <code>MessageContent</code> intent to read message text and detect blocked terms. This intent also needs to be enabled in the Discord application panel.</p>
+
+					<h3>Requirements</h3>
+					<ul>
+						<li>.NET 8.0+</li>
+						<li>DisCatSharp</li>
+						<li>Proper configuration in <code>config.json</code></li>
+						<li>Bot permissions in the Discord server</li>
 					</ul>
 				</article>
 			</section>
