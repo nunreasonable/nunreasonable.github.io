@@ -3,10 +3,10 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>CornwallCORE Bot</title>
+		<title>cornwallCORE Bot</title>
 		<meta
 			name="description"
-			content="CornwallCORE is a Discord bot for the 32nd 'The Cornwall' Regiment of Foot community."
+			content="cornwallCORE is a Discord bot for the 32nd 'The Cornwall' Regiment of Foot community."
 		/>
 		<link rel="icon" type="image/png" href="../filearchive/cornwallCOREpfp.png" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -199,8 +199,38 @@
 				object-fit: cover;
 				border: 1px solid rgba(255, 255, 255, 0.16);
 				box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
-				margin-bottom: 16px;
+				margin: 0;
 				background: rgba(255, 255, 255, 0.05);
+			}
+
+			.bot-identity {
+				display: flex;
+				align-items: center;
+				gap: 11px;
+				margin-bottom: 15px;
+			}
+
+			.bot-name-row {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				padding-top: 1px;
+			}
+
+			.bot-name {
+				margin: 0;
+				font-size: 1.03rem;
+				font-weight: 800;
+				letter-spacing: 0.01em;
+				line-height: 1;
+			}
+
+			.verified-app-icon {
+				width: 52px;
+				height: 19px;
+				flex: 0 0 auto;
+				display: block;
+				transform: translateY(1px);
 			}
 
 			.panel h2,
@@ -300,6 +330,19 @@
 				.button {
 					flex: 1 1 0;
 				}
+
+				.bot-identity {
+					gap: 9px;
+				}
+
+				.bot-name {
+					font-size: 0.98rem;
+				}
+
+				.verified-app-icon {
+					width: 50px;
+					height: 18px;
+				}
 			}
 		</style>
 	</head>
@@ -307,8 +350,9 @@
 		<main class="shell">
 			<header class="topbar">
 				<div class="brand">
-					<h1 class="brand-title">Cornwall Bot</h1>
-					<p class="brand-meta">Discord automation for one server only: the 32nd “The Cornwall” Regiment of Foot</p>
+					<h1 class="brand-title">cornwallCORE</h1>
+					<p class="brand-meta">The lovely CLANKER of 32nd "The Cornwall" Regiment of Foot in NW Rulecy's British Army!
+					</p>
 				</div>
 				<div class="actions">
 					<a class="button primary" href="https://discord.com/oauth2/authorize?client_id=1482173872848507062&scope=bot%20applications.commands" target="_blank" rel="noreferrer noopener">Add to Discord</a>
@@ -319,23 +363,33 @@
 
 			<section class="hero" aria-label="Bot overview">
 				<article class="card intro">
-					<p class="eyebrow">Bot overview</p>
-					<h2 class="title">Built for NWs BA Constantes Third Division, with simple utility and moderation tools.</h2>
+					<p class="eyebrow">This shit is:</p>
+					<h2 class="title">The 32nd version of BA CORE Family bots, managed by @daeese.</h2>
 					<p class="subtitle">
-						Cornwall is server-locked and only meant to work for the 32nd “The Cornwall” Regiment
-						of Foot Discord server. It is not a public multi-server bot.
+						Cornwall is server-locked and only meant to work for the <a href=\"https://discord.gg/constantes\" target=\"_blank\" rel=\"noreferrer noopener\">CONSTANTES</a> server. It's not a public multi-server bot.
 					</p>
 
 					<div class="pill-row" aria-label="Highlights">
-						<span class="pill">Server locked</span>
-						<span class="pill">Moderation tools</span>
-						<span class="pill">Utility commands</span>
+						<span class="pill">Single-Server</span>
+						<span class="pill">NW</span>
+						<span class="pill">Regimental Administration Utility</span>
 						<span class="pill">Slash commands</span>
 					</div>
 				</article>
 
 				<aside class="card panel">
-					<img class="bot-pfp" src="../filearchive/cornwallCOREpfp.png" alt="Cornwall bot profile picture" />
+					<div class="bot-identity" aria-label="Bot profile">
+								<img class="bot-pfp" src="../filearchive/cornwallCOREpfp.png" alt="cornwallCORE profile picture" />
+						<div class="bot-name-row">
+							<p class="bot-name">cornwallCORE</p>
+							<svg class="verified-app-icon" viewBox="0 0 51 19" aria-hidden="true" focusable="false">
+								<rect x="0" y="0" width="51" height="19" rx="5" fill="#5865F2"/>
+								<path fill="#ffffff" fill-opacity="0" d="M0 5h16v9H0z"/>
+								<path fill="#ffffff" d="M10.8 13.9 5.9 9l1.5-1.5 3.4 3.4 4.9-4.9 1.5 1.5z"/>
+								<text x="21.9" y="13.4" fill="#ffffff" font-size="10" font-family="Inter, Segoe UI, Arial, sans-serif" font-weight="800" letter-spacing="0.03em">APP</text>
+							</svg>
+						</div>
+					</div>
 					<h2>Quick action</h2>
 					<p>
 						The button below will invite the bot to your server, however i must tell you that IT WILL NOT WORK outside of it's main server. I will not look to patch that, this website was made as a showcase not for you to add it to yourself. This invite should be used by Rulecy's BA General Staff only.
@@ -349,29 +403,28 @@
 			<section class="section-grid" aria-label="More information">
 				<article class="card section">
 					<h2>What it does</h2>
-					<p>Small, focused automation for the approved server.</p>
+					<p>It... Works for the GREAT DECAFODEBRECHT, CO of 32nd Regt. of Foot!!!</p>
 					<ul>
-						<li>Utility commands for the server staff and members.</li>
-						<li>Slash-command based interaction.</li>
-						<li>Kept intentionally minimal.</li>
+						<li>Makes Regimental Administration easier</li>
+						<li>Disses chebob :p</li>
+						<li>Makes me go crazy 😭</li>
 					</ul>
 				</article>
 
 				<article class="card section">
 					<h2>Server note</h2>
 					<p>
-						This bot is only meant to work inside the 32nd “The Cornwall” Regiment of Foot
-						Discord server.
+						The clanker will not work outside of it's default server, good luck adding it... Make a fork on github if you'd like to use it on your server!!!
 					</p>
 					<ul>
-						<li>Not for public multi-server use</li>
-						<li>Invite only for the approved server</li>
-						<li>Keep the deployment scope narrow</li>
+						<li>chebob</li>
+						<li>is the biggest</li>
+						<li>goon ever to live</li>
 					</ul>
 				</article>
 			</section>
 
-			<p class="footer">Cornwall Bot landing page</p>
+			<p class="footer">cornwallCORE shit ass showcade :p</p>
 		</main>
 	</body>
 </html>

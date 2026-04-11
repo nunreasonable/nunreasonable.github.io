@@ -3,7 +3,7 @@
 
 ## 1. Introduction
 
-The Cornwall Discord Bot ("the Bot") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, store, and protect your information when you use our Discord bot.
+The cornwallCORE ("the Bot") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, store, and protect your information when you use our Discord bot.
 
 ## 2. Information We Collect
 
@@ -164,4 +164,4 @@ Our legal basis for processing your information includes:
 
 ---
 
-**By using the Cornwall Discord Bot, you acknowledge that you have read and understood this Privacy Policy.**
+**By using the cornwallCORE, you acknowledge that you have read and understood this Privacy Policy.**

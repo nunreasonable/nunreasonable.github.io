@@ -3,11 +3,11 @@
 
 ## 1. Agreement to Terms
 
-By using the Cornwall Discord Bot ("the Bot"), you agree to comply with and be bound by these Terms of Service. If you do not agree to these terms, please do not use the Bot.
+By using the cornwallCORE ("the Bot"), you agree to comply with and be bound by these Terms of Service. If you do not agree to these terms, please do not use the Bot.
 
 ## 2. Description of Service
 
-The Cornwall Discord Bot is a Discord bot designed for the 32nd "The Cornwall" Regiment of Foot community. The Bot provides features including:
+The cornwallCORE is a Discord bot designed for the 32nd "The Cornwall" Regiment of Foot community. The Bot provides features including:
 - User enlistment and ROBLOX verification
 - Deployment messaging
 - Direct messaging to roles/users
@@ -66,7 +66,7 @@ You agree to use the Bot only for lawful purposes and in accordance with these T
 ## 7. Intellectual Property
 
 ### 7.1 Bot Ownership
-The Cornwall Discord Bot and its underlying code are the intellectual property of its developers. All rights are reserved.
+The cornwallCORE and its underlying code are the intellectual property of its developers. All rights are reserved.
 
 ### 7.2 User Content
 You retain ownership of content you create and send through the Bot. However, you grant the Bot a limited license to store, process, and repost your content as described in Section 5.
@@ -127,4 +127,4 @@ These Terms of Service shall be governed by and construed in accordance with app
 
 ---
 
-**By using the Cornwall Discord Bot, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.**
+**By using the cornwallCORE, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.**

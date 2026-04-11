@@ -172,12 +172,35 @@
       .card {
         border: 1px solid var(--card-border);
         border-radius: 22px;
-        background: var(--card);
-        backdrop-filter: blur(12px);
+        background:
+          radial-gradient(circle at 16% 14%, rgba(145, 28, 74, 0.16) 0, rgba(145, 28, 74, 0) 40%),
+          radial-gradient(circle at 84% 84%, rgba(78, 15, 39, 0.12) 0, rgba(78, 15, 39, 0) 46%),
+          linear-gradient(160deg, rgba(4, 2, 3, 0.74) 0%, rgba(11, 4, 8, 0.66) 64%, rgba(29, 8, 19, 0.72) 100%);
+        backdrop-filter: blur(28px) saturate(1.2);
+        -webkit-backdrop-filter: blur(28px) saturate(1.2);
         padding: 28px 22px;
         width: 100%;
         overflow: clip;
-        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+        box-shadow:
+          0 24px 60px rgba(0, 0, 0, 0.38),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+        position: relative;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at top left, rgba(145, 28, 74, 0.12), transparent 34%),
+          radial-gradient(circle at bottom right, rgba(78, 15, 39, 0.1), transparent 34%);
+        pointer-events: none;
+      }
+
+      .card > * {
+        position: relative;
+        z-index: 1;
       }
 
       .card-wrapper {
@@ -192,6 +215,22 @@
         text-align: center;
       }
 
+      .discord-status-badge {
+        position: absolute;
+        right: 12px;
+        bottom: 4px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid rgba(0, 0, 0, 0);
+        z-index: 2;
+        display: grid;
+        place-items: center;
+        box-shadow:
+          0 0 0 2px rgba(5, 2, 4, 0.98),
+          0 8px 18px rgba(0, 0, 0, 0.34);
+      }
+
       .avatar {
         width: 110px;
         height: 110px;
@@ -199,12 +238,52 @@
         object-fit: cover;
         border: 3px solid rgba(255, 255, 255, 0.28);
         margin-top: 0;
-        z-index: 50;
+        z-index: 1;
         image-rendering: -webkit-optimize-contrast;
         filter: contrast(1.05) brightness(1.02) saturate(1.1);
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
         position: relative;
+      }
+
+      .avatar-shell {
+        position: relative;
+        width: 110px;
+        height: 110px;
+        flex-shrink: 0;
+      }
+
+      .discord-status-badge::before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .discord-status-badge[data-status="online"] {
+        color: #23a55a;
+        background: #23a55a;
+      }
+
+      .discord-status-badge[data-status="idle"] {
+        color: #f0b232;
+        background: #f0b232;
+      }
+
+      .discord-status-badge[data-status="dnd"] {
+        color: #f23f43;
+        background: #f23f43;
+      }
+
+      .discord-status-badge[data-status="offline"] {
+        color: #747f8d;
+        background: #747f8d;
+      }
+
+      .discord-status-badge[data-status="invisible"] {
+        color: #747f8d;
+        background: #747f8d;
       }
 
       .name-handle-wrap {
@@ -236,25 +315,56 @@
       .socials-inline {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 12px;
         justify-content: center;
+        padding: 2px 4px;
       }
 
       .socials-inline a {
         text-decoration: none;
         color: var(--text);
         cursor: pointer;
+        width: 48px;
+        height: 48px;
         border: 1px solid rgba(255, 255, 255, 0.14);
-        border-radius: 999px;
-        padding: 6px 10px;
-        font-size: 0.8rem;
-        background: rgba(255, 255, 255, 0.05);
-        transition: background 160ms ease, border-color 160ms ease;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        display: grid;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        line-height: 1;
+        overflow: visible;
+        transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+          0 0 18px rgba(145, 28, 74, 0.2),
+          0 0 26px rgba(78, 15, 39, 0.15);
       }
 
       .socials-inline a:hover {
         border-color: rgba(255, 255, 255, 0.28);
-        background: rgba(255, 255, 255, 0.08);
+        transform: translateY(-1px);
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow:
+          0 0 20px rgba(145, 28, 74, 0.24),
+          0 0 32px rgba(78, 15, 39, 0.16);
+      }
+
+      .socials-inline svg {
+        width: 17px;
+        height: 17px;
+        fill: currentColor;
+        display: block;
+        flex: 0 0 auto;
+      }
+
+      .socials-inline img {
+        width: 17px;
+        height: 17px;
+        object-fit: contain;
+        display: block;
+        flex: 0 0 auto;
       }
 
       .bio {
@@ -354,10 +464,12 @@
         display: block;
         flex: 1 1 auto;
         font-weight: 600;
+        color: var(--text);
         min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        transition: color 160ms ease;
       }
 
       .now-playing-left {
@@ -421,8 +533,14 @@
       }
 
       .link-btn .right {
-        color: var(--accent-2);
+        color: #eef4ff;
         font-size: 0.83rem;
+        transition: color 160ms ease;
+      }
+
+      .link-btn:hover .left,
+      .link-btn:hover .right {
+        color: #d98aa8;
       }
 
       .socials {
@@ -444,9 +562,58 @@
         background: rgba(255, 255, 255, 0.04);
       }
 
+      .project-title-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .project-thumb {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex: 0 0 auto;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+      }
+
       .project-title {
         margin: 0;
         font-size: 1rem;
+      }
+
+      .project-link-btn {
+        position: relative;
+      }
+
+      .project-link-btn .left {
+        transition: transform 180ms ease;
+      }
+
+      .project-link-hover-thumb {
+        position: absolute;
+        top: 50%;
+        left: 14px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-50%) scale(0.86);
+        transition: opacity 180ms ease, transform 180ms ease;
+      }
+
+      .project-link-btn:hover .left {
+        transform: translateX(44px);
+      }
+
+      .project-link-btn:hover .project-link-hover-thumb {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
       }
 
       .project-desc {
@@ -454,6 +621,21 @@
         color: #d2deee;
         font-size: 0.93rem;
         line-height: 1.4;
+      }
+
+      .project-desc a {
+        color: transparent;
+        background-image: linear-gradient(135deg, #b73a67 0%, #9e2b55 45%, #c34f72 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        text-decoration: underline;
+        text-decoration-color: rgba(195, 79, 114, 0.6);
+        text-underline-offset: 2px;
+      }
+
+      .project-desc a:hover {
+        background-image: linear-gradient(135deg, #c84a76 0%, #b23b67 45%, #d56687 100%);
+        text-decoration-color: rgba(213, 102, 135, 0.75);
       }
 
       .project-links-empty {
@@ -475,6 +657,16 @@
 
       .socials a:hover {
         border-color: rgba(255, 255, 255, 0.28);
+      }
+
+      @media (hover: none) {
+        .project-link-btn:hover .left {
+          transform: translateX(0);
+        }
+
+        .project-link-hover-thumb {
+          display: none;
+        }
       }
 
       .footer {
@@ -782,7 +974,21 @@
         .avatar {
           width: 90px;
           height: 90px;
-          margin-top: -55px;
+        }
+
+        .avatar-shell {
+          width: 90px;
+          height: 90px;
+        }
+
+        .discord-status-badge {
+          width: 16px;
+          height: 16px;
+          right: -2px;
+          bottom: -2px;
+          box-shadow:
+            0 0 0 2px rgba(5, 2, 4, 0.98),
+            0 6px 14px rgba(0, 0, 0, 0.3);
         }
 
         .name-handle-wrap {
@@ -889,12 +1095,21 @@
       <div class="card-wrapper">
         <article class="card" id="mainCard">
           <section class="top">
-            <img
-              class="avatar"
-              id="avatar"
-              src="./filearchive/lal.jpg"
-              alt="Profile avatar"
-            />
+            <div class="avatar-shell">
+              <img
+                class="avatar"
+                id="avatar"
+                src="./filearchive/lal.jpg"
+                alt="Profile avatar"
+              />
+              <span
+                class="discord-status-badge"
+                id="discordStatusBadge"
+                data-status="offline"
+                aria-hidden="true"
+                title="Discord status"
+              ></span>
+            </div>
             <div class="name-handle-wrap">
               <div class="name-wrap">
                 <h1 class="name" id="displayName">DAEESE</h1>
@@ -1010,8 +1225,9 @@
         projects: [
           {
             title: "cornwallCORE Discord Application",
-            description: "Utility and Automation discord bot for 32nd Regt. of Foot in https://discord.gg/constantes.",
-            href: "https://daeese.me/cornwallcore"
+            description: "Utility and Automation discord bot for 32nd Regt. of Foot in <a href=\"https://discord.gg/constantes\" target=\"_blank\" rel=\"noreferrer noopener\">CONSTANTES</a>.",
+            href: "https://daeese.me/cornwallcore",
+            image: "./filearchive/cornwallCOREpfp.png"
           },
           {
             title: "Soon...",
@@ -1027,12 +1243,13 @@
           { label: "Terms of Service", href: "https://daeese.me/cornwallcore/termsofservice", tag: "Cornwall" },
           { label: "Privacy Policy", href: "https://daeese.me/cornwallcore/privacypolicy", tag: "Cornwall" }
         ],
-        footer: "Last updated April 2026"
+        footer: "Last updated April 11, 2026"
       };
 
       document.title = profileData.name;
       
       const avatarEl = document.getElementById("avatar");
+      const discordStatusBadgeEl = document.getElementById("discordStatusBadge");
       // Load avatar from profile data if available
       if (profileData.avatar) {
         avatarEl.src = profileData.avatar;
@@ -1070,12 +1287,62 @@
         window.open(safeUrl, "_blank", "noopener,noreferrer");
       }
 
+      function getSocialIconMarkup(label, href) {
+        const normalizedLabel = String(label || "").toLowerCase();
+        const normalizedHref = String(href || "").toLowerCase();
+
+        if (normalizedLabel.includes("discord") || normalizedHref.includes("discord.com")) {
+          return '<img src="./filearchive/discordlogo.png" alt="" aria-hidden="true" />';
+        }
+
+        if (
+          normalizedLabel.includes("github") ||
+          normalizedHref.includes("github.com") ||
+          normalizedHref.includes("git")
+        ) {
+          return '<img src="./filearchive/githublogo.png" alt="" aria-hidden="true" />';
+        }
+
+        return `
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 2a7.94 7.94 0 0 1 5.29 2H6.71A7.94 7.94 0 0 1 12 4Zm-7.03 7h14.06a8.1 8.1 0 0 1 0 2H4.97a8.1 8.1 0 0 1 0-2Zm1.42 4h11.24A7.94 7.94 0 0 1 12 20a7.94 7.94 0 0 1-5.61-2ZM4.43 9a8.13 8.13 0 0 1 1.06-2h13.02a8.13 8.13 0 0 1 1.06 2Z"/>
+          </svg>`;
+      }
+
       const badgesEl = document.getElementById("badges");
       profileData.badges.forEach((badge) => {
         const item = document.createElement("li");
         item.textContent = badge;
         badgesEl.appendChild(item);
       });
+
+      function normalizeDiscordStatus(rawStatus) {
+        const status = typeof rawStatus === "string" ? rawStatus.toLowerCase() : "offline";
+        if (status === "online" || status === "idle" || status === "dnd") {
+          return status;
+        }
+
+        return status === "invisible" ? "invisible" : "offline";
+      }
+
+      function updateDiscordStatusBadge(status) {
+        if (!discordStatusBadgeEl) {
+          return;
+        }
+
+        const normalizedStatus = normalizeDiscordStatus(status);
+        discordStatusBadgeEl.dataset.status = normalizedStatus;
+
+        const statusLabelMap = {
+          online: "Online",
+          idle: "Idle",
+          dnd: "Do not disturb",
+          invisible: "Invisible",
+          offline: "Offline"
+        };
+
+        discordStatusBadgeEl.title = `Discord status: ${statusLabelMap[normalizedStatus] || "Offline"}`;
+      }
 
       const linksEl = document.getElementById("mainLinks");
       profileData.links.forEach((link, i) => {
@@ -1124,6 +1391,7 @@
       function setNowPlayingState(state) {
         // Update player modal state
         currentNowPlayingState = state;
+        updateDiscordStatusBadge(state && state.discordStatus);
 
         if (playerModal.classList.contains("active")) {
           updatePlayerDisplay();
@@ -1189,10 +1457,11 @@
             payload.error && payload.error.message
               ? payload.error.message
               : "Spotify status unavailable";
-          return { isPlaying: false, message: errorMessage };
+          return { isPlaying: false, message: errorMessage, discordStatus: "offline" };
         }
 
         const data = payload.data;
+        const discordStatus = normalizeDiscordStatus(data.discord_status);
         const spotifyOnlyMode = !profileData.spotify || profileData.spotify.onlySpotify !== false;
 
         function parseSpotifyState(rawSpotify) {
@@ -1262,14 +1531,14 @@
         const spotifyState = directSpotifyState || activitySpotifyState;
 
         if (!spotifyState) {
-          return { isPlaying: false };
+          return { isPlaying: false, discordStatus };
         }
 
         if (spotifyOnlyMode && data.listening_to_spotify === false && !activitySpotifyState) {
-          return { isPlaying: false };
+          return { isPlaying: false, discordStatus };
         }
 
-        return spotifyState;
+        return { ...spotifyState, discordStatus };
       }
 
       async function refreshNowPlaying() {
@@ -1422,7 +1691,10 @@
       profileData.projects.forEach((project) => {
         const card = document.createElement("article");
         card.className = "project-card";
-        card.innerHTML = `<h3 class="project-title">${project.title}</h3><p class="project-desc">${project.description}</p>`;
+        const projectThumb = project.image
+          ? `<img class="project-thumb" src="${project.image}" alt="${project.title} icon" />`
+          : "";
+        card.innerHTML = `<div class="project-title-row">${projectThumb}<h3 class="project-title">${project.title}</h3></div><p class="project-desc">${project.description}</p>`;
         projectsEl.appendChild(card);
       });
 
@@ -1437,13 +1709,14 @@
       } else {
         projectsWithLinks.forEach((project, i) => {
           const a = document.createElement("a");
-          a.className = "link-btn";
+          a.className = "link-btn project-link-btn";
           a.href = normalizeUrl(project.href) || "#";
           a.dataset.url = project.href;
           a.target = "_blank";
           a.rel = "noreferrer noopener";
           a.style.animationDelay = `${100 + i * 75}ms`;
-          a.innerHTML = `<span class="left">${project.title}</span><span class="right">Open</span>`;
+          const hoverThumb = project.image || "./filearchive/cornwallCOREpfp.png";
+          a.innerHTML = `<span class="left">${project.title}</span><span class="right">Open</span><img class="project-link-hover-thumb" src="${hoverThumb}" alt="" aria-hidden="true" />`;
           projectLinksEl.appendChild(a);
         });
       }
@@ -1505,13 +1778,15 @@
       const socialsInlineEl = document.getElementById("socialLinksInline");
       
       profileData.socials.forEach((social) => {
-        // Inline socials (beside name)
         const aInline = document.createElement("a");
+        const iconMarkup = getSocialIconMarkup(social.label, social.href);
         aInline.href = normalizeUrl(social.href) || "#";
         aInline.dataset.url = social.href;
         aInline.target = "_blank";
         aInline.rel = "noreferrer noopener";
-        aInline.textContent = social.label;
+        aInline.setAttribute("aria-label", social.label);
+        aInline.title = social.label;
+        aInline.innerHTML = iconMarkup;
         socialsInlineEl.appendChild(aInline);
       });
 
