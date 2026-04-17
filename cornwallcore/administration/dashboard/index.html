@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CornwallCORE Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-shape shape-a"></div>
+  <div class="bg-shape shape-b"></div>
+  <main class="shell">
+    <section id="loginView" class="card login-card">
+      <h1>CornwallCORE</h1>
+      <p class="subtitle">Dashboard de administração regimental</p>
+      <ol class="steps">
+        <li>No Discord, execute <strong>/dashboardlink</strong> no bot.</li>
+        <li>Insira o código abaixo para autenticar.</li>
+      </ol>
+      <label for="apiBase">URL da API do bot</label>
+      <input id="apiBase" placeholder="http://127.0.0.1:5056" />
+      <label for="linkCode">Código de login</label>
+      <input id="linkCode" placeholder="CORN-123456" />
+      <button id="loginBtn">Entrar no Dashboard</button>
+      <p id="loginMessage" class="message"></p>
+    </section>
+
+    <section id="dashboardView" class="dashboard hidden">
+      <header class="topbar card">
+        <div class="profile">
+          <img id="profileAvatar" alt="Avatar do usuário" />
+          <div>
+            <h2 id="profileName"></h2>
+            <p id="profilePermission"></p>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <button id="refreshAuditBtn" class="ghost">Atualizar audit log</button>
+          <button id="logoutBtn" class="danger">Sair</button>
+        </div>
+      </header>
+
+      <section class="grid">
+        <article class="card panel">
+          <h3>Gestão de Cargos</h3>
+          <p class="hint">Disponível para permissão 3+</p>
+          <input id="roleUserId" placeholder="ID do usuário" />
+          <input id="roleId" placeholder="ID do cargo" />
+          <input id="roleReason" placeholder="Motivo (opcional)" />
+          <div class="row">
+            <button id="addRoleBtn">Adicionar Cargo</button>
+            <button id="removeRoleBtn" class="ghost">Remover Cargo</button>
+          </div>
+          <p id="roleMsg" class="message"></p>
+        </article>
+
+        <article class="card panel">
+          <h3>Mensagens no Canal</h3>
+          <p class="hint">Digite o canal e a mensagem para envio via bot.</p>
+          <input id="msgChannelId" placeholder="ID do canal" />
+          <textarea id="msgContent" placeholder="Mensagem para enviar"></textarea>
+          <button id="sendMsgBtn">Enviar Mensagem</button>
+          <p id="msgSendStatus" class="message"></p>
+        </article>
+
+        <article class="card panel">
+          <h3>Punições</h3>
+          <p class="hint">Remoção/timeout exigem permissão 2+.</p>
+          <input id="punishUserId" placeholder="ID do usuário" />
+          <input id="punishReason" placeholder="Motivo (opcional)" />
+          <input id="timeoutMinutes" placeholder="Timeout em minutos" />
+          <div class="row">
+            <button id="timeoutBtn">Aplicar Timeout</button>
+            <button id="removeRegimentBtn" class="danger">Remover do Regimento</button>
+          </div>
+          <p id="punishMsg" class="message"></p>
+        </article>
+
+        <article class="card panel audit-panel">
+          <h3>Audit Log</h3>
+          <p class="hint">Alterações no dashboard com ator e horário.</p>
+          <ul id="auditList" class="audit-list"></ul>
+        </article>
+      </section>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
