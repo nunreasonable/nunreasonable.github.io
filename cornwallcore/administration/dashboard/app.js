@@ -71,11 +71,17 @@ function apiUrl(path) {
     return path;
   }
 
-  if (base.startsWith("http://") || base.startsWith("https://")) {
-    return `${base}${path}`;
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+  if (base.endsWith("/api") && normalizedPath.startsWith("/api/")) {
+    return `${base}${normalizedPath.substring(4)}`;
   }
 
-  return `${base.startsWith("/") ? base : `/${base}`}${path}`;
+  if (base.startsWith("http://") || base.startsWith("https://")) {
+    return `${base}${normalizedPath}`;
+  }
+
+  return `${base.startsWith("/") ? base : `/${base}`}${normalizedPath}`;
 }
 
 async function apiRequest(path, options = {}) {
