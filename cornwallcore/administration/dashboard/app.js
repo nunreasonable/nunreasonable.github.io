@@ -1,6 +1,34 @@
+const DEFAULT_LOCAL_API_BASE = "http://127.0.0.1:5056";
+
+function isLocalHost(hostname) {
+  return hostname === "localhost" || hostname === "127.0.0.1";
+}
+
+function getDefaultApiBase() {
+  const { protocol, hostname } = window.location;
+  if (protocol === "https:" || !isLocalHost(hostname)) {
+    return "/api";
+  }
+
+  return DEFAULT_LOCAL_API_BASE;
+}
+
+function normalizeApiBase(value) {
+  const input = (value || "").trim();
+  if (!input) {
+    return getDefaultApiBase();
+  }
+
+  if (input === "/") {
+    return "";
+  }
+
+  return input.replace(/\/$/, "");
+}
+
 const state = {
-  apiBase: localStorage.getItem("dashboardApiBase") || "http://127.0.0.1:5056",
-  token: "",
+  apiBase: normalizeApiBase(localStorage.getItem("dashboardApiBase") || getDefaultApiBase()),
+  token: localStorage.getItem("dashboardToken") || "",
   user: null
 };
 
@@ -38,7 +66,16 @@ const els = {
 els.apiBase.value = state.apiBase;
 
 function apiUrl(path) {
-  return `${state.apiBase.replace(/\/$/, "")}${path}`;
+  const base = normalizeApiBase(state.apiBase);
+  if (!base) {
+    return path;
+  }
+
+  if (base.startsWith("http://") || base.startsWith("https://")) {
+    return `${base}${path}`;
+  }
+
+  return `${base.startsWith("/") ? base : `/${base}`}${path}`;
 }
 
 async function apiRequest(path, options = {}) {
@@ -51,17 +88,52 @@ async function apiRequest(path, options = {}) {
     headers.Authorization = `Bearer ${state.token}`;
   }
 
-  const res = await fetch(apiUrl(path), {
-    ...options,
-    headers
-  });
+  const requestUrl = apiUrl(path);
+  let res;
+
+  try {
+    res = await fetch(requestUrl, {
+      ...options,
+      headers
+    });
+  } catch (err) {
+    const usingInsecureApi = state.apiBase.startsWith("http://");
+    const inHttpsPage = window.location.protocol === "https:";
+    const remotePage = !isLocalHost(window.location.hostname);
+
+    if (usingInsecureApi && inHttpsPage) {
+      throw new Error("Conexao bloqueada pelo navegador: pagina HTTPS nao pode chamar API HTTP. Use /api ou HTTPS na API.");
+    }
+
+    if (state.apiBase.includes("127.0.0.1") && remotePage) {
+      throw new Error("API em localhost nao funciona para acesso remoto. Use /api com proxy no servidor.");
+    }
+
+    throw new Error("Falha de rede ao conectar na API. Confira URL da API e se o bot esta online.");
+  }
 
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
+    if (res.status === 401) {
+      state.token = "";
+      localStorage.removeItem("dashboardToken");
+      state.user = null;
+      showLogin();
+    }
+
     throw new Error(data.error || "Erro desconhecido na API");
   }
 
   return data;
+}
+
+function parseDiscordSnowflake(value, label) {
+  const raw = (value || "").trim();
+  if (!/^\d{10,20}$/.test(raw)) {
+    throw new Error(`${label} invalido. Informe um ID numerico do Discord.`);
+  }
+
+  return raw;
 }
 
 function setMessage(el, text, isError = false) {
@@ -132,8 +204,14 @@ async function loadAudit() {
 
 els.loginBtn.addEventListener("click", async () => {
   setMessage(els.loginMessage, "Autenticando...");
-  state.apiBase = els.apiBase.value.trim() || state.apiBase;
+  state.apiBase = normalizeApiBase(els.apiBase.value);
+  els.apiBase.value = state.apiBase;
   localStorage.setItem("dashboardApiBase", state.apiBase);
+
+  if (state.apiBase.includes("127.0.0.1") && !isLocalHost(window.location.hostname)) {
+    setMessage(els.loginMessage, "URL localhost so funciona na mesma maquina do bot. Use /api para acesso remoto.", true);
+    return;
+  }
 
   try {
     const data = await apiRequest("/api/auth/login", {
@@ -142,6 +220,7 @@ els.loginBtn.addEventListener("click", async () => {
     });
 
     state.token = data.token;
+    localStorage.setItem("dashboardToken", state.token);
     setMessage(els.loginMessage, "Login realizado com sucesso.");
     await loadMeAndAudit();
   } catch (err) {
@@ -156,6 +235,7 @@ els.logoutBtn.addEventListener("click", async () => {
   }
 
   state.token = "";
+  localStorage.removeItem("dashboardToken");
   state.user = null;
   showLogin();
 });
@@ -173,7 +253,7 @@ els.sendMsgBtn.addEventListener("click", async () => {
     await apiRequest("/api/messages/send", {
       method: "POST",
       body: JSON.stringify({
-        channelId: Number(els.msgChannelId.value.trim()),
+        channelId: parseDiscordSnowflake(els.msgChannelId.value, "Canal"),
         message: els.msgContent.value
       })
     });
@@ -190,8 +270,8 @@ els.addRoleBtn.addEventListener("click", async () => {
     await apiRequest("/api/roles/add", {
       method: "POST",
       body: JSON.stringify({
-        userId: Number(els.roleUserId.value.trim()),
-        roleId: Number(els.roleId.value.trim()),
+        userId: parseDiscordSnowflake(els.roleUserId.value, "Usuario"),
+        roleId: parseDiscordSnowflake(els.roleId.value, "Cargo"),
         reason: els.roleReason.value.trim()
       })
     });
@@ -208,8 +288,8 @@ els.removeRoleBtn.addEventListener("click", async () => {
     await apiRequest("/api/roles/remove", {
       method: "POST",
       body: JSON.stringify({
-        userId: Number(els.roleUserId.value.trim()),
-        roleId: Number(els.roleId.value.trim()),
+        userId: parseDiscordSnowflake(els.roleUserId.value, "Usuario"),
+        roleId: parseDiscordSnowflake(els.roleId.value, "Cargo"),
         reason: els.roleReason.value.trim()
       })
     });
@@ -223,11 +303,16 @@ els.removeRoleBtn.addEventListener("click", async () => {
 
 els.timeoutBtn.addEventListener("click", async () => {
   try {
+    const duration = Number(els.timeoutMinutes.value.trim());
+    if (!Number.isFinite(duration) || duration <= 0) {
+      throw new Error("Timeout invalido. Informe minutos maiores que zero.");
+    }
+
     await apiRequest("/api/punishments/timeout", {
       method: "POST",
       body: JSON.stringify({
-        userId: Number(els.punishUserId.value.trim()),
-        durationMinutes: Number(els.timeoutMinutes.value.trim()),
+        userId: parseDiscordSnowflake(els.punishUserId.value, "Usuario"),
+        durationMinutes: duration,
         reason: els.punishReason.value.trim()
       })
     });
@@ -244,7 +329,7 @@ els.removeRegimentBtn.addEventListener("click", async () => {
     await apiRequest("/api/punishments/remove-from-regiment", {
       method: "POST",
       body: JSON.stringify({
-        userId: Number(els.punishUserId.value.trim()),
+        userId: parseDiscordSnowflake(els.punishUserId.value, "Usuario"),
         reason: els.punishReason.value.trim()
       })
     });
@@ -258,4 +343,15 @@ els.removeRegimentBtn.addEventListener("click", async () => {
 
 (async function bootstrap() {
   showLogin();
+  if (!state.token) {
+    return;
+  }
+
+  try {
+    await loadMeAndAudit();
+  } catch {
+    state.token = "";
+    localStorage.removeItem("dashboardToken");
+    showLogin();
+  }
 })();
