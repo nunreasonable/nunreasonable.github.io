@@ -1,4 +1,4 @@
-name = "daeese-api-proxy"
+name = "daese-api-proxy"
 main = "src/worker.js"
 compatibility_date = "2026-04-17"
 workers_dev = false
