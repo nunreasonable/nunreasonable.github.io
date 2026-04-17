@@ -1,10 +1,10 @@
-name = "daese-api-proxy"
+name = "daeese-api-proxy"
 main = "src/worker.js"
 compatibility_date = "2026-04-17"
 workers_dev = false
 
 [vars]
-BOT_API_ORIGIN = "https://api-daeese.me"
+BOT_API_ORIGIN = "https://api.daeese.me
 
 [[routes]]
 pattern = "daeese.me/api/*"
