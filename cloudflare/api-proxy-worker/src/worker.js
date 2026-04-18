@@ -14,9 +14,15 @@ function toUpstreamUrl(requestUrl, upstreamBase) {
     throw new Error("BOT_API_ORIGIN nao configurada.");
   }
 
-  let path = incoming.pathname;
-  if (path === "/api") {
-    path = "/api";
+  let path = incoming.pathname || "/";
+  if (!path.startsWith("/")) {
+    path = `/${path}`;
+  }
+
+  // Some Cloudflare route modes can pass the pathname without the matched
+  // /api prefix. Normalize so upstream always receives /api/*.
+  if (path !== "/api" && !path.startsWith("/api/")) {
+    path = `/api${path}`;
   }
 
   return `${base}${path}${incoming.search}`;
