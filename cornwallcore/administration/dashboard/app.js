@@ -23,11 +23,34 @@ function normalizeApiBase(value) {
     return "";
   }
 
+  try {
+    const parsedUrl = new URL(input, window.location.origin);
+    if (parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:") {
+      return parsedUrl.pathname.startsWith("/api") ? `${parsedUrl.origin}/api` : parsedUrl.origin;
+    }
+  } catch {
+  }
+
+  if (input.startsWith("/api")) {
+    return "/api";
+  }
+
   return input.replace(/\/$/, "");
 }
 
+function shouldForceProxyBase(value) {
+  if (window.location.protocol !== "https:") {
+    return false;
+  }
+
+  return /^https?:\/\//i.test(value) && !value.startsWith(window.location.origin);
+}
+
+const storedApiBase = localStorage.getItem("dashboardApiBase") || "";
+const initialApiBase = shouldForceProxyBase(storedApiBase) ? getDefaultApiBase() : (storedApiBase || getDefaultApiBase());
+
 const state = {
-  apiBase: normalizeApiBase(localStorage.getItem("dashboardApiBase") || getDefaultApiBase()),
+  apiBase: normalizeApiBase(initialApiBase),
   token: localStorage.getItem("dashboardToken") || "",
   user: null
 };
@@ -212,6 +235,12 @@ els.loginBtn.addEventListener("click", async () => {
   setMessage(els.loginMessage, "Autenticando...");
   state.apiBase = normalizeApiBase(els.apiBase.value);
   els.apiBase.value = state.apiBase;
+
+  if (shouldForceProxyBase(state.apiBase)) {
+    state.apiBase = getDefaultApiBase();
+    els.apiBase.value = state.apiBase;
+  }
+
   localStorage.setItem("dashboardApiBase", state.apiBase);
 
   if (state.apiBase.includes("127.0.0.1") && !isLocalHost(window.location.hostname)) {

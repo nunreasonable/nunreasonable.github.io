@@ -15,10 +15,8 @@ function toUpstreamUrl(requestUrl, upstreamBase) {
   }
 
   let path = incoming.pathname;
-  if (path.startsWith("/api/")) {
-    path = path.substring(4);
-  } else if (path === "/api") {
-    path = "/";
+  if (path === "/api") {
+    path = "/api";
   }
 
   return `${base}${path}${incoming.search}`;
