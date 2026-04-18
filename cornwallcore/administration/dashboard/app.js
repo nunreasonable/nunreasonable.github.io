@@ -1,4 +1,10 @@
 const DEFAULT_LOCAL_API_BASE = "http://127.0.0.1:5056";
+const PERMISSION_LABELS = {
+  4: "Developer",
+  3: "General Staff",
+  2: "Regimental Command",
+  1: "NCO/Officer"
+};
 
 function isLocalHost(hostname) {
   return hostname === "localhost" || hostname === "127.0.0.1";
@@ -170,6 +176,10 @@ function setMessage(el, text, isError = false) {
   el.style.color = isError ? "#ff8f8f" : "#9ab0c2";
 }
 
+function getPermissionLabel(level) {
+  return PERMISSION_LABELS[level] || "Unknown";
+}
+
 function showDashboard() {
   els.loginView.classList.add("hidden");
   els.dashboardView.classList.remove("hidden");
@@ -184,7 +194,7 @@ function applyUser(user) {
   state.user = user;
   els.profileAvatar.src = user.avatarUrl || "https://cdn.discordapp.com/embed/avatars/0.png";
   els.profileName.textContent = user.username;
-  els.profilePermission.textContent = `Permissão ${user.permissionLevel}`;
+  els.profilePermission.textContent = `${getPermissionLabel(user.permissionLevel)} (${user.permissionLevel})`;
 
   if (user.permissionLevel < 3) {
     els.addRoleBtn.disabled = true;
