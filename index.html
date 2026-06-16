@@ -1210,9 +1210,9 @@
       const profileData = {
         name: "daeese",
         handle: "@daeese",
-        bio: "Junior on C# and JavaScript, timezone is GMT-3 or UTC-3, working on cornwallCORE which you may check on my 'Projects' tab. I also play NW on roblox which... is kinda concerning. I'm open to commissions, just reach me through discord or the email, make sure to identify yourself... speacially on discord.",
-        avatar: "./filearchive/woasp.jpg",
-        badges: ["C#", "JavaScript", "GMT-3", "Gooba"],
+          bio: "I work with C#, JS, HTML & CSS, Main timezone is UTC -3 and sometimes UTC 0. \n Fullstack Developer @ Vltra Entertainment.",
+        avatar: "./filearchive/itljs.jpg",
+            badges: ["C#", "JavaScript", "HTML", "CSS", "UTC-3"],
         links: [
           { label: "Contact Me", href: "mailto:rafaelpasquarella@gmail.com", tag: "E-Mail" },
           { id: "nowPlaying", label: "Now Playing", href: "https://open.spotify.com", tag: "Spotify" }
@@ -1224,14 +1224,14 @@
         },
         projects: [
           {
-            title: "cornwallCORE Discord Application",
-            description: "Utility and Automation discord bot for 32nd Regt. of Foot in <a href=\"https://discord.gg/constantes\" target=\"_blank\" rel=\"noreferrer noopener\">CONSTANTES</a>.",
+            title: "ccore - 'chavinhoCORE' Discord Application",
+            description: "Utility and Automation discord bot for 12° Regimento de Infantaria in <a href=\"https://discord.gg/constantes\" target=\"_blank\" rel=\"noreferrer noopener\">CONSTANTES</a>.",
             href: "https://daeese.me/cornwallcore",
-            image: "./filearchive/cornwallCOREpfp.png"
+            image: "./filearchive/newpfp.png"
           },
           {
-            title: "VLTRA ENTERTAINMENT SUPPORT BOT",
-            description: "A multi-purpose bot for VLTRA ENTERTAINMENT development Studio",
+            title: "VLTRA ENTERTAINMENT",
+            description: "DEV @ VLTRA ENTERTAINMENT",
             href: "",
             image: "./filearchive/vltrasupport.png"
           }
@@ -1242,9 +1242,10 @@
         ],
         policyLinks: [
           { label: "Terms of Service", href: "https://daeese.me/cornwallcore/termsofservice", tag: "Cornwall" },
-          { label: "Privacy Policy", href: "https://daeese.me/cornwallcore/privacypolicy", tag: "Cornwall" }
+            { label: "Privacy Policy", href: "https://daeese.me/cornwallcore/privacypolicy", tag: "Cornwall" },
+            { label: "VLTRA INVITE", href: "https://discord.gg/3qdvhkNSS8", tag: "Vltra"}
         ],
-        footer: "Last updated April 11, 2026"
+        footer: "Last updated June 16, 2026"
       };
 
       document.title = profileData.name;
@@ -1623,19 +1624,13 @@
         updatePlayerDisplay();
       }
 
-      function closePlayerModal() {
+        function closePlayerModal() {
+
         playerModal.classList.remove("active");
         stopPlayerProgressTimer();
         playSFX('close');
       }
 
-      playerCloseBtn.addEventListener("click", closePlayerModal);
-
-      playerModal.addEventListener("click", (event) => {
-        if (event.target === playerModal) {
-          closePlayerModal();
-        }
-      });
 
       function updatePlayerDisplay() {
         if (!currentNowPlayingState || !currentNowPlayingState.isPlaying) {
