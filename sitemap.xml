@@ -6,21 +6,6 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://daeese.me/cornwallcore/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://daeese.me/cornwallcore/termsofservice/</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://daeese.me/cornwallcore/privacypolicy/</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://daeese.me/gabfirmino/</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

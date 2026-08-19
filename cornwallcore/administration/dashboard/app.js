@@ -1,4 +1,8 @@
 const DEFAULT_LOCAL_API_BASE = "http://127.0.0.1:5056";
+// O proxy da API mora no dominio raiz. O dashboard agora e servido em
+// dashboard.daeese.me, que nao tem rota /api propria, entao as chamadas saem
+// cross-origin para ca - o Worker da API libera essa origem por CORS.
+const PROXY_API_ORIGIN = "https://daeese.me";
 const PERMISSION_LABELS = {
   4: "Developer",
   3: "General Staff",
@@ -12,11 +16,16 @@ function isLocalHost(hostname) {
 
 function getDefaultApiBase() {
   const { protocol, hostname } = window.location;
-  if (protocol === "https:" || !isLocalHost(hostname)) {
-    return "/api";
+
+  // Desenvolvimento local: a pagina roda em http://localhost e fala direto com
+  // o bot, sem passar pelo proxy.
+  if (protocol !== "https:" && isLocalHost(hostname)) {
+    return DEFAULT_LOCAL_API_BASE;
   }
 
-  return DEFAULT_LOCAL_API_BASE;
+  // Em daeese.me o proxy e same-origin. Em dashboard.daeese.me nao existe rota
+  // /api, entao apontamos para o proxy no dominio raiz.
+  return hostname === "daeese.me" ? "/api" : `${PROXY_API_ORIGIN}/api`;
 }
 
 function normalizeApiBase(value) {
@@ -49,7 +58,16 @@ function shouldForceProxyBase(value) {
     return false;
   }
 
-  return /^https?:\/\//i.test(value) && !value.startsWith(window.location.origin);
+  if (!/^https?:\/\//i.test(value)) {
+    return false;
+  }
+
+  // Descarta valor guardado que nao vai funcionar numa pagina https: http://
+  // e bloqueado como conteudo misto, e qualquer origem que nao seja a do proxy
+  // oficial seria barrada no CORS. A origem da propria pagina tambem vale,
+  // para o caso de o dashboard estar sendo servido em daeese.me.
+  const acceptable = [PROXY_API_ORIGIN, window.location.origin];
+  return !acceptable.some((origin) => value === origin || value.startsWith(`${origin}/`));
 }
 
 const storedApiBase = localStorage.getItem("dashboardApiBase") || "";

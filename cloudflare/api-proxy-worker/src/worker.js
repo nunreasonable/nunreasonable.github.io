@@ -1,7 +1,11 @@
-// Unica origem legitima: a pagina do dashboard. Em desenvolvimento local o
-// dashboard fala direto com http://127.0.0.1:5056 e nao passa por este Worker,
-// entao nao ha origem de dev para liberar aqui.
-const ALLOWED_ORIGINS = new Set(["https://daeese.me"]);
+// Origens legitimas: o dashboard, que agora mora em dashboard.daeese.me, e
+// daeese.me, que ainda serve os caminhos antigos ate os 301 propagarem. Em
+// desenvolvimento local o dashboard fala direto com http://127.0.0.1:5056 e nao
+// passa por este Worker, entao nao ha origem de dev para liberar aqui.
+const ALLOWED_ORIGINS = new Set([
+  "https://dashboard.daeese.me",
+  "https://daeese.me"
+]);
 
 function buildCorsHeaders(origin) {
   // Refletir de volta qualquer Origin recebido transforma o proxy num

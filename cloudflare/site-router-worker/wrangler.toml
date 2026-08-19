@@ -1,0 +1,23 @@
+name = "daeese-site-router"
+main = "src/worker.js"
+compatibility_date = "2026-08-19"
+workers_dev = false
+
+# custom_domain = true faz a Cloudflare provisionar o registro DNS e o
+# certificado sozinha, sem precisar criar nada a mao no painel.
+[[routes]]
+pattern = "ccore.daeese.me"
+custom_domain = true
+
+[[routes]]
+pattern = "spreadsheet.daeese.me"
+custom_domain = true
+
+[[routes]]
+pattern = "dashboard.daeese.me"
+custom_domain = true
+
+# Caminhos antigos: o Worker responde 301 para o subdominio equivalente.
+[[routes]]
+pattern = "daeese.me/cornwallcore/*"
+zone_name = "daeese.me"

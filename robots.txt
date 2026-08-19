@@ -1,6 +1,13 @@
 # https://daeese.me/robots.txt
+#
+# Os subdominios (ccore, spreadsheet, dashboard) tem robots.txt proprio,
+# servido pelo Worker daeese-site-router - robots.txt e por host.
+#
+# /cornwallcore/* nao e bloqueado de proposito: esses caminhos agora respondem
+# 301 para os subdominios, e um Disallow impediria os buscadores de verem o
+# redirecionamento e transferirem a reputacao para o endereco novo.
 
 User-agent: *
-Disallow: /cornwallcore/administration/
+Allow: /
 
 Sitemap: https://daeese.me/sitemap.xml
