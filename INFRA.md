@@ -94,7 +94,34 @@ function buildCorsHeaders(origin) {
 
 Alterar isso exige `npx wrangler deploy`, por isso não foi feito junto com as correções do site.
 
-## 5. Planilha regimental legível sem autenticação
+## 5. A Cloudflare injeta o próprio bloco no `robots.txt`
+
+O `robots.txt` servido em produção **não** é apenas o arquivo deste repositório. A Cloudflare
+prepend um bloco gerenciado (content signals + `Disallow` para crawlers de IA) e o conteúdo do
+repositório aparece depois dele:
+
+```
+# BEGIN Cloudflare Managed content
+User-agent: *
+Content-Signal: search=yes,ai-train=no,use=reference
+Allow: /
+...
+# END Cloudflare Managed Content
+
+# https://daeese.me/robots.txt
+User-agent: *
+Disallow: /cornwallcore/administration/
+```
+
+Isso funciona — o Google combina grupos com o mesmo `User-agent`, então o `Disallow` é respeitado —
+mas o resultado tem dois blocos `User-agent: *`, um com `Allow: /` e outro com o `Disallow`. Se
+algum dia o bloqueio de `/cornwallcore/administration/` parecer estar sendo ignorado, é aqui que se
+deve olhar primeiro. De todo modo, a garantia real de não-indexação é a meta `noindex` nas próprias
+páginas, que não depende da Cloudflare.
+
+O bloco gerenciado é configurável em Cloudflare → *AI Crawl Control* / *Manage robots.txt*.
+
+## 6. Planilha regimental legível sem autenticação
 
 ```
 $ curl -s '.../gviz/tq?gid=827170318&tqx=out:json'   -> 200 com USERNAME, DISCORD USER, RANK, KILLS
