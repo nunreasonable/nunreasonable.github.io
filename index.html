@@ -4,7 +4,23 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Meet daeeseD</title>
-    <link rel="icon" type="image/png" href="./filearchive/lal.jpg" />
+    <meta
+      name="description"
+      content="daeese - fullstack developer working with C#, JavaScript, HTML and CSS. Links, projects and what I'm listening to right now."
+    />
+    <link rel="canonical" href="https://daeese.me/" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content="daeese.me" />
+    <meta property="og:title" content="Meet daeeseD" />
+    <meta
+      property="og:description"
+      content="daeese - fullstack developer working with C#, JavaScript, HTML and CSS."
+    />
+    <meta property="og:url" content="https://daeese.me/" />
+    <meta property="og:image" content="https://daeese.me/filearchive/itljs.jpg" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="theme-color" content="#040203" />
+    <link rel="icon" type="image/jpeg" href="./filearchive/lal.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -60,7 +76,10 @@
         background-attachment: fixed;
         display: grid;
         place-items: center;
-        overflow-x: hidden;
+      }
+
+      body.modal-open {
+        overflow: hidden;
       }
 
       .noise {
@@ -371,6 +390,7 @@
         margin: 18px 0 8px;
         color: #d2deee;
         line-height: 1.52;
+        white-space: pre-line;
       }
 
       .badges {
@@ -543,13 +563,6 @@
         color: #d98aa8;
       }
 
-      .socials {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        min-width: 0;
-      }
-
       .projects {
         display: grid;
         gap: 10px;
@@ -642,21 +655,6 @@
         margin: 0;
         color: var(--muted);
         font-size: 0.9rem;
-      }
-
-      .socials a {
-        text-decoration: none;
-        color: var(--text);
-        cursor: pointer;
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        border-radius: 999px;
-        padding: 8px 12px;
-        font-size: 0.9rem;
-        background: rgba(255, 255, 255, 0.05);
-      }
-
-      .socials a:hover {
-        border-color: rgba(255, 255, 255, 0.28);
       }
 
       @media (hover: none) {
@@ -875,15 +873,6 @@
         margin: -14px 0 18px;
       }
 
-      @keyframes pulse {
-        0%, 100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.8;
-        }
-      }
-
       .player-listen-btn,
       .player-listen-btn:link,
       .player-listen-btn:visited,
@@ -926,33 +915,6 @@
       .player-listen-btn:focus-visible {
         outline: 2px solid rgba(255, 255, 255, 0.75);
         outline-offset: 2px;
-      }
-
-      .click-to-enter {
-        cursor: pointer;
-        transition: all 160ms ease;
-        position: relative;
-      }
-
-      .click-to-enter:hover {
-        transform: scale(1.02);
-      }
-
-      .click-to-enter::after {
-        content: "click to enter";
-        position: absolute;
-        bottom: -24px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 0.75rem;
-        color: var(--muted);
-        white-space: nowrap;
-        opacity: 0;
-        transition: opacity 160ms ease;
-      }
-
-      .click-to-enter:hover::after {
-        opacity: 1;
       }
 
       @media (max-width: 640px) {
@@ -1033,15 +995,6 @@
           height: 34px;
         }
 
-        .socials {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .socials a {
-          text-align: center;
-        }
-
         .player-modal-content {
           width: 95vw;
           padding: 24px 16px;
@@ -1071,9 +1024,17 @@
       <div class="blur-message">click to enter</div>
     </div>
 
-    <div class="player-modal" id="playerModal">
+    <div
+      class="player-modal"
+      id="playerModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="playerTrackTitle"
+    >
       <div class="player-modal-content">
-        <button class="player-close-btn" id="playerCloseBtn">✕</button>
+        <button class="player-close-btn" id="playerCloseBtn" type="button" aria-label="Close player">
+          ✕
+        </button>
         <div class="player-disc">
           <img class="player-album-art" id="playerAlbumArt" src="" alt="Album artwork" />
         </div>
@@ -1099,7 +1060,7 @@
               <img
                 class="avatar"
                 id="avatar"
-                src="./filearchive/lal.jpg"
+                src="./filearchive/itljs.jpg"
                 alt="Profile avatar"
               />
               <span
@@ -1133,6 +1094,7 @@
               role="tab"
               aria-controls="panel-links"
               aria-selected="true"
+              type="button"
             >
               Main Links
             </button>
@@ -1142,6 +1104,7 @@
               role="tab"
               aria-controls="panel-projects"
               aria-selected="false"
+              type="button"
             >
               Projects
             </button>
@@ -1173,20 +1136,51 @@
     </main>
 
     <script>
-      // Sound Effects via Web Audio API
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      // --- Sound effects (Web Audio API) -------------------------------------
+      // The context is created lazily inside a user gesture: browsers start it
+      // suspended otherwise, which silently swallows every beep. The try/catch
+      // keeps browsers without Web Audio from breaking the rest of this script.
+      let audioContext = null;
+
+      function ensureAudioContext() {
+        if (audioContext) {
+          return audioContext;
+        }
+
+        const AudioCtor = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtor) {
+          return null;
+        }
+
+        try {
+          audioContext = new AudioCtor();
+        } catch (error) {
+          audioContext = null;
+        }
+
+        return audioContext;
+      }
 
       function playBeep(frequency = 800, duration = 100, volume = 0.3) {
-        const osc = audioContext.createOscillator();
-        const gain = audioContext.createGain();
+        const ctx = ensureAudioContext();
+        if (!ctx) {
+          return;
+        }
+
+        if (ctx.state === "suspended") {
+          ctx.resume();
+        }
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
         osc.connect(gain);
-        gain.connect(audioContext.destination);
+        gain.connect(ctx.destination);
         osc.frequency.value = frequency;
-        osc.type = 'sine';
-        gain.gain.setValueAtTime(volume, audioContext.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000);
-        osc.start(audioContext.currentTime);
-        osc.stop(audioContext.currentTime + duration / 1000);
+        osc.type = "sine";
+        gain.gain.setValueAtTime(volume, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration / 1000);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + duration / 1000);
       }
 
       function playSFX(type) {
@@ -1194,6 +1188,15 @@
         else if (type === 'open') playBeep(1000, 120, 0.25);
         else if (type === 'close') playBeep(400, 120, 0.2);
         else if (type === 'hover') playBeep(700, 50, 0.15);
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
       }
 
       // Blur overlay handler
@@ -1210,7 +1213,7 @@
       const profileData = {
         name: "daeese",
         handle: "@daeese",
-          bio: "I work with C#, JS, HTML & CSS, Main timezone is UTC -3 and sometimes UTC 0. \n Fullstack Developer @ Vltra Entertainment.",
+          bio: "I work with C#, JS, HTML & CSS, Main timezone is UTC -3 and sometimes UTC 0.\nFullstack Developer @ Vltra Entertainment.",
         avatar: "./filearchive/itljs.jpg",
             badges: ["C#", "JavaScript", "HTML", "CSS", "UTC-3"],
         links: [
@@ -1241,18 +1244,19 @@
           { label: "Discord", href: "https://discord.com/users/1402344358199689348" }
         ],
         policyLinks: [
-          { label: "Terms of Service", href: "https://daeese.me/cornwallcore/termsofservice", tag: "Cornwall" },
-            { label: "Privacy Policy", href: "https://daeese.me/cornwallcore/privacypolicy", tag: "Cornwall" },
+          { label: "Terms of Service", href: "https://daeese.me/cornwallcore/termsofservice/", tag: "Cornwall" },
+            { label: "Privacy Policy", href: "https://daeese.me/cornwallcore/privacypolicy/", tag: "Cornwall" },
             { label: "VLTRA INVITE", href: "https://discord.gg/3qdvhkNSS8", tag: "Vltra"}
         ],
-        footer: "Last updated June 16, 2026"
+        footer: "Last updated August 19, 2026"
       };
 
-      document.title = profileData.name;
-      
+      const FALLBACK_ALBUM_ART = "https://i.scdn.co/image/ab67616d00001e02a0f8b88f0a2b2b3d92d8f57f";
+
       const avatarEl = document.getElementById("avatar");
       const discordStatusBadgeEl = document.getElementById("discordStatusBadge");
-      // Load avatar from profile data if available
+      // Load avatar from profile data if available. The markup already points at
+      // the same file, so this does not trigger a second request.
       if (profileData.avatar) {
         avatarEl.src = profileData.avatar;
       }
@@ -1264,6 +1268,19 @@
       document.getElementById("handle").textContent = profileData.handle;
       document.getElementById("bio").textContent = profileData.bio;
       document.getElementById("footerText").textContent = profileData.footer;
+
+      // --- Player modal element refs -----------------------------------------
+      // Declared before refreshNowPlaying() runs: setNowPlayingState() reads them
+      // and can be reached synchronously when no Spotify config is present.
+      const playerModal = document.getElementById("playerModal");
+      const playerCloseBtn = document.getElementById("playerCloseBtn");
+      const playerListenBtn = document.getElementById("playerListenBtn");
+      const playerProgressBar = document.getElementById("playerProgressBar");
+      const playerTimeCurrent = document.getElementById("playerTimeCurrent");
+      const playerTimeTotal = document.getElementById("playerTimeTotal");
+      let currentNowPlayingState = null;
+      let playerProgressTimer = null;
+      let lastFocusedBeforeModal = null;
 
       function normalizeUrl(rawUrl) {
         if (!rawUrl) {
@@ -1287,6 +1304,16 @@
         }
 
         window.open(safeUrl, "_blank", "noopener,noreferrer");
+      }
+
+      // Only allow image URLs we are willing to put in a src attribute.
+      function safeImageUrl(rawUrl, fallback) {
+        const candidate = String(rawUrl || "").trim();
+        if (/^https:\/\//i.test(candidate) || /^\.{0,2}\//.test(candidate)) {
+          return candidate;
+        }
+
+        return fallback;
       }
 
       function getSocialIconMarkup(label, href) {
@@ -1356,7 +1383,7 @@
         a.target = "_blank";
         a.rel = "noreferrer noopener";
         a.style.animationDelay = `${100 + i * 75}ms`;
-        a.innerHTML = `<span class="left">${link.label}</span><span class="right">${link.tag}</span>`;
+        a.innerHTML = `<span class="left">${escapeHtml(link.label)}</span><span class="right">${escapeHtml(link.tag)}</span>`;
         linksEl.appendChild(a);
       });
 
@@ -1410,18 +1437,20 @@
           return;
         }
 
+        // Everything below is third-party data from Lanyard, so it is escaped
+        // before it reaches innerHTML.
         if (!state || !state.isPlaying) {
           const idleMessage = state && state.message ? state.message : "Spotify status idle";
           left.innerHTML = `
             <span class="now-playing-left">
               <img
                 class="now-playing-cover"
-                src="https://i.scdn.co/image/ab67616d00001e02a0f8b88f0a2b2b3d92d8f57f"
+                src="${escapeHtml(FALLBACK_ALBUM_ART)}"
                 alt="No track artwork"
               />
               <span class="now-playing-text">
                 <span class="now-playing-title"><span class="now-playing-title-inner">Not listening right now</span></span>
-                <span class="now-playing-subtitle">${idleMessage}</span>
+                <span class="now-playing-subtitle">${escapeHtml(idleMessage)}</span>
               </span>
             </span>
           `;
@@ -1432,18 +1461,19 @@
           return;
         }
 
+        const coverUrl = safeImageUrl(state.imageUrl, FALLBACK_ALBUM_ART);
         left.innerHTML = `
           <span class="now-playing-left">
-            <img class="now-playing-cover" src="${state.imageUrl}" alt="Album artwork" />
+            <img class="now-playing-cover" src="${escapeHtml(coverUrl)}" alt="Album artwork" />
             <span class="now-playing-text">
-              <span class="now-playing-title"><span class="now-playing-title-inner">${formatNowPlayingLabel(state.title, state.artist)}</span></span>
-              <span class="now-playing-subtitle">${state.album || "Live on Spotify"}</span>
+              <span class="now-playing-title"><span class="now-playing-title-inner">${escapeHtml(formatNowPlayingLabel(state.title, state.artist))}</span></span>
+              <span class="now-playing-subtitle">${escapeHtml(state.album || "Live on Spotify")}</span>
             </span>
           </span>
         `;
         right.textContent = "Live";
         nowPlayingLink.dataset.url = state.trackUrl;
-        nowPlayingLink.href = state.trackUrl;
+        nowPlayingLink.href = normalizeUrl(state.trackUrl) || "https://open.spotify.com";
         refreshNowPlayingTitleFit();
       }
 
@@ -1475,7 +1505,7 @@
           const endsAt = Number(rawSpotify.timestamps?.end) || 0;
 
           const trackUrl = rawSpotify.track_id
-            ? `https://open.spotify.com/track/${rawSpotify.track_id}`
+            ? `https://open.spotify.com/track/${encodeURIComponent(rawSpotify.track_id)}`
             : "https://open.spotify.com";
 
           return {
@@ -1483,8 +1513,7 @@
             title: rawSpotify.song || "Unknown song",
             artist: rawSpotify.artist || "Unknown artist",
             album: rawSpotify.album || "",
-            imageUrl:
-              rawSpotify.album_art_url || "https://i.scdn.co/image/ab67616d00001e02a0f8b88f0a2b2b3d92d8f57f",
+            imageUrl: rawSpotify.album_art_url || FALLBACK_ALBUM_ART,
             trackUrl,
             startedAt,
             endsAt
@@ -1520,9 +1549,11 @@
             artist: state,
             album,
             imageUrl: imageId
-              ? `https://i.scdn.co/image/${imageId}`
-              : "https://i.scdn.co/image/ab67616d00001e02a0f8b88f0a2b2b3d92d8f57f",
-            trackUrl: syncId ? `https://open.spotify.com/track/${syncId}` : "https://open.spotify.com",
+              ? `https://i.scdn.co/image/${encodeURIComponent(imageId)}`
+              : FALLBACK_ALBUM_ART,
+            trackUrl: syncId
+              ? `https://open.spotify.com/track/${encodeURIComponent(syncId)}`
+              : "https://open.spotify.com",
             startedAt,
             endsAt
           };
@@ -1558,22 +1589,18 @@
       }
 
       refreshNowPlaying();
-      setInterval(refreshNowPlaying, profileData.spotify.refreshMs || 30000);
+      setInterval(
+        refreshNowPlaying,
+        (profileData.spotify && profileData.spotify.refreshMs) || 30000
+      );
 
+      let resizeFitTimer = null;
       window.addEventListener("resize", () => {
-        refreshNowPlayingTitleFit();
+        window.clearTimeout(resizeFitTimer);
+        resizeFitTimer = window.setTimeout(refreshNowPlayingTitleFit, 150);
       });
 
-      // Player Modal Logic
-      const playerModal = document.getElementById("playerModal");
-      const playerCloseBtn = document.getElementById("playerCloseBtn");
-      const playerListenBtn = document.getElementById("playerListenBtn");
-      const playerProgressBar = document.getElementById("playerProgressBar");
-      const playerTimeCurrent = document.getElementById("playerTimeCurrent");
-      const playerTimeTotal = document.getElementById("playerTimeTotal");
-      let currentNowPlayingState = null;
-      let playerProgressTimer = null;
-
+      // --- Player Modal Logic -------------------------------------------------
       function formatTime(ms) {
         const safeMs = Number.isFinite(ms) ? Math.max(0, ms) : 0;
         const totalSeconds = Math.floor(safeMs / 1000);
@@ -1619,25 +1646,40 @@
         playerProgressTimer = setInterval(updatePlayerProgress, 1000);
       }
 
-      function openPlayerModal() {
-        playerModal.classList.add("active");
-        updatePlayerDisplay();
+      function isPlayerModalOpen() {
+        return playerModal.classList.contains("active");
       }
 
-        function closePlayerModal() {
+      function openPlayerModal() {
+        lastFocusedBeforeModal = document.activeElement;
+        playerModal.classList.add("active");
+        document.body.classList.add("modal-open");
+        updatePlayerDisplay();
+        playerCloseBtn.focus();
+      }
+
+      function closePlayerModal() {
+        if (!isPlayerModalOpen()) {
+          return;
+        }
 
         playerModal.classList.remove("active");
+        document.body.classList.remove("modal-open");
         stopPlayerProgressTimer();
         playSFX('close');
-      }
 
+        if (lastFocusedBeforeModal && typeof lastFocusedBeforeModal.focus === "function") {
+          lastFocusedBeforeModal.focus();
+        }
+        lastFocusedBeforeModal = null;
+      }
 
       function updatePlayerDisplay() {
         if (!currentNowPlayingState || !currentNowPlayingState.isPlaying) {
           document.getElementById("playerTrackTitle").textContent = "Not Playing";
           document.getElementById("playerTrackArtist").textContent = "Start listening on Spotify";
           document.getElementById("playerTrackAlbum").textContent = "";
-          document.getElementById("playerAlbumArt").src = "https://i.scdn.co/image/ab67616d00001e02a0f8b88f0a2b2b3d92d8f57f";
+          document.getElementById("playerAlbumArt").src = FALLBACK_ALBUM_ART;
           playerListenBtn.href = "https://open.spotify.com";
           playerListenBtn.classList.add("is-idle");
           stopPlayerProgressTimer();
@@ -1648,11 +1690,30 @@
         document.getElementById("playerTrackTitle").textContent = currentNowPlayingState.title;
         document.getElementById("playerTrackArtist").textContent = currentNowPlayingState.artist;
         document.getElementById("playerTrackAlbum").textContent = currentNowPlayingState.album || "Live on Spotify";
-        document.getElementById("playerAlbumArt").src = currentNowPlayingState.imageUrl;
-        playerListenBtn.href = currentNowPlayingState.trackUrl || "https://open.spotify.com";
+        document.getElementById("playerAlbumArt").src = safeImageUrl(
+          currentNowPlayingState.imageUrl,
+          FALLBACK_ALBUM_ART
+        );
+        playerListenBtn.href = normalizeUrl(currentNowPlayingState.trackUrl) || "https://open.spotify.com";
         playerListenBtn.classList.remove("is-idle");
         startPlayerProgressTimer();
       }
+
+      playerCloseBtn.addEventListener("click", closePlayerModal);
+
+      // Clicking the backdrop (but not the card itself) closes the modal.
+      playerModal.addEventListener("click", (event) => {
+        if (event.target === playerModal) {
+          closePlayerModal();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && isPlayerModalOpen()) {
+          event.preventDefault();
+          closePlayerModal();
+        }
+      });
 
       playerListenBtn.addEventListener("click", () => {
         playSFX('click');
@@ -1665,32 +1726,46 @@
         }
 
         event.preventDefault();
-        
+
         // Check if it's the now playing link
         if (linkButton.dataset.linkId === "nowPlaying") {
           playSFX('open');
           openPlayerModal();
           return;
         }
-        
+
         openProfileLink(linkButton.dataset.url);
       });
 
-      // Hover SFX
-      document.querySelectorAll(".link-btn, .player-listen-btn, .socials a").forEach(el => {
-        el.addEventListener("mouseenter", () => {
+      // Hover SFX, delegated so links rendered later still get it.
+      document.addEventListener(
+        "mouseover",
+        (event) => {
+          const target = event.target.closest(".link-btn, .player-listen-btn, .socials-inline a");
+          if (!target) {
+            return;
+          }
+
+          // Ignore moves that stay inside the same element.
+          if (event.relatedTarget && target.contains(event.relatedTarget)) {
+            return;
+          }
+
           playSFX('hover');
-        });
-      });
+        },
+        true
+      );
 
       const projectsEl = document.getElementById("projectsList");
       profileData.projects.forEach((project) => {
         const card = document.createElement("article");
         card.className = "project-card";
         const projectThumb = project.image
-          ? `<img class="project-thumb" src="${project.image}" alt="${project.title} icon" />`
+          ? `<img class="project-thumb" src="${escapeHtml(project.image)}" alt="${escapeHtml(project.title)} icon" />`
           : "";
-        card.innerHTML = `<div class="project-title-row">${projectThumb}<h3 class="project-title">${project.title}</h3></div><p class="project-desc">${project.description}</p>`;
+        // project.description is authored here in profileData and intentionally
+        // allows inline markup; project.title is escaped.
+        card.innerHTML = `<div class="project-title-row">${projectThumb}<h3 class="project-title">${escapeHtml(project.title)}</h3></div><p class="project-desc">${project.description}</p>`;
         projectsEl.appendChild(card);
       });
 
@@ -1712,7 +1787,7 @@
           a.rel = "noreferrer noopener";
           a.style.animationDelay = `${100 + i * 75}ms`;
           const hoverThumb = project.image || "./filearchive/cornwallCOREpfp.png";
-          a.innerHTML = `<span class="left">${project.title}</span><span class="right">Open</span><img class="project-link-hover-thumb" src="${hoverThumb}" alt="" aria-hidden="true" />`;
+          a.innerHTML = `<span class="left">${escapeHtml(project.title)}</span><span class="right">Open</span><img class="project-link-hover-thumb" src="${escapeHtml(hoverThumb)}" alt="" aria-hidden="true" />`;
           projectLinksEl.appendChild(a);
         });
       }
@@ -1736,7 +1811,7 @@
         a.target = "_blank";
         a.rel = "noreferrer noopener";
         a.style.animationDelay = `${100 + i * 75}ms`;
-        a.innerHTML = `<span class="left">${link.label}</span><span class="right">${link.tag}</span>`;
+        a.innerHTML = `<span class="left">${escapeHtml(link.label)}</span><span class="right">${escapeHtml(link.tag)}</span>`;
         policyLinksEl.appendChild(a);
       });
 
@@ -1750,13 +1825,18 @@
         openProfileLink(linkButton.dataset.url);
       });
 
-      const tabButtons = document.querySelectorAll(".tab-btn");
+      const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
       const tabPanels = document.querySelectorAll(".tab-panel");
 
-      function setActiveTab(tabId) {
+      function setActiveTab(tabId, shouldFocus = false) {
         tabButtons.forEach((button) => {
           const isSelected = button.id === tabId;
           button.setAttribute("aria-selected", isSelected ? "true" : "false");
+          // Roving tabindex: only the selected tab is in the tab order.
+          button.tabIndex = isSelected ? 0 : -1;
+          if (isSelected && shouldFocus) {
+            button.focus();
+          }
         });
 
         tabPanels.forEach((panel) => {
@@ -1771,8 +1851,40 @@
         });
       });
 
+      document.querySelector(".tabs").addEventListener("keydown", (event) => {
+        const currentIndex = tabButtons.findIndex(
+          (button) => button.getAttribute("aria-selected") === "true"
+        );
+        if (currentIndex === -1) {
+          return;
+        }
+
+        let nextIndex = null;
+        if (event.key === "ArrowRight") {
+          nextIndex = (currentIndex + 1) % tabButtons.length;
+        } else if (event.key === "ArrowLeft") {
+          nextIndex = (currentIndex - 1 + tabButtons.length) % tabButtons.length;
+        } else if (event.key === "Home") {
+          nextIndex = 0;
+        } else if (event.key === "End") {
+          nextIndex = tabButtons.length - 1;
+        }
+
+        if (nextIndex === null) {
+          return;
+        }
+
+        event.preventDefault();
+        setActiveTab(tabButtons[nextIndex].id, true);
+      });
+
+      // Sync the roving tabindex with the tab selected in the markup.
+      setActiveTab(
+        (tabButtons.find((button) => button.getAttribute("aria-selected") === "true") || tabButtons[0]).id
+      );
+
       const socialsInlineEl = document.getElementById("socialLinksInline");
-      
+
       profileData.socials.forEach((social) => {
         const aInline = document.createElement("a");
         const iconMarkup = getSocialIconMarkup(social.label, social.href);

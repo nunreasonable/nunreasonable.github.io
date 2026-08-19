@@ -57,7 +57,7 @@ const initialApiBase = shouldForceProxyBase(storedApiBase) ? getDefaultApiBase()
 
 const state = {
   apiBase: normalizeApiBase(initialApiBase),
-  token: localStorage.getItem("dashboardToken") || "",
+  token: sessionStorage.getItem("dashboardToken") || "",
   user: null
 };
 
@@ -151,7 +151,7 @@ async function apiRequest(path, options = {}) {
   if (!res.ok) {
     if (res.status === 401) {
       state.token = "";
-      localStorage.removeItem("dashboardToken");
+      sessionStorage.removeItem("dashboardToken");
       state.user = null;
       showLogin();
     }
@@ -169,6 +169,19 @@ function parseDiscordSnowflake(value, label) {
   }
 
   return raw;
+}
+
+const FALLBACK_AVATAR = "https://cdn.discordapp.com/embed/avatars/0.png";
+
+// Avatares vem da API do bot, que os repassa do Discord. So aceitamos http(s)
+// para que um valor tipo "javascript:" nunca chegue a um atributo src.
+function safeAvatarUrl(value) {
+  const candidate = String(value || "").trim();
+  if (/^https?:\/\//i.test(candidate)) {
+    return candidate;
+  }
+
+  return FALLBACK_AVATAR;
 }
 
 function setMessage(el, text, isError = false) {
@@ -192,21 +205,31 @@ function showLogin() {
 
 function applyUser(user) {
   state.user = user;
-  els.profileAvatar.src = user.avatarUrl || "https://cdn.discordapp.com/embed/avatars/0.png";
+  els.profileAvatar.src = safeAvatarUrl(user.avatarUrl);
   els.profileName.textContent = user.username;
   els.profilePermission.textContent = `${getPermissionLabel(user.permissionLevel)} (${user.permissionLevel})`;
 
-  if (user.permissionLevel < 3) {
-    els.addRoleBtn.disabled = true;
-    els.removeRoleBtn.disabled = true;
-    setMessage(els.roleMsg, "Sua permissão não permite gerenciar cargos.", true);
-  }
+  const level = Number(user.permissionLevel) || 0;
 
-  if (user.permissionLevel < 2) {
-    els.timeoutBtn.disabled = true;
-    els.removeRegimentBtn.disabled = true;
-    setMessage(els.punishMsg, "Sua permissão não permite punições administrativas.", true);
-  }
+  // Sempre reatribuido (nao so desabilitado) para que trocar de conta sem
+  // recarregar a pagina reflita a permissao do usuario atual.
+  const canManageRoles = level >= 3;
+  els.addRoleBtn.disabled = !canManageRoles;
+  els.removeRoleBtn.disabled = !canManageRoles;
+  setMessage(
+    els.roleMsg,
+    canManageRoles ? "" : "Sua permissão não permite gerenciar cargos.",
+    !canManageRoles
+  );
+
+  const canPunish = level >= 2;
+  els.timeoutBtn.disabled = !canPunish;
+  els.removeRegimentBtn.disabled = !canPunish;
+  setMessage(
+    els.punishMsg,
+    canPunish ? "" : "Sua permissão não permite punições administrativas.",
+    !canPunish
+  );
 }
 
 async function loadMeAndAudit() {
@@ -220,19 +243,30 @@ async function loadAudit() {
   const { logs } = await apiRequest("/api/audit", { method: "GET" });
   els.auditList.innerHTML = "";
 
-  for (const log of logs) {
+  for (const log of Array.isArray(logs) ? logs : []) {
     const li = document.createElement("li");
     const img = document.createElement("img");
-    img.src = log.actorAvatarUrl || "https://cdn.discordapp.com/embed/avatars/0.png";
+    img.src = safeAvatarUrl(log.actorAvatarUrl);
     img.alt = `Avatar de ${log.actorUsername}`;
 
     const main = document.createElement("div");
     main.className = "audit-main";
-    main.innerHTML = `<strong>${log.actorUsername}</strong> - ${log.action}<br>${log.details}`;
+
+    // actorUsername/action/details sao controlados por qualquer membro do
+    // Discord: montamos nos de texto em vez de interpolar em innerHTML.
+    const actor = document.createElement("strong");
+    actor.textContent = log.actorUsername ?? "";
+    main.appendChild(actor);
+    main.appendChild(document.createTextNode(` - ${log.action ?? ""}`));
+    main.appendChild(document.createElement("br"));
+    main.appendChild(document.createTextNode(log.details ?? ""));
 
     const time = document.createElement("span");
     time.className = "audit-time";
-    time.textContent = new Date(log.timestampUtc).toLocaleString("pt-BR");
+    const parsedTime = new Date(log.timestampUtc);
+    time.textContent = Number.isNaN(parsedTime.getTime())
+      ? ""
+      : parsedTime.toLocaleString("pt-BR");
 
     main.appendChild(time);
     li.appendChild(img);
@@ -241,7 +275,12 @@ async function loadAudit() {
   }
 }
 
-els.loginBtn.addEventListener("click", async () => {
+async function submitLogin() {
+  if (els.loginBtn.disabled) {
+    return;
+  }
+
+  els.loginBtn.disabled = true;
   setMessage(els.loginMessage, "Autenticando...");
   state.apiBase = normalizeApiBase(els.apiBase.value);
   els.apiBase.value = state.apiBase;
@@ -255,6 +294,7 @@ els.loginBtn.addEventListener("click", async () => {
 
   if (state.apiBase.includes("127.0.0.1") && !isLocalHost(window.location.hostname)) {
     setMessage(els.loginMessage, "URL localhost so funciona na mesma maquina do bot. Use /api para acesso remoto.", true);
+    els.loginBtn.disabled = false;
     return;
   }
 
@@ -265,12 +305,26 @@ els.loginBtn.addEventListener("click", async () => {
     });
 
     state.token = data.token;
-    localStorage.setItem("dashboardToken", state.token);
+    sessionStorage.setItem("dashboardToken", state.token);
     setMessage(els.loginMessage, "Login realizado com sucesso.");
     await loadMeAndAudit();
   } catch (err) {
     setMessage(els.loginMessage, err.message, true);
+  } finally {
+    els.loginBtn.disabled = false;
   }
+}
+
+els.loginBtn.addEventListener("click", submitLogin);
+
+// Enter em qualquer um dos campos envia o login.
+[els.apiBase, els.linkCode].forEach((input) => {
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      submitLogin();
+    }
+  });
 });
 
 els.logoutBtn.addEventListener("click", async () => {
@@ -280,16 +334,20 @@ els.logoutBtn.addEventListener("click", async () => {
   }
 
   state.token = "";
-  localStorage.removeItem("dashboardToken");
+  sessionStorage.removeItem("dashboardToken");
   state.user = null;
   showLogin();
 });
 
 els.refreshAuditBtn.addEventListener("click", async () => {
+  els.refreshAuditBtn.disabled = true;
   try {
     await loadAudit();
+    setMessage(els.loginMessage, "");
   } catch (err) {
-    alert(err.message);
+    setMessage(els.loginMessage, err.message, true);
+  } finally {
+    els.refreshAuditBtn.disabled = false;
   }
 });
 
@@ -396,7 +454,7 @@ els.removeRegimentBtn.addEventListener("click", async () => {
     await loadMeAndAudit();
   } catch {
     state.token = "";
-    localStorage.removeItem("dashboardToken");
+    sessionStorage.removeItem("dashboardToken");
     showLogin();
   }
 })();

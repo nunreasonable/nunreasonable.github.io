@@ -4,6 +4,8 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>ccore Administration Data Viewer</title>
+		<meta name="robots" content="noindex, nofollow, noarchive" />
+		<meta name="referrer" content="strict-origin-when-cross-origin" />
 		<link rel="icon" type="image/png" href="../../../filearchive/newpfp.png" />
 		<meta
 			name="description"
@@ -660,6 +662,7 @@
 				{ gid: "1896956474", name: "Grens" }
 			];
 			const AUTO_REFRESH_MS = 30000;
+			const JSONP_TIMEOUT_MS = 15000;
 			const ALL_SHEETS_VALUE = "__all__";
 
 			const tableEl = document.getElementById("sheetTable");
@@ -694,6 +697,11 @@
 			let recordMatches = [];
 			let activeRecordMatchIndex = -1;
 			let activeViewerMode = "table";
+			// Incrementado a cada carga. Uma resposta so pinta a tela se ainda for
+			// a requisicao corrente, senao trocar de aba durante um refresh faz a
+			// resposta antiga sobrescrever a nova.
+			let loadGeneration = 0;
+			let isLoading = false;
 
 			function columnNameFromIndex(index) {
 				let name = "";
@@ -749,13 +757,34 @@
 					const callbackName =
 						"__sheetCb_" + gid + "_" + Date.now() + "_" + Math.floor(Math.random() * 1000000);
 					const script = document.createElement("script");
+					let timeoutId = null;
+					let settled = false;
 
 					function cleanup() {
+						if (timeoutId !== null) {
+							clearTimeout(timeoutId);
+							timeoutId = null;
+						}
 						delete window[callbackName];
 						script.remove();
 					}
 
+					// Sem isso, um script que nunca carrega deixa a Promise viva para
+					// sempre e o <script> pendurado no <head>.
+					timeoutId = setTimeout(() => {
+						if (settled) {
+							return;
+						}
+						settled = true;
+						cleanup();
+						reject(new Error("Tempo esgotado ao carregar a aba " + gid + "."));
+					}, JSONP_TIMEOUT_MS);
+
 					window[callbackName] = (data) => {
+						if (settled) {
+							return;
+						}
+						settled = true;
 						cleanup();
 						if (!data || data.status !== "ok") {
 							reject(new Error("Google Sheets retornou erro para a aba " + gid + "."));
@@ -769,6 +798,10 @@
 					};
 
 					script.onerror = () => {
+						if (settled) {
+							return;
+						}
+						settled = true;
 						cleanup();
 						reject(new Error("Falha de rede ao carregar a aba " + gid + "."));
 					};
@@ -1064,18 +1097,50 @@
 			}
 
 			async function loadAndRenderData() {
+				const generation = ++loadGeneration;
+				isLoading = true;
 				setStatus("Carregando os dados mais recentes da planilha...");
+
 				try {
 					const selected = activeSheetValue || ALL_SHEETS_VALUE;
+					let failedTabs = [];
 
 					if (selected === ALL_SHEETS_VALUE) {
-						const tables = await Promise.all(sheetTabs.map((tab) => fetchSheetDataByGid(tab.gid)));
-						const normalizedTables = tables.map((table) => normalizeTable(table));
-						const combined = combineSheetData(sheetTabs, normalizedTables);
+						// allSettled: uma aba quebrada nao pode derrubar a visao
+						// consolidada inteira.
+						const settled = await Promise.allSettled(
+							sheetTabs.map((tab) => fetchSheetDataByGid(tab.gid))
+						);
+
+						if (generation !== loadGeneration) {
+							return;
+						}
+
+						const okTabs = [];
+						const normalizedTables = [];
+						settled.forEach((result, index) => {
+							if (result.status === "fulfilled") {
+								okTabs.push(sheetTabs[index]);
+								normalizedTables.push(normalizeTable(result.value));
+							} else {
+								failedTabs.push(sheetTabs[index].name);
+							}
+						});
+
+						if (okTabs.length === 0) {
+							throw new Error("Nenhuma aba pode ser carregada. Verifique a conexao e o acesso a planilha.");
+						}
+
+						const combined = combineSheetData(okTabs, normalizedTables);
 						allHeaders = combined.headers;
 						allRows = combined.rows;
 					} else {
 						const table = await fetchSheetDataByGid(selected);
+
+						if (generation !== loadGeneration) {
+							return;
+						}
+
 						const normalized = normalizeTable(table);
 						allHeaders = normalized.headers;
 						allRows = normalized.rows;
@@ -1085,9 +1150,24 @@
 
 					const now = new Date();
 					lastUpdatedEl.textContent = "Ultima atualizacao: " + now.toLocaleString();
-					setStatus("Dados sincronizados com sucesso.", "ok");
+
+					if (failedTabs.length > 0) {
+						setStatus(
+							"Dados sincronizados, mas estas abas falharam: " + failedTabs.join(", ") + ".",
+							"error"
+						);
+					} else {
+						setStatus("Dados sincronizados com sucesso.", "ok");
+					}
 				} catch (error) {
+					if (generation !== loadGeneration) {
+						return;
+					}
 					setStatus(error.message, "error");
+				} finally {
+					if (generation === loadGeneration) {
+						isLoading = false;
+					}
 				}
 			}
 
@@ -1169,6 +1249,17 @@
 				}
 			});
 
+			function startAutoRefresh() {
+				setInterval(() => {
+					// Nao empilha uma carga em cima de outra ainda em voo, e nao
+					// atualiza com a aba em segundo plano.
+					if (isLoading || document.hidden) {
+						return;
+					}
+					loadAndRenderData();
+				}, AUTO_REFRESH_MS);
+			}
+
 			(async () => {
 				setStatus("Preparando as abas...");
 				try {
@@ -1176,13 +1267,13 @@
 					sheetTabs = KNOWN_SHEETS;
 					renderSheetButtons(sheetTabs);
 					await loadAndRenderData();
-					setInterval(loadAndRenderData, AUTO_REFRESH_MS);
+					startAutoRefresh();
 				} catch (error) {
 					sheetTabs = [{ gid: DEFAULT_SHEET_GID, name: "Painel Principal" }];
 					renderSheetButtons(sheetTabs);
 					setStatus(error.message + " Exibindo apenas a aba principal.", "error");
 					await loadAndRenderData();
-					setInterval(loadAndRenderData, AUTO_REFRESH_MS);
+					startAutoRefresh();
 				}
 			})();
 		</script>

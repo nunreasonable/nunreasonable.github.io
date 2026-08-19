@@ -1,0 +1,17 @@
+# Wrangler / Cloudflare local state (contem account id e cache da conta)
+.wrangler/
+.dev.vars
+wrangler.toml.bak
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

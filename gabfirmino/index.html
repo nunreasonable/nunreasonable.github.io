@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Meias UwU - meias confortaveis e ventiladas, um projeto de estudo em HTML e CSS." />
+    <link rel="icon" type="image/png" href="assets/img/kitten.png">
     <link rel="stylesheet" href="alt_style.css">
     <title>Meias UwU</title>
 </head>
@@ -11,9 +13,9 @@
         <nav>
         <a href="#" id="logo" class="nav-item"><h2><img src="assets/img/kitten.png" alt=""> Meias UwU </h2></a>
         <ul>
-            <a class="nav-item" href="#about"><li>Sobre</li></a>
-            <a class="nav-item" href="#employees"><li>Funcionários</li></a>
-            <a class="nav-item" href="#account"><li>Sua Conta</li></a>
+            <li><a class="nav-item" href="#about">Sobre</a></li>
+            <li><a class="nav-item" href="#employees">Funcionários</a></li>
+            <li><a class="nav-item" href="#account">Sua Conta</a></li>
         </ul>
         </nav>
     </header>
@@ -77,22 +79,37 @@
         <section id="account">
             <article id="registration-form">
                 <h3>Registre-se para não perder novidades!!</h3>
+                <form id="registration" action="#account" method="post">
                 <div class="input-wrapper"> <!--input é o campo onde coloca seus dados, wrapper embrulha o campo de informação-->
                 <label for="complete-name">Nome completo: </label>
-                <input type="text" id="complete-name">
+                <input type="text" id="complete-name" name="complete-name" autocomplete="name" required>
                 </div>
                 <div class="input-wrapper">
                 <label for="mail">Email: </label>
-                <input type="text" id="mail">
+                <input type="email" id="mail" name="mail" autocomplete="email" required>
                 </div>
-                <button id="register-button">Cadastrar </button>
+                <button id="register-button" type="submit">Cadastrar </button>
+                <p id="register-feedback" role="status"></p>
+                </form>
             </article>
             <img src="assets/img/tetooo.gif" alt="Tetooo">
         </section>
     </main>
     <footer>
-        Visite nossas redes sociais<a href="https://instagram.com" id="insta">
-            <img src="assets/img/instagram.png"></a>
+        Visite nossas redes sociais<a href="https://instagram.com" id="insta" target="_blank" rel="noreferrer noopener">
+            <img src="assets/img/instagram.png" alt="Instagram"></a>
     </footer>
+    <script>
+      // Esta pagina e uma vitrine estatica: nao ha backend para receber o
+      // cadastro, entao damos um retorno claro em vez de um botao que nao faz nada.
+      document.getElementById("registration").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const name = document.getElementById("complete-name").value.trim();
+        const feedback = document.getElementById("register-feedback");
+        feedback.textContent = name
+          ? `Obrigado, ${name}! Este site e uma demonstracao, entao nada foi enviado.`
+          : "Este site e uma demonstracao, entao nada foi enviado.";
+      });
+    </script>
 </body>
 </html>

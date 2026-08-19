@@ -1,0 +1,6 @@
+# https://daeese.me/robots.txt
+
+User-agent: *
+Disallow: /cornwallcore/administration/
+
+Sitemap: https://daeese.me/sitemap.xml

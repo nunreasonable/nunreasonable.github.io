@@ -1,6 +1,6 @@
-# Cornwall Discord Bot
+# ccore - 'chavinhoCORE' Discord Bot
 
-Bot Discord para o 32nd "The Cornwall" Regiment of Foot com funcionalidades de alistamento, deployments e mensagens.
+Bot Discord para o 12° Regimento de Infantaria "Chaves" (servidor CONSTANTES) com funcionalidades de alistamento, deployments e mensagens.
 
 ## Comandos do Bot
 

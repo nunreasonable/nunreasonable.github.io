@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 - Page not found</title>
+    <meta name="robots" content="noindex" />
+    <meta name="description" content="This page does not exist on daeese.me." />
+    <link rel="icon" type="image/jpeg" href="/filearchive/lal.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg-start: #040203;
+        --bg-mid: #0b0408;
+        --bg-end: #1d0813;
+        --text: #e7eef7;
+        --muted: #9caac0;
+        --card-border: rgba(189, 0, 104, 0.342);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        font-family: "Space Grotesk", system-ui, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 16% 14%, rgba(145, 28, 74, 0.22) 0, rgba(145, 28, 74, 0) 40%),
+          radial-gradient(circle at 84% 84%, rgba(78, 15, 39, 0.16) 0, rgba(78, 15, 39, 0) 46%),
+          linear-gradient(160deg, var(--bg-start) 0%, var(--bg-mid) 64%, var(--bg-end) 100%);
+        background-attachment: fixed;
+      }
+
+      .card {
+        width: min(520px, 100%);
+        text-align: center;
+        padding: 36px 26px;
+        border: 1px solid var(--card-border);
+        border-radius: 22px;
+        background: rgba(4, 2, 3, 0.72);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
+      }
+
+      .code {
+        margin: 0;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(4rem, 18vw, 7rem);
+        line-height: 0.9;
+        letter-spacing: 2px;
+      }
+
+      h1 {
+        margin: 10px 0 0;
+        font-size: 1.2rem;
+        font-weight: 700;
+      }
+
+      p {
+        margin: 12px 0 0;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      a.home {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 22px;
+        min-height: 46px;
+        padding: 0 20px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        color: var(--text);
+        background: linear-gradient(135deg, #9e002f, #440114);
+        border: 1px solid rgba(158, 0, 47, 0.5);
+        transition: filter 160ms ease, transform 160ms ease;
+      }
+
+      a.home:hover {
+        filter: brightness(1.1);
+        transform: translateY(-1px);
+      }
+
+      a.home:focus-visible {
+        outline: 2px solid rgba(255, 255, 255, 0.75);
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <p class="code">404</p>
+      <h1>Page not found</h1>
+      <p>This URL does not exist on daeese.me. It may have been moved or removed.</p>
+      <a class="home" href="/">Back to home</a>
+    </main>
+  </body>
+</html>
