@@ -19,7 +19,11 @@ frente (proxy + rota `/api/*`).
 ## Infra
 
 - Proxy da API via Cloudflare Worker + Tunnel: [cloudflare/CLOUDFLARE_API_PROXY_SETUP.md](cloudflare/CLOUDFLARE_API_PROXY_SETUP.md)
-- Pendências de configuração fora do repositório (HTTPS, headers de segurança): [INFRA.md](INFRA.md)
+- Tunnel, serviço do bot e pendências de configuração fora do repositório: [INFRA.md](INFRA.md)
+
+A API do bot é servida em `daeese.me/api/*` por um Worker da Cloudflare, que encaminha para
+`api.daeese.me` através de um tunnel `cloudflared` rodando na máquina do bot. Tanto o tunnel
+(`cloudflared.service`) quanto o bot (`ccore-bot.service`, serviço de usuário) sobem no boot.
 
 ## Aviso sobre o spreadsheet viewer
 

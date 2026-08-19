@@ -1,6 +1,16 @@
+// Unica origem legitima: a pagina do dashboard. Em desenvolvimento local o
+// dashboard fala direto com http://127.0.0.1:5056 e nao passa por este Worker,
+// entao nao ha origem de dev para liberar aqui.
+const ALLOWED_ORIGINS = new Set(["https://daeese.me"]);
+
 function buildCorsHeaders(origin) {
+  // Refletir de volta qualquer Origin recebido transforma o proxy num
+  // intermediario aberto. So devolvemos a origem quando ela esta na allowlist.
+  const allowed = ALLOWED_ORIGINS.has(origin) ? origin : "https://daeese.me";
+
   return {
-    "Access-Control-Allow-Origin": origin || "https://daeese.me",
+    "Access-Control-Allow-Origin": allowed,
+    "Vary": "Origin",
     "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
     "Access-Control-Allow-Headers": "Authorization, Content-Type"
   };

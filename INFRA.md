@@ -1,8 +1,17 @@
-# Pendências de infraestrutura
+# Infraestrutura
 
-Itens que **não** dá para corrigir com um commit neste repositório — todos ficam no painel da
-Cloudflare ou na máquina que hospeda o bot. Levantados na auditoria de 19/08/2026; o estado
-observado está registrado para dar contexto.
+Itens que **não** dá para corrigir com um commit neste repositório — ficam no painel da Cloudflare
+ou na máquina que hospeda o bot. Levantados na auditoria de 19/08/2026; o estado observado está
+registrado para dar contexto.
+
+| # | Item | Estado |
+|---|---|---|
+| 1 | HTTP sem redirect para HTTPS | ⏳ pendente (painel da Cloudflare) |
+| 2 | Sem headers de segurança | ⏳ pendente (painel da Cloudflare) |
+| 3 | `api.daeese.me` fora do ar | ✅ **resolvido** em 19/08/2026 |
+| 4 | CORS do Worker permissivo | ✅ **resolvido** em 19/08/2026 |
+| 5 | `robots.txt` gerenciado pela Cloudflare | ℹ️ comportamento conhecido |
+| 6 | Planilha legível sem autenticação | ⏳ decisão pendente |
 
 ## 1. HTTP não redireciona para HTTPS
 
@@ -55,44 +64,84 @@ frame-ancestors 'self';
 Publicar primeiro como `Content-Security-Policy-Report-Only` e conferir o console antes de
 aplicar de verdade.
 
-## 3. `api.daeese.me` fora do ar
+## 3. `api.daeese.me` fora do ar — RESOLVIDO (19/08/2026)
 
-```
-$ curl -s -o /dev/null -w '%{http_code}' https://daeese.me/api/health   -> 530
-```
+Era um **530** da Cloudflare: o tunnel existia na conta e o DNS já apontava para ele, mas nenhum
+conector rodava nesta máquina — o `cloudflared` sequer estava instalado. O Worker e o DNS estavam
+corretos o tempo todo.
 
-O 530 da Cloudflare significa que o tunnel não tem origem viva, ou seja, o `cloudflared` não está
-rodando na máquina do bot. Enquanto isso, o login do dashboard falha em produção.
+Como está agora:
 
-Correção: subir o tunnel conforme [cloudflare/CLOUDFLARE_API_PROXY_SETUP.md](cloudflare/CLOUDFLARE_API_PROXY_SETUP.md).
+- `cloudflared` 2026.8.2, instalado pelo repo oficial (`pkg.cloudflare.com/cloudflared`).
+- Tunnel **`cornwall-bot-api`** (`7f9dd9b0-cf95-48e8-b4b1-1c7dfdf55a8a`), criado em 17/04/2026 —
+  reaproveitado, não recriado, então o registro DNS não precisou ser mexido.
+- Configuração em `/etc/cloudflared/config.yml`, credenciais em
+  `/etc/cloudflared/cornwall-bot-api.json` (root, 600).
+- Serviço de sistema `cloudflared.service`, `enabled` — sobe no boot.
 
 ```bash
-sudo systemctl status cloudflared
-sudo systemctl start cloudflared
+systemctl status cloudflared
+cloudflared tunnel info cornwall-bot-api      # deve listar um conector ativo
+sudo systemctl restart cloudflared
 ```
 
-## 4. CORS do Worker reflete qualquer Origin
+### Duas coisas que não são óbvias
 
-Em `cloudflare/api-proxy-worker/src/worker.js`, `buildCorsHeaders` devolve o `Origin` recebido em
-`Access-Control-Allow-Origin`. Como a autenticação usa `Authorization: Bearer` (header, não
-cookie), o navegador não anexa credencial sozinho e o risco fica contido — mas o correto é validar
-contra uma allowlist antes de refletir:
+**O `httpHostHeader` é obrigatório.** O bot roteia por `Host`, e o Worker encaminha com
+`Host: api.daeese.me`. Medido no bot local: `Host: 127.0.0.1:5056` → **200**;
+`Host: api.daeese.me` → **404**. Sem o `originRequest.httpHostHeader` no ingress, tudo vira 404.
+
+**O IPv6 de saída desta máquina não funciona.** `curl -6` dá timeout em 8s; `curl -4` responde em
+0,1s (o README do bot já registrava o mesmo sintoma no NuGet). Sem `edge-ip-version: "4"` o
+`cloudflared` tentava edges IPv6 e falhava em toda conexão — com a fixação, o tempo de conexão caiu
+de 8s para 2s e as falhas de dial foram de 4 para zero.
+
+## 3b. O bot também virou serviço
+
+O bot rodava como `dotnet run` preso a um terminal: fechar a aba derrubava a API. Um tunnel
+persistente com um bot volátil só trocaria o 530 por 502, então ele virou
+`~/.config/systemd/user/ccore-bot.service`.
+
+É um serviço **de usuário**, não de sistema, de propósito: o SELinux está `Enforcing` e o binário
+mora em `/home` (contexto `user_home_t`). Um serviço de sistema o executaria como `init_t`, uma
+transição que a política padrão do Fedora bloqueia. Como contrapartida, o `Linger` precisou ser
+ligado (`sudo loginctl enable-linger daeese`) para o serviço sobreviver ao logout.
+
+Aponta para o binário já construído em vez de `dotnet run`, que recompila a cada start, e leva
+`DOTNET_SYSTEM_NET_DISABLEIPV6=1` pelo mesmo motivo de IPv6 acima.
+
+```bash
+systemctl --user status ccore-bot
+systemctl --user restart ccore-bot
+journalctl --user -u ccore-bot -f
+```
+
+Verificado: `kill -9` no processo e o serviço trouxe o bot de volta sozinho em 11s.
+
+**Atenção ao desenvolver:** o serviço ocupa a porta 5056. Rodar `dotnet run` à mão em paralelo
+falha com `HttpListenerException (98): Address already in use`. Pare o serviço antes
+(`systemctl --user stop ccore-bot`).
+
+## 4. CORS do Worker reflete qualquer Origin — RESOLVIDO (19/08/2026)
+
+`buildCorsHeaders` devolvia em `Access-Control-Allow-Origin` qualquer `Origin` recebido. Agora usa
+allowlist, com `Vary: Origin` para o cache não misturar respostas:
 
 ```js
-const ALLOWED_ORIGINS = new Set(["https://daeese.me", "http://127.0.0.1:5056"]);
-
-function buildCorsHeaders(origin) {
-  const allowed = ALLOWED_ORIGINS.has(origin) ? origin : "https://daeese.me";
-  return {
-    "Access-Control-Allow-Origin": allowed,
-    "Vary": "Origin",
-    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-    "Access-Control-Allow-Headers": "Authorization, Content-Type"
-  };
-}
+const ALLOWED_ORIGINS = new Set(["https://daeese.me"]);
 ```
 
-Alterar isso exige `npx wrangler deploy`, por isso não foi feito junto com as correções do site.
+**Correção a uma versão anterior deste documento:** o exemplo aqui incluía `http://127.0.0.1:5056`
+na allowlist, o que estava errado — aquilo é a origem da *API*, nunca a de uma *página*. Em
+desenvolvimento local o dashboard fala direto com `127.0.0.1:5056` e não passa pelo Worker, então
+`https://daeese.me` é a única origem legítima.
+
+Deployado com `npx wrangler deploy` (versão `accee14a-c5dc-4251-aebb-53140d55776b`). Verificação:
+
+```bash
+curl -si -X OPTIONS https://daeese.me/api/health -H 'Origin: https://evil.test' | grep -i allow-origin
+# access-control-allow-origin: https://daeese.me   <- nao reflete a origem hostil
+```
 
 ## 5. A Cloudflare injeta o próprio bloco no `robots.txt`
 
