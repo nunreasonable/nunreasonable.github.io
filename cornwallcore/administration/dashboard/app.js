@@ -107,7 +107,8 @@ const els = {
   timeoutBtn: document.getElementById("timeoutBtn"),
   removeRegimentBtn: document.getElementById("removeRegimentBtn"),
   punishMsg: document.getElementById("punishMsg"),
-  auditList: document.getElementById("auditList")
+  auditList: document.getElementById("auditList"),
+  auditEmpty: document.getElementById("auditEmpty")
 };
 
 els.apiBase.value = state.apiBase;
@@ -202,13 +203,47 @@ function safeAvatarUrl(value) {
   return FALLBACK_AVATAR;
 }
 
-function setMessage(el, text, isError = false) {
+/**
+ * Escreve uma mensagem de status.
+ *
+ * O tom vira classe CSS em vez de cor inline: antes o vermelho de erro estava
+ * escrito em hexadecimal aqui dentro, fora do sistema de cores da folha de
+ * estilo, entao mudar a paleta nao alcancava esta mensagem.
+ *
+ * Aceita `true` como segundo argumento por compatibilidade com as chamadas
+ * antigas, que passavam um booleano de "isError".
+ */
+function setMessage(el, text, tone = "") {
+  const resolved = tone === true ? "error" : (tone || "");
+
   el.textContent = text;
-  el.style.color = isError ? "#ff8f8f" : "#9ab0c2";
+  el.classList.remove("is-error", "is-success");
+
+  if (!text) {
+    return;
+  }
+
+  if (resolved === "error") {
+    el.classList.add("is-error");
+  } else if (resolved === "success") {
+    el.classList.add("is-success");
+  }
 }
 
-function getPermissionLabel(level) {
-  return PERMISSION_LABELS[level] || "Unknown";
+/**
+ * Nome do nivel de permissao.
+ *
+ * A API ja devolve `permissionName`; PERMISSION_LABELS existe so como reserva
+ * para o caso de uma resposta antiga sem esse campo. Preferir o valor do
+ * servidor evita que os dois lados divirjam silenciosamente quando os niveis
+ * mudarem no bot.
+ */
+function getPermissionLabel(level, serverName) {
+  if (typeof serverName === "string" && serverName.trim()) {
+    return serverName.trim();
+  }
+
+  return PERMISSION_LABELS[level] || "Desconhecido";
 }
 
 function showDashboard() {
@@ -225,7 +260,8 @@ function applyUser(user) {
   state.user = user;
   els.profileAvatar.src = safeAvatarUrl(user.avatarUrl);
   els.profileName.textContent = user.username;
-  els.profilePermission.textContent = `${getPermissionLabel(user.permissionLevel)} (${user.permissionLevel})`;
+  els.profilePermission.textContent =
+    `${getPermissionLabel(user.permissionLevel, user.permissionName)} (nível ${user.permissionLevel})`;
 
   const level = Number(user.permissionLevel) || 0;
 
@@ -260,6 +296,11 @@ async function loadMeAndAudit() {
 async function loadAudit() {
   const { logs } = await apiRequest("/api/audit", { method: "GET" });
   els.auditList.innerHTML = "";
+
+  // Sem isto a lista simplesmente ficava em branco, sem dizer se estava vazia
+  // ou se a carga tinha falhado.
+  const hasLogs = Array.isArray(logs) && logs.length > 0;
+  els.auditEmpty.classList.toggle("hidden", hasLogs);
 
   for (const log of Array.isArray(logs) ? logs : []) {
     const li = document.createElement("li");
@@ -324,7 +365,7 @@ async function submitLogin() {
 
     state.token = data.token;
     sessionStorage.setItem("dashboardToken", state.token);
-    setMessage(els.loginMessage, "Login realizado com sucesso.");
+    setMessage(els.loginMessage, "Login realizado com sucesso.", "success");
     await loadMeAndAudit();
   } catch (err) {
     setMessage(els.loginMessage, err.message, true);
@@ -379,7 +420,7 @@ els.sendMsgBtn.addEventListener("click", async () => {
       })
     });
 
-    setMessage(els.msgSendStatus, "Mensagem enviada com sucesso.");
+    setMessage(els.msgSendStatus, "Mensagem enviada com sucesso.", "success");
     await loadAudit();
   } catch (err) {
     setMessage(els.msgSendStatus, err.message, true);
@@ -397,7 +438,7 @@ els.addRoleBtn.addEventListener("click", async () => {
       })
     });
 
-    setMessage(els.roleMsg, "Cargo adicionado.");
+    setMessage(els.roleMsg, "Cargo adicionado.", "success");
     await loadAudit();
   } catch (err) {
     setMessage(els.roleMsg, err.message, true);
@@ -415,7 +456,7 @@ els.removeRoleBtn.addEventListener("click", async () => {
       })
     });
 
-    setMessage(els.roleMsg, "Cargo removido.");
+    setMessage(els.roleMsg, "Cargo removido.", "success");
     await loadAudit();
   } catch (err) {
     setMessage(els.roleMsg, err.message, true);
@@ -438,7 +479,7 @@ els.timeoutBtn.addEventListener("click", async () => {
       })
     });
 
-    setMessage(els.punishMsg, "Timeout aplicado.");
+    setMessage(els.punishMsg, "Timeout aplicado.", "success");
     await loadAudit();
   } catch (err) {
     setMessage(els.punishMsg, err.message, true);
@@ -455,7 +496,7 @@ els.removeRegimentBtn.addEventListener("click", async () => {
       })
     });
 
-    setMessage(els.punishMsg, "Usuário removido do regimento.");
+    setMessage(els.punishMsg, "Usuário removido do regimento.", "success");
     await loadAudit();
   } catch (err) {
     setMessage(els.punishMsg, err.message, true);

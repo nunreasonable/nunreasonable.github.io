@@ -1,14 +1,52 @@
+/*
+ * Painel administrativo do ccore.
+ *
+ * A paleta e ancorada na do site irmao (ccore.daeese.me): azul-marinho, o
+ * vermelho do regimento e branco. Antes o painel era preto com dourado, sem
+ * relacao nenhuma com a vitrine ao lado.
+ *
+ * A regra que organiza as cores: o vermelho do regimento (--danger) e
+ * RESERVADO para acao destrutiva e erro. Antes ele era gasto em manchas
+ * decorativas de fundo enquanto o botao primario era dourado - ou seja, a cor
+ * mais forte da tela nao queria dizer nada. Num painel que aplica timeout e
+ * remove gente do regimento, a cor precisa carregar significado.
+ *
+ * Todos os pares de texto/fundo daqui passam em WCAG AA (>= 4.5:1 para texto
+ * normal, >= 3:1 para auxiliar).
+ */
+
 :root {
-  --bg: #101417;
-  --bg-soft: #1a2127;
-  --surface: rgba(17, 24, 31, 0.86);
-  --surface-2: #212a32;
-  --line: rgba(255, 255, 255, 0.11);
-  --text: #ecf4fb;
-  --muted: #9ab0c2;
-  --highlight: #e3b341;
-  --danger: #57061a;
-  --ok: #40bf78;
+  color-scheme: dark;
+
+  /* Superficies, do mais fundo ao mais proximo */
+  --bg: #071733;
+  --bg-2: #0b1f44;          /* o mesmo do site irmao: a ponte visual */
+  --surface: rgba(11, 31, 68, 0.82);
+  --surface-2: #12294f;     /* campos de formulario */
+  --surface-3: rgba(255, 255, 255, 0.04);
+
+  --line: rgba(255, 255, 255, 0.14);
+  --line-strong: rgba(255, 255, 255, 0.3);
+
+  --text: #f6f8fc;
+  --muted: #a8bad6;
+  --dim: #8fa3c2;
+
+  /* Acao primaria: o azul do regimento */
+  --accent: #1f4aa8;
+  --accent-hover: #2a5cc4;
+  --accent-soft: rgba(31, 74, 168, 0.22);
+
+  /* Destrutivo e erro: o vermelho do regimento, e so isso */
+  --danger: #cf142b;
+  --danger-hover: #e01f38;
+  --danger-soft: rgba(207, 20, 43, 0.16);
+
+  --ok: #5fd39b;
+  --error-text: #ff9aa6;
+
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+  --radius: 18px;
 }
 
 * {
@@ -18,35 +56,37 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at 5% 10%, #57061a, transparent 40%),
-              radial-gradient(circle at 80% 20%, #57061a, transparent 45%),
-              linear-gradient(160deg, #0f1418 0%, #000000 60%, #0f1418 100%);
+  background:
+    radial-gradient(circle at 8% 6%, rgba(31, 74, 168, 0.3), transparent 42%),
+    radial-gradient(circle at 92% 12%, rgba(207, 20, 43, 0.14), transparent 44%),
+    linear-gradient(165deg, var(--bg) 0%, var(--bg-2) 55%, #061530 100%);
+  background-attachment: fixed;
   color: var(--text);
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 .bg-shape {
   position: fixed;
   border-radius: 999px;
-  filter: blur(70px);
+  filter: blur(80px);
   pointer-events: none;
-  opacity: 0.25;
+  opacity: 0.3;
 }
 
 .shape-a {
   width: 380px;
   height: 380px;
-  background: #530613;
-  top: -120px;
-  right: -60px;
+  background: #1f4aa8;
+  top: -130px;
+  right: -70px;
   animation: floatA 10s ease-in-out infinite;
 }
 
 .shape-b {
   width: 280px;
   height: 280px;
-  background: #30010f;
-  bottom: -80px;
+  background: #7a0c1c;
+  bottom: -90px;
   left: -60px;
   animation: floatB 12s ease-in-out infinite;
 }
@@ -61,9 +101,10 @@ body {
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
-  backdrop-filter: blur(10px);
-  border-radius: 18px;
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
 .login-card {
@@ -76,26 +117,33 @@ body {
 
 h1 {
   margin: 0;
-  font-size: 3rem;
+  font-size: clamp(2.2rem, 6vw, 3rem);
   font-family: "Bebas Neue", sans-serif;
   letter-spacing: 1.2px;
+  line-height: 1;
 }
 
 .subtitle {
-  margin-top: 4px;
+  margin-top: 6px;
   color: var(--muted);
 }
 
 .steps {
   color: var(--muted);
   margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+.steps strong {
+  color: var(--text);
 }
 
 label {
   display: block;
   margin-bottom: 6px;
   margin-top: 12px;
-  color: #d8e4ef;
+  color: var(--muted);
+  font-size: 0.92rem;
 }
 
 input,
@@ -110,6 +158,23 @@ button {
   font: inherit;
 }
 
+input::placeholder,
+textarea::placeholder {
+  color: var(--dim);
+}
+
+input:hover,
+textarea:hover {
+  border-color: var(--line-strong);
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent-hover);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
 textarea {
   min-height: 92px;
   resize: vertical;
@@ -118,14 +183,20 @@ textarea {
 button {
   margin-top: 12px;
   cursor: pointer;
-  background: linear-gradient(95deg, #e3b341, #cf8c2c);
-  color: #221804;
-  border: none;
+  background: var(--accent);
+  color: #ffffff;
+  border: 1px solid transparent;
   font-weight: 700;
+  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease, opacity 140ms ease;
 }
 
-button:hover {
-  filter: brightness(1.06);
+button:hover:not(:disabled) {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 button.ghost {
@@ -134,25 +205,69 @@ button.ghost {
   border: 1px solid var(--line);
 }
 
+button.ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--line-strong);
+}
+
 button.danger {
-  background: linear-gradient(95deg, #d64545, #8f2727);
-  color: #fff;
+  background: var(--danger);
+  color: #ffffff;
+}
+
+button.danger:hover:not(:disabled) {
+  background: var(--danger-hover);
+}
+
+/*
+ * O modelo de permissao do painel funciona DESABILITANDO botoes conforme o
+ * nivel do usuario. Sem estilo de :disabled, um botao proibido ficava
+ * indistinguivel de um permitido e so falhava ao ser clicado.
+ */
+button:disabled {
+  cursor: not-allowed;
+  /* Fica com cara de campo inerte, nao de botao azul desbotado: so baixar a
+     opacidade dava 1.08:1 contra o habilitado, diferenca fraca demais para uma
+     regra de permissao. */
+  background: var(--surface-2);
+  color: var(--dim);
+  border-color: var(--line);
+  opacity: 0.75;
+  transform: none;
+}
+
+/* Foco visivel por teclado: a pagina e toda formulario e nao tinha nenhum. */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
 }
 
 .message {
   min-height: 20px;
   color: var(--muted);
   margin-top: 10px;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+/* Antes essas duas cores eram atribuidas inline pelo app.js, fora do CSS. */
+.message.is-error {
+  color: var(--error-text);
+}
+
+.message.is-success {
+  color: var(--ok);
 }
 
 .dev-note {
   margin: 16px 0 0;
   padding-top: 10px;
   border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 0.9rem;
+  color: var(--dim);
+  font-size: 0.85rem;
   text-align: center;
-  opacity: 0.9;
 }
 
 .hidden {
@@ -175,6 +290,7 @@ button.danger {
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
 }
 
 .profile img {
@@ -182,7 +298,9 @@ button.danger {
   height: 48px;
   border-radius: 999px;
   object-fit: cover;
-  border: 2px solid #ddb24f;
+  border: 2px solid var(--accent-hover);
+  flex: 0 0 auto;
+  background: var(--surface-2);
 }
 
 .profile h2,
@@ -190,8 +308,13 @@ button.danger {
   margin: 0;
 }
 
+.profile h2 {
+  font-size: 1.15rem;
+}
+
 .profile p {
   color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .topbar-actions {
@@ -199,25 +322,55 @@ button.danger {
   gap: 10px;
 }
 
+.topbar-actions button {
+  margin-top: 0;
+  width: auto;
+  white-space: nowrap;
+}
+
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* auto-fit em vez de 2 colunas fixas: com tres paineis, duas colunas deixam
+     uma celula vazia e a tela fica torta. Assim eles ocupam a linha inteira
+     quando ha largura, e quebram sozinhos quando nao ha. */
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  align-items: start;
   gap: 14px;
   margin-top: 14px;
 }
 
 .panel {
-  padding: 16px;
+  padding: 18px;
+  min-width: 0;
 }
 
 .panel h3 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
+}
+
+/* Uma faixa de cor por painel, para distinguir o destrutivo a distancia. */
+.panel {
+  border-top: 3px solid var(--accent);
+}
+
+.panel.is-destructive {
+  border-top-color: var(--danger);
+  /* Tinta de fundo levissima: o painel que remove gente do regimento
+     precisa ser reconhecivel antes de o clique acontecer. */
+  background:
+    linear-gradient(180deg, var(--danger-soft), transparent 120px),
+    var(--surface);
+}
+
+.panel.audit-panel {
+  border-top-color: var(--line-strong);
 }
 
 .hint {
   color: var(--muted);
   margin: 6px 0 12px;
+  font-size: 0.9rem;
 }
 
 .row {
@@ -226,7 +379,7 @@ button.danger {
 }
 
 .audit-panel {
-  grid-column: span 2;
+  grid-column: 1 / -1;
 }
 
 .audit-list {
@@ -237,10 +390,11 @@ button.danger {
   gap: 10px;
   max-height: 350px;
   overflow: auto;
+  scrollbar-gutter: stable;
 }
 
 .audit-list li {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface-3);
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 10px;
@@ -254,20 +408,30 @@ button.danger {
   height: 34px;
   border-radius: 999px;
   object-fit: cover;
+  flex: 0 0 auto;
+  background: var(--surface-2);
 }
 
 .audit-main {
   font-size: 0.92rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .audit-main strong {
-  color: #f1f8ff;
+  color: var(--text);
 }
 
 .audit-time {
   display: block;
-  color: var(--muted);
+  color: var(--dim);
   font-size: 0.82rem;
+  margin-top: 4px;
+}
+
+.audit-empty {
+  color: var(--muted);
+  margin: 12px 0 0;
 }
 
 @keyframes rise {
@@ -291,6 +455,17 @@ button.danger {
   50% { transform: translateY(-16px); }
 }
 
+/* Respeita quem pediu menos movimento no sistema. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: 1fr;
@@ -302,6 +477,10 @@ button.danger {
 
   .topbar {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+  }
+
+  .topbar-actions button {
+    flex: 1 1 0;
   }
 }
