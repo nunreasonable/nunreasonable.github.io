@@ -143,6 +143,27 @@ curl -si -X OPTIONS https://daeese.me/api/health -H 'Origin: https://evil.test' 
 # access-control-allow-origin: https://daeese.me   <- nao reflete a origem hostil
 ```
 
+## 4b. O IP do cliente só chega ao bot via `CF-Connecting-IP`
+
+Consequência de tudo passar por Worker + tunnel: o bot escuta em `127.0.0.1` e o
+`cloudflared` conecta do próprio loopback, então `RemoteEndPoint` é **sempre**
+`127.0.0.1`. Qualquer lógica por cliente que dependa dele trata o mundo inteiro
+como um único visitante — foi assim que o rate limit de login do dashboard
+acabou sendo global (corrigido em `cornwall-discord-application`, commit
+`fd5209e`).
+
+O que de fato chega ao bot, capturado em 19/08/2026:
+
+| Header | Valor | Confiável? |
+|---|---|---|
+| `CF-Connecting-IP` | IP real do cliente | ✅ a Cloudflare recusa na borda, com `403 error code: 1000`, qualquer requisição que traga esse header do cliente |
+| `X-Forwarded-For` | `<valor forjado>,<ip real>` | ❌ o valor do cliente fica **na frente** da cadeia |
+| `X-Real-IP` | ausente | — |
+
+A armadilha é que a leitura convencional de `X-Forwarded-For` é pegar o primeiro
+elemento, e é exatamente ele que o atacante controla. Qualquer código novo que
+precise do IP do cliente deve usar `CF-Connecting-IP` e mais nada.
+
 ## 5. A Cloudflare injeta o próprio bloco no `robots.txt`
 
 O `robots.txt` servido em produção **não** é apenas o arquivo deste repositório. A Cloudflare
