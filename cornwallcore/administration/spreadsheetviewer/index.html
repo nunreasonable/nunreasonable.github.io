@@ -646,20 +646,16 @@
 		</main>
 
 		<script>
-			const SPREADSHEET_ID = "1zME1G3vJ-pwKZ_h6pm7G48qfPQDZQdijCD90j1XSvzs";
-			const DEFAULT_SHEET_GID = "247858763";
+			// Planilha do regimento. E a mesma que o bot le como auditCsvUrl e que o
+			// comando /checkspreadsheetinfo consulta, entao o painel e o Discord
+			// mostram sempre o mesmo numero.
+			const SPREADSHEET_ID = "1ZPFd05P5tsy-6QgvxIgm_5ftjP7ZO6E1lDyjAnmHJxs";
+			const DEFAULT_SHEET_GID = "1117562202";
 			const KNOWN_SHEETS = [
-				{ gid: "247858763", name: "Settings/Information" },
-				{ gid: "634577384", name: "EVENT FORM" },
-				{ gid: "1169198029", name: "INACTIVITY FORM" },
-				{ gid: "1265948508", name: "EventLogs" },
-				{ gid: "227744936", name: "InactivityLogs" },
-				{ gid: "1678230106", name: "Active Personnel" },
-				{ gid: "827170318", name: "Roster" },
-				{ gid: "1798939993", name: "PERFORMANCE HISTORY" },
-				{ gid: "677829820", name: "Centre" },
-				{ gid: "1182925860", name: "Lights" },
-				{ gid: "1896956474", name: "Grens" }
+				{ gid: "1117562202", name: "CENTRO" },
+				{ gid: "206072502", name: "LIGEIROS" },
+				{ gid: "213664984", name: "GRANADEIROS" },
+				{ gid: "382684213", name: "PROMOÇÕES" }
 			];
 			const AUTO_REFRESH_MS = 30000;
 			const JSONP_TIMEOUT_MS = 15000;
@@ -820,11 +816,40 @@
 				});
 			}
 
+			/*
+			 * O gviz so marca a linha 1 como cabecalho quando consegue deduzir isso
+			 * pelos tipos das colunas - e numa aba ainda sem ninguem, como LIGEIROS
+			 * e GRANADEIROS hoje, nao ha dado abaixo para comparar. O resultado era
+			 * a aba aparecer com colunas "A, B, C, D, E" e o cabecalho de verdade
+			 * ("NOME DE USUARIO", "CARGO"...) exibido como se fosse um jogador.
+			 *
+			 * Quando NENHUMA coluna tem rotulo e a primeira linha e toda de texto,
+			 * ela e o cabecalho. A checagem de texto evita comer a primeira linha de
+			 * uma tabela que realmente comece pelos dados.
+			 */
+			function promoteHeaderRow(labels, table) {
+				if (labels.some((label) => label !== "") || table.rows.length === 0) {
+					return null;
+				}
+
+				const cells = Array.isArray(table.rows[0].c) ? table.rows[0].c : [];
+				const values = labels.map((_, index) => formatCellValue(cells[index]).trim());
+
+				const temTexto = values.some((value) => value !== "");
+				const soTexto = values.every((value) => value === "" || Number.isNaN(Number(value)));
+				return temTexto && soTexto ? values : null;
+			}
+
 			function normalizeTable(table) {
-				const headers = table.cols.map((col, index) => {
-					const cleaned = (col.label || "").trim();
-					return cleaned || columnNameFromIndex(index);
-				});
+				let labels = table.cols.map((col) => (col.label || "").trim());
+
+				const promoted = promoteHeaderRow(labels, table);
+				if (promoted) {
+					labels = promoted;
+					table = { cols: table.cols, rows: table.rows.slice(1) };
+				}
+
+				const headers = labels.map((label, index) => label || columnNameFromIndex(index));
 
 				const rows = table.rows
 					.map((row) => {
@@ -833,7 +858,23 @@
 					})
 					.filter((rowValues) => rowValues.some((value) => value.trim() !== ""));
 
-				return { headers, rows };
+				/*
+				 * Coluna sem rotulo E sem nenhum valor nao vira coluna.
+				 *
+				 * A aba PROMOCOES so comeca na coluna K: sem isto, dez colunas
+				 * vazias apareciam na frente dos dados, cada uma com um nome
+				 * inventado (A, B, C...), e empurravam o conteudo para fora da
+				 * primeira tela. Uma coluna com rotulo continua aparecendo mesmo
+				 * vazia - ali o vazio e informacao.
+				 */
+				const keep = headers.map(
+					(_, index) => labels[index] !== "" || rows.some((row) => row[index].trim() !== "")
+				);
+
+				return {
+					headers: headers.filter((_, index) => keep[index]),
+					rows: rows.map((row) => row.filter((_, index) => keep[index]))
+				};
 			}
 
 			function combineSheetData(tabs, normalizedTables) {
@@ -1064,6 +1105,11 @@
 
 				if (filteredRows.length === 0) {
 					tableEl.innerHTML = "";
+					// "Nenhum resultado para o filtro" mentia quando nao havia filtro
+					// nenhum: as abas LIGEIROS e GRANADEIROS estao vazias, e o texto
+					// sugeria que era a busca escondendo as linhas.
+					emptyStateEl.textContent =
+						allRowCount === 0 ? "This tab has no rows yet." : "No results for the current filter.";
 					emptyStateEl.hidden = false;
 					return;
 				}
