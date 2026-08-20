@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>ccore — Status</title>
+		<link rel="canonical" href="https://ccore.daeese.me/status/" />
+		<meta
+			name="description"
+			content="Estado em tempo real do ccore - 'chavinhoCORE', bot do 12° Regimento de Infantaria &quot;Chaves&quot;."
+		/>
+		<link rel="icon" type="image/png" href="../../filearchive/newpfp.png" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			/*
+			 * Paleta copiada do site vitrine ao lado (ccore.daeese.me): esta
+			 * pagina mora no mesmo host e precisa parecer a mesma coisa.
+			 *
+			 * O vermelho (--accent) e reservado a "fora do ar", e nada mais -
+			 * mesma regra do painel administrativo. Numa pagina de status, a
+			 * cor mais forte da tela tem que querer dizer alguma coisa.
+			 */
+			:root {
+				color-scheme: dark;
+				--bg: #0b1f44;
+				--bg-2: #142f63;
+				--panel: rgba(12, 28, 61, 0.9);
+				--line: rgba(255, 255, 255, 0.16);
+				--line-strong: rgba(255, 255, 255, 0.28);
+				--text: #f6f8fc;
+				--muted: #d5ddee;
+				--dim: #a8bad6;
+				--accent: #cf142b;
+				--accent-3: #1f4aa8;
+				--ok: #5fd39b;
+				--shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+				--radius: 22px;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				margin: 0;
+				min-height: 100vh;
+				color: var(--text);
+				font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+				background:
+					radial-gradient(circle at top left, rgba(207, 20, 43, 0.22), transparent 28%),
+					radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.12), transparent 34%),
+					linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
+				background-attachment: fixed;
+			}
+
+			.shell {
+				width: min(1080px, calc(100% - 24px));
+				margin: 0 auto;
+				padding: 18px 0 28px;
+			}
+
+			.topbar {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 12px;
+				justify-content: space-between;
+				align-items: center;
+				border: 1px solid rgba(255, 255, 255, 0.2);
+				border-radius: 18px;
+				padding: 14px 16px;
+				background: var(--panel);
+				box-shadow: var(--shadow);
+				margin-bottom: 16px;
+			}
+
+			.brand {
+				display: flex;
+				flex-direction: column;
+				gap: 3px;
+			}
+
+			.brand-title {
+				margin: 0;
+				font-size: 1rem;
+				letter-spacing: 0.02em;
+			}
+
+			.brand-meta {
+				margin: 0;
+				color: var(--muted);
+				font-size: 0.92rem;
+			}
+
+			.actions {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+			}
+
+			.button {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				padding: 10px 14px;
+				border: 1px solid var(--line);
+				border-radius: 999px;
+				color: var(--text);
+				text-decoration: none;
+				background: rgba(255, 255, 255, 0.04);
+				transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+			}
+
+			.button:hover,
+			.button:focus-visible {
+				background: rgba(255, 255, 255, 0.12);
+				border-color: var(--line-strong);
+				outline: none;
+				transform: translateY(-1px);
+			}
+
+			.card {
+				border: 1px solid rgba(255, 255, 255, 0.2);
+				border-radius: var(--radius);
+				background: var(--panel);
+				box-shadow: var(--shadow);
+				padding: 22px;
+			}
+
+			.headline {
+				display: flex;
+				align-items: center;
+				gap: 14px;
+				flex-wrap: wrap;
+			}
+
+			.dot {
+				width: 16px;
+				height: 16px;
+				border-radius: 999px;
+				flex: 0 0 auto;
+				background: var(--dim);
+				box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.08);
+			}
+
+			.state-online .dot {
+				background: var(--ok);
+				box-shadow: 0 0 0 5px rgba(95, 211, 155, 0.18);
+			}
+
+			.state-offline .dot {
+				background: var(--accent);
+				box-shadow: 0 0 0 5px rgba(207, 20, 43, 0.2);
+			}
+
+			.headline h2 {
+				margin: 0;
+				font-size: clamp(1.4rem, 4vw, 2rem);
+			}
+
+			.headline-note {
+				margin: 10px 0 0;
+				color: var(--muted);
+				line-height: 1.55;
+			}
+
+			.metrics {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+				gap: 12px;
+				margin-top: 20px;
+			}
+
+			.metric {
+				border: 1px solid var(--line);
+				border-radius: 14px;
+				padding: 14px;
+				background: rgba(255, 255, 255, 0.04);
+			}
+
+			.metric dt {
+				margin: 0;
+				color: var(--dim);
+				font-size: 0.82rem;
+				text-transform: uppercase;
+				letter-spacing: 0.06em;
+			}
+
+			.metric dd {
+				margin: 6px 0 0;
+				font-size: 1.35rem;
+				font-weight: 700;
+				overflow-wrap: anywhere;
+			}
+
+			.footnote {
+				margin: 18px 0 0;
+				color: var(--dim);
+				font-size: 0.86rem;
+				line-height: 1.5;
+			}
+
+			.footnote a {
+				color: var(--muted);
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				*,
+				*::before,
+				*::after {
+					transition-duration: 0.001ms !important;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main class="shell">
+			<header class="topbar">
+				<div class="brand">
+					<h1 class="brand-title">ccore — Status</h1>
+					<p class="brand-meta">Estado do bot do 12° Regimento de Infantaria "Chaves".</p>
+				</div>
+				<div class="actions">
+					<a class="button" href="../">Voltar ao ccore</a>
+					<a class="button" href="https://dashboard.daeese.me/">Dashboard</a>
+				</div>
+			</header>
+
+			<section class="card" id="statusCard" aria-live="polite">
+				<div class="headline">
+					<span class="dot" aria-hidden="true"></span>
+					<h2 id="statusHeadline">Consultando o bot…</h2>
+				</div>
+				<p class="headline-note" id="statusNote">Buscando o estado atual na API do bot.</p>
+
+				<dl class="metrics" id="metrics">
+					<div class="metric"><dt>Uptime</dt><dd id="mUptime">—</dd></div>
+					<div class="metric"><dt>Latência</dt><dd id="mLatency">—</dd></div>
+					<div class="metric"><dt>Servidores</dt><dd id="mGuilds">—</dd></div>
+					<div class="metric"><dt>Membros</dt><dd id="mMembers">—</dd></div>
+					<div class="metric"><dt>Versão</dt><dd id="mVersion">—</dd></div>
+					<div class="metric"><dt>Biblioteca</dt><dd id="mLibrary">—</dd></div>
+				</dl>
+
+				<p class="footnote">
+					Atualiza sozinho a cada 15 segundos. Última medição: <span id="mMeasured">—</span>.
+					Dados da máquina que hospeda o bot não aparecem aqui — eles ficam na aba
+					<em>Logs</em> do <a href="https://dashboard.daeese.me/">painel administrativo</a>, que exige login.
+				</p>
+			</section>
+		</main>
+
+		<script>
+			// O proxy da API mora no dominio raiz; em producao esta pagina e
+			// servida em ccore.daeese.me, entao a chamada sai cross-origin e
+			// depende de ccore.daeese.me estar na allowlist de CORS do Worker.
+			//
+			// Em desenvolvimento (python3 -m http.server) a pagina fala direto
+			// com o bot, sem passar pelo Worker - mesmo criterio que o
+			// getDefaultApiBase() do dashboard ja usa.
+			const PROXY_STATUS_URL = "https://daeese.me/api/status";
+			const LOCAL_STATUS_URL = "http://127.0.0.1:5056/api/status";
+			const REFRESH_MS = 15000;
+
+			function isLocalHost(hostname) {
+				return hostname === "localhost" || hostname === "127.0.0.1";
+			}
+
+			const API_URL =
+				window.location.protocol !== "https:" && isLocalHost(window.location.hostname)
+					? LOCAL_STATUS_URL
+					: PROXY_STATUS_URL;
+
+			const els = {
+				card: document.getElementById("statusCard"),
+				headline: document.getElementById("statusHeadline"),
+				note: document.getElementById("statusNote"),
+				uptime: document.getElementById("mUptime"),
+				latency: document.getElementById("mLatency"),
+				guilds: document.getElementById("mGuilds"),
+				members: document.getElementById("mMembers"),
+				version: document.getElementById("mVersion"),
+				library: document.getElementById("mLibrary"),
+				measured: document.getElementById("mMeasured")
+			};
+
+			function setState(state) {
+				els.card.classList.remove("state-online", "state-offline");
+				if (state) {
+					els.card.classList.add(state);
+				}
+			}
+
+			function clearMetrics() {
+				[els.uptime, els.latency, els.guilds, els.members, els.version, els.library].forEach((el) => {
+					el.textContent = "—";
+				});
+			}
+
+			async function refresh() {
+				try {
+					// AbortController porque um tunnel fora do ar pode deixar o
+					// fetch pendurado bem alem do intervalo de refresh, e a
+					// pagina ficaria presa em "Consultando..." para sempre.
+					const controller = new AbortController();
+					const timeout = window.setTimeout(() => controller.abort(), 8000);
+
+					const res = await fetch(API_URL, { signal: controller.signal, cache: "no-store" });
+					window.clearTimeout(timeout);
+
+					if (!res.ok) {
+						throw new Error(`A API respondeu ${res.status}.`);
+					}
+
+					const data = await res.json();
+					const bot = data.bot;
+					if (!bot) {
+						throw new Error("Resposta da API sem os dados do bot.");
+					}
+
+					setState("state-online");
+					els.headline.textContent = "O bot está no ar";
+					els.note.textContent = "Conectado ao gateway do Discord e respondendo a comandos.";
+
+					els.uptime.textContent = bot.uptime ?? "—";
+					els.latency.textContent = `${bot.latencyMs} ms`;
+					els.guilds.textContent = bot.guilds;
+					els.members.textContent = Number(bot.members || 0).toLocaleString("pt-BR");
+					els.version.textContent = bot.version ?? "—";
+					els.library.textContent = String(bot.library || "").split("+")[0] || "—";
+					els.measured.textContent = new Date(bot.measuredAtUtc).toLocaleString("pt-BR");
+				} catch (err) {
+					// O fetch falhar E a informacao que esta pagina existe para
+					// dar. Mostrar isso explicitamente vale mais do que uma tela
+					// em branco ou metricas velhas fingindo estar frescas.
+					setState("state-offline");
+					els.headline.textContent = "O bot está fora do ar";
+					els.note.textContent =
+						err.name === "AbortError"
+							? "A API não respondeu a tempo. O bot ou o túnel que o expõe podem estar fora do ar."
+							: `Não consegui falar com a API do bot: ${err.message}`;
+
+					clearMetrics();
+					els.measured.textContent = new Date().toLocaleString("pt-BR");
+				}
+			}
+
+			refresh();
+			window.setInterval(refresh, REFRESH_MS);
+		</script>
+	</body>
+</html>

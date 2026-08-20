@@ -25,12 +25,12 @@ Bot Discord para o 12° Regimento de Infantaria "Chaves" (servidor CONSTANTES) c
   - Parâmetro: código do jogo
   - Função: Embed com roles ping + botões de acesso
 
-- **`/dmrole`** - Envia DM para cargo/usuário (com código)
+- **`/dmdeployment`** - Envia DM para cargo/usuário (com código)
   - Requer: Cargo de permissão configurado
   - Parâmetros: cargo/usuário, código, mensagem
   - Limite: 500 membros por execução
 
-- **`/dmrolemsg`** - Envia DM para cargo/usuário (sem código)
+- **`/dmreminder`** - Envia DM para cargo/usuário (sem código)
   - Requer: Cargo de permissão configurado
   - Parâmetros: cargo/usuário, mensagem
   - Limite: 500 membros por execução
@@ -46,6 +46,16 @@ Bot Discord para o 12° Regimento de Infantaria "Chaves" (servidor CONSTANTES) c
 ### Utilitários
 - **`/ping`** - Testa latência do bot
   - Função: Retorna tempo de resposta em ms
+
+- **`/logs`** - Mostra as últimas linhas de log do bot
+  - Requer: cargo de staff
+  - Parâmetros opcionais: quantidade, nível, filtro de texto, privado
+  - As mesmas linhas aparecem na aba **Logs** do dashboard
+
+### Estado do bot
+O estado público (uptime, latência, servidores, membros) fica em
+[ccore.daeese.me/status](https://ccore.daeese.me/status/), sem login. Dados da máquina que
+hospeda o bot só aparecem no painel administrativo autenticado.
 
 ### Comandos de Administração
 - **`vsfdliliane`** - Comando especial restrito
@@ -67,7 +77,7 @@ Observação: o bot agora usa o intent `MessageContent` para ler o texto das men
 
 ## Requisitos
 
-- .NET 8.0+
+- .NET 9.0
 - DisCatSharp
 - Configuração adequada no `config.json`
 - Permissões do bot no servidor Discord

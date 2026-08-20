@@ -27,10 +27,10 @@
       <label for="apiBase">URL da API do bot</label>
       <input id="apiBase" placeholder="https://daeese.me/api (producao) ou http://127.0.0.1:5056 (local)" />
       <label for="linkCode">Código de login</label>
-      <input id="linkCode" placeholder="CORN-123456" />
+      <input id="linkCode" placeholder="CORN-XXXXX-XXXXX" />
       <button id="loginBtn">Entrar no Dashboard</button>
       <p id="loginMessage" class="message"></p>
-      <p class="dev-note">Painel em desenvolvimento — beta 0.1.2</p>
+      <p class="dev-note">Painel em desenvolvimento — beta 0.2.0</p>
     </section>
 
     <section id="dashboardView" class="dashboard hidden">
@@ -48,7 +48,22 @@
         </div>
       </header>
 
-      <section class="grid">
+      <!--
+        Abas em vez de uma grade unica: com onze paineis, empilhar tudo numa
+        coluna so tornaria a pagina impossivel de varrer. Sao botoes trocando a
+        classe .hidden - a mesma mecanica que ja alterna login/dashboard, sem
+        router nem framework.
+      -->
+      <nav class="tabs" role="tablist" aria-label="Seções do painel">
+        <button class="tab is-active" role="tab" data-tab="moderacao" aria-selected="true">Moderação</button>
+        <button class="tab" role="tab" data-tab="auditoria" aria-selected="false">Auditoria</button>
+        <button class="tab" role="tab" data-tab="comunicacoes" aria-selected="false">Comunicações</button>
+        <button class="tab" role="tab" data-tab="alistamento" aria-selected="false">Alistamento</button>
+        <button class="tab" role="tab" data-tab="logs" aria-selected="false">Logs</button>
+      </nav>
+
+      <!-- ================= MODERAÇÃO ================= -->
+      <section class="grid tab-panel" data-panel="moderacao">
         <article class="card panel">
           <h3>Gestão de Cargos</h3>
           <p class="hint">Disponível para permissão 3+</p>
@@ -83,9 +98,174 @@
           </div>
           <p id="punishMsg" class="message"></p>
         </article>
+      </section>
 
-        <article class="card panel audit-panel">
-          <h3>Audit Log</h3>
+      <!-- ================= AUDITORIA ================= -->
+      <section class="grid tab-panel hidden" data-panel="auditoria">
+        <article class="card panel wide">
+          <h3>Efetivo</h3>
+          <p class="hint">Kills, deaths, assists e batalhas consolidados. Clique numa linha para editar.</p>
+          <div class="row">
+            <input id="rosterSearch" placeholder="Buscar jogador" />
+            <button id="rosterRefreshBtn" class="ghost">Recarregar</button>
+          </div>
+          <p id="rosterTotals" class="hint"></p>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>Nome</th><th>K</th><th>D</th><th>A</th><th>K/D</th><th>Bat.</th><th>Cargo</th></tr>
+              </thead>
+              <tbody id="rosterBody"></tbody>
+            </table>
+          </div>
+          <p id="rosterMsg" class="message"></p>
+        </article>
+
+        <article class="card panel">
+          <h3>Editar jogador</h3>
+          <p class="hint">Permissão 3+. Renomear para um nome já existente é recusado.</p>
+          <label for="editUsername">Jogador</label>
+          <input id="editUsername" placeholder="Nome atual" />
+          <label for="editNewUsername">Novo nome (opcional)</label>
+          <input id="editNewUsername" placeholder="Deixe vazio para manter" />
+          <div class="row">
+            <input id="editKills" placeholder="Kills" inputmode="numeric" />
+            <input id="editDeaths" placeholder="Deaths" inputmode="numeric" />
+          </div>
+          <div class="row">
+            <input id="editAssists" placeholder="Assists" inputmode="numeric" />
+            <input id="editBattles" placeholder="Batalhas" inputmode="numeric" />
+          </div>
+          <label for="editScope">Escopo</label>
+          <select id="editScope">
+            <option value="consolidado">Consolidado (audit.json)</option>
+            <option value="pendente">Fila pendente</option>
+          </select>
+          <div class="row">
+            <button id="editSaveBtn">Salvar</button>
+            <button id="editRemoveBtn" class="danger">Remover</button>
+          </div>
+          <p id="editMsg" class="message"></p>
+        </article>
+
+        <article class="card panel">
+          <h3>Patente</h3>
+          <p class="hint">Texto livre. Campo em branco remove a patente.</p>
+          <input id="rankUsername" placeholder="Jogador" />
+          <input id="rankValue" placeholder="Patente (vazio remove)" />
+          <button id="rankSaveBtn">Definir patente</button>
+          <p id="rankMsg" class="message"></p>
+        </article>
+
+        <article class="card panel">
+          <h3>Publicar no GitHub</h3>
+          <p class="hint">Consolida a fila e publica. Rode a prévia antes.</p>
+          <p id="pushPending" class="hint"></p>
+          <div class="row">
+            <button id="pushDryBtn" class="ghost">Prévia (dry run)</button>
+            <button id="pushBtn">Publicar</button>
+          </div>
+          <pre id="pushResult" class="output hidden"></pre>
+          <p id="pushMsg" class="message"></p>
+        </article>
+
+        <article class="card panel wide">
+          <h3>Histórico da auditoria</h3>
+          <p class="hint">O mesmo que <code>/audit-logs</code> mostra no Discord.</p>
+          <ul id="auditHistoryList" class="audit-list"></ul>
+          <p id="auditHistoryEmpty" class="audit-empty hidden">Nenhuma ação registrada ainda.</p>
+        </article>
+      </section>
+
+      <!-- ================= COMUNICAÇÕES ================= -->
+      <section class="grid tab-panel hidden" data-panel="comunicacoes">
+        <article class="card panel">
+          <h3>Deployment</h3>
+          <p class="hint">Permissão 2+. Vai para o canal configurado no bot.</p>
+          <label for="deployCode">Código do jogo</label>
+          <input id="deployCode" placeholder="Ex.: CORN1" />
+          <button id="deployBtn">Enviar deployment</button>
+          <p id="deployMsg" class="message"></p>
+        </article>
+
+        <article class="card panel">
+          <h3>DM em massa</h3>
+          <p class="hint">Permissão 3+. Máximo 500 destinatários por envio.</p>
+          <label for="dmRoleId">ID do cargo <em>ou</em> do usuário</label>
+          <input id="dmRoleId" placeholder="ID do cargo" />
+          <input id="dmUserId" placeholder="ID do usuário (alternativa ao cargo)" />
+          <label for="dmCode">Código (opcional)</label>
+          <input id="dmCode" placeholder="Código do jogo" />
+          <label for="dmMessage">Mensagem</label>
+          <textarea id="dmMessage" placeholder="Mensagem para enviar"></textarea>
+          <button id="dmBtn">Iniciar envio</button>
+          <!--
+            O envio leva ~4,2s por pessoa (limitador global do bot). Para 500
+            destinatarios sao ~35 minutos, entao a API devolve um jobId e o
+            progresso vem por polling.
+          -->
+          <div id="dmProgressWrap" class="progress-wrap hidden">
+            <div class="progress"><div id="dmProgressBar" class="progress-bar"></div></div>
+            <p id="dmProgressText" class="hint"></p>
+          </div>
+          <p id="dmMsg" class="message"></p>
+        </article>
+      </section>
+
+      <!-- ================= ALISTAMENTO ================= -->
+      <section class="grid tab-panel hidden" data-panel="alistamento">
+        <article class="card panel">
+          <h3>Alistar usuário</h3>
+          <p class="hint">Permissão 3+. Verificação anti-ALT no ROBLOX é automática.</p>
+          <label for="enlistUserId">ID do usuário no Discord</label>
+          <input id="enlistUserId" placeholder="ID do usuário" />
+          <label for="enlistRoblox">Username do ROBLOX</label>
+          <input id="enlistRoblox" placeholder="Username ROBLOX" />
+          <label class="checkbox"><input type="checkbox" id="enlistSocial" /> Adicionar cargo social</label>
+          <button id="enlistBtn">Alistar</button>
+          <pre id="enlistResult" class="output hidden"></pre>
+          <p id="enlistMsg" class="message"></p>
+        </article>
+
+        <article class="card panel wide">
+          <h3>Promoções</h3>
+          <p class="hint">Elegibilidade pela escada do regimento. A decisão continua sendo do comando.</p>
+          <button id="promotionsRefreshBtn" class="ghost">Carregar promoções</button>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>Jogador</th><th>Patente</th><th>Batalhas</th><th>Alvo</th><th>Falta</th><th>Situação</th></tr>
+              </thead>
+              <tbody id="promotionsBody"></tbody>
+            </table>
+          </div>
+          <p id="promotionsMsg" class="message"></p>
+        </article>
+      </section>
+
+      <!-- ================= LOGS ================= -->
+      <section class="grid tab-panel hidden" data-panel="logs">
+        <article class="card panel wide">
+          <h3>Logs do bot</h3>
+          <p class="hint">Permissão 3+. Mesmo buffer que o comando <code>/logs</code> lê. Zera a cada reinício do bot.</p>
+          <div class="row">
+            <select id="logLevel">
+              <option value="">Todos os níveis</option>
+              <option value="erro">Apenas erros</option>
+              <option value="aviso">Apenas avisos</option>
+              <option value="info">Apenas informativos</option>
+            </select>
+            <input id="logQuery" placeholder="Filtrar por texto" />
+            <button id="logRefreshBtn" class="ghost">Atualizar</button>
+          </div>
+          <label class="checkbox"><input type="checkbox" id="logAuto" /> Atualizar automaticamente (10s)</label>
+          <p id="logCounts" class="hint"></p>
+          <pre id="logOutput" class="output log-output">Clique em Atualizar para carregar os logs.</pre>
+          <p id="logMsg" class="message"></p>
+        </article>
+
+        <article class="card panel wide audit-panel">
+          <h3>Audit Log do painel</h3>
           <p class="hint">Alterações no dashboard com ator e horário.</p>
           <ul id="auditList" class="audit-list"></ul>
           <p id="auditEmpty" class="audit-empty hidden">Nenhuma alteração registrada ainda.</p>

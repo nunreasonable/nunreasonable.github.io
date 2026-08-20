@@ -1,0 +1,38 @@
+# Publica os Workers da Cloudflare no boot, se o codigo tiver mudado.
+#
+# Copia versionada da unit. A que roda de verdade fica em
+# ~/.config/systemd/user/ccore-workers-deploy.service - esta existe para que a
+# configuracao nao viva so na maquina, como acontece com a do ccore-bot.
+#
+# Instalar:
+#   cp cloudflare/ccore-workers-deploy.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now ccore-workers-deploy.service
+#
+# E servico DE USUARIO, nao de sistema, porque as credenciais do wrangler moram
+# em ~/.config/.wrangler. Rodando como root ele nao as encontraria. O Linger do
+# usuario ja esta ligado por causa do ccore-bot, entao ele sobe no boot mesmo
+# sem ninguem logado.
+
+[Unit]
+Description=Publica os Workers da Cloudflare do ccore quando o codigo muda
+Documentation=https://github.com/nunreasonable/nunreasonable.github.io/blob/main/INFRA.md
+# O wrangler precisa de DNS e saida para a API da Cloudflare.
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/daeese/daeesewrkspc/nunreasonable.github.io/cloudflare
+ExecStart=/home/daeese/daeesewrkspc/nunreasonable.github.io/cloudflare/deploy-workers.sh
+
+# O IPv6 de saida desta maquina nao funciona (ver INFRA.md secao 3): sem isto o
+# npm perde ~8s por conexao tentando edges IPv6 antes de cair para IPv4.
+Environment=NODE_OPTIONS=--dns-result-order=ipv4first
+
+# O npx pode levar um tempo baixando o wrangler na primeira execucao.
+TimeoutStartSec=600
+
+[Install]
+WantedBy=default.target

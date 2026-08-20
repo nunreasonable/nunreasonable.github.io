@@ -9,11 +9,12 @@ frente (proxy + rota `/api/*`).
 |---|---|
 | `index.html` | Página inicial — perfil, links, projetos e o "Now Playing" do Spotify via [Lanyard](https://github.com/Phineas/lanyard). |
 | `cornwallcore/` | Showcase do bot **ccore - 'chavinhoCORE'** (12° Regimento de Infantaria "Chaves"). |
+| `cornwallcore/status/` | Página **pública** de estado do bot: uptime, latência, servidores e membros, lidos de `GET /api/status`. Sem dados da máquina. |
 | `cornwallcore/termsofservice/`, `cornwallcore/privacypolicy/` | Termos de Serviço e Política de Privacidade vigentes do app no Discord. |
-| `cornwallcore/administration/dashboard/` | Painel administrativo do bot. Fala com a API do bot em `/api/*`. **Acesso restrito** — `noindex`. |
+| `cornwallcore/administration/dashboard/` | Painel administrativo do bot, em abas (Moderação, Auditoria, Comunicações, Alistamento, Logs). Fala com a API do bot em `/api/*`. **Acesso restrito** — `noindex`. |
 | `cornwallcore/administration/spreadsheetviewer/` | Leitor da planilha regimental (Google Sheets via `gviz`). **`noindex`** — veja o aviso abaixo. |
 | `gabfirmino/` | "Meias UwU" — página de estudo em HTML/CSS. |
-| `cloudflare/` | Worker que publica `daeese.me/api/*` e o guia de setup do tunnel. |
+| `cloudflare/` | Os dois Workers (proxy da API e roteador de subdomínios), o script de deploy e o guia de setup do tunnel. |
 | `filearchive/` | Imagens usadas pelas páginas. |
 
 ## Infra
@@ -41,4 +42,17 @@ python3 -m http.server 8080
 ```
 
 O dashboard detecta `localhost` e usa `http://127.0.0.1:5056` como API por padrão; em produção usa
-`/api`.
+`/api`. A página de status segue o mesmo critério.
+
+Os dois Workers em `cloudflare/` não sobem pelo GitHub Pages. Quem os publica é
+[`cloudflare/deploy-workers.sh`](cloudflare/deploy-workers.sh), rodado no boot pelo serviço de
+usuário `ccore-workers-deploy.service` — ele compara o hash do fonte com o da última publicação e
+só chama o `wrangler deploy` quando algo mudou. Para publicar na hora:
+
+```bash
+cloudflare/deploy-workers.sh            # so o que mudou
+cloudflare/deploy-workers.sh --force    # tudo, ignorando o carimbo
+```
+
+A allowlist de CORS do proxy da API (`cloudflare/api-proxy-worker/src/worker.js`) precisa conter
+toda origem que chame `/api/*` — hoje `dashboard.daeese.me`, `ccore.daeese.me` e `daeese.me`.

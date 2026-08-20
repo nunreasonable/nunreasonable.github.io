@@ -12,6 +12,7 @@ registrado para dar contexto.
 | 4 | CORS do Worker permissivo | ✅ **resolvido** em 19/08/2026 |
 | 5 | `robots.txt` gerenciado pela Cloudflare | ℹ️ comportamento conhecido |
 | 6 | Planilha legível sem autenticação | ⏳ decisão pendente |
+| 7 | Workers publicados só à mão | ✅ **resolvido** em 20/08/2026 |
 
 ## 1. HTTP não redireciona para HTTPS
 
@@ -163,6 +164,39 @@ O que de fato chega ao bot, capturado em 19/08/2026:
 A armadilha é que a leitura convencional de `X-Forwarded-For` é pegar o primeiro
 elemento, e é exatamente ele que o atacante controla. Qualquer código novo que
 precise do IP do cliente deve usar `CF-Connecting-IP` e mais nada.
+
+## 4c. Os Workers agora sobem sozinhos no boot — RESOLVIDO (20/08/2026)
+
+O conteúdo do site sobe pelo GitHub Pages a cada commit, mas `cloudflare/` não: editar um Worker
+e esquecer o `wrangler deploy` deixava a borda rodando código diferente do repositório, sem nada
+avisar. Duas vezes já bastou para essa divergência custar tempo de investigação.
+
+Agora existe [`cloudflare/deploy-workers.sh`](cloudflare/deploy-workers.sh), disparado no boot
+pelo serviço de usuário `ccore-workers-deploy.service` (`Type=oneshot`, cópia versionada em
+`cloudflare/ccore-workers-deploy.service`).
+
+```bash
+systemctl --user status ccore-workers-deploy
+systemctl --user restart ccore-workers-deploy     # reexecuta (RemainAfterExit=yes)
+cloudflare/deploy-workers.sh --force              # publica ignorando o carimbo
+```
+
+### Três coisas que não são óbvias
+
+**Ele publica por mudança, não por boot.** Cada `wrangler deploy` cria uma versão nova mesmo com
+código idêntico. Publicar a cada reinício encheria a lista de versões de entradas iguais e ela
+deixaria de servir para achar a mudança real. O script guarda o `sha256` de `src/` + `wrangler.toml`
+em `.wrangler/.deployed-hash` (gitignored) e pula quando bate.
+
+**É serviço de usuário, e por um motivo diferente do `ccore-bot`.** Aqui não é SELinux: as
+credenciais do wrangler moram em `~/.config/.wrangler`, e um serviço de sistema rodando como root
+simplesmente não as encontraria. O `Linger` já estava ligado por causa do bot.
+
+**Não precisa de token novo.** O `oauth_token` guardado expira em horas, mas o `refresh_token` tem
+escopo `offline_access` e o wrangler o renova sozinho — verificado com o access token já vencido:
+`npx wrangler whoami` renovou sem interação. Se algum dia o refresh for revogado, o script falha
+com uma mensagem pedindo `npx wrangler login`, em vez de travar esperando um prompt que ninguém
+vai ver no boot.
 
 ## 5. A Cloudflare injeta o próprio bloco no `robots.txt`
 

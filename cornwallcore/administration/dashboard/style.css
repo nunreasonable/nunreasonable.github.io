@@ -148,6 +148,7 @@ label {
 
 input,
 textarea,
+select,
 button {
   width: 100%;
   border-radius: 11px;
@@ -164,12 +165,14 @@ textarea::placeholder {
 }
 
 input:hover,
-textarea:hover {
+textarea:hover,
+select:hover {
   border-color: var(--line-strong);
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   outline: none;
   border-color: var(--accent-hover);
   box-shadow: 0 0 0 3px var(--accent-soft);
@@ -239,7 +242,8 @@ button:disabled {
 /* Foco visivel por teclado: a pagina e toda formulario e nao tinha nenhum. */
 button:focus-visible,
 input:focus-visible,
-textarea:focus-visible {
+textarea:focus-visible,
+select:focus-visible {
   outline: 2px solid #ffffff;
   outline-offset: 2px;
 }
@@ -434,6 +438,175 @@ textarea:focus-visible {
   margin: 12px 0 0;
 }
 
+/*
+ * Abas.
+ *
+ * Onze paineis nao cabem numa grade unica sem virar um rolo vertical
+ * ilegivel. As abas apenas trocam a classe .hidden - mesma mecanica que ja
+ * alterna login/dashboard, sem router nem framework.
+ */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.tab {
+  width: auto;
+  margin-top: 0;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  font-weight: 500;
+  padding: 9px 16px;
+}
+
+.tab:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text);
+}
+
+.tab.is-active {
+  background: var(--accent);
+  border-color: transparent;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Paineis que carregam tabela ocupam a linha inteira: uma tabela de sete
+   colunas espremida em 320px nao se le. */
+.panel.wide {
+  grid-column: 1 / -1;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.checkbox input {
+  width: auto;
+  margin: 0;
+  accent-color: var(--accent-hover);
+}
+
+/* A tabela rola dentro do proprio container; a pagina nunca rola na
+   horizontal. */
+.table-wrap {
+  margin-top: 12px;
+  max-height: 420px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  scrollbar-gutter: stable;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.data-table th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-weight: 500;
+  z-index: 1;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr.clickable {
+  cursor: pointer;
+}
+
+.data-table tr.clickable:hover td,
+.data-table tr.clickable:focus-visible td {
+  background: var(--accent-soft);
+}
+
+.data-table tr.clickable:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -2px;
+}
+
+.data-table td.empty-cell {
+  color: var(--muted);
+  text-align: center;
+  padding: 18px 10px;
+  white-space: normal;
+}
+
+.data-table td.is-eligible {
+  color: var(--ok);
+}
+
+/* Saida bruta (logs, relatorio de push, resultado do alistamento). */
+.output {
+  margin: 12px 0 0;
+  padding: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-family: ui-monospace, "SFMono-Regular", "Consolas", monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 420px;
+  overflow: auto;
+}
+
+.log-output {
+  /* Log e a unica saida em que a coluna importa: quebrar linha desalinharia
+     o carimbo de hora do texto. */
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+}
+
+/*
+ * Progresso do envio em massa. Existe porque o envio leva ~4,2s por pessoa
+ * (limitador global de DM do bot): sem barra, um envio para 300 pessoas
+ * pareceria travado por vinte minutos.
+ */
+.progress-wrap {
+  margin-top: 12px;
+}
+
+.progress {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 300ms ease;
+}
+
 @keyframes rise {
   from {
     transform: translateY(12px);
@@ -482,5 +655,27 @@ textarea:focus-visible {
 
   .topbar-actions button {
     flex: 1 1 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .panel.wide {
+    grid-column: auto;
+  }
+
+  .tabs {
+    /* Rolagem horizontal em vez de quebra: cinco abas empilhadas empurram o
+       conteudo para fora da primeira tela. */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    flex: 0 0 auto;
   }
 }

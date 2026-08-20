@@ -59,7 +59,12 @@ function buildRobotsTxt(hostname) {
 }
 
 function buildCcoreSitemap() {
-  const urls = ["https://ccore.daeese.me/", "https://ccore.daeese.me/termsofservice/", "https://ccore.daeese.me/privacypolicy/"];
+  const urls = [
+    "https://ccore.daeese.me/",
+    "https://ccore.daeese.me/status/",
+    "https://ccore.daeese.me/termsofservice/",
+    "https://ccore.daeese.me/privacypolicy/"
+  ];
 
   return (
     '<?xml version="1.0" encoding="UTF-8"?>\n' +

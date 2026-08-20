@@ -1,9 +1,11 @@
-// Origens legitimas: o dashboard, que agora mora em dashboard.daeese.me, e
-// daeese.me, que ainda serve os caminhos antigos ate os 301 propagarem. Em
+// Origens legitimas: o dashboard, que agora mora em dashboard.daeese.me;
+// ccore.daeese.me, cuja pagina /status consome GET /api/status; e daeese.me,
+// que ainda serve os caminhos antigos ate os 301 propagarem. Em
 // desenvolvimento local o dashboard fala direto com http://127.0.0.1:5056 e nao
 // passa por este Worker, entao nao ha origem de dev para liberar aqui.
 const ALLOWED_ORIGINS = new Set([
   "https://dashboard.daeese.me",
+  "https://ccore.daeese.me",
   "https://daeese.me"
 ]);
 
