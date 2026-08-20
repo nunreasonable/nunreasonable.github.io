@@ -64,11 +64,12 @@ function buildCcoreSitemap() {
     "https://ccore.daeese.me/status/",
     "https://ccore.daeese.me/termsofservice/",
     "https://ccore.daeese.me/privacypolicy/",
-    // CommunityBot, o bot de moderacao/diversao: aplicacao separada do ccore,
+    // Sollarety, o bot de moderacao/diversao: aplicacao separada do ccore,
     // hospedada no mesmo site.
     "https://ccore.daeese.me/fun/",
     "https://ccore.daeese.me/fun/termsofservice/",
-    "https://ccore.daeese.me/fun/privacypolicy/"
+    "https://ccore.daeese.me/fun/privacypolicy/",
+    "https://ccore.daeese.me/fun/invite/"
   ];
 
   return (

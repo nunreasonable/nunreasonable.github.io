@@ -25,7 +25,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-WORKERS=(api-proxy-worker site-router-worker)
+WORKERS=(api-proxy-worker site-router-worker fun-oauth-worker)
 FORCE=0
 if [[ "${1:-}" == "--force" ]]; then
   FORCE=1

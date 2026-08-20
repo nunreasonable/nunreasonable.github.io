@@ -3,17 +3,17 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>CommunityBot</title>
+		<title>Sollarety</title>
 		<link rel="canonical" href="https://ccore.daeese.me/fun/" />
 		<meta
 			name="description"
-			content="CommunityBot - a moderation and fun Discord bot. Commands, terms and privacy policy."
+			content="Sollarety - a moderation and fun Discord bot. Commands, terms and privacy policy."
 		/>
-		<link rel="icon" type="image/png" href="../../filearchive/newpfp.png" />
+		<link rel="icon" type="image/png" href="../../filearchive/sollarety.png" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap"
 			rel="stylesheet"
 		/>
 		<style>
@@ -24,17 +24,19 @@
 			 */
 			:root {
 				color-scheme: dark;
-				--bg: #0d1117;
-				--bg-2: #131926;
-				--panel: rgba(17, 24, 39, 0.88);
-				--line: rgba(148, 163, 184, 0.18);
-				--line-strong: rgba(148, 163, 184, 0.3);
-				--text: #e5eef8;
-				--muted: #a8b3c5;
-				--accent: #c084fc;
-				--accent-2: #7dd3fc;
-				--shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
-				--radius: 22px;
+				--bg: #050506;
+				--bg-2: #0b0b0e;
+				--panel: rgba(255, 255, 255, 0.028);
+				--panel-hi: rgba(255, 255, 255, 0.06);
+				--line: rgba(255, 255, 255, 0.09);
+				--line-strong: rgba(255, 255, 255, 0.2);
+				--text: #f3f4f6;
+				--muted: #9aa0a9;
+				--accent: #e8ebf0;
+				--accent-2: #c3c8d1;
+				--shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+				--radius: 20px;
+				--ease: cubic-bezier(0.22, 1, 0.36, 1);
 			}
 
 			* { box-sizing: border-box; }
@@ -42,14 +44,46 @@
 			body {
 				margin: 0;
 				min-height: 100vh;
-				font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+				font-family: "Space Grotesk", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+				font-weight: 300;
 				color: var(--text);
 				line-height: 1.65;
-				background:
-					radial-gradient(circle at top left, rgba(192, 132, 252, 0.16), transparent 30%),
-					radial-gradient(circle at bottom right, rgba(125, 211, 252, 0.1), transparent 34%),
-					linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
+				background-color: var(--bg);
+				background-repeat: repeat;
+				background-size: 620px 620px;
 				background-attachment: fixed;
+				background-image:
+					radial-gradient(1.4px 1.4px at 68px 92px, rgba(255, 255, 255, 0.6), transparent),
+					radial-gradient(1.1px 1.1px at 402px 66px, rgba(255, 255, 255, 0.42), transparent),
+					radial-gradient(1.6px 1.6px at 168px 348px, rgba(255, 255, 255, 0.5), transparent),
+					radial-gradient(1px 1px at 528px 262px, rgba(255, 255, 255, 0.36), transparent),
+					radial-gradient(1.3px 1.3px at 296px 552px, rgba(255, 255, 255, 0.46), transparent),
+					radial-gradient(1px 1px at 470px 486px, rgba(255, 255, 255, 0.32), transparent),
+					radial-gradient(1.5px 1.5px at 44px 470px, rgba(255, 255, 255, 0.4), transparent),
+					radial-gradient(1.1px 1.1px at 590px 128px, rgba(255, 255, 255, 0.34), transparent);
+			}
+
+			/*
+			 * Corona: uma mancha larga e fria que deriva devagar, a prima pobre da
+			 * aurora da home - uma camada em vez de duas. Anima so transform, que o
+			 * compositor resolve sem repintar.
+			 */
+			body::before {
+				content: "";
+				position: fixed;
+				inset: -25%;
+				z-index: -1;
+				pointer-events: none;
+				background:
+					radial-gradient(42% 34% at 50% 30%, rgba(226, 232, 240, 0.11) 0%, transparent 68%),
+					radial-gradient(38% 30% at 76% 78%, rgba(148, 163, 184, 0.08) 0%, transparent 70%);
+				animation: corona-drift 34s ease-in-out infinite alternate;
+				will-change: transform;
+			}
+
+			@keyframes corona-drift {
+				from { transform: translate3d(-2%, -1.5%, 0) scale(1); }
+				to { transform: translate3d(2%, 1.5%, 0) scale(1.1); }
 			}
 
 			.shell {
@@ -120,12 +154,66 @@
 
 			.nav a:hover { background: rgba(255, 255, 255, 0.09); }
 
+			/* Prata do emblema: a unica inversao de contraste da pagina, entao nao
+			   ha duvida sobre qual e a acao principal. */
+			.cta {
+				display: inline-flex;
+				align-items: center;
+				gap: 10px;
+				margin-top: 18px;
+				padding: 12px 22px;
+				border-radius: 12px;
+				background: linear-gradient(180deg, #ffffff 0%, #c6cad2 100%);
+				color: #08080a;
+				font-weight: 500;
+				text-decoration: none;
+				transition: transform 180ms var(--ease), background 180ms var(--ease);
+			}
+
+			.cta:hover {
+				background: linear-gradient(180deg, #ffffff 0%, #dfe2e8 100%);
+				transform: translateY(-1px);
+			}
+
+			.hero {
+				text-align: center;
+				margin-bottom: 30px;
+			}
+
+			.emblem {
+				display: block;
+				width: clamp(120px, 24vw, 168px);
+				height: auto;
+				margin: 0 auto 14px;
+			}
+
+			.wordmark {
+				margin: 0;
+				font-weight: 700;
+				font-size: clamp(1.6rem, 5vw, 2.4rem);
+				letter-spacing: 0.28em;
+				text-indent: 0.28em;
+				line-height: 1.1;
+				background: linear-gradient(180deg, #ffffff 0%, #9ca1aa 100%);
+				-webkit-background-clip: text;
+				background-clip: text;
+				color: transparent;
+			}
+
+			/* Duas rotacoes so, lentas o bastante para voce nao flagrar o movimento. */
+			.orbit { animation: spin 52s linear infinite; transform-origin: 200px 200px; }
+			.rays { animation: spin 190s linear infinite reverse; transform-origin: 200px 200px; }
+
+			@keyframes spin {
+				to { transform: rotate(360deg); }
+			}
+
 			.note {
 				margin-top: 26px;
 				padding: 14px 16px;
-				border-left: 3px solid var(--accent);
+				border-left: 2px solid var(--line-strong);
 				border-radius: 0 12px 12px 0;
-				background: rgba(192, 132, 252, 0.08);
+				background: rgba(255, 255, 255, 0.035);
 			}
 
 			footer {
@@ -136,20 +224,78 @@
 			}
 
 			@media (prefers-reduced-motion: reduce) {
+				body::before,
+				.orbit,
+				.rays { animation: none !important; }
 				* { transition-duration: 0.001ms !important; }
 			}
 		</style>
 	</head>
 	<body>
 		<main class="shell">
+			<header class="hero">
+			<svg class="emblem" viewBox="0 0 400 400" role="img" aria-label="Sollarety emblem">
+				<defs>
+					<linearGradient id="sphere" x1="0.18" y1="0.08" x2="0.82" y2="0.95">
+						<stop offset="0" stop-color="#ffffff" />
+						<stop offset="0.55" stop-color="#c9ced6" />
+						<stop offset="1" stop-color="#6c7078" />
+					</linearGradient>
+					<linearGradient id="ray" x1="0.5" y1="0" x2="0.5" y2="1">
+						<stop offset="0" stop-color="#e9ecf1" />
+						<stop offset="1" stop-color="#9ba0a9" />
+					</linearGradient>
+				</defs>
+
+				<g fill="none" stroke="#ffffff" stroke-opacity="0.1">
+					<circle cx="200" cy="200" r="192" />
+					<circle cx="200" cy="200" r="168" />
+					<circle cx="200" cy="200" r="146" />
+				</g>
+
+				<g class="orbit">
+					<ellipse
+						cx="200" cy="200" rx="190" ry="80"
+						transform="rotate(-16 200 200)"
+						fill="none" stroke="#ffffff" stroke-opacity="0.28"
+					/>
+					<circle cx="18" cy="147" r="6.5" fill="#ffffff" fill-opacity="0.9" />
+					<circle cx="382" cy="253" r="9" fill="#ffffff" />
+				</g>
+
+				<g class="rays" fill="url(#ray)">
+					<polygon points="200.0,34.0 221.2,104.3 178.8,104.3" />
+					<polygon points="317.4,82.6 282.7,147.3 252.7,117.3" />
+					<polygon points="366.0,200.0 295.7,221.2 295.7,178.8" />
+					<polygon points="317.4,317.4 252.7,282.7 282.7,252.7" />
+					<polygon points="200.0,366.0 178.8,295.7 221.2,295.7" />
+					<polygon points="82.6,317.4 117.3,252.7 147.3,282.7" />
+					<polygon points="34.0,200.0 104.3,178.8 104.3,221.2" />
+					<polygon points="82.6,82.6 147.3,117.3 117.3,147.3" />
+				</g>
+
+				<circle cx="200" cy="200" r="110" fill="url(#sphere)" />
+				<circle cx="200" cy="200" r="78" fill="#050506" />
+
+				<g fill="none" stroke="#ffffff" stroke-opacity="0.22">
+					<circle cx="200" cy="200" r="46" />
+					<circle cx="200" cy="200" r="28" />
+				</g>
+
+				<circle cx="200" cy="200" r="8" fill="#ffffff" />
+			</svg>
+				<h1 class="wordmark">SOLLARETY</h1>
+			</header>
+
 			<article class="card">
 				<p class="eyebrow">Discord bot</p>
-				<h1>CommunityBot</h1>
 				<p>
 					A moderation and fun bot for community servers. It runs on the same
 					infrastructure as <a href="../">ccore</a>, but the two are separate
 					applications and share no data.
 				</p>
+
+				<p><a class="cta" href="./invite/">Add to Discord</a></p>
 
 				<h2>Moderation</h2>
 				<p>
@@ -196,14 +342,15 @@
 					</p>
 				</div>
 
-				<h2>Legal</h2>
+				<h2>Links</h2>
 				<div class="nav" style="margin-top: 10px">
+					<a href="./invite/">Add to a server</a>
 					<a href="./termsofservice/">Terms of Service</a>
 					<a href="./privacypolicy/">Privacy Policy</a>
 					<a href="../">Back to ccore</a>
 				</div>
 			</article>
-			<footer>CommunityBot · hosted alongside ccore at daeese.me</footer>
+			<footer>Sollarety · C# · hosted alongside ccore at daeese.me</footer>
 		</main>
 	</body>
 </html>

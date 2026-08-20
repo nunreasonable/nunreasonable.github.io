@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Add Sollarety to your server</title>
+		<link rel="canonical" href="https://ccore.daeese.me/fun/invite/" />
+		<meta
+			name="description"
+			content="Sign in with Discord and add Sollarety to one of your servers. Moderation, warnings, fun and utility slash commands."
+		/>
+		<link rel="icon" type="image/png" href="../../../filearchive/sollarety.png" />
+
+		<!--
+		 * Esta e a pagina feita para ser colada num chat do Discord, entao ela
+		 * precisa das tags de embed que so a home do site tinha ate agora. As
+		 * URLs sao absolutas de proposito: o raspador nao roda JS e nao resolve
+		 * caminho relativo. summary_large_image e o formato que o Discord
+		 * renderiza grande, e theme-color pinta a barra lateral do embed.
+		-->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="daeese.me" />
+		<meta property="og:title" content="Add Sollarety to your server" />
+		<meta
+			property="og:description"
+			content="Pick one of your servers and invite Sollarety. Moderation, warnings, fun and utility slash commands - and it never reads your messages."
+		/>
+		<meta property="og:url" content="https://ccore.daeese.me/fun/invite/" />
+		<meta property="og:image" content="https://daeese.me/filearchive/sollarety-og.png" />
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content="The Sollarety emblem: a silver sun ringed by orbits" />
+		<meta property="og:locale" content="en_US" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="Add Sollarety to your server" />
+		<meta
+			name="twitter:description"
+			content="Pick one of your servers and invite Sollarety."
+		/>
+		<meta name="twitter:image" content="https://daeese.me/filearchive/sollarety-og.png" />
+		<meta name="twitter:image:alt" content="The Sollarety emblem: a silver sun ringed by orbits" />
+		<meta name="theme-color" content="#050506" />
+		<meta name="referrer" content="strict-origin-when-cross-origin" />
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			/*
+			 * Sollarety: monocromatico sobre preto, na linha do emblema. A
+			 * paleta violeta que as paginas de /fun/ herdaram do ccore saiu
+			 * inteira - aqui a unica cor e a luz.
+			 *
+			 * Os efeitos sao os mesmos da home do site (corona que deriva,
+			 * entrada em escala, entrada escalonada dos blocos), mas de
+			 * proposito mais baratos: nenhum backdrop-filter, que e a coisa
+			 * mais cara que a home faz, nenhum laco de rAF, e toda animacao
+			 * continua se resume a transform e opacity - as duas propriedades
+			 * que o compositor resolve sozinho, sem repintar.
+			 */
+			:root {
+				color-scheme: dark;
+				--bg: #050506;
+				--bg-2: #0b0b0e;
+				--panel: rgba(255, 255, 255, 0.028);
+				--panel-hi: rgba(255, 255, 255, 0.06);
+				--line: rgba(255, 255, 255, 0.09);
+				--line-strong: rgba(255, 255, 255, 0.2);
+				--text: #f3f4f6;
+				--muted: #9aa0a9;
+				--accent: #e8ebf0;
+				--accent-2: #c3c8d1;
+				--ok: #cfe8da;
+				--warn: #e8dcc0;
+				--radius: 20px;
+				--ease: cubic-bezier(0.22, 1, 0.36, 1);
+			}
+
+			* { box-sizing: border-box; }
+
+			body {
+				margin: 0;
+				min-height: 100vh;
+				font-family: "Space Grotesk", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+				font-weight: 300;
+				color: var(--text);
+				line-height: 1.65;
+				background: var(--bg);
+				overflow-x: hidden;
+			}
+
+			/*
+			 * Campo de estrelas: uma camada fixa so, pintada uma vez por
+			 * gradientes minusculos. Sem canvas e sem elemento por estrela -
+			 * o navegador rasteriza isto no primeiro quadro e nunca mais toca.
+			 */
+			.stars {
+				position: fixed;
+				inset: 0;
+				z-index: 0;
+				pointer-events: none;
+				opacity: 0.75;
+				background-repeat: repeat;
+				background-size: 620px 620px;
+				background-image:
+					radial-gradient(1.4px 1.4px at 68px 92px, rgba(255, 255, 255, 0.65), transparent),
+					radial-gradient(1.1px 1.1px at 402px 66px, rgba(255, 255, 255, 0.45), transparent),
+					radial-gradient(1.6px 1.6px at 168px 348px, rgba(255, 255, 255, 0.55), transparent),
+					radial-gradient(1px 1px at 528px 262px, rgba(255, 255, 255, 0.4), transparent),
+					radial-gradient(1.3px 1.3px at 296px 552px, rgba(255, 255, 255, 0.5), transparent),
+					radial-gradient(1px 1px at 470px 486px, rgba(255, 255, 255, 0.35), transparent),
+					radial-gradient(1.5px 1.5px at 44px 470px, rgba(255, 255, 255, 0.42), transparent),
+					radial-gradient(1.1px 1.1px at 590px 128px, rgba(255, 255, 255, 0.38), transparent);
+			}
+
+			/*
+			 * Corona: uma mancha larga e fria que deriva devagar. E a prima
+			 * pobre da aurora da home - uma camada em vez de duas, porque o
+			 * efeito desejado e so o fundo deixar de ser chapado.
+			 */
+			.corona {
+				position: fixed;
+				inset: -25%;
+				z-index: 0;
+				pointer-events: none;
+				background:
+					radial-gradient(42% 34% at 50% 32%, rgba(226, 232, 240, 0.12) 0%, transparent 68%),
+					radial-gradient(38% 30% at 76% 78%, rgba(148, 163, 184, 0.09) 0%, transparent 70%);
+				animation: corona-drift 34s ease-in-out infinite alternate;
+				will-change: transform;
+			}
+
+			@keyframes corona-drift {
+				from { transform: translate3d(-2%, -1.5%, 0) scale(1); }
+				to { transform: translate3d(2%, 1.5%, 0) scale(1.1); }
+			}
+
+			.shell {
+				position: relative;
+				z-index: 1;
+				width: min(880px, calc(100% - 32px));
+				margin: 0 auto;
+				padding: 52px 0 64px;
+			}
+
+			/* Cabecalho: emblema, nome e uma linha. */
+			.hero {
+				text-align: center;
+				margin-bottom: 34px;
+			}
+
+			.emblem {
+				display: block;
+				width: clamp(140px, 30vw, 208px);
+				height: auto;
+				margin: 0 auto 18px;
+			}
+
+			.wordmark {
+				margin: 0;
+				font-weight: 700;
+				font-size: clamp(1.9rem, 6vw, 3rem);
+				letter-spacing: 0.28em;
+				text-indent: 0.28em;
+				line-height: 1.1;
+				background: linear-gradient(180deg, #ffffff 0%, #9ca1aa 100%);
+				-webkit-background-clip: text;
+				background-clip: text;
+				color: transparent;
+			}
+
+			.tagline {
+				margin: 8px 0 0;
+				color: var(--muted);
+				font-size: 0.94rem;
+				letter-spacing: 0.04em;
+			}
+
+			/* Rotacoes do emblema. Duas so, ambas lentas o bastante para voce
+			   nao flagrar o movimento se olhar de proposito. */
+			.orbit { animation: spin 52s linear infinite; transform-origin: 200px 200px; }
+			.rays { animation: spin 190s linear infinite reverse; transform-origin: 200px 200px; }
+
+			@keyframes spin {
+				to { transform: rotate(360deg); }
+			}
+
+			.card {
+				position: relative;
+				background: var(--panel);
+				border: 1px solid var(--line);
+				border-radius: var(--radius);
+				padding: clamp(20px, 4vw, 38px);
+			}
+
+			/* Fio de luz no topo do cartao, como se a corona batesse na borda. */
+			.card::before {
+				content: "";
+				position: absolute;
+				inset: -1px auto auto 12%;
+				width: 76%;
+				height: 1px;
+				background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.36), transparent);
+			}
+
+			.eyebrow {
+				margin: 0 0 6px;
+				text-transform: uppercase;
+				letter-spacing: 0.2em;
+				font-size: 0.72rem;
+				color: var(--muted);
+			}
+
+			h1 {
+				margin: 0;
+				font-size: clamp(1.5rem, 4vw, 2rem);
+				font-weight: 500;
+				line-height: 1.2;
+			}
+
+			h2 {
+				margin: 30px 0 8px;
+				font-size: 1.05rem;
+				font-weight: 500;
+				letter-spacing: 0.06em;
+				text-transform: uppercase;
+				color: var(--accent-2);
+			}
+
+			p, li { color: var(--muted); }
+			strong { color: var(--text); font-weight: 500; }
+			a { color: var(--text); }
+
+			.nav {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+				margin-top: 10px;
+			}
+
+			.nav a {
+				padding: 8px 15px;
+				border: 1px solid var(--line);
+				border-radius: 999px;
+				text-decoration: none;
+				color: var(--text);
+				font-size: 0.88rem;
+				transition: border-color 180ms var(--ease), background 180ms var(--ease);
+			}
+
+			.nav a:hover { border-color: var(--line-strong); background: var(--panel-hi); }
+
+			.note {
+				margin-top: 26px;
+				padding: 14px 16px;
+				border-left: 2px solid var(--line-strong);
+				border-radius: 0 12px 12px 0;
+				background: rgba(255, 255, 255, 0.035);
+			}
+
+			.note p { margin: 0; }
+			.note.bad { border-left-color: var(--warn); }
+			.note.good { border-left-color: var(--ok); }
+
+			/* Botoes. O primario e a prata do emblema: preto sobre claro e a
+			   unica inversao de contraste da pagina, entao nao ha duvida sobre
+			   qual e a acao principal. */
+			.button {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 10px;
+				padding: 12px 22px;
+				border: 1px solid var(--line-strong);
+				border-radius: 12px;
+				font: inherit;
+				font-weight: 500;
+				text-decoration: none;
+				color: var(--text);
+				background: transparent;
+				cursor: pointer;
+				transition: transform 180ms var(--ease), background 180ms var(--ease), border-color 180ms var(--ease);
+			}
+
+			.button:hover { background: var(--panel-hi); transform: translateY(-1px); }
+			.button:active { transform: translateY(0); }
+
+			.button.primary {
+				border-color: transparent;
+				background: linear-gradient(180deg, #ffffff 0%, #c6cad2 100%);
+				color: #08080a;
+			}
+
+			.button.primary:hover {
+				background: linear-gradient(180deg, #ffffff 0%, #dfe2e8 100%);
+			}
+
+			.button svg { flex: none; }
+
+			.actions {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				gap: 14px;
+				margin-top: 22px;
+			}
+
+			.subtle { font-size: 0.88rem; color: var(--muted); }
+
+			/* Presets de permissao. Radio de verdade por baixo, para o teclado e
+			   o leitor de tela continuarem funcionando; o cartao e so a pintura. */
+			.presets {
+				display: grid;
+				gap: 12px;
+				grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+				margin-top: 14px;
+			}
+
+			.preset {
+				position: relative;
+				display: block;
+				padding: 16px 18px;
+				border: 1px solid var(--line);
+				border-radius: 14px;
+				cursor: pointer;
+				transition: border-color 180ms var(--ease), background 180ms var(--ease);
+			}
+
+			.preset input {
+				position: absolute;
+				opacity: 0;
+				width: 0;
+				height: 0;
+			}
+
+			.preset:hover { background: var(--panel-hi); }
+
+			.preset:has(input:checked) {
+				border-color: var(--line-strong);
+				background: rgba(255, 255, 255, 0.055);
+			}
+
+			.preset:has(input:focus-visible) {
+				outline: 2px solid var(--accent);
+				outline-offset: 2px;
+			}
+
+			.preset .title {
+				display: block;
+				font-weight: 500;
+				color: var(--text);
+			}
+
+			.preset .detail {
+				display: block;
+				margin-top: 4px;
+				font-size: 0.85rem;
+				color: var(--muted);
+			}
+
+			/* Lista de servidores */
+			.who {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				margin-top: 6px;
+			}
+
+			.who img, .who .fallback {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				flex: none;
+			}
+
+			.filter {
+				width: 100%;
+				margin-top: 18px;
+				padding: 11px 14px;
+				border: 1px solid var(--line);
+				border-radius: 12px;
+				background: rgba(0, 0, 0, 0.3);
+				color: var(--text);
+				font: inherit;
+			}
+
+			.filter:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 1px;
+			}
+
+			.guilds {
+				display: grid;
+				gap: 10px;
+				grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+				margin-top: 16px;
+			}
+
+			.guild {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				width: 100%;
+				padding: 12px 14px;
+				border: 1px solid var(--line);
+				border-radius: 13px;
+				color: var(--text);
+				font: inherit;
+				text-align: left;
+				text-decoration: none;
+				cursor: pointer;
+				transition: transform 180ms var(--ease), background 180ms var(--ease), border-color 180ms var(--ease);
+			}
+
+			.guild:hover {
+				background: var(--panel-hi);
+				border-color: var(--line-strong);
+				transform: translateY(-2px);
+			}
+
+			.guild .icon, .guild .fallback {
+				width: 36px;
+				height: 36px;
+				border-radius: 50%;
+				flex: none;
+			}
+
+			.fallback {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: rgba(255, 255, 255, 0.08);
+				border: 1px solid var(--line);
+				color: var(--text);
+				font-weight: 500;
+				font-size: 0.9rem;
+			}
+
+			.guild .name {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+			.hidden { display: none; }
+
+			footer {
+				margin-top: 26px;
+				color: var(--muted);
+				font-size: 0.82rem;
+				letter-spacing: 0.05em;
+				text-align: center;
+			}
+
+			footer a { color: var(--muted); }
+
+			/*
+			 * Entrada. Mesmo vocabulario da home - a pagina cresce um fio e os
+			 * blocos sobem escalonados - mas o atraso sai de nth-child em vez
+			 * de uma variavel escrita pelo JS: um seletor a mais no CSS custa
+			 * menos que um laco no carregamento.
+			 */
+			.hero, .card, footer {
+				animation: rise 620ms var(--ease) both;
+			}
+
+			.card { animation-delay: 90ms; }
+			footer { animation-delay: 180ms; }
+
+			.card > * {
+				animation: rise 520ms var(--ease) both;
+				animation-delay: 200ms;
+			}
+
+			.card > *:nth-child(2) { animation-delay: 260ms; }
+			.card > *:nth-child(3) { animation-delay: 320ms; }
+			.card > *:nth-child(4) { animation-delay: 380ms; }
+
+			@keyframes rise {
+				from { transform: translateY(14px); opacity: 0; }
+				to { transform: translateY(0); opacity: 1; }
+			}
+
+			/*
+			 * Mesma regra da home, e pelo mesmo motivo: estas declaracoes tem a
+			 * especificidade das que anulam, entao precisam vir por ultimo e com
+			 * !important para nao perderem para a transition declarada depois.
+			 */
+			@media (prefers-reduced-motion: reduce) {
+				.corona,
+				.orbit,
+				.rays,
+				.hero,
+				.card,
+				.card > *,
+				footer {
+					animation: none !important;
+				}
+
+				* { transition-duration: 0.001ms !important; }
+			}
+		</style>
+	</head>
+	<body>
+		<div class="stars" aria-hidden="true"></div>
+		<div class="corona" aria-hidden="true"></div>
+
+		<main class="shell">
+			<header class="hero">
+				<!--
+				 * O emblema e SVG e nao o PNG do logo: escala sem borrar, pesa
+				 * menos de 2 KB depois do gzip e deixa as orbitas girarem sem
+				 * carregar imagem nenhuma. O PNG continua servindo de favicon e
+				 * de imagem do embed, onde SVG nao serve.
+				-->
+				<svg class="emblem" viewBox="0 0 400 400" role="img" aria-label="Sollarety emblem">
+					<defs>
+						<linearGradient id="sphere" x1="0.18" y1="0.08" x2="0.82" y2="0.95">
+							<stop offset="0" stop-color="#ffffff" />
+							<stop offset="0.55" stop-color="#c9ced6" />
+							<stop offset="1" stop-color="#6c7078" />
+						</linearGradient>
+						<linearGradient id="ray" x1="0.5" y1="0" x2="0.5" y2="1">
+							<stop offset="0" stop-color="#e9ecf1" />
+							<stop offset="1" stop-color="#9ba0a9" />
+						</linearGradient>
+					</defs>
+
+					<g fill="none" stroke="#ffffff" stroke-opacity="0.1">
+						<circle cx="200" cy="200" r="192" />
+						<circle cx="200" cy="200" r="168" />
+						<circle cx="200" cy="200" r="146" />
+					</g>
+
+					<g class="orbit">
+						<ellipse
+							cx="200" cy="200" rx="190" ry="80"
+							transform="rotate(-16 200 200)"
+							fill="none" stroke="#ffffff" stroke-opacity="0.28"
+						/>
+						<circle cx="18" cy="147" r="6.5" fill="#ffffff" fill-opacity="0.9" />
+						<circle cx="382" cy="253" r="9" fill="#ffffff" />
+					</g>
+
+					<g class="rays" fill="url(#ray)">
+						<polygon points="200.0,34.0 221.2,104.3 178.8,104.3" />
+						<polygon points="317.4,82.6 282.7,147.3 252.7,117.3" />
+						<polygon points="366.0,200.0 295.7,221.2 295.7,178.8" />
+						<polygon points="317.4,317.4 252.7,282.7 282.7,252.7" />
+						<polygon points="200.0,366.0 178.8,295.7 221.2,295.7" />
+						<polygon points="82.6,317.4 117.3,252.7 147.3,282.7" />
+						<polygon points="34.0,200.0 104.3,178.8 104.3,221.2" />
+						<polygon points="82.6,82.6 147.3,117.3 117.3,147.3" />
+					</g>
+
+					<circle cx="200" cy="200" r="110" fill="url(#sphere)" />
+					<circle cx="200" cy="200" r="78" fill="#050506" />
+
+					<g fill="none" stroke="#ffffff" stroke-opacity="0.22">
+						<circle cx="200" cy="200" r="46" />
+						<circle cx="200" cy="200" r="28" />
+					</g>
+
+					<circle cx="200" cy="200" r="8" fill="#ffffff" />
+				</svg>
+
+				<h1 class="wordmark">SOLLARETY</h1>
+				<p class="tagline">Moderation, warnings, fun and utility - in one Discord bot.</p>
+			</header>
+
+			<article class="card">
+				<div id="alert" class="note bad hidden" role="alert" style="margin-top: 0">
+					<p id="alert-text"></p>
+				</div>
+
+				<!-- 1. Nao logado -->
+				<section id="step-start">
+					<p class="eyebrow">Add to a server</p>
+					<p>
+						Sign in with Discord and this page will list the servers where
+						you are allowed to add a bot, so you can pick one instead of
+						hunting through a dropdown. Nothing you do here is stored.
+					</p>
+
+					<h2>Permissions to request</h2>
+					<div class="presets">
+						<label class="preset">
+							<input type="radio" name="preset" value="full" checked />
+							<span class="title">Full</span>
+							<span class="detail">
+								Everything the commands need: Ban, Kick, Timeout,
+								Manage Messages, Manage Channels and Manage Roles, plus
+								reading and posting in channels.
+							</span>
+						</label>
+						<label class="preset">
+							<input type="radio" name="preset" value="fun" />
+							<span class="title">Fun only</span>
+							<span class="detail">
+								Reading and posting only. The moderation commands still
+								show up in the server, but they will refuse to run
+								because the bot has no permission to carry them out.
+							</span>
+						</label>
+					</div>
+
+					<div class="actions">
+						<button id="signin" type="button" class="button primary">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+								<path d="M19.54 5.34A16.1 16.1 0 0 0 15.5 4.1l-.2.4a15 15 0 0 1 3.6 1.5 12.7 12.7 0 0 0-9.8 0 15 15 0 0 1 3.6-1.5l-.2-.4a16.1 16.1 0 0 0-4.04 1.24C5 9.06 4.3 12.7 4.6 16.3a16.2 16.2 0 0 0 4.9 2.5l.6-1.1a10.5 10.5 0 0 1-1.7-.8l.4-.3a11.6 11.6 0 0 0 9.9 0l.4.3a10.5 10.5 0 0 1-1.7.8l.6 1.1a16.2 16.2 0 0 0 4.9-2.5c.36-4.2-.75-7.8-3.36-10.96ZM9.9 14.4c-.96 0-1.75-.9-1.75-2s.77-2 1.75-2 1.77.9 1.75 2c0 1.1-.78 2-1.75 2Zm4.2 0c-.96 0-1.75-.9-1.75-2s.77-2 1.75-2 1.77.9 1.75 2c0 1.1-.78 2-1.75 2Z" />
+							</svg>
+							Continue with Discord
+						</button>
+						<a id="direct" class="button" href="#" rel="noreferrer noopener">Add without signing in</a>
+					</div>
+
+					<p class="subtle" style="margin-top: 14px">
+						Signing in asks Discord for your username and the list of servers
+						you are in - nothing else, and never your messages. The list is
+						read once, shown to you, and thrown away; it is not saved on any
+						server, including this one. "Add without signing in" skips that
+						entirely and lets Discord's own picker choose the server.
+					</p>
+				</section>
+
+				<!-- 2. Logado, escolhendo o servidor -->
+				<section id="step-pick" class="hidden">
+					<p class="eyebrow">Choose a server</p>
+					<div class="who">
+						<span id="user-avatar"></span>
+						<div>
+							<strong id="user-name">&nbsp;</strong>
+							<div class="subtle">Pick a server to add Sollarety to.</div>
+						</div>
+					</div>
+
+					<input
+						id="filter"
+						class="filter hidden"
+						type="search"
+						placeholder="Filter servers"
+						autocomplete="off"
+						aria-label="Filter servers"
+					/>
+
+					<div id="guilds" class="guilds"></div>
+
+					<div id="no-guilds" class="note bad hidden">
+						<p>
+							None of your servers can take a new bot. Adding one needs the
+							<strong>Manage Server</strong> permission, so only servers you
+							own or help run are listed here.
+						</p>
+					</div>
+
+					<div class="actions">
+						<button id="restart" type="button" class="button">Start over</button>
+					</div>
+				</section>
+
+				<!-- 3. Adicionado -->
+				<section id="step-done" class="hidden">
+					<p class="eyebrow">Done</p>
+					<div class="note good">
+						<p>
+							<strong>Sollarety is in.</strong> Type <strong>/help</strong>
+							in the server to see every command. If the slash commands do
+							not appear right away, give Discord up to an hour to propagate
+							them.
+						</p>
+					</div>
+					<div class="nav" style="margin-top: 20px">
+						<a href="../">Commands</a>
+						<a href="../termsofservice/">Terms of Service</a>
+						<a href="../privacypolicy/">Privacy Policy</a>
+						<a href="./">Add to another server</a>
+					</div>
+				</section>
+
+				<div class="note" style="margin-top: 26px">
+					<p>
+						<strong>The bot never reads your messages.</strong> It does not
+						request Discord's Message Content intent, so message text is not
+						received, read or stored. See the
+						<a href="../privacypolicy/">Privacy Policy</a> for the full picture.
+					</p>
+				</div>
+			</article>
+
+			<footer>Sollarety &middot; C# &middot; hosted alongside <a href="../../">ccore</a> at daeese.me</footer>
+		</main>
+
+		<script>
+			/*
+			 * Toda a logica de convite mora aqui, e de proposito ela nao confia em
+			 * nada. O Worker em daeese.me/oauth/fun/callback devolve a lista de
+			 * servidores num fragmento sem assinatura porque a lista so desenha
+			 * botoes: quem valida se a pessoa pode mesmo adicionar o bot naquele
+			 * servidor e o Discord, na tela de autorizacao. Falsificar o fragmento
+			 * so leva a uma tela de erro do proprio Discord.
+			 */
+
+			// Application ID do Sollarety. Publico, nao e segredo. O mesmo valor
+			// esta em cloudflare/fun-oauth-worker/wrangler.toml.
+			const CLIENT_ID = "1403153848507301939";
+
+			// Precisa bater caractere a caractere com Developer Portal > OAuth2 >
+			// Redirects. Sao duas entradas cadastradas: esta, do login, e a propria
+			// pagina, para onde o Discord volta depois de adicionar o bot.
+			const LOGIN_REDIRECT = "https://daeese.me/oauth/fun/callback";
+			const INVITE_RETURN = "https://ccore.daeese.me/fun/invite/";
+
+			// Somas dos bits que os [ApplicationCommandRequireBotPermissions] do bot
+			// exigem. "fun" e so a base de ler/escrever/reagir; "full" acrescenta
+			// Kick(2) Ban(4) ManageChannels(16) ManageMessages(8192)
+			// ManageRoles(1<<28) ModerateMembers(1<<40).
+			const PERMISSIONS = {
+				full: "1374658358358",
+				fun: "274878286912"
+			};
+
+			const STATE_KEY = "sollarety-invite-state";
+			const PRESET_KEY = "sollarety-invite-preset";
+
+			// Acima disto o campo de filtro aparece. Abaixo ele so ocuparia espaco.
+			const FILTER_THRESHOLD = 12;
+
+			const ERRORS = {
+				denied: "The Discord sign-in was cancelled, so nothing happened. You can try again, or add the bot without signing in.",
+				config: "This page is not finished being set up yet - its Discord application id is missing. Nothing is wrong on your end.",
+				oauth: "Discord did not complete the sign-in. Try again in a moment, or add the bot without signing in.",
+				state: "That sign-in did not match the one this page started, so it was ignored. Start again from this tab."
+			};
+
+			const el = (id) => document.getElementById(id);
+
+			function show(stepId) {
+				for (const id of ["step-start", "step-pick", "step-done"]) {
+					el(id).classList.toggle("hidden", id !== stepId);
+				}
+			}
+
+			function showAlert(code) {
+				el("alert-text").textContent = ERRORS[code] || ERRORS.oauth;
+				el("alert").classList.remove("hidden");
+			}
+
+			function currentPreset() {
+				const checked = document.querySelector('input[name="preset"]:checked');
+				return checked && checked.value === "fun" ? "fun" : "full";
+			}
+
+			function permissionsFor(preset) {
+				return PERMISSIONS[preset] || PERMISSIONS.full;
+			}
+
+			function randomState() {
+				const bytes = new Uint8Array(16);
+				crypto.getRandomValues(bytes);
+				return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+			}
+
+			function base64urlDecode(value) {
+				const padded = value.replace(/-/g, "+").replace(/_/g, "/");
+				const binary = atob(padded + "===".slice((padded.length + 3) % 4));
+				const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+				return new TextDecoder().decode(bytes);
+			}
+
+			// URL de autorizacao do login: escopo minimo, so o suficiente para
+			// saber quem e a pessoa e em que servidores ela esta.
+			function loginUrl(state) {
+				const params = new URLSearchParams({
+					client_id: CLIENT_ID,
+					response_type: "code",
+					scope: "identify guilds",
+					redirect_uri: LOGIN_REDIRECT,
+					state,
+					prompt: "none"
+				});
+				return "https://discord.com/oauth2/authorize?" + params.toString();
+			}
+
+			// URL que de fato coloca o bot no servidor. Com guild_id e
+			// disable_guild_select o Discord ja abre no servidor escolhido, sem
+			// dropdown para errar.
+			function inviteUrl(guildId) {
+				const params = new URLSearchParams({
+					client_id: CLIENT_ID,
+					scope: "bot applications.commands",
+					permissions: permissionsFor(currentPreset()),
+					integration_type: "0"
+				});
+
+				if (guildId) {
+					params.set("guild_id", guildId);
+					params.set("disable_guild_select", "true");
+					params.set("response_type", "code");
+					params.set("redirect_uri", INVITE_RETURN);
+					params.set("state", randomState());
+				}
+
+				return "https://discord.com/oauth2/authorize?" + params.toString();
+			}
+
+			function guildIconNode(guild) {
+				if (guild.c) {
+					const img = document.createElement("img");
+					img.className = "icon";
+					img.loading = "lazy";
+					img.alt = "";
+					img.src = "https://cdn.discordapp.com/icons/" + guild.i + "/" + guild.c + ".png?size=64";
+					return img;
+				}
+
+				// Servidor sem icone: inicial num circulo, como o proprio Discord faz.
+				const span = document.createElement("span");
+				span.className = "fallback";
+				span.setAttribute("aria-hidden", "true");
+				span.textContent = (guild.n || "?").trim().charAt(0).toUpperCase() || "?";
+				return span;
+			}
+
+			function renderGuilds(guilds) {
+				const container = el("guilds");
+				container.textContent = "";
+
+				// Um fragmento so: a grade entra no documento de uma vez, em vez
+				// de forcar um recalculo de layout por servidor.
+				const batch = document.createDocumentFragment();
+
+				for (const guild of guilds) {
+					const button = document.createElement("a");
+					button.className = "guild";
+					button.dataset.name = (guild.n || "").toLowerCase();
+					button.href = inviteUrl(guild.i);
+					button.rel = "noreferrer noopener";
+
+					const name = document.createElement("span");
+					name.className = "name";
+					name.textContent = guild.n || guild.i;
+
+					button.append(guildIconNode(guild), name);
+					batch.append(button);
+				}
+
+				container.append(batch);
+				el("no-guilds").classList.toggle("hidden", guilds.length > 0);
+				el("filter").classList.toggle("hidden", guilds.length <= FILTER_THRESHOLD);
+			}
+
+			function renderUser(user) {
+				el("user-name").textContent = user && user.n ? "Signed in as " + user.n : "Signed in";
+
+				const slot = el("user-avatar");
+				slot.textContent = "";
+
+				if (user && user.a && user.i) {
+					const img = document.createElement("img");
+					img.alt = "";
+					img.loading = "lazy";
+					img.src = "https://cdn.discordapp.com/avatars/" + user.i + "/" + user.a + ".png?size=80";
+					slot.append(img);
+					return;
+				}
+
+				const span = document.createElement("span");
+				span.className = "fallback";
+				span.setAttribute("aria-hidden", "true");
+				span.textContent = (user && user.n ? user.n : "?").trim().charAt(0).toUpperCase() || "?";
+				slot.append(span);
+			}
+
+			// Nem o fragmento nem a query devem sobreviver na barra de endereco: um
+			// deles carrega a lista de servidores da pessoa, o outro o id do servidor.
+			function scrubUrl() {
+				history.replaceState(null, "", location.pathname);
+			}
+
+			function handleSignedIn(raw) {
+				let payload;
+				try {
+					payload = JSON.parse(base64urlDecode(raw));
+				} catch {
+					scrubUrl();
+					showAlert("oauth");
+					return;
+				}
+
+				const expected = sessionStorage.getItem(STATE_KEY);
+				sessionStorage.removeItem(STATE_KEY);
+				scrubUrl();
+
+				if (!expected || payload.s !== expected) {
+					showAlert("state");
+					return;
+				}
+
+				const preset = sessionStorage.getItem(PRESET_KEY);
+				if (preset === "fun" || preset === "full") {
+					const radio = document.querySelector('input[name="preset"][value="' + preset + '"]');
+					if (radio) {
+						radio.checked = true;
+					}
+				}
+
+				renderUser(payload.u);
+				renderGuilds(Array.isArray(payload.g) ? payload.g : []);
+				show("step-pick");
+			}
+
+			function startLogin() {
+				// Guarda contra um id ausente ou mal colado: melhor um aviso aqui
+				// que mandar a pessoa para uma tela de erro do Discord.
+				if (!/^\d{17,20}$/.test(CLIENT_ID)) {
+					showAlert("config");
+					return;
+				}
+
+				const state = randomState();
+				sessionStorage.setItem(STATE_KEY, state);
+				sessionStorage.setItem(PRESET_KEY, currentPreset());
+				location.assign(loginUrl(state));
+			}
+
+			function refreshDirectLink() {
+				el("direct").href = inviteUrl(null);
+			}
+
+			function boot() {
+				refreshDirectLink();
+
+				for (const radio of document.querySelectorAll('input[name="preset"]')) {
+					radio.addEventListener("change", refreshDirectLink);
+				}
+
+				el("signin").addEventListener("click", startLogin);
+
+				el("restart").addEventListener("click", () => {
+					sessionStorage.removeItem(STATE_KEY);
+					sessionStorage.removeItem(PRESET_KEY);
+					show("step-start");
+				});
+
+				el("filter").addEventListener("input", (event) => {
+					const needle = event.target.value.trim().toLowerCase();
+					for (const node of document.querySelectorAll(".guild")) {
+						node.classList.toggle("hidden", needle !== "" && !node.dataset.name.includes(needle));
+					}
+				});
+
+				// O Discord volta do convite com ?guild_id=. O code que vem junto e
+				// inutil sem o client secret e e ignorado de proposito.
+				const query = new URLSearchParams(location.search);
+				if (query.get("guild_id")) {
+					scrubUrl();
+					show("step-done");
+					return;
+				}
+
+				const hash = new URLSearchParams(location.hash.replace(/^#/, ""));
+				const data = hash.get("d");
+				const error = hash.get("e");
+
+				if (data) {
+					handleSignedIn(data);
+					return;
+				}
+
+				if (error) {
+					scrubUrl();
+					showAlert(error);
+				}
+			}
+
+			boot();
+		</script>
+	</body>
+</html>

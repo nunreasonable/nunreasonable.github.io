@@ -1,0 +1,28 @@
+name = "daeese-fun-oauth"
+main = "src/worker.js"
+compatibility_date = "2026-08-20"
+workers_dev = false
+
+[vars]
+# Application ID do Sollarety. E publico - aparece na URL de autorizacao que
+# o navegador monta - entao fica versionado aqui e nao como secret. O mesmo
+# valor esta no <script> de cornwallcore/fun/invite/index.html: trocar de
+# aplicacao significa mexer nos dois.
+DISCORD_CLIENT_ID = "1403153848507301939"
+
+# Precisa bater caractere a caractere com o que esta cadastrado em
+# Developer Portal > OAuth2 > Redirects. O Discord recusa a troca do code se
+# houver diferenca de barra final que seja.
+REDIRECT_URI = "https://daeese.me/oauth/fun/callback"
+
+# Para onde o visitante volta depois do login. E a propria pagina de convite.
+RETURN_URL = "https://ccore.daeese.me/fun/invite/"
+
+# O client secret entra fora do repositorio:
+#   npx wrangler secret put DISCORD_CLIENT_SECRET
+
+# daeese.me/api/* e do api-proxy-worker e os subdominios sao do
+# site-router-worker, entao este prefixo nao disputa rota com ninguem.
+[[routes]]
+pattern = "daeese.me/oauth/fun/*"
+zone_name = "daeese.me"
