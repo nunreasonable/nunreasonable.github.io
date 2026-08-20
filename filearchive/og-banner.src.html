@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>og-banner source</title>
+    <!--
+      Fonte do banner de embed (filearchive/og-banner.png).
+
+      Fica versionado ao lado do PNG para o banner poder ser refeito: abrir este
+      arquivo, capturar a .frame em 1200x630 e salvar por cima do PNG. Foi
+      escrito em HTML em vez de montado num script de imagem justamente para
+      herdar as fontes, os gradientes e o carmim da propria pagina - o embed
+      parece o site, e nao uma aproximacao dele.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-start: #040203;
+        --bg-mid: #0b0408;
+        --bg-end: #1d0813;
+        --text: #e7eef7;
+        --muted: #9caac0;
+        --accent-lit: #ff2d62;
+        --accent-glow: rgba(255, 45, 98, 0.55);
+        --accent-line: rgba(255, 45, 98, 0.32);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #000;
+        display: grid;
+        place-items: start;
+      }
+
+      .frame {
+        width: 1200px;
+        height: 630px;
+        position: relative;
+        overflow: hidden;
+        font-family: "Space Grotesk", system-ui, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(46% 60% at 18% 26%, rgba(255, 45, 98, 0.26) 0%, transparent 70%),
+          radial-gradient(40% 50% at 84% 78%, rgba(120, 0, 40, 0.3) 0%, transparent 72%),
+          linear-gradient(160deg, var(--bg-start) 0%, var(--bg-mid) 62%, var(--bg-end) 100%);
+      }
+
+      /* Mesma trama de pontos do site, na mesma opacidade. */
+      .frame::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        opacity: 0.08;
+        background-image: radial-gradient(#ffffff 0.5px, transparent 0.5px);
+        background-size: 3px 3px;
+      }
+
+      /* Fio de luz no topo, como a borda do card. */
+      .frame::after {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--accent-line) 20%, var(--accent-lit) 50%, var(--accent-line) 80%, transparent);
+      }
+
+      .inner {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        align-items: center;
+        gap: 62px;
+        padding: 0 78px;
+      }
+
+      .avatar-shell {
+        position: relative;
+        width: 300px;
+        height: 300px;
+      }
+
+      .avatar {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 6px solid var(--accent-lit);
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.7), 0 0 90px -10px var(--accent-glow);
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 22px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--accent-lit);
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 34px;
+        height: 3px;
+        border-radius: 3px;
+        background: var(--accent-lit);
+        box-shadow: 0 0 12px var(--accent-glow);
+      }
+
+      h1 {
+        margin: 0;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 148px;
+        line-height: 0.86;
+        letter-spacing: 2px;
+        background: linear-gradient(180deg, #ffffff 0%, #ffd9e2 50%, var(--accent-lit) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .tagline {
+        margin: 18px 0 0;
+        font-size: 30px;
+        line-height: 1.35;
+        color: var(--muted);
+        max-width: 640px;
+      }
+
+      .stack {
+        margin: 30px 0 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .stack li {
+        padding: 10px 20px;
+        border: 1px solid var(--accent-line);
+        border-radius: 999px;
+        font-size: 22px;
+        color: #ffe7ed;
+        background: rgba(255, 45, 98, 0.1);
+      }
+
+      .domain {
+        position: absolute;
+        right: 78px;
+        bottom: 46px;
+        z-index: 1;
+        font-size: 26px;
+        letter-spacing: 0.16em;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame" id="frame">
+      <div class="inner">
+        <div class="avatar-shell">
+          <img class="avatar" src="./pfp22.jpeg" alt="" />
+        </div>
+        <div>
+          <p class="eyebrow">Fullstack Developer</p>
+          <h1>DAEESE</h1>
+          <p class="tagline">Bots, dashboards and interfaces &mdash; from C# on the backend to the browser.</p>
+          <ul class="stack">
+            <li>C#</li>
+            <li>JavaScript</li>
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>.NET</li>
+          </ul>
+        </div>
+      </div>
+      <p class="domain">daeese.me</p>
+    </div>
+  </body>
+</html>

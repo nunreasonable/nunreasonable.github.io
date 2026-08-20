@@ -17,9 +17,43 @@
       content="daeese - fullstack developer working with C#, JavaScript, HTML and CSS."
     />
     <meta property="og:url" content="https://daeese.me/" />
-    <meta property="og:image" content="https://daeese.me/filearchive/pfp22.jpeg" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="theme-color" content="#040203" />
+
+    <!--
+      Banner do embed: 1200x630 e a proporcao que Discord, X, WhatsApp e
+      Telegram esperam para a imagem grande. URL absoluta de proposito - varios
+      desses robos nao resolvem caminho relativo.
+
+      A imagem e ESTATICA. O robo que monta o embed nao roda JavaScript, entao
+      ela nao acompanha a troca de avatar do Discord que a pagina faz em tempo
+      de execucao.
+    -->
+    <meta property="og:image" content="https://daeese.me/filearchive/og-banner.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="daeese - fullstack developer. C#, JavaScript, HTML, CSS."
+    />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- summary_large_image e o que faz o Discord desenhar o banner inteiro em
+         vez de uma miniatura quadrada ao lado do texto. -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Meet daeeseD" />
+    <meta
+      name="twitter:description"
+      content="Fullstack developer working with C#, JavaScript, HTML and CSS. Links, projects and what I'm listening to right now."
+    />
+    <meta name="twitter:image" content="https://daeese.me/filearchive/og-banner.png" />
+    <meta
+      name="twitter:image:alt"
+      content="daeese - fullstack developer. C#, JavaScript, HTML, CSS."
+    />
+
+    <!-- E a cor da barra lateral do embed no Discord. Em #040203 ela sumia
+         contra o fundo escuro do proprio Discord. -->
+    <meta name="theme-color" content="#ff2d62" />
     <link rel="icon" type="image/jpeg" href="./filearchive/lal.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -40,6 +74,18 @@
         --accent-2: #440114;
         --button-bg: rgba(255, 255, 255, 0.07);
         --button-hover: rgba(255, 255, 255, 0.14);
+
+        /*
+         * O carmim em versoes claras o bastante para VER.
+         *
+         * O --accent (#9e002f) e escuro demais para brilho e borda: sobre um
+         * fundo quase preto ele some. Estes tons sao o mesmo matiz puxado para
+         * cima em luminosidade, e sao o que aparece em anel, hover e aurora.
+         */
+        --accent-lit: #ff2d62;
+        --accent-glow: rgba(255, 45, 98, 0.55);
+        --accent-soft: rgba(255, 45, 98, 0.14);
+        --accent-line: rgba(255, 45, 98, 0.32);
       }
 
       * {
@@ -102,21 +148,117 @@
         animation: float 12s ease-in-out infinite;
       }
 
+      /*
+       * Os halos eram #080000b2 e #00000088 - preto sobre um fundo ja quase
+       * preto, ou seja, invisiveis. Agora sao carmim de verdade, grandes e bem
+       * borrados: o que se ve e a luz, nao o circulo.
+       */
       .halo-1 {
-        width: 260px;
-        height: 260px;
-        top: -90px;
-        left: -80px;
-        background: #080000b2;
+        width: 620px;
+        height: 620px;
+        top: -240px;
+        left: -220px;
+        background: radial-gradient(circle, rgba(255, 45, 98, 0.5) 0%, rgba(255, 45, 98, 0) 68%);
+        filter: blur(70px);
+        opacity: 0.55;
       }
 
       .halo-2 {
-        width: 220px;
-        height: 220px;
-        right: -70px;
-        bottom: -50px;
-        background: #00000088;
+        width: 520px;
+        height: 520px;
+        right: -200px;
+        bottom: -180px;
+        background: radial-gradient(circle, rgba(158, 0, 47, 0.55) 0%, rgba(158, 0, 47, 0) 70%);
+        filter: blur(80px);
+        opacity: 0.5;
         animation-delay: -6s;
+      }
+
+      /*
+       * Aurora: duas manchas largas que giram devagar e em ritmos diferentes.
+       * Sozinhas nao chamam atencao - o efeito e o fundo deixar de ser chapado.
+       */
+      .aurora {
+        position: fixed;
+        inset: -30%;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.5;
+        background:
+          radial-gradient(38% 30% at 22% 26%, rgba(255, 45, 98, 0.24) 0%, transparent 70%),
+          radial-gradient(34% 28% at 78% 72%, rgba(120, 0, 40, 0.28) 0%, transparent 72%);
+        animation: aurora-drift 26s ease-in-out infinite alternate;
+        will-change: transform;
+      }
+
+      @keyframes aurora-drift {
+        from {
+          transform: translate3d(-3%, -2%, 0) rotate(0deg) scale(1);
+        }
+        to {
+          transform: translate3d(3%, 2%, 0) rotate(8deg) scale(1.12);
+        }
+      }
+
+      /* Campo de particulas: fica atras de tudo, inclusive da aurora. */
+      #particles {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        display: block;
+      }
+
+      /*
+       * Brilho que segue o cursor. So existe onde ha ponteiro fino - num
+       * celular ele ficaria parado num canto, aceso, sem motivo.
+       */
+      .cursor-glow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 460px;
+        height: 460px;
+        margin: -230px 0 0 -230px;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0;
+        background: radial-gradient(circle, rgba(255, 45, 98, 0.16) 0%, transparent 62%);
+        transition: opacity 400ms ease;
+        will-change: transform;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        .cursor-glow.is-live {
+          opacity: 1;
+        }
+      }
+
+      /* Barra de rolagem no accent, para a moldura combinar com a pagina. */
+      html {
+        scrollbar-color: var(--accent-line) transparent;
+        scrollbar-width: thin;
+      }
+
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--accent-line);
+        border-radius: 999px;
+        border: 2px solid transparent;
+        background-clip: content-box;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-lit);
+        background-clip: content-box;
       }
 
       .blur-overlay {
@@ -162,12 +304,62 @@
         font-size: 1.2rem;
         letter-spacing: 0.05em;
         animation: pulse-text 1.5s ease infinite;
-        padding: 14px 18px;
-        border: 1px solid rgba(255, 255, 255, 0.16);
+        padding: 14px 22px;
+        border: 1px solid var(--accent-line);
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.08);
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+        background: rgba(255, 45, 98, 0.08);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22), 0 0 46px -14px var(--accent-glow);
       }
+
+      /*
+       * Anel que se abre a partir do rotulo, repetidamente. E o sinal de "isto
+       * e clicavel" - sem ele, "click to enter" e so um texto parado.
+       */
+      .blur-message::after {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: 999px;
+        border: 1px solid var(--accent-lit);
+        opacity: 0;
+        animation: gate-ring 2.4s ease-out infinite;
+        pointer-events: none;
+      }
+
+      @keyframes gate-ring {
+        0% { transform: scale(1); opacity: 0.55; }
+        100% { transform: scale(1.28); opacity: 0; }
+      }
+
+      /* O conteudo entra com uma escala minima, e nao so aparecendo. */
+      .site {
+        transform-origin: center top;
+      }
+
+      body.is-entering .site {
+        animation: reveal-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      @keyframes reveal-in {
+        from { transform: scale(0.965); opacity: 0; filter: blur(6px); }
+        to { transform: scale(1); opacity: 1; filter: blur(0); }
+      }
+
+      /*
+       * Entrada escalonada dos blocos do card. O atraso vem de uma variavel
+       * escrita pelo JS, entao acrescentar um bloco novo no HTML nao exige
+       * mexer no CSS.
+       */
+      body.is-entering .card > * {
+        animation: stagger-in 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: calc(var(--i, 0) * 70ms + 120ms);
+      }
+
+      @keyframes stagger-in {
+        from { transform: translateY(12px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+
 
       @keyframes pulse-text {
         0%, 100% {
@@ -180,12 +372,29 @@
 
       .site {
         width: min(620px, 92vw);
+        transition: width 300ms ease;
         max-width: 100%;
         margin: 24px auto;
         padding: 0 8px;
         position: relative;
         z-index: 2;
-        animation: fade-in 0.75s ease both;
+        /*
+         * So opacidade, sem translate.
+         *
+         * O fade-in original translada em Y, e com fill-mode `both` o quadro
+         * final fica retido: .site guardava um transform para sempre. Qualquer
+         * transform num ancestral - ate identidade - vira bloco de contencao
+         * para descendentes `position: fixed`, e o painel do disco agora mora
+         * aqui dentro: no celular ele se posicionava em relacao a .site em vez
+         * da viewport e nao cobria a tela. O movimento de entrada nao se perde -
+         * a intro e o escalonamento dos blocos ja dao isso.
+         */
+        animation: fade-in-soft 0.75s ease both;
+      }
+
+      @keyframes fade-in-soft {
+        from { opacity: 0; }
+        to { opacity: 1; }
       }
 
       .card {
@@ -202,9 +411,25 @@
         overflow: clip;
         box-shadow:
           0 24px 60px rgba(0, 0, 0, 0.38),
-          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          0 0 90px -30px var(--accent-glow),
+          inset 0 1px 0 rgba(255, 255, 255, 0.12),
           inset 0 0 0 1px rgba(255, 255, 255, 0.03);
         position: relative;
+        transform-style: preserve-3d;
+        transition: box-shadow 400ms ease;
+      }
+
+      /*
+       * Fio de luz na borda de cima. E o detalhe que faz um card escuro parecer
+       * vidro em vez de um retangulo pintado.
+       */
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--accent-line) 22%, rgba(255, 255, 255, 0.5) 50%, var(--accent-line) 78%, transparent);
+        pointer-events: none;
       }
 
       .card::before {
@@ -255,7 +480,9 @@
         height: 110px;
         border-radius: 50%;
         object-fit: cover;
-        border: 3px solid rgba(255, 255, 255, 0.28);
+        border: 3px solid var(--accent-lit);
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 26px -4px var(--accent-glow);
+        animation: avatar-pulse 3.6s ease-in-out infinite;
         margin-top: 0;
         z-index: 1;
         image-rendering: -webkit-optimize-contrast;
@@ -323,6 +550,41 @@
         letter-spacing: 1px;
         font-size: clamp(2.1rem, 3.5vw, 2.8rem);
         line-height: 0.92;
+        background: linear-gradient(180deg, #ffffff 0%, #ffd9e2 52%, var(--accent-lit) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 28px rgba(255, 45, 98, 0.25);
+      }
+
+      /*
+       * Cursor da maquina de escrever. Some sozinho quando a digitacao acaba,
+       * por isso o estado fica numa classe e nao num timer solto.
+       */
+      .name-caret {
+        display: inline-block;
+        width: 0.06em;
+        height: 0.78em;
+        margin-left: 0.06em;
+        vertical-align: baseline;
+        background: var(--accent-lit);
+        box-shadow: 0 0 10px var(--accent-glow);
+        animation: caret-blink 1s steps(1) infinite;
+      }
+
+      .name-wrap.is-typed .name-caret {
+        display: none;
+      }
+
+      @keyframes caret-blink {
+        0%, 49% { opacity: 1; }
+        50%, 100% { opacity: 0; }
+      }
+
+      @keyframes avatar-pulse {
+        0%, 100% { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 22px -6px var(--accent-glow); }
+        50% { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 34px 0 var(--accent-glow); }
       }
 
       .handle {
@@ -412,11 +674,26 @@
       }
 
       .section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
         font-size: 0.8rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--muted);
         margin: 24px 2px 10px;
+      }
+
+      /* Tracinho em carmim antes do rotulo: diz onde um bloco comeca sem
+         precisar de linha divisoria atravessando o card. */
+      .section-title::before {
+        content: "";
+        width: 14px;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--accent-lit);
+        box-shadow: 0 0 8px var(--accent-glow);
+        flex: 0 0 auto;
       }
 
       .tabs {
@@ -439,8 +716,10 @@
       }
 
       .tab-btn[aria-selected="true"] {
-        background: rgba(255, 255, 255, 0.14);
-        border-color: rgba(255, 255, 255, 0.35);
+        background: var(--accent-soft);
+        border-color: var(--accent-line);
+        color: #ffe7ed;
+        box-shadow: 0 0 22px -10px var(--accent-glow);
       }
 
       .tab-panel[hidden] {
@@ -476,8 +755,19 @@
 
       .link-btn:hover {
         background: var(--button-hover);
-        border-color: rgba(255, 255, 255, 0.3);
-        transform: translateY(-1px);
+        border-color: var(--accent-line);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 26px -16px rgba(0, 0, 0, 0.9), 0 0 34px -20px var(--accent-glow);
+      }
+
+      /* Anel de foco visivel: a pagina e navegavel so por teclado e ate agora
+         so tinha o contorno padrao do navegador, que some sobre fundo escuro. */
+      .link-btn:focus-visible,
+      .tab-btn:focus-visible,
+      .project-card:focus-visible,
+      .social-btn:focus-visible {
+        outline: 2px solid var(--accent-lit);
+        outline-offset: 2px;
       }
 
       .link-btn .left {
@@ -568,11 +858,45 @@
         gap: 10px;
       }
 
+      /*
+       * O card que o portfolio existe para mostrar, e ate agora o mais apagado
+       * da pagina. Ganha borda que acende, elevacao e um veio de luz que
+       * atravessa no hover.
+       */
       .project-card {
+        position: relative;
+        overflow: hidden;
         border: 1px solid rgba(255, 255, 255, 0.14);
-        border-radius: 12px;
-        padding: 12px 14px;
-        background: rgba(255, 255, 255, 0.04);
+        border-radius: 14px;
+        padding: 14px 16px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+        transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+      }
+
+      .project-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.1) 50%, transparent 62%);
+        transform: translateX(-120%);
+        transition: transform 700ms ease;
+      }
+
+      .project-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--accent-line);
+        box-shadow: 0 14px 34px -18px rgba(0, 0, 0, 0.9), 0 0 40px -22px var(--accent-glow);
+      }
+
+      .project-card:hover::after {
+        transform: translateX(120%);
+      }
+
+      .project-card:hover .project-thumb {
+        transform: scale(1.1);
+        border-color: var(--accent-lit);
       }
 
       .project-title-row {
@@ -583,12 +907,13 @@
       }
 
       .project-thumb {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
+        width: 42px;
+        height: 42px;
+        border-radius: 11px;
         object-fit: cover;
         flex: 0 0 auto;
         border: 1px solid rgba(255, 255, 255, 0.16);
+        transition: transform 260ms ease, border-color 260ms ease;
       }
 
       .project-title {
@@ -917,6 +1242,140 @@
         outline-offset: 2px;
       }
 
+      /*
+       * Desktop: o card vira duas colunas.
+       *
+       * Ate aqui a coluna tinha 620px e o resto da tela ficava vazio - num
+       * portfolio, exatamente o espaco que os projetos deveriam ocupar. A
+       * esquerda fica a identidade e os links principais; a direita, os
+       * projetos em grade.
+       *
+       * Com os dois paineis na tela ao mesmo tempo, a barra de abas nao alterna
+       * mais nada e some. Quem devolve o `hidden` dos paineis e o JS, nao um
+       * !important daqui: atributo e folha de estilo discordando foi o que fez
+       * o dashboard mostrar os cinco paineis de uma vez.
+       */
+      @media (min-width: 900px) {
+        .site {
+          width: min(1100px, 94vw);
+        }
+
+        .card {
+          display: grid;
+          grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+          /*
+           * Cinco linhas coladas ao conteudo mais uma que come a sobra.
+           *
+           * Sem a sexta linha, o painel da direita - que e mais alto e atravessa
+           * todas as linhas - fazia a folga ser dividida ENTRE os itens da
+           * esquerda: sobrava um buraco entre o nome e a bio, outro entre a bio
+           * e os badges. Com uma linha vazia no fim, a sobra vai toda para
+           * baixo e a coluna da esquerda fica junta.
+           */
+          grid-template-rows: repeat(5, min-content) 1fr;
+          column-gap: 34px;
+          row-gap: 4px;
+          align-items: start;
+          padding: 34px 32px;
+        }
+
+        .top,
+        .bio,
+        .badges,
+        .tabs,
+        #panel-links {
+          grid-column: 1;
+        }
+
+        /* Linha fina separando as duas colunas, do lado do painel da direita. */
+        #panel-projects {
+          grid-column: 2;
+          grid-row: 1 / -1;
+          border-left: 1px solid rgba(255, 255, 255, 0.08);
+          padding-left: 30px;
+        }
+
+        /*
+         * So o titulo do TOPO da coluna da direita perde o respiro de cima -
+         * ali ele encosta na borda do card e a margem seria buraco. Na
+         * esquerda, o "Main Links" vem logo depois dos badges e precisa do
+         * espaco, senao os dois grudam.
+         */
+        #panel-projects .section-title:first-child {
+          margin-top: 0;
+        }
+
+        #panel-links .section-title:first-child {
+          margin-top: 6px;
+        }
+
+        .projects {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .tabs.is-hidden {
+          display: none;
+        }
+
+        /*
+         * Painel do disco encaixado a esquerda do card.
+         *
+         * Ele deixa de ser um overlay que cobre a pagina e vira um item flex ao
+         * lado do card. Quando abre, .site ALARGA de min(1100px,94vw) para
+         * min(1460px,96vw): como .site ja e centralizada por `margin: auto`, o
+         * conjunto se recentraliza sozinho e o card nao encolhe - sem conta com
+         * transform nem posicao fixa.
+         */
+        .card-wrapper {
+          display: flex;
+          align-items: stretch;
+          justify-content: center;
+          gap: 22px;
+        }
+
+        .card-wrapper > .card {
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+
+        .player-modal.active {
+          position: static;
+          inset: auto;
+          display: block;
+          flex: 0 0 320px;
+          background: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+          z-index: auto;
+          animation: dock-in 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .player-modal.active .player-modal-content {
+          width: 100%;
+          height: 100%;
+          padding: 26px 20px;
+          border-radius: 22px;
+          box-shadow:
+            0 24px 60px rgba(0, 0, 0, 0.38),
+            0 0 90px -30px var(--accent-glow),
+            inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        body.player-docked .site {
+          width: min(1460px, 96vw);
+        }
+
+        /* Encaixado, a pagina continua rolando normalmente. */
+        body.player-docked.modal-open {
+          overflow: auto;
+        }
+
+        @keyframes dock-in {
+          from { opacity: 0; transform: translateX(-26px) scale(0.96); }
+          to { opacity: 1; transform: translateX(0) scale(1); }
+        }
+      }
+
       @media (max-width: 640px) {
         .site {
           width: min(620px, 100vw);
@@ -1013,9 +1472,130 @@
           font-size: 1rem;
         }
       }
+      /* ==================================================================== *
+       * Intro: boot de terminal
+       *
+       * Roda uma vez, depois do clique no portao, e some. Nao segura o
+       * conteudo: o card monta POR TRAS dela ao mesmo tempo, entao quem tem
+       * pressa ja encontra a pagina pronta quando a camada se apaga.
+       *
+       * As linhas sao escalonadas por --i no proprio HTML, e nao por timer no
+       * JS: uma linha a mais e uma linha a mais na marcacao, sem recalcular
+       * atraso nenhum. O tempo total sai em ~1,6s.
+       * ==================================================================== */
+      .intro {
+        position: fixed;
+        inset: 0;
+        z-index: 998;
+        display: none;
+        place-items: center;
+        pointer-events: none;
+        background: radial-gradient(circle at 50% 50%, rgba(4, 2, 3, 0.9) 0%, rgba(4, 2, 3, 0.98) 70%);
+      }
+
+      .intro.is-running {
+        display: grid;
+        animation: intro-out 320ms ease 1300ms both;
+      }
+
+      .intro-terminal {
+        font-family: ui-monospace, "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+        font-size: clamp(0.82rem, 2.4vw, 1.05rem);
+        line-height: 1.85;
+        color: var(--muted);
+        text-shadow: 0 0 24px rgba(255, 45, 98, 0.18);
+        padding: 0 20px;
+      }
+
+      .intro-line {
+        margin: 0;
+        white-space: nowrap;
+        opacity: 0;
+        animation: line-in 220ms ease both;
+        animation-delay: calc(var(--i) * 200ms);
+      }
+
+      /* O prompt em carmim: e o que amarra a intro ao resto da pagina. */
+      .intro-line .p {
+        color: var(--accent-lit);
+        margin-right: 8px;
+      }
+
+      .intro-line .dots {
+        color: rgba(156, 170, 192, 0.4);
+      }
+
+      .intro-line .ok {
+        color: var(--accent-lit);
+        font-weight: 700;
+      }
+
+      /* Bloco piscando na primeira linha, enquanto o resto "carrega". */
+      .intro-line .cur {
+        display: inline-block;
+        width: 0.55em;
+        height: 1em;
+        margin-left: 4px;
+        vertical-align: text-bottom;
+        background: var(--accent-lit);
+        box-shadow: 0 0 10px var(--accent-glow);
+        animation: caret-blink 0.7s steps(1) infinite;
+      }
+
+      @keyframes line-in {
+        from { opacity: 0; transform: translateX(-6px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+
+      @keyframes intro-out {
+        to { opacity: 0; }
+      }
+
+      /*
+       * Movimento reduzido: fica no FIM da folha de proposito.
+       *
+       * Estas regras tem a mesma especificidade das que anulam (.project-card,
+       * .link-btn), entao quem decide e a ordem de fonte. No meio do arquivo o
+       * `transition: none` perdia para o `transition` declarado depois, e os
+       * cards continuavam animando - foi o que o teste pegou.
+       */
+      @media (prefers-reduced-motion: reduce) {
+        .aurora,
+        .halo,
+        .blur-message,
+        .blur-message::after,
+        .avatar,
+        .intro,
+        .intro-line,
+        .intro-line .cur,
+        body.is-entering .site,
+        body.is-entering .card > * {
+          animation: none !important;
+        }
+
+        /* Sem animacao, a camada ficaria parada na tela para sempre. */
+        .intro.is-running {
+          display: none;
+        }
+
+        .project-card,
+        .link-btn,
+        .project-thumb,
+        .card,
+        .tab-btn {
+          transition: none;
+        }
+
+        .project-card::after {
+          display: none;
+        }
+      }
     </style>
   </head>
   <body>
+    <canvas id="particles" aria-hidden="true"></canvas>
+    <div class="aurora" aria-hidden="true"></div>
+    <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
     <div class="noise"></div>
     <div class="halo halo-1"></div>
     <div class="halo halo-2"></div>
@@ -1024,36 +1604,51 @@
       <div class="blur-message">click to enter</div>
     </div>
 
-    <div
-      class="player-modal"
-      id="playerModal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="playerTrackTitle"
-    >
-      <div class="player-modal-content">
-        <button class="player-close-btn" id="playerCloseBtn" type="button" aria-label="Close player">
-          ✕
-        </button>
-        <div class="player-disc">
-          <img class="player-album-art" id="playerAlbumArt" src="" alt="Album artwork" />
-        </div>
-        <h2 class="player-track-title" id="playerTrackTitle">Not Playing</h2>
-        <p class="player-track-artist" id="playerTrackArtist"></p>
-        <p class="player-track-album" id="playerTrackAlbum"></p>
-        <div class="player-progress">
-          <div class="player-progress-bar" id="playerProgressBar"></div>
-        </div>
-        <div class="player-time">
-          <span id="playerTimeCurrent">0:00</span>
-          <span id="playerTimeTotal">0:00</span>
-        </div>
-        <a class="player-listen-btn" id="playerListenBtn" href="https://open.spotify.com" target="_blank" rel="noopener noreferrer">Listen too!</a>
+    <!--
+      Camada da intro. Fica vazia e inerte ate o clique no portao; o JS a liga e
+      ela se apaga sozinha. aria-hidden porque e puramente decorativa - o nome
+      ja esta no <h1> do card, e anuncia-lo duas vezes so atrapalha.
+    -->
+    <div class="intro" id="intro" aria-hidden="true">
+      <div class="intro-terminal">
+        <p class="intro-line" style="--i: 0"><span class="p">&gt;</span> initializing daeese.me<span class="cur"></span></p>
+        <p class="intro-line" style="--i: 1"><span class="p">&gt;</span> loading modules<span class="dots">.........</span> <span class="ok">ok</span></p>
+        <p class="intro-line" style="--i: 2"><span class="p">&gt;</span> discord gateway<span class="dots">.........</span> <span class="ok">ok</span></p>
+        <p class="intro-line" style="--i: 3"><span class="p">&gt;</span> spotify<span class="dots">.................</span> <span class="ok">live</span></p>
+        <p class="intro-line" style="--i: 4"><span class="p">&gt;</span> ready.</p>
       </div>
     </div>
 
+
     <main class="site">
       <div class="card-wrapper">
+      <div
+        class="player-modal"
+        id="playerModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="playerTrackTitle"
+      >
+        <div class="player-modal-content">
+          <button class="player-close-btn" id="playerCloseBtn" type="button" aria-label="Close player">
+            ✕
+          </button>
+          <div class="player-disc">
+            <img class="player-album-art" id="playerAlbumArt" src="" alt="Album artwork" />
+          </div>
+          <h2 class="player-track-title" id="playerTrackTitle">Not Playing</h2>
+          <p class="player-track-artist" id="playerTrackArtist"></p>
+          <p class="player-track-album" id="playerTrackAlbum"></p>
+          <div class="player-progress">
+            <div class="player-progress-bar" id="playerProgressBar"></div>
+          </div>
+          <div class="player-time">
+            <span id="playerTimeCurrent">0:00</span>
+            <span id="playerTimeTotal">0:00</span>
+          </div>
+          <a class="player-listen-btn" id="playerListenBtn" href="https://open.spotify.com" target="_blank" rel="noopener noreferrer">Listen too!</a>
+        </div>
+      </div>
         <article class="card" id="mainCard">
           <section class="top">
             <div class="avatar-shell">
@@ -1205,6 +1800,99 @@
         playSFX('click');
         blurOverlay.style.opacity = "0";
         blurOverlay.style.pointerEvents = "none";
+
+        // Numera os filhos do card para o CSS escalonar a entrada. Feito aqui,
+        // e nao no HTML, para um bloco novo entrar na conta sozinho.
+        document.querySelectorAll("#mainCard > *").forEach((el, i) => {
+          el.style.setProperty("--i", String(i));
+        });
+        document.body.classList.add("is-entering");
+
+        /*
+         * A classe sai assim que a entrada termina, e isso NAO e limpeza
+         * cosmetica.
+         *
+         * As animacoes de entrada usam `both` como fill-mode, entao o
+         * quadro final fica retido: `.site` mantem um transform identidade
+         * para sempre. E qualquer transform - mesmo identidade - transforma o
+         * elemento em bloco de contencao para descendentes `position: fixed`.
+         * Como o painel do disco agora vive dentro de `.site`, o modo modal do
+         * celular passava a se posicionar em relacao a ela e nao a viewport:
+         * ficava 14px abaixo do topo e nao cobria a tela.
+         *
+         * Contamos os filhos em vez de usar um timeout com o total somado, para
+         * acrescentar um bloco no card nao exigir recalcular numero nenhum.
+         */
+        const filhos = document.querySelectorAll("#mainCard > *");
+        let restantes = filhos.length;
+
+        function encerrarEntrada() {
+          document.body.classList.remove("is-entering");
+        }
+
+        if (restantes === 0 || reduceMotionQuery.matches) {
+          encerrarEntrada();
+        } else {
+          filhos.forEach((el) => {
+            el.addEventListener(
+              "animationend",
+              (event) => {
+                if (event.animationName !== "stagger-in") {
+                  return;
+                }
+                restantes -= 1;
+                if (restantes <= 0) {
+                  encerrarEntrada();
+                }
+              },
+              { once: true }
+            );
+          });
+
+          // Rede de seguranca: se algum animationend nao vier - aba em segundo
+          // plano na hora certa, por exemplo - a classe sai mesmo assim.
+          window.setTimeout(encerrarEntrada, 4000);
+        }
+
+        /*
+         * Intro glitch.
+         *
+         * A camada roda POR CIMA enquanto o card monta por tras, entao ela nao
+         * atrasa nada: quando se apaga, a pagina ja esta pronta. Ela se remove
+         * sozinha no fim da animacao - sem timer solto que possa disparar
+         * depois de a pessoa ja ter saido.
+         *
+         * Quem pediu menos movimento nao ve intro nenhuma; o CSS esconde a
+         * camada e o animationend nunca vem, por isso o display volta aqui.
+         */
+        const intro = document.getElementById("intro");
+        if (intro && !reduceMotionQuery.matches) {
+          intro.classList.add("is-running");
+
+          const encerrarIntro = () => intro.classList.remove("is-running");
+
+          intro.addEventListener(
+            "animationend",
+            (event) => {
+              // So o fade final encerra: as outras animacoes da camada
+              // terminam antes e borbulham ate aqui.
+              if (event.animationName === "intro-out") {
+                encerrarIntro();
+              }
+            },
+            { passive: true }
+          );
+
+          /*
+           * Rede de seguranca. O navegador congela animacoes em aba de segundo
+           * plano - conferido: com visibilityState "hidden" o currentTime fica
+           * em 0. Quem clicar em "enter" e trocar de aba na hora voltaria para
+           * uma camada de boot parada em cima do conteudo, esperando um
+           * animationend que nunca chegou.
+           */
+          window.setTimeout(encerrarIntro, 6000);
+        }
+
         window.setTimeout(() => {
           blurOverlay.classList.add("hidden");
         }, 220);
@@ -1260,9 +1948,17 @@
       if (profileData.avatar) {
         avatarEl.src = profileData.avatar;
       }
+      /*
+       * Reserva do avatar.
+       *
+       * Isto apontava para uma foto aleatoria do Unsplash: se o avatar falhasse
+       * - e agora ele vem do CDN do Discord, que pode falhar - o site passava a
+       * mostrar a foto de um desconhecido no lugar do dono da pagina.
+       */
       avatarEl.addEventListener("error", () => {
-        avatarEl.src =
-          "https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=256&auto=format&fit=crop";
+        if (avatarEl.src !== new URL(profileData.avatar, location.href).href) {
+          avatarEl.src = profileData.avatar;
+        }
       });
       document.getElementById("displayName").textContent = profileData.name;
       document.getElementById("handle").textContent = profileData.handle;
@@ -1417,7 +2113,28 @@
         titleEl.classList.add("is-scrolling");
       }
 
+      /*
+       * Troca o avatar so quando a URL muda de verdade.
+       *
+       * O poll roda a cada 30s; reatribuir o mesmo src faria o navegador
+       * redesenhar a imagem sem necessidade, e um avatar animado reiniciaria a
+       * cada volta.
+       */
+      function applyDiscordAvatar(avatarUrl) {
+        const alvo = avatarUrl || profileData.avatar;
+        if (!alvo) {
+          return;
+        }
+
+        const atual = avatarEl.getAttribute("src");
+        if (atual !== alvo) {
+          avatarEl.src = alvo;
+        }
+      }
+
       function setNowPlayingState(state) {
+        applyDiscordAvatar(state && state.avatarUrl);
+
         // Update player modal state
         currentNowPlayingState = state;
         updateDiscordStatusBadge(state && state.discordStatus);
@@ -1489,11 +2206,28 @@
             payload.error && payload.error.message
               ? payload.error.message
               : "Spotify status unavailable";
-          return { isPlaying: false, message: errorMessage, discordStatus: "offline" };
+          return { isPlaying: false, message: errorMessage, discordStatus: "offline", avatarUrl: null };
         }
 
         const data = payload.data;
         const discordStatus = normalizeDiscordStatus(data.discord_status);
+
+        /*
+         * Avatar do Discord, de graca.
+         *
+         * O Lanyard ja e consultado a cada 30s para o status e a faixa tocando,
+         * e a resposta traz discord_user.avatar. Nao ha requisicao nova: e so
+         * montar a URL do CDN a partir do hash.
+         *
+         * Hash comecando com "a_" e avatar animado, que so existe em .gif -
+         * pedir .png devolve o primeiro quadro parado.
+         */
+        const discordUser = data.discord_user || {};
+        let avatarUrl = null;
+        if (discordUser.id && discordUser.avatar) {
+          const ext = discordUser.avatar.startsWith("a_") ? "gif" : "png";
+          avatarUrl = `https://cdn.discordapp.com/avatars/${encodeURIComponent(discordUser.id)}/${encodeURIComponent(discordUser.avatar)}.${ext}?size=256`;
+        }
         const spotifyOnlyMode = !profileData.spotify || profileData.spotify.onlySpotify !== false;
 
         function parseSpotifyState(rawSpotify) {
@@ -1564,14 +2298,14 @@
         const spotifyState = directSpotifyState || activitySpotifyState;
 
         if (!spotifyState) {
-          return { isPlaying: false, discordStatus };
+          return { isPlaying: false, discordStatus, avatarUrl };
         }
 
         if (spotifyOnlyMode && data.listening_to_spotify === false && !activitySpotifyState) {
-          return { isPlaying: false, discordStatus };
+          return { isPlaying: false, discordStatus, avatarUrl };
         }
 
-        return { ...spotifyState, discordStatus };
+        return { ...spotifyState, discordStatus, avatarUrl };
       }
 
       async function refreshNowPlaying() {
@@ -1650,10 +2384,18 @@
         return playerModal.classList.contains("active");
       }
 
+      /*
+       * Ha largura para o painel ficar ao lado do card? Abaixo disto nao ha, e
+       * ele volta a ser o modal centralizado - o unico formato que cabe no
+       * celular. O valor acompanha o @media do layout de duas colunas.
+       */
+      const dockQuery = window.matchMedia("(min-width: 1100px)");
+
       function openPlayerModal() {
         lastFocusedBeforeModal = document.activeElement;
         playerModal.classList.add("active");
         document.body.classList.add("modal-open");
+        document.body.classList.toggle("player-docked", dockQuery.matches);
         updatePlayerDisplay();
         playerCloseBtn.focus();
       }
@@ -1664,7 +2406,7 @@
         }
 
         playerModal.classList.remove("active");
-        document.body.classList.remove("modal-open");
+        document.body.classList.remove("modal-open", "player-docked");
         stopPlayerProgressTimer();
         playSFX('close');
 
@@ -1698,6 +2440,12 @@
         playerListenBtn.classList.remove("is-idle");
         startPlayerProgressTimer();
       }
+
+      dockQuery.addEventListener("change", () => {
+        if (isPlayerModalOpen()) {
+          document.body.classList.toggle("player-docked", dockQuery.matches);
+        }
+      });
 
       playerCloseBtn.addEventListener("click", closePlayerModal);
 
@@ -1908,6 +2656,251 @@
         playSFX('click');
         openProfileLink(socialLink.dataset.url);
       });
+
+      /* ==================================================================== *
+       * Efeitos visuais
+       *
+       * Tudo aqui e enfeite: se qualquer pedaco falhar, a pagina continua
+       * legivel e navegavel. Por isso nada abaixo participa da renderizacao do
+       * conteudo, e tudo respeita prefers-reduced-motion.
+       * ==================================================================== */
+
+      // Uma consulta so, reutilizada: quem pediu menos movimento ao sistema nao
+      // recebe particula, inclinacao, brilho de cursor nem digitacao letra a
+      // letra. E a primeira coisa que a pessoa ve na pagina.
+      const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const finePointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+      // --- Particulas ------------------------------------------------------
+      (function initParticles() {
+        const canvas = document.getElementById("particles");
+        if (!canvas || reduceMotionQuery.matches) {
+          return;
+        }
+
+        const ctx = canvas.getContext("2d", { alpha: true });
+        if (!ctx) {
+          return;
+        }
+
+        let particles = [];
+        let frame = null;
+        let width = 0;
+        let height = 0;
+
+        function resize() {
+          // Densidade limitada: num monitor grande, "uma particula a cada N
+          // pixels" sem teto vira um numero absurdo de objetos por quadro.
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          width = window.innerWidth;
+          height = window.innerHeight;
+
+          canvas.width = Math.floor(width * dpr);
+          canvas.height = Math.floor(height * dpr);
+          canvas.style.width = width + "px";
+          canvas.style.height = height + "px";
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+          const alvo = finePointerQuery.matches ? 60 : 25;
+          const total = Math.min(alvo, Math.round((width * height) / 26000));
+
+          particles = Array.from({ length: total }, () => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            r: Math.random() * 1.6 + 0.5,
+            vx: (Math.random() - 0.5) * 0.16,
+            vy: -(Math.random() * 0.22 + 0.05),
+            a: Math.random() * 0.5 + 0.16
+          }));
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, width, height);
+
+          for (const p of particles) {
+            p.x += p.vx;
+            p.y += p.vy;
+
+            // Sobe, sai por cima e volta por baixo: o campo nunca esvazia.
+            if (p.y < -8) {
+              p.y = height + 8;
+              p.x = Math.random() * width;
+            }
+            if (p.x < -8) p.x = width + 8;
+            if (p.x > width + 8) p.x = -8;
+
+            ctx.beginPath();
+            ctx.fillStyle = `rgba(255, 45, 98, ${p.a})`;
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          frame = requestAnimationFrame(draw);
+        }
+
+        function start() {
+          if (frame === null) {
+            frame = requestAnimationFrame(draw);
+          }
+        }
+
+        function stop() {
+          if (frame !== null) {
+            cancelAnimationFrame(frame);
+            frame = null;
+          }
+        }
+
+        resize();
+        start();
+
+        window.addEventListener("resize", resize);
+
+        // Aba em segundo plano nao pode ficar queimando CPU desenhando algo que
+        // ninguem esta vendo.
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) {
+            stop();
+          } else {
+            start();
+          }
+        });
+
+        // Se a preferencia mudar em tempo de execucao, para na hora.
+        reduceMotionQuery.addEventListener("change", (e) => {
+          if (e.matches) {
+            stop();
+            ctx.clearRect(0, 0, width, height);
+          } else {
+            start();
+          }
+        });
+      })();
+
+      // --- Brilho seguindo o cursor ----------------------------------------
+      (function initCursorGlow() {
+        const glow = document.getElementById("cursorGlow");
+        if (!glow || reduceMotionQuery.matches || !finePointerQuery.matches) {
+          return;
+        }
+
+        let x = 0;
+        let y = 0;
+        let pendente = false;
+
+        // A posicao e aplicada dentro de um rAF: mousemove dispara muito mais
+        // vezes do que a tela desenha, e escrever style a cada evento forca
+        // layout a toa.
+        function aplicar() {
+          pendente = false;
+          glow.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        }
+
+        window.addEventListener("mousemove", (event) => {
+          x = event.clientX;
+          y = event.clientY;
+          glow.classList.add("is-live");
+
+          if (!pendente) {
+            pendente = true;
+            requestAnimationFrame(aplicar);
+          }
+        }, { passive: true });
+
+        document.addEventListener("mouseleave", () => glow.classList.remove("is-live"));
+      })();
+
+      // --- Maquina de escrever no nome -------------------------------------
+      (function initTypewriter() {
+        const nameEl = document.getElementById("displayName");
+        const wrap = nameEl?.closest(".name-wrap");
+        if (!nameEl || !wrap) {
+          return;
+        }
+
+        const texto = nameEl.textContent.trim();
+
+        // O nome completo fica SEMPRE disponivel para leitor de tela. Sem isto,
+        // quem usa leitor ouviria "d", "da", "dae"... ou um nome pela metade.
+        nameEl.setAttribute("aria-label", texto);
+
+        if (reduceMotionQuery.matches) {
+          return;
+        }
+
+        const saida = document.createElement("span");
+        saida.setAttribute("aria-hidden", "true");
+        const caret = document.createElement("span");
+        caret.className = "name-caret";
+        caret.setAttribute("aria-hidden", "true");
+
+        nameEl.textContent = "";
+        nameEl.append(saida, caret);
+
+        let i = 0;
+        const timer = setInterval(() => {
+          saida.textContent = texto.slice(0, ++i);
+          if (i >= texto.length) {
+            clearInterval(timer);
+            wrap.classList.add("is-typed");
+          }
+        }, 85);
+      })();
+
+      // --- Inclinacao do card com o ponteiro -------------------------------
+      (function initTilt() {
+        const card = document.getElementById("mainCard");
+        if (!card || reduceMotionQuery.matches || !finePointerQuery.matches) {
+          return;
+        }
+
+        // Angulo pequeno de proposito: passando disto, texto sobre vidro
+        // borrado fica desconfortavel de ler.
+        const MAX = 4;
+
+        card.addEventListener("mousemove", (event) => {
+          const r = card.getBoundingClientRect();
+          const px = (event.clientX - r.left) / r.width - 0.5;
+          const py = (event.clientY - r.top) / r.height - 0.5;
+          card.style.transform =
+            `perspective(1200px) rotateY(${px * MAX}deg) rotateX(${-py * MAX}deg)`;
+        }, { passive: true });
+
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "";
+        });
+      })();
+
+      // --- Abas: no desktop os dois paineis ficam visiveis ------------------
+      (function initResponsiveTabs() {
+        const consulta = window.matchMedia("(min-width: 900px)");
+        const barra = document.querySelector(".tabs");
+        const paineis = Array.from(document.querySelectorAll(".tab-panel"));
+        if (!barra || paineis.length === 0) {
+          return;
+        }
+
+        function aplicar() {
+          if (consulta.matches) {
+            // Duas colunas: aba nao alterna nada, entao some - e os dois
+            // paineis precisam perder o atributo hidden que setActiveTab pos.
+            barra.classList.add("is-hidden");
+            paineis.forEach((painel) => {
+              painel.hidden = false;
+            });
+          } else {
+            barra.classList.remove("is-hidden");
+            // Devolve o controle a aba que estiver marcada.
+            const selecionada = document.querySelector('.tab-btn[aria-selected="true"]');
+            if (selecionada) {
+              setActiveTab(selecionada.id);
+            }
+          }
+        }
+
+        aplicar();
+        consulta.addEventListener("change", aplicar);
+      })();
     </script>
   </body>
 </html>
