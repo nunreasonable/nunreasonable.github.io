@@ -580,9 +580,9 @@
 		<main class="shell">
 			<header class="card">
 				<p class="eyebrow">Administration Sheet Viewer</p>
-				<h1>Visualizador da Planilha Regimental</h1>
+				<h1>Regimental Spreadsheet Viewer</h1>
 				<p class="subtitle">
-					Mostra informacoes da planilha regimental em tempo real, de forma simplificada para facilitar o entendimento.
+					Shows the regimental spreadsheet in real time, laid out simply so it is easier to read.
 				</p>
 
 				<div class="controls">
@@ -590,46 +590,46 @@
 						id="searchInput"
 						class="search"
 						type="search"
-						placeholder="Buscar em todas as colunas e linhas..."
-						aria-label="Buscar"
+						placeholder="Search every column and row..."
+						aria-label="Search"
 					/>
-					<button id="refreshBtn" class="button" type="button">Atualizar agora</button>
+					<button id="refreshBtn" class="button" type="button">Refresh now</button>
 				</div>
 
 				<div class="meta-row" aria-live="polite">
-					<span id="sheetCount" class="pill">Abas: 0</span>
-					<span id="rowCount" class="pill">Linhas: 0</span>
-					<span id="columnCount" class="pill">Colunas: 0</span>
-					<span id="lastUpdated" class="pill">Ultima atualizacao: nunca</span>
+					<span id="sheetCount" class="pill">Tabs: 0</span>
+					<span id="rowCount" class="pill">Rows: 0</span>
+					<span id="columnCount" class="pill">Columns: 0</span>
+					<span id="lastUpdated" class="pill">Last updated: never</span>
 				</div>
 			</header>
 
 			<section class="card data-card" aria-label="Spreadsheet data table">
-				<p id="status" class="status">Carregando dados...</p>
+				<p id="status" class="status">Loading data...</p>
 				<div class="workspace">
-					<aside id="sheetSidebar" class="sheet-sidebar" aria-label="Lista de abas"></aside>
+					<aside id="sheetSidebar" class="sheet-sidebar" aria-label="Tab list"></aside>
 					<div class="sheet-content">
-						<h2 id="currentSheetTitle" class="panel-title">Visao geral</h2>
-						<div id="viewerTabs" class="viewer-tabs" aria-label="Modos de visualizacao">
-							<button id="viewTabRecords" class="viewer-tab-btn" type="button">Registros organizados</button>
-							<button id="viewTabTable" class="viewer-tab-btn" type="button">Celulas da planilha</button>
+						<h2 id="currentSheetTitle" class="panel-title">Overview</h2>
+						<div id="viewerTabs" class="viewer-tabs" aria-label="View modes">
+							<button id="viewTabRecords" class="viewer-tab-btn" type="button">Structured records</button>
+							<button id="viewTabTable" class="viewer-tab-btn" type="button">Raw cells</button>
 						</div>
 						<div id="recordFindBar" class="record-find" hidden>
 							<input
 								id="recordFindInput"
 								class="record-find-input"
 								type="search"
-								placeholder="Buscar palavra-chave dentro dos registros..."
-								aria-label="Buscar nos registros"
+								placeholder="Search for a keyword inside the records..."
+								aria-label="Search the records"
 							/>
 							<span id="recordFindCount" class="record-find-count">0/0</span>
-							<button id="recordFindPrev" class="record-find-btn" type="button">Anterior</button>
-							<button id="recordFindNext" class="record-find-btn" type="button">Proximo</button>
-							<button id="recordFindInfo" class="record-find-btn" type="button">Ajuda</button>
-							<button id="recordFindClose" class="record-find-btn" type="button">Fechar</button>
+							<button id="recordFindPrev" class="record-find-btn" type="button">Previous</button>
+							<button id="recordFindNext" class="record-find-btn" type="button">Next</button>
+							<button id="recordFindInfo" class="record-find-btn" type="button">Help</button>
+							<button id="recordFindClose" class="record-find-btn" type="button">Close</button>
 							<div id="recordFindInfoCard" class="record-help-card" hidden>
-								<p><strong>Atalhos:</strong> Ctrl+F (ou Cmd+F), Enter/Shift+Enter, Esc.</p>
-								<p><strong>Escopo:</strong> somente os cards de registros, nao a tabela inferior.</p>
+								<p><strong>Shortcuts:</strong> Ctrl+F (or Cmd+F), Enter/Shift+Enter, Esc.</p>
+								<p><strong>Scope:</strong> the record cards only, not the table below.</p>
 							</div>
 						</div>
 						<div id="summaryGrid" class="summary-grid"></div>
@@ -637,7 +637,7 @@
 							<div id="recordsWrap" class="records-wrap" hidden></div>
 							<div id="tableWrap" class="table-wrap">
 								<table id="sheetTable"></table>
-								<div id="emptyState" class="empty" hidden>Nenhum resultado para o filtro atual.</div>
+								<div id="emptyState" class="empty" hidden>No results for the current filter.</div>
 							</div>
 						</div>
 					</div>
@@ -777,7 +777,7 @@
 						}
 						settled = true;
 						cleanup();
-						reject(new Error("Tempo esgotado ao carregar a aba " + gid + "."));
+						reject(new Error("Timed out loading tab " + gid + "."));
 					}, JSONP_TIMEOUT_MS);
 
 					window[callbackName] = (data) => {
@@ -787,11 +787,11 @@
 						settled = true;
 						cleanup();
 						if (!data || data.status !== "ok") {
-							reject(new Error("Google Sheets retornou erro para a aba " + gid + "."));
+							reject(new Error("Google Sheets returned an error for tab " + gid + "."));
 							return;
 						}
 						if (!data.table || !Array.isArray(data.table.cols) || !Array.isArray(data.table.rows)) {
-							reject(new Error("Dados incompletos recebidos para a aba " + gid + "."));
+							reject(new Error("Incomplete data received for tab " + gid + "."));
 							return;
 						}
 						resolve(data.table);
@@ -803,7 +803,7 @@
 						}
 						settled = true;
 						cleanup();
-						reject(new Error("Falha de rede ao carregar a aba " + gid + "."));
+						reject(new Error("Network failure loading tab " + gid + "."));
 					};
 
 					script.src =
@@ -841,7 +841,7 @@
 				normalizedTables.forEach((table) => {
 					table.headers.forEach((header) => headerSet.add(header));
 				});
-				const mergedHeaders = ["Aba", ...Array.from(headerSet)];
+				const mergedHeaders = ["Tab", ...Array.from(headerSet)];
 
 				const mergedRows = [];
 				normalizedTables.forEach((table, index) => {
@@ -868,7 +868,7 @@
 				allButton.type = "button";
 				allButton.className = "sheet-btn";
 				allButton.dataset.value = ALL_SHEETS_VALUE;
-				allButton.textContent = "Visao consolidada";
+				allButton.textContent = "Consolidated view";
 				sheetSidebarEl.appendChild(allButton);
 
 				tabs.forEach((tab) => {
@@ -880,7 +880,7 @@
 					sheetSidebarEl.appendChild(button);
 				});
 
-				sheetCountEl.textContent = "Abas: " + tabs.length;
+				sheetCountEl.textContent = "Tabs: " + tabs.length;
 				updateActiveSheetButton();
 			}
 
@@ -893,10 +893,10 @@
 
 			function getActiveSheetTitle() {
 				if (activeSheetValue === ALL_SHEETS_VALUE) {
-					return "Visao consolidada de todas as abas";
+					return "Consolidated view of every tab";
 				}
 				const tab = sheetTabs.find((item) => item.gid === activeSheetValue);
-				return tab ? "Aba: " + tab.name : "Aba selecionada";
+				return tab ? "Tab: " + tab.name : "Selected tab";
 			}
 
 			function filterRows(rows) {
@@ -915,16 +915,16 @@
 				const density = totalCells === 0 ? "0%" : Math.round((filledCells / totalCells) * 100) + "%";
 
 				summaryGridEl.innerHTML =
-					'<article class="summary-item"><div class="summary-label">Registros visiveis</div><div class="summary-value">' +
+					'<article class="summary-item"><div class="summary-label">Visible records</div><div class="summary-value">' +
 					escapeHtml(visibleRows.length) +
 					"</div></article>" +
-					'<article class="summary-item"><div class="summary-label">Registros totais</div><div class="summary-value">' +
+					'<article class="summary-item"><div class="summary-label">Total records</div><div class="summary-value">' +
 					escapeHtml(sourceRows.length) +
 					"</div></article>" +
-					'<article class="summary-item"><div class="summary-label">Colunas</div><div class="summary-value">' +
+					'<article class="summary-item"><div class="summary-label">Columns</div><div class="summary-value">' +
 					escapeHtml(headers.length) +
 					"</div></article>" +
-					'<article class="summary-item"><div class="summary-label">Densidade de dados</div><div class="summary-value">' +
+					'<article class="summary-item"><div class="summary-label">Data density</div><div class="summary-value">' +
 					escapeHtml(density) +
 					"</div></article>";
 			}
@@ -933,7 +933,7 @@
 				const rowsToRender = rows;
 
 				if (rowsToRender.length === 0) {
-					recordsWrapEl.innerHTML = '<p class="empty">Nenhum registro com valores para mostrar.</p>';
+					recordsWrapEl.innerHTML = '<p class="empty">No record has any value to show.</p>';
 					return;
 				}
 
@@ -951,7 +951,7 @@
 					}
 
 					html += '<article class="record-card">';
-					html += '<h3 class="record-title">Registro #' + escapeHtml(rowIndex + 1) + "</h3>";
+					html += '<h3 class="record-title">Record #' + escapeHtml(rowIndex + 1) + "</h3>";
 					html += '<div class="kv-grid">';
 					filledPairs.forEach((pair) => {
 						html += '<div class="kv-item"><span class="kv-key">' + escapeHtml(pair.key) + '</span><span class="kv-value">' + escapeHtml(pair.value) + "</span></div>";
@@ -1059,8 +1059,8 @@
 			}
 
 			function renderTable(headers, filteredRows, allRowCount) {
-				rowCountEl.textContent = "Linhas: " + filteredRows.length + " / " + allRowCount;
-				columnCountEl.textContent = "Colunas: " + headers.length;
+				rowCountEl.textContent = "Rows: " + filteredRows.length + " / " + allRowCount;
+				columnCountEl.textContent = "Columns: " + headers.length;
 
 				if (filteredRows.length === 0) {
 					tableEl.innerHTML = "";
@@ -1099,7 +1099,7 @@
 			async function loadAndRenderData() {
 				const generation = ++loadGeneration;
 				isLoading = true;
-				setStatus("Carregando os dados mais recentes da planilha...");
+				setStatus("Loading the latest spreadsheet data...");
 
 				try {
 					const selected = activeSheetValue || ALL_SHEETS_VALUE;
@@ -1128,7 +1128,7 @@
 						});
 
 						if (okTabs.length === 0) {
-							throw new Error("Nenhuma aba pode ser carregada. Verifique a conexao e o acesso a planilha.");
+							throw new Error("No tab could be loaded. Check the connection and access to the spreadsheet.");
 						}
 
 						const combined = combineSheetData(okTabs, normalizedTables);
@@ -1149,15 +1149,15 @@
 					renderDataViews(allHeaders, allRows);
 
 					const now = new Date();
-					lastUpdatedEl.textContent = "Ultima atualizacao: " + now.toLocaleString();
+					lastUpdatedEl.textContent = "Last updated: " + now.toLocaleString("en-US");
 
 					if (failedTabs.length > 0) {
 						setStatus(
-							"Dados sincronizados, mas estas abas falharam: " + failedTabs.join(", ") + ".",
+							"Data synced, but these tabs failed: " + failedTabs.join(", ") + ".",
 							"error"
 						);
 					} else {
-						setStatus("Dados sincronizados com sucesso.", "ok");
+						setStatus("Data synced successfully.", "ok");
 					}
 				} catch (error) {
 					if (generation !== loadGeneration) {
@@ -1261,7 +1261,7 @@
 			}
 
 			(async () => {
-				setStatus("Preparando as abas...");
+				setStatus("Preparing the tabs...");
 				try {
 					setActiveViewerMode("table");
 					sheetTabs = KNOWN_SHEETS;
@@ -1269,9 +1269,9 @@
 					await loadAndRenderData();
 					startAutoRefresh();
 				} catch (error) {
-					sheetTabs = [{ gid: DEFAULT_SHEET_GID, name: "Painel Principal" }];
+					sheetTabs = [{ gid: DEFAULT_SHEET_GID, name: "Main Sheet" }];
 					renderSheetButtons(sheetTabs);
-					setStatus(error.message + " Exibindo apenas a aba principal.", "error");
+					setStatus(error.message + " Showing the main tab only.", "error");
 					await loadAndRenderData();
 					startAutoRefresh();
 				}

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,7 +7,7 @@
 		<link rel="canonical" href="https://ccore.daeese.me/status/" />
 		<meta
 			name="description"
-			content="Estado em tempo real do ccore - 'chavinhoCORE', bot do 12° Regimento de Infantaria &quot;Chaves&quot;."
+			content="Live status of ccore - 'chavinhoCORE', the bot of the 12° Regimento de Infantaria &quot;Chaves&quot;."
 		/>
 		<link rel="icon" type="image/png" href="../../filearchive/newpfp.png" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -222,10 +222,10 @@
 			<header class="topbar">
 				<div class="brand">
 					<h1 class="brand-title">ccore — Status</h1>
-					<p class="brand-meta">Estado do bot do 12° Regimento de Infantaria "Chaves".</p>
+					<p class="brand-meta">Status of the 12° Regimento de Infantaria "Chaves" bot.</p>
 				</div>
 				<div class="actions">
-					<a class="button" href="../">Voltar ao ccore</a>
+					<a class="button" href="../">Back to ccore</a>
 					<a class="button" href="https://dashboard.daeese.me/">Dashboard</a>
 				</div>
 			</header>
@@ -233,23 +233,23 @@
 			<section class="card" id="statusCard" aria-live="polite">
 				<div class="headline">
 					<span class="dot" aria-hidden="true"></span>
-					<h2 id="statusHeadline">Consultando o bot…</h2>
+					<h2 id="statusHeadline">Checking the bot…</h2>
 				</div>
-				<p class="headline-note" id="statusNote">Buscando o estado atual na API do bot.</p>
+				<p class="headline-note" id="statusNote">Fetching the current status from the bot's API.</p>
 
 				<dl class="metrics" id="metrics">
 					<div class="metric"><dt>Uptime</dt><dd id="mUptime">—</dd></div>
-					<div class="metric"><dt>Latência</dt><dd id="mLatency">—</dd></div>
-					<div class="metric"><dt>Servidores</dt><dd id="mGuilds">—</dd></div>
-					<div class="metric"><dt>Membros</dt><dd id="mMembers">—</dd></div>
-					<div class="metric"><dt>Versão</dt><dd id="mVersion">—</dd></div>
-					<div class="metric"><dt>Biblioteca</dt><dd id="mLibrary">—</dd></div>
+					<div class="metric"><dt>Latency</dt><dd id="mLatency">—</dd></div>
+					<div class="metric"><dt>Servers</dt><dd id="mGuilds">—</dd></div>
+					<div class="metric"><dt>Members</dt><dd id="mMembers">—</dd></div>
+					<div class="metric"><dt>Version</dt><dd id="mVersion">—</dd></div>
+					<div class="metric"><dt>Library</dt><dd id="mLibrary">—</dd></div>
 				</dl>
 
 				<p class="footnote">
-					Atualiza sozinho a cada 15 segundos. Última medição: <span id="mMeasured">—</span>.
-					Dados da máquina que hospeda o bot não aparecem aqui — eles ficam na aba
-					<em>Logs</em> do <a href="https://dashboard.daeese.me/">painel administrativo</a>, que exige login.
+					Refreshes on its own every 15 seconds. Last measurement: <span id="mMeasured">—</span>.
+					Data about the machine hosting the bot is not shown here — it lives in the
+					<em>Logs</em> tab of the <a href="https://dashboard.daeese.me/">admin dashboard</a>, which requires a login.
 				</p>
 			</section>
 		</main>
@@ -313,39 +313,39 @@
 					window.clearTimeout(timeout);
 
 					if (!res.ok) {
-						throw new Error(`A API respondeu ${res.status}.`);
+						throw new Error(`The API responded ${res.status}.`);
 					}
 
 					const data = await res.json();
 					const bot = data.bot;
 					if (!bot) {
-						throw new Error("Resposta da API sem os dados do bot.");
+						throw new Error("The API response carried no bot data.");
 					}
 
 					setState("state-online");
-					els.headline.textContent = "O bot está no ar";
-					els.note.textContent = "Conectado ao gateway do Discord e respondendo a comandos.";
+					els.headline.textContent = "The bot is online";
+					els.note.textContent = "Connected to the Discord gateway and responding to commands.";
 
 					els.uptime.textContent = bot.uptime ?? "—";
 					els.latency.textContent = `${bot.latencyMs} ms`;
 					els.guilds.textContent = bot.guilds;
-					els.members.textContent = Number(bot.members || 0).toLocaleString("pt-BR");
+					els.members.textContent = Number(bot.members || 0).toLocaleString("en-US");
 					els.version.textContent = bot.version ?? "—";
 					els.library.textContent = String(bot.library || "").split("+")[0] || "—";
-					els.measured.textContent = new Date(bot.measuredAtUtc).toLocaleString("pt-BR");
+					els.measured.textContent = new Date(bot.measuredAtUtc).toLocaleString("en-US");
 				} catch (err) {
 					// O fetch falhar E a informacao que esta pagina existe para
 					// dar. Mostrar isso explicitamente vale mais do que uma tela
 					// em branco ou metricas velhas fingindo estar frescas.
 					setState("state-offline");
-					els.headline.textContent = "O bot está fora do ar";
+					els.headline.textContent = "The bot is offline";
 					els.note.textContent =
 						err.name === "AbortError"
-							? "A API não respondeu a tempo. O bot ou o túnel que o expõe podem estar fora do ar."
-							: `Não consegui falar com a API do bot: ${err.message}`;
+							? "The API did not answer in time. The bot, or the tunnel that exposes it, may be down."
+							: `Could not reach the bot's API: ${err.message}`;
 
 					clearMetrics();
-					els.measured.textContent = new Date().toLocaleString("pt-BR");
+					els.measured.textContent = new Date().toLocaleString("en-US");
 				}
 			}
 
