@@ -44,6 +44,18 @@ python3 -m http.server 8080
 O dashboard detecta `localhost` e usa `http://127.0.0.1:5056` como API por padrão; em produção usa
 `/api`. A página de status segue o mesmo critério.
 
+### Ao editar o CSS ou o JS do dashboard
+
+```bash
+cornwallcore/administration/dashboard/stamp-assets.py
+```
+
+O GitHub Pages serve o HTML com `max-age=600` e os assets com `max-age=14400`. Sem isso o
+navegador pega o HTML novo e segura o `style.css` antigo por até quatro horas — e HTML novo com
+CSS velho não é "um pouco desatualizado", é uma página quebrada, porque as classes novas não
+existem na folha antiga. O script carimba o hash do conteúdo na URL
+(`style.css?v=abc12345`), então o par nunca fica descasado. **Rode antes de commitar.**
+
 Os dois Workers em `cloudflare/` não sobem pelo GitHub Pages. Quem os publica é
 [`cloudflare/deploy-workers.sh`](cloudflare/deploy-workers.sh), rodado no boot pelo serviço de
 usuário `ccore-workers-deploy.service` — ele compara o hash do fonte com o da última publicação e

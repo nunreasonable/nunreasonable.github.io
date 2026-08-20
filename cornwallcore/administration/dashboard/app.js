@@ -316,6 +316,18 @@ function getPermissionLabel(level, serverName) {
 function showDashboard() {
   els.loginView.classList.add("hidden");
   els.dashboardView.classList.remove("hidden");
+
+  // Reafirma o invariante em vez de confiar nas classes escritas a mao no
+  // HTML: ao abrir o painel, exatamente uma aba esta visivel e as outras nao.
+  // Se um painel novo for adicionado sem o .hidden inicial, isto corrige
+  // sozinho em vez de deixar dois aparecerem juntos.
+  selectTab(activeTabName());
+}
+
+// Aba marcada como ativa no HTML; cai na primeira se nenhuma estiver.
+function activeTabName() {
+  const marked = els.tabs.find((tab) => tab.classList.contains("is-active"));
+  return (marked || els.tabs[0])?.dataset.tab;
 }
 
 function showLogin() {
