@@ -403,6 +403,28 @@ select:focus-visible {
   margin-top: 0;
 }
 
+/*
+ * Linha que mistura campo e botao.
+ *
+ * Campos e botoes compartilham `width: 100%`, e como itens flex isso os fazia
+ * dividir a linha em partes iguais: um "Atualizar" ficava tao largo quanto o
+ * campo de filtro ao lado. Numa linha so de botoes a divisao igual e o que se
+ * quer, entao a correcao e por modificador em vez de mexer na .row.
+ *
+ * Aqui o campo de texto cresce e o resto fica do tamanho do proprio conteudo.
+ */
+.row.with-input > input,
+.row.with-input > textarea {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.row.with-input > button,
+.row.with-input > select {
+  flex: 0 0 auto;
+  width: auto;
+}
+
 .audit-panel {
   grid-column: 1 / -1;
 }
