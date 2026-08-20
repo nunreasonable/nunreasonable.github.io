@@ -140,8 +140,6 @@ h1 {
 
 label {
   display: block;
-  margin-bottom: 6px;
-  margin-top: 12px;
   color: var(--muted);
   font-size: 0.92rem;
 }
@@ -184,7 +182,6 @@ textarea {
 }
 
 button {
-  margin-top: 12px;
   cursor: pointer;
   background: var(--accent);
   color: #ffffff;
@@ -251,7 +248,6 @@ select:focus-visible {
 .message {
   min-height: 20px;
   color: var(--muted);
-  margin-top: 10px;
   font-size: 0.92rem;
   line-height: 1.45;
 }
@@ -266,8 +262,8 @@ select:focus-visible {
 }
 
 .dev-note {
-  margin: 16px 0 0;
-  padding-top: 10px;
+  margin: 0;
+  padding-top: 14px;
   border-top: 1px solid var(--line);
   color: var(--dim);
   font-size: 0.85rem;
@@ -291,11 +287,24 @@ select:focus-visible {
   animation: rise 450ms ease forwards;
 }
 
+/*
+ * A barra do topo passou a ter duas faixas: quem esta logado em cima, as abas
+ * embaixo. As abas ficavam soltas entre o header e os paineis, sem nada que as
+ * ligasse ao conteudo que comandam.
+ */
 .topbar {
   padding: 16px;
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+}
+
+.topbar-top {
+  display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -336,7 +345,6 @@ select:focus-visible {
 }
 
 .topbar-actions button {
-  margin-top: 0;
   width: auto;
   white-space: nowrap;
 }
@@ -347,7 +355,9 @@ select:focus-visible {
      uma celula vazia e a tela fica torta. Assim eles ocupam a linha inteira
      quando ha largura, e quebram sozinhos quando nao ha. */
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  align-items: start;
+  /* stretch, nao start: com start, tres cards de alturas diferentes na mesma
+     linha deixavam a borda de baixo em degraus. */
+  align-items: stretch;
   gap: 14px;
   margin-top: 14px;
 }
@@ -355,6 +365,48 @@ select:focus-visible {
 .panel {
   padding: 18px;
   min-width: 0;
+}
+
+/*
+ * Ritmo vertical dos cards.
+ *
+ * Antes cada elemento carregava a propria margem: label tinha 12px, botao
+ * tinha 12px, input nao tinha nenhuma. Onde dois campos se seguiam sem rotulo
+ * entre eles - Gestao de Cargos, Punicoes, DM em massa - eles simplesmente
+ * encostavam e viravam um bloco unico. E onde havia rotulo, a soma das margens
+ * dava um espacamento diferente do vizinho.
+ *
+ * Uma regra so passa a mandar no espaco entre irmaos, e as duas excecoes abaixo
+ * apenas aproximam o que forma um par: rotulo do seu campo, titulo da sua
+ * legenda.
+ */
+.panel > * + *,
+.login-card > * + * {
+  margin-top: 12px;
+}
+
+.panel > label + input,
+.panel > label + select,
+.panel > label + textarea,
+.login-card > label + input {
+  margin-top: 6px;
+}
+
+.panel > h3 + .hint {
+  margin-top: 6px;
+}
+
+/*
+ * Num painel que ocupa a linha inteira, um campo de texto com width: 100%
+ * chegaria a 1200px - largura em que ninguem le nem digita nada. O limite so
+ * age nesses paineis; nos normais a coluna ja e mais estreita que isto.
+ */
+.panel > label,
+.panel > input,
+.panel > select,
+.panel > textarea,
+.panel > button {
+  max-width: 520px;
 }
 
 .panel h3 {
@@ -382,25 +434,14 @@ select:focus-visible {
 
 .hint {
   color: var(--muted);
-  margin: 6px 0 12px;
+  margin: 0;
   font-size: 0.9rem;
 }
 
 .row {
   display: flex;
   gap: 10px;
-  margin-top: 12px;
   align-items: center;
-}
-
-/*
- * O botao carrega margin-top de 12px para se separar do campo de cima. Dentro
- * de uma .row isso o desalinhava do campo ao lado, que nao tem margem. A
- * margem passou para a linha: as linhas so-de-botoes mantem o mesmo
- * espacamento de antes e as que misturam campo e botao ficam alinhadas.
- */
-.row > button {
-  margin-top: 0;
 }
 
 /*
@@ -425,14 +466,10 @@ select:focus-visible {
   width: auto;
 }
 
-.audit-panel {
-  grid-column: 1 / -1;
-}
-
 .audit-list {
   list-style: none;
   padding: 0;
-  margin: 10px 0 0;
+  margin: 0;
   display: grid;
   gap: 10px;
   max-height: 350px;
@@ -478,7 +515,7 @@ select:focus-visible {
 
 .audit-empty {
   color: var(--muted);
-  margin: 12px 0 0;
+  margin: 0;
 }
 
 /*
@@ -492,12 +529,15 @@ select:focus-visible {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 14px;
+  /* Filete separando as abas do perfil: dentro do mesmo card, e o que diz onde
+     uma faixa acaba e a outra comeca. */
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
 }
 
 .tab {
   width: auto;
-  margin-top: 0;
+  max-width: none;
   background: transparent;
   color: var(--muted);
   border: 1px solid var(--line);
@@ -523,11 +563,22 @@ select:focus-visible {
   grid-column: 1 / -1;
 }
 
+/*
+ * Um .wide ocupa todas as colunas, entao o auto-fit nao consegue recolher as
+ * vazias como faz quando a aba so tem cards normais. O card comum que abre uma
+ * aba terminada em tabela ficava sozinho num terco da linha, com dois tercos de
+ * buraco ao lado - o caso da aba Alistamento. Ocupando a linha inteira ele fica
+ * alinhado com a tabela de baixo, e o limite de largura acima impede que os
+ * campos estiquem junto.
+ */
+.grid > .panel:not(.wide):first-child:has(+ .panel.wide) {
+  grid-column: 1 / -1;
+}
+
 .checkbox {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 12px;
   color: var(--muted);
   font-size: 0.92rem;
 }
@@ -541,7 +592,6 @@ select:focus-visible {
 /* A tabela rola dentro do proprio container; a pagina nunca rola na
    horizontal. */
 .table-wrap {
-  margin-top: 12px;
   max-height: 420px;
   overflow: auto;
   border: 1px solid var(--line);
@@ -603,7 +653,7 @@ select:focus-visible {
 
 /* Saida bruta (logs, relatorio de push, resultado do alistamento). */
 .output {
-  margin: 12px 0 0;
+  margin: 0;
   padding: 12px;
   background: var(--surface-2);
   border: 1px solid var(--line);
@@ -632,7 +682,7 @@ select:focus-visible {
  * pareceria travado por vinte minutos.
  */
 .progress-wrap {
-  margin-top: 12px;
+  margin: 0;
 }
 
 .progress {
@@ -687,23 +737,19 @@ select:focus-visible {
     grid-template-columns: 1fr;
   }
 
-  .audit-panel {
+  .panel.wide,
+  .grid > .panel:not(.wide):first-child:has(+ .panel.wide) {
     grid-column: auto;
   }
 
-  .topbar {
+  /* A .topbar ja e coluna; quem precisa quebrar aqui e a faixa de cima. */
+  .topbar-top {
     flex-direction: column;
     align-items: stretch;
   }
 
   .topbar-actions button {
     flex: 1 1 0;
-  }
-}
-
-@media (max-width: 900px) {
-  .panel.wide {
-    grid-column: auto;
   }
 
   .tabs {

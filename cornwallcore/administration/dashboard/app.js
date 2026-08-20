@@ -319,8 +319,8 @@ function showDashboard() {
 
   // Reafirma o invariante em vez de confiar nas classes escritas a mao no
   // HTML: ao abrir o painel, exatamente uma aba esta visivel e as outras nao.
-  // Se um painel novo for adicionado sem o .hidden inicial, isto corrige
-  // sozinho em vez de deixar dois aparecerem juntos.
+  // Roda depois de applyUser(), entao o loader da aba ja enxerga os botoes com
+  // a permissao do usuario que acabou de entrar.
   selectTab(activeTabName());
 }
 
@@ -333,6 +333,10 @@ function activeTabName() {
 function showLogin() {
   els.dashboardView.classList.add("hidden");
   els.loginView.classList.remove("hidden");
+
+  // Sem isto, entrar com outra conta sem recarregar a pagina reaproveitaria os
+  // dados carregados pela conta anterior.
+  loadedTabs.clear();
 }
 
 function applyUser(user) {
@@ -398,15 +402,102 @@ function applyUser(user) {
  * Abas
  * ------------------------------------------------------------------ */
 
+/*
+ * Cada aba carrega os proprios dados na primeira vez que e aberta, em vez de o
+ * login puxar tudo de uma vez: quem entra para aplicar um timeout nao precisa
+ * esperar o efetivo, o historico e as promocoes chegarem antes.
+ *
+ * Moderacao e Comunicacoes nao aparecem aqui porque nao leem nada - sao so
+ * formularios de escrita.
+ */
+const TAB_LOADERS = {
+  auditoria: async () => {
+    await loadRoster();
+    await loadAuditHistory();
+  },
+  alistamento: () => loadPromotions(),
+  logs: async () => {
+    // O painel de audit log do dashboard e nivel 1; o buffer de log do bot e
+    // nivel 3. Pedir o segundo sem permissao so renderia um 403 previsivel,
+    // entao seguimos o mesmo botao que applyUser() ja desabilitou.
+    await loadAudit();
+    if (!els.logRefreshBtn.disabled) {
+      await loadLogs();
+    }
+  }
+};
+
+// Mensagem em que o erro de carga de cada aba aparece - dentro da propria aba,
+// nunca derrubando o painel inteiro.
+const TAB_ERROR_TARGETS = {
+  auditoria: () => els.rosterMsg,
+  alistamento: () => els.promotionsMsg,
+  logs: () => els.logMsg
+};
+
+const loadedTabs = new Set();
+
+async function ensureTabLoaded(name) {
+  const loader = TAB_LOADERS[name];
+  // state.user, nao state.token: o token vem do sessionStorage antes de
+  // qualquer validacao, e buscar dados de aba antes de o /api/auth/me responder
+  // so renderia um 401 na cara de quem esta com sessao expirada.
+  if (!loader || loadedTabs.has(name) || !state.user) {
+    return;
+  }
+
+  // Marcado antes de rodar: dois cliques rapidos na mesma aba nao disparam a
+  // mesma carga duas vezes.
+  loadedTabs.add(name);
+
+  try {
+    await loader();
+  } catch (err) {
+    loadedTabs.delete(name);
+    const target = TAB_ERROR_TARGETS[name]?.();
+    if (target) {
+      setMessage(target, err.message, true);
+    }
+  }
+}
+
+/*
+ * Um dado que a aba mostra acabou de mudar. Se ela esta a vista, recarrega
+ * agora; se nao, so descarta o cache para a proxima abertura buscar de novo.
+ */
+function invalidateTab(name) {
+  loadedTabs.delete(name);
+  if (activeTabName() === name) {
+    ensureTabLoaded(name);
+  }
+}
+
 function selectTab(name) {
   els.tabs.forEach((tab) => {
     const active = tab.dataset.tab === name;
     tab.classList.toggle("is-active", active);
     tab.setAttribute("aria-selected", active ? "true" : "false");
+    // Roving tabindex: a fileira de abas e uma parada so no Tab, e as setas
+    // andam entre elas. E o que o role="tablist" promete ao leitor de tela.
+    tab.tabIndex = active ? 0 : -1;
   });
 
   els.tabPanels.forEach((panel) => {
-    panel.classList.toggle("hidden", panel.dataset.panel !== name);
+    const active = panel.dataset.panel === name;
+    panel.classList.toggle("hidden", !active);
+    panel.hidden = !active;
+    /*
+     * O display inline e o que garante a troca.
+     *
+     * Esconder painel dependia de `.hidden { display: none }` vencer o
+     * `.grid { display: grid }` da folha de estilo. Num navegador que ainda
+     * segurava a versao antiga do CSS em cache - o Pages serve asset com
+     * max-age de quatro horas - a regra perdida fazia os cinco paineis
+     * aparecerem juntos e as abas pareciam nao fazer nada. Estilo inline ganha
+     * de qualquer folha de autor, entao a troca deixa de depender de qual
+     * versao do CSS o navegador tem em maos.
+     */
+    panel.style.display = active ? "" : "none";
   });
 
   // Sair da aba de logs desliga o auto-refresh: manter um timer batendo na
@@ -416,10 +507,36 @@ function selectTab(name) {
   } else if (els.logAuto.checked) {
     startLogAutoRefresh();
   }
+
+  ensureTabLoaded(name);
 }
 
 els.tabs.forEach((tab) => {
   tab.addEventListener("click", () => selectTab(tab.dataset.tab));
+});
+
+// Setas, Home e End movem a aba ativa, como manda o padrao de tablist.
+els.tabs.forEach((tab, index) => {
+  tab.addEventListener("keydown", (event) => {
+    const last = els.tabs.length - 1;
+    let target = null;
+
+    if (event.key === "ArrowRight") {
+      target = index === last ? 0 : index + 1;
+    } else if (event.key === "ArrowLeft") {
+      target = index === 0 ? last : index - 1;
+    } else if (event.key === "Home") {
+      target = 0;
+    } else if (event.key === "End") {
+      target = last;
+    } else {
+      return;
+    }
+
+    event.preventDefault();
+    selectTab(els.tabs[target].dataset.tab);
+    els.tabs[target].focus();
+  });
 });
 
 /* ------------------------------------------------------------------ *
@@ -468,21 +585,16 @@ function readCount(input, label) {
   return value;
 }
 
-async function loadMeAndAudit() {
+/*
+ * O login busca so quem esta entrando. Efetivo, historico, promocoes e logs
+ * ficam por conta de ensureTabLoaded(), na primeira vez que a aba for aberta -
+ * assim uma falha em qualquer um deles aparece dentro da propria aba em vez de
+ * derrubar o login de volta para a tela de codigo.
+ */
+async function loadMe() {
   const me = await apiRequest("/api/auth/me");
   applyUser(me.user);
   showDashboard();
-  await loadAudit();
-
-  // O efetivo e o historico sao complementares: se um deles falhar, o painel
-  // continua utilizavel e o erro aparece na propria aba, em vez de derrubar o
-  // login inteiro de volta para a tela de codigo.
-  try {
-    await loadRoster();
-    await loadAuditHistory();
-  } catch (err) {
-    setMessage(els.rosterMsg, err.message, true);
-  }
 }
 
 async function loadAudit() {
@@ -558,7 +670,7 @@ async function submitLogin() {
     state.token = data.token;
     sessionStorage.setItem("dashboardToken", state.token);
     setMessage(els.loginMessage, "Login realizado com sucesso.", "success");
-    await loadMeAndAudit();
+    await loadMe();
   } catch (err) {
     setMessage(els.loginMessage, err.message, true);
   } finally {
@@ -598,7 +710,9 @@ els.logoutBtn.addEventListener("click", async () => {
 els.refreshAuditBtn.addEventListener("click", async () => {
   els.refreshAuditBtn.disabled = true;
   try {
-    await loadAudit();
+    // Pedido explicito: recarrega esteja a aba de Logs a vista ou nao.
+    loadedTabs.delete("logs");
+    await ensureTabLoaded("logs");
     setMessage(els.loginMessage, "");
   } catch (err) {
     setMessage(els.loginMessage, err.message, true);
@@ -618,7 +732,7 @@ els.sendMsgBtn.addEventListener("click", async () => {
     });
 
     setMessage(els.msgSendStatus, "Mensagem enviada com sucesso.", "success");
-    await loadAudit();
+    invalidateTab("logs");
   } catch (err) {
     setMessage(els.msgSendStatus, err.message, true);
   }
@@ -636,7 +750,7 @@ els.addRoleBtn.addEventListener("click", async () => {
     });
 
     setMessage(els.roleMsg, "Cargo adicionado.", "success");
-    await loadAudit();
+    invalidateTab("logs");
   } catch (err) {
     setMessage(els.roleMsg, err.message, true);
   }
@@ -654,7 +768,7 @@ els.removeRoleBtn.addEventListener("click", async () => {
     });
 
     setMessage(els.roleMsg, "Cargo removido.", "success");
-    await loadAudit();
+    invalidateTab("logs");
   } catch (err) {
     setMessage(els.roleMsg, err.message, true);
   }
@@ -677,7 +791,7 @@ els.timeoutBtn.addEventListener("click", async () => {
     });
 
     setMessage(els.punishMsg, "Timeout aplicado.", "success");
-    await loadAudit();
+    invalidateTab("logs");
   } catch (err) {
     setMessage(els.punishMsg, err.message, true);
   }
@@ -694,7 +808,7 @@ els.removeRegimentBtn.addEventListener("click", async () => {
     });
 
     setMessage(els.punishMsg, "Usuário removido do regimento.", "success");
-    await loadAudit();
+    invalidateTab("logs");
   } catch (err) {
     setMessage(els.punishMsg, err.message, true);
   }
@@ -812,8 +926,8 @@ els.rosterSearch.addEventListener("input", renderRoster);
 els.rosterRefreshBtn.addEventListener("click", async () => {
   els.rosterRefreshBtn.disabled = true;
   try {
-    await loadRoster();
-    await loadAuditHistory();
+    loadedTabs.delete("auditoria");
+    await ensureTabLoaded("auditoria");
     setMessage(els.rosterMsg, "Efetivo atualizado.", "success");
   } catch (err) {
     setMessage(els.rosterMsg, err.message, true);
@@ -843,9 +957,8 @@ els.editSaveBtn.addEventListener("click", async () => {
     });
 
     setMessage(els.editMsg, "Registro atualizado.", "success");
-    await loadRoster();
-    await loadAuditHistory();
-    await loadAudit();
+    invalidateTab("auditoria");
+    invalidateTab("logs");
   } catch (err) {
     setMessage(els.editMsg, err.message, true);
   }
@@ -870,9 +983,8 @@ els.editRemoveBtn.addEventListener("click", async () => {
     });
 
     setMessage(els.editMsg, `Removido (${result.removed} registro(s)).`, "success");
-    await loadRoster();
-    await loadAuditHistory();
-    await loadAudit();
+    invalidateTab("auditoria");
+    invalidateTab("logs");
   } catch (err) {
     setMessage(els.editMsg, err.message, true);
   }
@@ -895,9 +1007,8 @@ els.rankSaveBtn.addEventListener("click", async () => {
     }
 
     setMessage(els.rankMsg, result.changed > 0 ? "Patente definida." : "Nada mudou: a patente já era essa.", "success");
-    await loadRoster();
-    await loadAuditHistory();
-    await loadAudit();
+    invalidateTab("auditoria");
+    invalidateTab("logs");
   } catch (err) {
     setMessage(els.rankMsg, err.message, true);
   }
@@ -936,9 +1047,8 @@ async function runPush(dryRun) {
     els.pushResult.classList.remove("hidden");
     setMessage(els.pushMsg, dryRun ? "Prévia concluída." : "Publicação concluída.", "success");
 
-    await loadRoster();
-    await loadAuditHistory();
-    await loadAudit();
+    invalidateTab("auditoria");
+    invalidateTab("logs");
   } catch (err) {
     setMessage(els.pushMsg, err.message, true);
   } finally {
@@ -972,7 +1082,7 @@ els.deployBtn.addEventListener("click", async () => {
 
     const extra = result.warning ? ` ${result.warning}` : "";
     setMessage(els.deployMsg, `Deployment enviado (${result.rolesPinged} cargo(s) pingado(s)).${extra}`, "success");
-    await loadAudit();
+    invalidateTab("logs");
   } catch (err) {
     setMessage(els.deployMsg, err.message, true);
   }
@@ -1052,7 +1162,7 @@ els.dmBtn.addEventListener("click", async () => {
     setMessage(els.dmMsg, `Envio iniciado para ${result.job.total} destinatário(s). Isso pode levar bastante tempo.`, "success");
     renderDmJob(result.job);
     startDmPolling(result.job.jobId);
-    await loadAudit();
+    invalidateTab("logs");
   } catch (err) {
     setMessage(els.dmMsg, err.message, true);
   }
@@ -1102,7 +1212,7 @@ els.enlistBtn.addEventListener("click", async () => {
       result.approved ? "success" : "error"
     );
 
-    await loadAudit();
+    invalidateTab("logs");
   } catch (err) {
     setMessage(els.enlistMsg, err.message, true);
   } finally {
@@ -1110,36 +1220,41 @@ els.enlistBtn.addEventListener("click", async () => {
   }
 });
 
+// Extraido do handler do botao para que abrir a aba Alistamento tambem carregue
+// a tabela; o botao continua existindo como recarga explicita.
+async function loadPromotions() {
+  const data = await apiRequest("/api/promotions");
+  els.promotionsBody.innerHTML = "";
+
+  const players = Array.isArray(data.players) ? data.players : [];
+  if (players.length === 0) {
+    emptyRow(els.promotionsBody, 6, "Nenhum jogador na auditoria ainda.");
+  }
+
+  for (const p of players) {
+    const tr = document.createElement("tr");
+    tr.appendChild(cell(p.username));
+    tr.appendChild(cell(p.currentRank || "—"));
+    tr.appendChild(cell(p.battles));
+    tr.appendChild(cell(p.targetRank || p.nextRank || "—"));
+    tr.appendChild(cell(p.battlesToNext > 0 ? `${p.battlesToNext} bat.` : "—"));
+
+    const situacao = p.promotable
+      ? (p.needsApproval ? "Elegível (exige avaliação)" : "Elegível")
+      : (p.status === "OutsideLadder" ? "Fora da escada" : "Em dia");
+    tr.appendChild(cell(situacao, p.promotable ? "is-eligible" : ""));
+
+    els.promotionsBody.appendChild(tr);
+  }
+
+  setMessage(els.promotionsMsg, `${data.promotable} elegível(is) de ${data.total} jogador(es).`, "success");
+}
+
 els.promotionsRefreshBtn.addEventListener("click", async () => {
   els.promotionsRefreshBtn.disabled = true;
   try {
-    const data = await apiRequest("/api/promotions");
-    els.promotionsBody.innerHTML = "";
-
-    const players = Array.isArray(data.players) ? data.players : [];
-    if (players.length === 0) {
-      emptyRow(els.promotionsBody, 6, "Nenhum jogador na auditoria ainda.");
-    }
-
-    for (const p of players) {
-      const tr = document.createElement("tr");
-      tr.appendChild(cell(p.username));
-      tr.appendChild(cell(p.currentRank || "—"));
-      tr.appendChild(cell(p.battles));
-      tr.appendChild(cell(p.targetRank || p.nextRank || "—"));
-      tr.appendChild(cell(p.battlesToNext > 0 ? `${p.battlesToNext} bat.` : "—"));
-
-      const situacao = p.promotable
-        ? (p.needsApproval ? "Elegível (exige avaliação)" : "Elegível")
-        : (p.status === "OutsideLadder" ? "Fora da escada" : "Em dia");
-      tr.appendChild(cell(situacao, p.promotable ? "is-eligible" : ""));
-
-      els.promotionsBody.appendChild(tr);
-    }
-
-    setMessage(els.promotionsMsg, `${data.promotable} elegível(is) de ${data.total} jogador(es).`, "success");
-  } catch (err) {
-    setMessage(els.promotionsMsg, err.message, true);
+    loadedTabs.delete("alistamento");
+    await ensureTabLoaded("alistamento");
   } finally {
     els.promotionsRefreshBtn.disabled = false;
   }
@@ -1217,13 +1332,25 @@ els.logAuto.addEventListener("change", () => {
 });
 
 (async function bootstrap() {
+  /*
+   * Aplica o invariante das abas ja no carregamento, e nao so depois do login:
+   * exatamente uma aba visivel desde o primeiro frame, aconteca o que acontecer
+   * com a folha de estilo.
+   *
+   * Aqui embaixo, e nao logo apos os listeners das abas: selectTab() chama
+   * stopLogAutoRefresh(), que le um `let` declarado no fim do arquivo. Chamada
+   * antes disso, ela morre em temporal dead zone e leva junto todo o resto do
+   * modulo - os proprios handlers de login incluidos.
+   */
+  selectTab(activeTabName());
+
   showLogin();
   if (!state.token) {
     return;
   }
 
   try {
-    await loadMeAndAudit();
+    await loadMe();
   } catch {
     state.token = "";
     sessionStorage.removeItem("dashboardToken");
