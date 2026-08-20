@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>CommunityBot Privacy Policy</title>
+		<link rel="canonical" href="https://ccore.daeese.me/fun/privacypolicy/" />
+		<meta name="description" content="Privacy Policy for the CommunityBot Discord application." />
+		<link rel="icon" type="image/png" href="../../../filearchive/newpfp.png" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			/*
+			 * Paleta e tipografia herdadas das paginas irmas em
+			 * cornwallcore/termsofservice/ e cornwallcore/privacypolicy/: as tres
+			 * moram no mesmo host e precisam parecer a mesma coisa.
+			 */
+			:root {
+				color-scheme: dark;
+				--bg: #0d1117;
+				--bg-2: #131926;
+				--panel: rgba(17, 24, 39, 0.88);
+				--line: rgba(148, 163, 184, 0.18);
+				--line-strong: rgba(148, 163, 184, 0.3);
+				--text: #e5eef8;
+				--muted: #a8b3c5;
+				--accent: #c084fc;
+				--accent-2: #7dd3fc;
+				--shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+				--radius: 22px;
+			}
+
+			* { box-sizing: border-box; }
+
+			body {
+				margin: 0;
+				min-height: 100vh;
+				font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+				color: var(--text);
+				line-height: 1.65;
+				background:
+					radial-gradient(circle at top left, rgba(192, 132, 252, 0.16), transparent 30%),
+					radial-gradient(circle at bottom right, rgba(125, 211, 252, 0.1), transparent 34%),
+					linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
+				background-attachment: fixed;
+			}
+
+			.shell {
+				width: min(860px, calc(100% - 32px));
+				margin: 0 auto;
+				padding: 36px 0 56px;
+			}
+
+			.card {
+				background: var(--panel);
+				border: 1px solid var(--line);
+				border-radius: var(--radius);
+				box-shadow: var(--shadow);
+				padding: clamp(20px, 4vw, 40px);
+			}
+
+			.eyebrow {
+				margin: 0 0 6px;
+				text-transform: uppercase;
+				letter-spacing: 0.14em;
+				font-size: 0.76rem;
+				color: var(--accent);
+			}
+
+			h1 {
+				margin: 0;
+				font-size: clamp(1.7rem, 5vw, 2.4rem);
+				line-height: 1.15;
+			}
+
+			h2 {
+				margin: 32px 0 8px;
+				font-size: 1.16rem;
+				color: var(--accent-2);
+			}
+
+			p, li { color: var(--muted); }
+			strong { color: var(--text); }
+
+			.pill {
+				display: inline-block;
+				margin-top: 14px;
+				padding: 5px 12px;
+				border: 1px solid var(--line-strong);
+				border-radius: 999px;
+				font-size: 0.82rem;
+				color: var(--muted);
+			}
+
+			a { color: var(--accent-2); }
+
+			.nav {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+				margin-bottom: 18px;
+			}
+
+			.nav a {
+				padding: 8px 14px;
+				border: 1px solid var(--line);
+				border-radius: 999px;
+				text-decoration: none;
+				color: var(--text);
+				font-size: 0.9rem;
+				background: rgba(255, 255, 255, 0.03);
+			}
+
+			.nav a:hover { background: rgba(255, 255, 255, 0.09); }
+
+			.note {
+				margin-top: 26px;
+				padding: 14px 16px;
+				border-left: 3px solid var(--accent);
+				border-radius: 0 12px 12px 0;
+				background: rgba(192, 132, 252, 0.08);
+			}
+
+			footer {
+				margin-top: 26px;
+				color: var(--muted);
+				font-size: 0.86rem;
+				text-align: center;
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				* { transition-duration: 0.001ms !important; }
+			}
+		</style>
+	</head>
+	<body>
+		<main class="shell">
+			<div class="nav">
+				<a href="../">CommunityBot</a>
+				<a href="../termsofservice/">Terms of Service</a>
+			</div>
+
+			<article class="card">
+				<p class="eyebrow">CommunityBot</p>
+				<h1>Privacy Policy</h1>
+				<span class="pill">Last updated: August 20, 2026</span>
+
+				<div class="note">
+					<p style="margin: 0">
+						<strong>The Bot does not read your messages.</strong> It does not
+						request Discord's Message Content intent, which means Discord never
+						sends it the text of messages. It cannot store, search or forward
+						something it does not receive.
+					</p>
+				</div>
+
+				<h2>1. What is stored</h2>
+				<p>Only two things leave the moment they happen:</p>
+				<ul>
+					<li>
+						<strong>Warnings.</strong> When a moderator runs the warn command,
+						the Bot saves the Discord user ID of the warned member, the user ID
+						and tag of the moderator, the reason the moderator typed, the server
+						ID, and the date. This is written to a file on the machine that hosts
+						the Bot.
+					</li>
+					<li>
+						<strong>Moderation log messages.</strong> Each moderation action is
+						posted as a message to a channel your administrators choose. That
+						message lives in your server, under your control, like any other
+						message.
+					</li>
+				</ul>
+
+				<h2>2. What is held only in memory</h2>
+				<p>
+					The Bot keeps a short buffer of its own console output so that
+					administrators can diagnose failures without server access. It may
+					contain user IDs and error messages. It is never written to disk and is
+					<strong>erased every time the Bot restarts</strong>.
+				</p>
+
+				<h2>3. What is read but not kept</h2>
+				<p>
+					To check role hierarchy before a punishment, and to answer the userinfo
+					and serverinfo commands, the Bot reads roles, nicknames and join dates
+					from Discord. That information is used to build the reply and then
+					discarded — nothing is written down.
+				</p>
+				<p>
+					The purge command deletes messages through the Discord API. It does not
+					read or copy their content before deleting.
+				</p>
+
+				<h2>4. What is never collected</h2>
+				<ul>
+					<li>message content, attachments or embeds;</li>
+					<li>direct messages;</li>
+					<li>voice audio;</li>
+					<li>email addresses, IP addresses, payment details or any real-world identity;</li>
+					<li>anything at all from users who never appear in a moderation command.</li>
+				</ul>
+
+				<h2>5. How long warnings are kept</h2>
+				<p>
+					Until a moderator deletes them. The delwarn command removes a warning
+					permanently, and removing the Bot from your server stops any further
+					records being created. There is no automatic expiry: a warning history
+					that erased itself would defeat its own purpose.
+				</p>
+
+				<h2>6. Who can see it</h2>
+				<p>
+					Warnings are visible through the Bot only to members with the Moderate
+					Members permission in the server the warning belongs to. A warning
+					recorded in one server is not visible from another. The log channel is
+					visible to whoever your administrators grant access to.
+				</p>
+				<p>
+					Data is not sold, rented, or shared with third parties. There is no
+					analytics service and no advertising.
+				</p>
+
+				<h2>7. Where it is stored</h2>
+				<p>
+					On a single self-hosted machine operated by the Bot's administrators.
+					The stored data is not sent to any external service; the only network
+					the Bot talks to is Discord's own API.
+				</p>
+
+				<h2>8. Your rights</h2>
+				<p>
+					You may ask what the Bot has recorded about you, and ask for it to be
+					deleted, by contacting the Bot administrators through the official
+					Discord server channels. Deleting a warning does not delete the message
+					already posted in the server's log channel — that message belongs to
+					your server, and a server administrator can remove it.
+				</p>
+
+				<h2>9. Children</h2>
+				<p>
+					The Bot is not directed at anyone under the minimum age required by the
+					<a href="https://discord.com/terms" target="_blank" rel="noreferrer noopener">Discord Terms of Service</a>
+					in their country. It is not knowingly used to collect information from
+					them.
+				</p>
+
+				<h2>10. Discord's own handling</h2>
+				<p>
+					Everything the Bot does passes through Discord, which handles your data
+					under its own
+					<a href="https://discord.com/privacy" target="_blank" rel="noreferrer noopener">Privacy Policy</a>.
+					This policy covers only what the Bot itself does.
+				</p>
+
+				<h2>11. Changes</h2>
+				<p>
+					This policy may change. Material changes will be reflected here with a
+					new "last updated" date.
+				</p>
+
+				<h2>12. Contact</h2>
+				<p>
+					Questions about this policy, or requests about your data, can be raised
+					with the Bot administrators through the official Discord server channels.
+				</p>
+
+				<div class="note">
+					<p style="margin: 0">
+						CommunityBot is a separate Discord application from
+						<a href="../../">ccore</a>. They do not share storage, and ccore's
+						privacy policy does not describe this Bot.
+					</p>
+				</div>
+			</article>
+			<footer>CommunityBot · <a href="../">overview</a> · <a href="../termsofservice/">terms</a></footer>
+		</main>
+	</body>
+</html>

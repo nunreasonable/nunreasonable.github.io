@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>CommunityBot</title>
+		<link rel="canonical" href="https://ccore.daeese.me/fun/" />
+		<meta
+			name="description"
+			content="CommunityBot - a moderation and fun Discord bot. Commands, terms and privacy policy."
+		/>
+		<link rel="icon" type="image/png" href="../../filearchive/newpfp.png" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			/*
+			 * Paleta e tipografia herdadas das paginas irmas em
+			 * cornwallcore/termsofservice/ e cornwallcore/privacypolicy/: as tres
+			 * moram no mesmo host e precisam parecer a mesma coisa.
+			 */
+			:root {
+				color-scheme: dark;
+				--bg: #0d1117;
+				--bg-2: #131926;
+				--panel: rgba(17, 24, 39, 0.88);
+				--line: rgba(148, 163, 184, 0.18);
+				--line-strong: rgba(148, 163, 184, 0.3);
+				--text: #e5eef8;
+				--muted: #a8b3c5;
+				--accent: #c084fc;
+				--accent-2: #7dd3fc;
+				--shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+				--radius: 22px;
+			}
+
+			* { box-sizing: border-box; }
+
+			body {
+				margin: 0;
+				min-height: 100vh;
+				font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+				color: var(--text);
+				line-height: 1.65;
+				background:
+					radial-gradient(circle at top left, rgba(192, 132, 252, 0.16), transparent 30%),
+					radial-gradient(circle at bottom right, rgba(125, 211, 252, 0.1), transparent 34%),
+					linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
+				background-attachment: fixed;
+			}
+
+			.shell {
+				width: min(860px, calc(100% - 32px));
+				margin: 0 auto;
+				padding: 36px 0 56px;
+			}
+
+			.card {
+				background: var(--panel);
+				border: 1px solid var(--line);
+				border-radius: var(--radius);
+				box-shadow: var(--shadow);
+				padding: clamp(20px, 4vw, 40px);
+			}
+
+			.eyebrow {
+				margin: 0 0 6px;
+				text-transform: uppercase;
+				letter-spacing: 0.14em;
+				font-size: 0.76rem;
+				color: var(--accent);
+			}
+
+			h1 {
+				margin: 0;
+				font-size: clamp(1.7rem, 5vw, 2.4rem);
+				line-height: 1.15;
+			}
+
+			h2 {
+				margin: 32px 0 8px;
+				font-size: 1.16rem;
+				color: var(--accent-2);
+			}
+
+			p, li { color: var(--muted); }
+			strong { color: var(--text); }
+
+			.pill {
+				display: inline-block;
+				margin-top: 14px;
+				padding: 5px 12px;
+				border: 1px solid var(--line-strong);
+				border-radius: 999px;
+				font-size: 0.82rem;
+				color: var(--muted);
+			}
+
+			a { color: var(--accent-2); }
+
+			.nav {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+				margin-bottom: 18px;
+			}
+
+			.nav a {
+				padding: 8px 14px;
+				border: 1px solid var(--line);
+				border-radius: 999px;
+				text-decoration: none;
+				color: var(--text);
+				font-size: 0.9rem;
+				background: rgba(255, 255, 255, 0.03);
+			}
+
+			.nav a:hover { background: rgba(255, 255, 255, 0.09); }
+
+			.note {
+				margin-top: 26px;
+				padding: 14px 16px;
+				border-left: 3px solid var(--accent);
+				border-radius: 0 12px 12px 0;
+				background: rgba(192, 132, 252, 0.08);
+			}
+
+			footer {
+				margin-top: 26px;
+				color: var(--muted);
+				font-size: 0.86rem;
+				text-align: center;
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				* { transition-duration: 0.001ms !important; }
+			}
+		</style>
+	</head>
+	<body>
+		<main class="shell">
+			<article class="card">
+				<p class="eyebrow">Discord bot</p>
+				<h1>CommunityBot</h1>
+				<p>
+					A moderation and fun bot for community servers. It runs on the same
+					infrastructure as <a href="../">ccore</a>, but the two are separate
+					applications and share no data.
+				</p>
+
+				<h2>Moderation</h2>
+				<p>
+					<strong>/ban</strong>, <strong>/kick</strong>, <strong>/timeout</strong>,
+					<strong>/untimeout</strong>, <strong>/purge</strong>,
+					<strong>/slowmode</strong>, <strong>/lock</strong> and
+					<strong>/unlock</strong>.
+				</p>
+				<p>
+					Who may run each one is decided by your server's own Discord
+					permissions — there is no role to configure. A moderator cannot act on
+					the server owner, on themselves, or on anyone whose highest role sits
+					at or above their own.
+				</p>
+
+				<h2>Warnings</h2>
+				<p>
+					<strong>/warn</strong>, <strong>/warnings</strong> and
+					<strong>/delwarn</strong> keep a written record, so a punishment is not
+					an isolated event with no history behind it.
+				</p>
+
+				<h2>Fun</h2>
+				<p>
+					<strong>/8ball</strong>, <strong>/roll</strong>,
+					<strong>/coinflip</strong>, <strong>/choose</strong>,
+					<strong>/avatar</strong> and <strong>/say</strong>. All rate limited per
+					user.
+				</p>
+
+				<h2>Utility</h2>
+				<p>
+					<strong>/ping</strong>, <strong>/userinfo</strong>,
+					<strong>/serverinfo</strong>, <strong>/poll</strong>,
+					<strong>/help</strong> and <strong>/logs</strong>.
+				</p>
+
+				<div class="note">
+					<p style="margin: 0">
+						<strong>The bot never reads your messages.</strong> It does not
+						request Discord's Message Content intent, so message text is not
+						received, read or stored. See the
+						<a href="./privacypolicy/">Privacy Policy</a> for the full picture.
+					</p>
+				</div>
+
+				<h2>Legal</h2>
+				<div class="nav" style="margin-top: 10px">
+					<a href="./termsofservice/">Terms of Service</a>
+					<a href="./privacypolicy/">Privacy Policy</a>
+					<a href="../">Back to ccore</a>
+				</div>
+			</article>
+			<footer>CommunityBot · hosted alongside ccore at daeese.me</footer>
+		</main>
+	</body>
+</html>

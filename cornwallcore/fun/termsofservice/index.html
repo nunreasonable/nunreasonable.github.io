@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>CommunityBot Terms of Service</title>
+		<link rel="canonical" href="https://ccore.daeese.me/fun/termsofservice/" />
+		<meta name="description" content="Terms of Service for the CommunityBot Discord application." />
+		<link rel="icon" type="image/png" href="../../../filearchive/newpfp.png" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			/*
+			 * Paleta e tipografia herdadas das paginas irmas em
+			 * cornwallcore/termsofservice/ e cornwallcore/privacypolicy/: as tres
+			 * moram no mesmo host e precisam parecer a mesma coisa.
+			 */
+			:root {
+				color-scheme: dark;
+				--bg: #0d1117;
+				--bg-2: #131926;
+				--panel: rgba(17, 24, 39, 0.88);
+				--line: rgba(148, 163, 184, 0.18);
+				--line-strong: rgba(148, 163, 184, 0.3);
+				--text: #e5eef8;
+				--muted: #a8b3c5;
+				--accent: #c084fc;
+				--accent-2: #7dd3fc;
+				--shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+				--radius: 22px;
+			}
+
+			* { box-sizing: border-box; }
+
+			body {
+				margin: 0;
+				min-height: 100vh;
+				font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+				color: var(--text);
+				line-height: 1.65;
+				background:
+					radial-gradient(circle at top left, rgba(192, 132, 252, 0.16), transparent 30%),
+					radial-gradient(circle at bottom right, rgba(125, 211, 252, 0.1), transparent 34%),
+					linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
+				background-attachment: fixed;
+			}
+
+			.shell {
+				width: min(860px, calc(100% - 32px));
+				margin: 0 auto;
+				padding: 36px 0 56px;
+			}
+
+			.card {
+				background: var(--panel);
+				border: 1px solid var(--line);
+				border-radius: var(--radius);
+				box-shadow: var(--shadow);
+				padding: clamp(20px, 4vw, 40px);
+			}
+
+			.eyebrow {
+				margin: 0 0 6px;
+				text-transform: uppercase;
+				letter-spacing: 0.14em;
+				font-size: 0.76rem;
+				color: var(--accent);
+			}
+
+			h1 {
+				margin: 0;
+				font-size: clamp(1.7rem, 5vw, 2.4rem);
+				line-height: 1.15;
+			}
+
+			h2 {
+				margin: 32px 0 8px;
+				font-size: 1.16rem;
+				color: var(--accent-2);
+			}
+
+			p, li { color: var(--muted); }
+			strong { color: var(--text); }
+
+			.pill {
+				display: inline-block;
+				margin-top: 14px;
+				padding: 5px 12px;
+				border: 1px solid var(--line-strong);
+				border-radius: 999px;
+				font-size: 0.82rem;
+				color: var(--muted);
+			}
+
+			a { color: var(--accent-2); }
+
+			.nav {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+				margin-bottom: 18px;
+			}
+
+			.nav a {
+				padding: 8px 14px;
+				border: 1px solid var(--line);
+				border-radius: 999px;
+				text-decoration: none;
+				color: var(--text);
+				font-size: 0.9rem;
+				background: rgba(255, 255, 255, 0.03);
+			}
+
+			.nav a:hover { background: rgba(255, 255, 255, 0.09); }
+
+			.note {
+				margin-top: 26px;
+				padding: 14px 16px;
+				border-left: 3px solid var(--accent);
+				border-radius: 0 12px 12px 0;
+				background: rgba(192, 132, 252, 0.08);
+			}
+
+			footer {
+				margin-top: 26px;
+				color: var(--muted);
+				font-size: 0.86rem;
+				text-align: center;
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				* { transition-duration: 0.001ms !important; }
+			}
+		</style>
+	</head>
+	<body>
+		<main class="shell">
+			<div class="nav">
+				<a href="../">CommunityBot</a>
+				<a href="../privacypolicy/">Privacy Policy</a>
+			</div>
+
+			<article class="card">
+				<p class="eyebrow">CommunityBot</p>
+				<h1>Terms of Service</h1>
+				<span class="pill">Last updated: August 20, 2026</span>
+
+				<h2>1. Agreement</h2>
+				<p>
+					By adding CommunityBot (the "Bot") to a Discord server, or by using any
+					of its commands, you agree to these Terms. If you do not agree, remove
+					the Bot from your server and stop using its commands.
+				</p>
+
+				<h2>2. What the Bot does</h2>
+				<p>
+					The Bot provides moderation commands (ban, kick, timeout, message
+					purge, channel slowmode and lock), a warning record, and a set of
+					entertainment and utility commands. All of them are Discord slash
+					commands.
+				</p>
+
+				<h2>3. Who may use the moderation commands</h2>
+				<p>
+					Access is governed entirely by your server's own Discord permissions.
+					The Bot does not maintain its own list of staff: if Discord says you may
+					ban members, the ban command is available to you, and if it does not,
+					the command is not even shown.
+				</p>
+				<p>
+					The Bot additionally refuses to act on the server owner, on the person
+					issuing the command, or on any member whose highest role is at or above
+					the issuer's own. This is a safeguard, not a substitute for configuring
+					your roles correctly.
+				</p>
+
+				<h2>4. Acceptable use</h2>
+				<p>You agree not to use the Bot to:</p>
+				<ul>
+					<li>harass, threaten or target any person or group;</li>
+					<li>evade Discord's rate limits, or automate abuse of the Discord API;</li>
+					<li>impersonate the server staff through the say command;</li>
+					<li>break the <a href="https://discord.com/terms" target="_blank" rel="noreferrer noopener">Discord Terms of Service</a> or Community Guidelines.</li>
+				</ul>
+
+				<h2>5. Your responsibility as a server administrator</h2>
+				<p>
+					You decide which roles hold moderation permissions, and therefore who
+					can act through the Bot. You are responsible for that configuration and
+					for the moderation decisions made on your server. The Bot carries out
+					instructions; it does not review them.
+				</p>
+
+				<h2>6. Data</h2>
+				<p>
+					The Bot stores warnings you create and writes moderation actions to a
+					log channel you configure. It does not read message content. The
+					<a href="../privacypolicy/">Privacy Policy</a> describes exactly what is
+					kept and for how long, and forms part of these Terms.
+				</p>
+
+				<h2>7. Availability</h2>
+				<p>
+					The Bot is provided as is, without any guarantee of uptime. It is run on
+					a single self-hosted machine and may be offline for maintenance, restarts,
+					network issues or Discord outages, without notice.
+				</p>
+
+				<h2>8. Limitation of liability</h2>
+				<p>
+					To the extent permitted by law, the Bot's operators are not liable for
+					any loss arising from its use, including moderation actions taken through
+					it, messages deleted by the purge command, or data lost during an outage.
+					Moderation actions are performed by your staff, not by the operators.
+				</p>
+
+				<h2>9. Termination</h2>
+				<p>
+					You may stop using the Bot at any time by removing it from your server.
+					The operators may withdraw the Bot from any server at any time,
+					particularly where these Terms are being broken.
+				</p>
+
+				<h2>10. Changes</h2>
+				<p>
+					These Terms may change. Material changes will be reflected on this page
+					with a new "last updated" date. Continuing to use the Bot after a change
+					means accepting the revised Terms.
+				</p>
+
+				<h2>11. Contact</h2>
+				<p>
+					Questions about these Terms can be raised with the Bot administrators
+					through the official Discord server channels.
+				</p>
+
+				<div class="note">
+					<p style="margin: 0">
+						CommunityBot is a separate Discord application from
+						<a href="../../">ccore</a>. The two do not share data, and ccore's
+						terms do not apply here.
+					</p>
+				</div>
+			</article>
+			<footer>CommunityBot · <a href="../">overview</a> · <a href="../privacypolicy/">privacy</a></footer>
+		</main>
+	</body>
+</html>
