@@ -348,54 +348,90 @@ function applyUser(user) {
 
   const level = Number(user.permissionLevel) || 0;
 
+  /*
+   * Os dois degraus de permissao do painel.
+   *
+   * NIVEL 1 (NCO/Officer) - administracao do dia a dia: mandar mensagem por
+   * canal, consultar o efetivo, definir patente, corrigir numeros de um
+   * jogador e anunciar deployment. Nada aqui remove ninguem nem sai falando
+   * com servico de terceiro.
+   *
+   * NIVEL 2 (Regimental Command) - o que REMOVE gente, o que fala com API
+   * EXTERNA e o que age em VOLUME: expulsar do regimento, timeout, cargo
+   * (conceder tambem, porque dar cargo pode escalar privilegio), apagar
+   * registro da auditoria, publicar no GitHub, alistar via ROBLOX, DM em massa
+   * e os logs do bot - que carregam id de usuario e caminho da maquina.
+   *
+   * Estes numeros PRECISAM acompanhar o DashboardHttpService: aqui o botao so
+   * fica cinza, quem de fato recusa e o servidor. Divergir faz a interface
+   * mentir - botao aceso que devolve 403, ou apagado que funcionaria.
+   */
+  const canBasic = level >= 1;
+  const canCommand = level >= 2;
+
   // Sempre reatribuido (nao so desabilitado) para que trocar de conta sem
   // recarregar a pagina reflita a permissao do usuario atual.
-  const canManageRoles = level >= 3;
-  els.addRoleBtn.disabled = !canManageRoles;
-  els.removeRoleBtn.disabled = !canManageRoles;
+  function gate(elementos, permitido, alvoMsg, recusa) {
+    elementos.forEach((el) => {
+      if (el) {
+        el.disabled = !permitido;
+      }
+    });
+
+    if (alvoMsg) {
+      setMessage(alvoMsg, permitido ? "" : recusa, !permitido);
+    }
+  }
+
+  // --- Nivel 1: administracao basica ---------------------------------------
+  gate([els.sendMsgBtn], canBasic, els.msgSendStatus,
+    "Sua permissão não permite enviar mensagens pelo bot.");
+
+  gate([els.rankSaveBtn], canBasic, els.rankMsg,
+    "Sua permissão não permite definir patentes.");
+
+  gate([els.deployBtn], canBasic, els.deployMsg,
+    "Sua permissão não permite enviar deployments.");
+
+  // --- Nivel 2: remove gente, API externa, ou volume -----------------------
+  gate([els.addRoleBtn, els.removeRoleBtn], canCommand, els.roleMsg,
+    "Gerenciar cargos exige permissão 2+.");
+
+  gate([els.timeoutBtn, els.removeRegimentBtn], canCommand, els.punishMsg,
+    "Punições administrativas exigem permissão 2+.");
+
+  gate([els.pushBtn, els.pushDryBtn], canCommand, els.pushMsg,
+    "Publicar a auditoria no GitHub exige permissão 2+.");
+
+  gate([els.dmBtn], canCommand, els.dmMsg,
+    "DM em massa exige permissão 2+.");
+
+  gate([els.enlistBtn], canCommand, els.enlistMsg,
+    "Alistar usuários exige permissão 2+.");
+
+  /*
+   * O painel de editar jogador tem os dois pesos no mesmo lugar: Salvar corrige
+   * numeros e e nivel 1, Remover apaga o historico e e nivel 2. O backend
+   * decide pela flag `remove` no corpo, e aqui os botoes seguem separados para
+   * a tela contar a mesma historia.
+   */
+  gate([els.editSaveBtn], canBasic, null, "");
+  gate([els.editRemoveBtn], canCommand, null, "");
   setMessage(
-    els.roleMsg,
-    canManageRoles ? "" : "Sua permissão não permite gerenciar cargos.",
-    !canManageRoles
+    els.editMsg,
+    canBasic
+      ? (canCommand ? "" : "Você pode editar; remover registros exige permissão 2+.")
+      : "Sua permissão não permite editar a auditoria.",
+    !canBasic
   );
 
-  const canPunish = level >= 2;
-  els.timeoutBtn.disabled = !canPunish;
-  els.removeRegimentBtn.disabled = !canPunish;
-  setMessage(
-    els.punishMsg,
-    canPunish ? "" : "Sua permissão não permite punições administrativas.",
-    !canPunish
-  );
+  gate([els.logRefreshBtn, els.logAuto], canCommand, els.logMsg,
+    "Ver os logs do bot exige permissão 2+.");
 
-  // Deployment segue o mesmo nivel das punicoes: e uma acao que notifica o
-  // servidor inteiro.
-  els.deployBtn.disabled = !canPunish;
-  setMessage(els.deployMsg, canPunish ? "" : "Sua permissão não permite enviar deployments.", !canPunish);
-
-  // Nivel 3 concentra o que altera dados historicos ou expoe o interior do
-  // bot: auditoria, DM em massa, alistamento e logs.
-  const canManageAudit = level >= 3;
-  [els.editSaveBtn, els.editRemoveBtn, els.rankSaveBtn, els.pushBtn, els.pushDryBtn].forEach((btn) => {
-    btn.disabled = !canManageAudit;
-  });
-  setMessage(els.editMsg, canManageAudit ? "" : "Sua permissão não permite editar a auditoria.", !canManageAudit);
-  setMessage(els.rankMsg, canManageAudit ? "" : "Sua permissão não permite definir patentes.", !canManageAudit);
-  setMessage(els.pushMsg, canManageAudit ? "" : "Sua permissão não permite publicar a auditoria.", !canManageAudit);
-
-  els.dmBtn.disabled = !canManageAudit;
-  setMessage(els.dmMsg, canManageAudit ? "" : "Sua permissão não permite enviar DM em massa.", !canManageAudit);
-
-  els.enlistBtn.disabled = !canManageAudit;
-  setMessage(els.enlistMsg, canManageAudit ? "" : "Sua permissão não permite alistar usuários.", !canManageAudit);
-
-  els.logRefreshBtn.disabled = !canManageAudit;
-  els.logAuto.disabled = !canManageAudit;
-  if (!canManageAudit) {
+  if (!canCommand) {
     stopLogAutoRefresh();
     els.logAuto.checked = false;
   }
-  setMessage(els.logMsg, canManageAudit ? "" : "Sua permissão não permite ver os logs do bot.", !canManageAudit);
 }
 
 /* ------------------------------------------------------------------ *
@@ -417,9 +453,9 @@ const TAB_LOADERS = {
   },
   alistamento: () => loadPromotions(),
   logs: async () => {
-    // O painel de audit log do dashboard e nivel 1; o buffer de log do bot e
-    // nivel 3. Pedir o segundo sem permissao so renderia um 403 previsivel,
-    // entao seguimos o mesmo botao que applyUser() ja desabilitou.
+    // O painel de audit log do dashboard so exige sessao; o buffer de log do
+    // bot exige nivel 2. Pedir o segundo sem permissao so renderia um 403
+    // previsivel, entao seguimos o mesmo botao que applyUser() ja desabilitou.
     await loadAudit();
     if (!els.logRefreshBtn.disabled) {
       await loadLogs();

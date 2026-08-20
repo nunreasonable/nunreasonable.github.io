@@ -73,7 +73,7 @@
       <section class="grid tab-panel" id="panel-moderacao" data-panel="moderacao" role="tabpanel" aria-labelledby="tab-moderacao" tabindex="0">
         <article class="card panel">
           <h3>Gestão de Cargos</h3>
-          <p class="hint">Disponível para permissão 3+</p>
+          <p class="hint">Permissão 2+ — conceder cargo também pode escalar privilégio.</p>
           <input id="roleUserId" placeholder="ID do usuário" />
           <input id="roleId" placeholder="ID do cargo" />
           <input id="roleReason" placeholder="Motivo (opcional)" />
@@ -95,7 +95,7 @@
 
         <article class="card panel is-destructive">
           <h3>Punições</h3>
-          <p class="hint">Remoção/timeout exigem permissão 2+.</p>
+          <p class="hint">Permissão 2+. Remoção do regimento é irreversível pelo painel.</p>
           <input id="punishUserId" placeholder="ID do usuário" />
           <input id="punishReason" placeholder="Motivo (opcional)" />
           <input id="timeoutMinutes" placeholder="Timeout em minutos" />
@@ -130,7 +130,7 @@
 
         <article class="card panel">
           <h3>Editar jogador</h3>
-          <p class="hint">Permissão 3+. Renomear para um nome já existente é recusado.</p>
+          <p class="hint">Editar é permissão 1+; <strong>remover</strong> exige 2+. Renomear para um nome já existente é recusado.</p>
           <label for="editUsername">Jogador</label>
           <input id="editUsername" placeholder="Nome atual" />
           <label for="editNewUsername">Novo nome (opcional)</label>
@@ -157,7 +157,7 @@
 
         <article class="card panel">
           <h3>Patente</h3>
-          <p class="hint">Texto livre. Campo em branco remove a patente.</p>
+          <p class="hint">Permissão 1+. Texto livre; campo em branco remove a patente.</p>
           <input id="rankUsername" placeholder="Jogador" />
           <input id="rankValue" placeholder="Patente (vazio remove)" />
           <button id="rankSaveBtn">Definir patente</button>
@@ -166,7 +166,7 @@
 
         <article class="card panel">
           <h3>Publicar no GitHub</h3>
-          <p class="hint">Consolida a fila e publica. Rode a prévia antes.</p>
+          <p class="hint">Permissão 2+. Consolida a fila e publica no GitHub. Rode a prévia antes.</p>
           <p id="pushPending" class="hint"></p>
           <div class="row">
             <button id="pushDryBtn" class="ghost">Prévia (dry run)</button>
@@ -188,7 +188,7 @@
       <section class="grid tab-panel hidden" id="panel-comunicacoes" data-panel="comunicacoes" role="tabpanel" aria-labelledby="tab-comunicacoes" tabindex="0" hidden>
         <article class="card panel">
           <h3>Deployment</h3>
-          <p class="hint">Permissão 2+. Vai para o canal configurado no bot.</p>
+          <p class="hint">Permissão 1+. Vai para o canal configurado no bot.</p>
           <label for="deployCode">Código do jogo</label>
           <input id="deployCode" placeholder="Ex.: CORN1" />
           <button id="deployBtn">Enviar deployment</button>
@@ -197,7 +197,7 @@
 
         <article class="card panel">
           <h3>DM em massa</h3>
-          <p class="hint">Permissão 3+. Máximo 500 destinatários por envio.</p>
+          <p class="hint">Permissão 2+. Máximo 500 destinatários por envio.</p>
           <label for="dmRoleId">ID do cargo <em>ou</em> do usuário</label>
           <input id="dmRoleId" placeholder="ID do cargo" />
           <input id="dmUserId" placeholder="ID do usuário (alternativa ao cargo)" />
@@ -223,7 +223,7 @@
       <section class="grid tab-panel hidden" id="panel-alistamento" data-panel="alistamento" role="tabpanel" aria-labelledby="tab-alistamento" tabindex="0" hidden>
         <article class="card panel">
           <h3>Alistar usuário</h3>
-          <p class="hint">Permissão 3+. Verificação anti-ALT no ROBLOX é automática.</p>
+          <p class="hint">Permissão 2+. Verificação anti-ALT no ROBLOX é automática.</p>
           <label for="enlistUserId">ID do usuário no Discord</label>
           <input id="enlistUserId" placeholder="ID do usuário" />
           <label for="enlistRoblox">Username do ROBLOX</label>
@@ -254,7 +254,7 @@
       <section class="grid tab-panel hidden" id="panel-logs" data-panel="logs" role="tabpanel" aria-labelledby="tab-logs" tabindex="0" hidden>
         <article class="card panel wide">
           <h3>Logs do bot</h3>
-          <p class="hint">Permissão 3+. Mesmo buffer que o comando <code>/logs</code> lê. Zera a cada reinício do bot.</p>
+          <p class="hint">Permissão 2+. Mesmo buffer que o comando <code>/logs</code> lê. Zera a cada reinício do bot.</p>
           <div class="row with-input">
             <select id="logLevel">
               <option value="">Todos os níveis</option>
@@ -280,6 +280,6 @@
       </section>
     </section>
   </main>
-  <script src="app.js?v=e1522185"></script>
+  <script src="app.js?v=f53fd336"></script>
 </body>
 </html>
