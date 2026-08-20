@@ -274,8 +274,17 @@ select:focus-visible {
   text-align: center;
 }
 
+/*
+ * Utilitario de visibilidade - precisa ganhar de qualquer regra de display.
+ *
+ * Sem o !important isto perdia para `.grid { display: grid }`, que vem depois
+ * no arquivo e tem a mesma especificidade: os paineis de aba, que sao
+ * `class="grid tab-panel hidden"`, apareciam todos ao mesmo tempo e as abas
+ * pareciam nao fazer nada. Numa classe cuja unica funcao e esconder, o
+ * !important e o comportamento correto, nao uma escapatoria.
+ */
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .dashboard {
@@ -380,6 +389,18 @@ select:focus-visible {
 .row {
   display: flex;
   gap: 10px;
+  margin-top: 12px;
+  align-items: center;
+}
+
+/*
+ * O botao carrega margin-top de 12px para se separar do campo de cima. Dentro
+ * de uma .row isso o desalinhava do campo ao lado, que nao tem margem. A
+ * margem passou para a linha: as linhas so-de-botoes mantem o mesmo
+ * espacamento de antes e as que misturam campo e botao ficam alinhadas.
+ */
+.row > button {
+  margin-top: 0;
 }
 
 .audit-panel {
