@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>rich presence - small image source</title>
+    <!--
+      Fonte da imagem pequena do Rich Presence (filearchive/widget/rp-small.png).
+
+      Capturar a .frame em 512x512.
+
+      O Discord recorta esta arte em circulo e a exibe com ~20px de lado, no
+      canto da imagem grande. Por isso ela e deliberadamente quase vazia: um
+      disco carmim com nucleo claro, no espirito do .discord-status-badge da
+      home. Qualquer letra ou icone com detalhe some nesse tamanho.
+
+      Os cantos fora do disco usam o preto da home, e nao transparencia: a
+      captura headless do Firefox achata alpha em branco, e franja branca na
+      borda do circulo apareceria contra o tema escuro do Discord.
+    -->
+    <style>
+      :root {
+        --accent-lit: #ff2d62;
+        --accent-glow: rgba(255, 45, 98, 0.55);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #040203;
+        display: grid;
+        place-items: start;
+      }
+
+      .frame {
+        width: 512px;
+        height: 512px;
+        position: relative;
+        display: grid;
+        place-items: center;
+        background: #040203;
+      }
+
+      .disc {
+        width: 512px;
+        height: 512px;
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 36% 30%, #ff6b90 0%, var(--accent-lit) 42%, #9e002f 100%);
+        box-shadow: inset 0 0 0 18px rgba(4, 2, 3, 0.55);
+        display: grid;
+        place-items: center;
+      }
+
+      .core {
+        width: 168px;
+        height: 168px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 40% 34%, #ffffff 0%, #ffd9e2 60%, #ff9ab4 100%);
+        box-shadow: 0 0 70px 10px var(--accent-glow);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame" id="frame">
+      <div class="disc">
+        <div class="core"></div>
+      </div>
+    </div>
+  </body>
+</html>

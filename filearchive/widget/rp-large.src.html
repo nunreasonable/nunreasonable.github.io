@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>rich presence - large image source</title>
+    <!--
+      Fonte da imagem grande do Rich Presence (filearchive/widget/rp-large.png).
+
+      Mesmo racional do og-banner.src.html: fica versionado ao lado do PNG e e
+      escrito em HTML para herdar as fontes, o gradiente e o carmim da propria
+      home, em vez de aproximar tudo num script de imagem.
+
+      Capturar a .frame em 1024x1024 (o Discord exige no minimo 512x512).
+
+      IMPORTANTE - o Discord renderiza esta arte com cerca de 60px de lado no
+      cartao de atividade do perfil. Por isso o monograma ocupa quase todo o
+      quadro e nao ha texto corrido: qualquer detalhe fino vira borrao nesse
+      tamanho. O "daeese.me" no rodape existe para quando o usuario amplia.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-start: #040203;
+        --bg-mid: #0b0408;
+        --bg-end: #1d0813;
+        --text: #e7eef7;
+        --muted: #9caac0;
+        --accent-lit: #ff2d62;
+        --accent-glow: rgba(255, 45, 98, 0.55);
+        --accent-line: rgba(255, 45, 98, 0.32);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #000;
+        display: grid;
+        place-items: start;
+      }
+
+      .frame {
+        width: 1024px;
+        height: 1024px;
+        position: relative;
+        overflow: hidden;
+        font-family: "Space Grotesk", system-ui, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(52% 52% at 30% 24%, rgba(255, 45, 98, 0.3) 0%, transparent 70%),
+          radial-gradient(46% 46% at 78% 82%, rgba(120, 0, 40, 0.34) 0%, transparent 72%),
+          linear-gradient(160deg, var(--bg-start) 0%, var(--bg-mid) 62%, var(--bg-end) 100%);
+      }
+
+      /* Halo borrado, o mesmo recurso de .halo-1 na home. */
+      .halo {
+        position: absolute;
+        width: 720px;
+        height: 720px;
+        left: 50%;
+        top: 46%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 45, 98, 0.24) 0%, transparent 68%);
+        filter: blur(70px);
+      }
+
+      /* Mesma trama de pontos do site, na mesma opacidade. */
+      .frame::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        opacity: 0.08;
+        background-image: radial-gradient(#ffffff 0.5px, transparent 0.5px);
+        background-size: 3px 3px;
+      }
+
+      /* Fio de luz no topo, como a borda do card. */
+      .frame::after {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto 0;
+        z-index: 2;
+        height: 5px;
+        background: linear-gradient(90deg, transparent, var(--accent-line) 20%, var(--accent-lit) 50%, var(--accent-line) 80%, transparent);
+      }
+
+      .inner {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: grid;
+        place-items: center;
+      }
+
+      /* Anel carmim: le como "moldura" mesmo com 60px de lado. */
+      .ring {
+        position: absolute;
+        inset: 54px;
+        border: 3px solid var(--accent-line);
+        border-radius: 72px;
+      }
+
+      .mark {
+        margin: 0;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 720px;
+        line-height: 0.74;
+        letter-spacing: 4px;
+        background: linear-gradient(180deg, #ffffff 0%, #ffd9e2 48%, var(--accent-lit) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 60px rgba(255, 45, 98, 0.45));
+        transform: translateY(-18px);
+      }
+
+      .domain {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 104px;
+        z-index: 3;
+        margin: 0;
+        text-align: center;
+        font-size: 46px;
+        font-weight: 500;
+        letter-spacing: 0.3em;
+        text-indent: 0.3em;
+        color: #ffe7ed;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame" id="frame">
+      <div class="halo"></div>
+      <div class="ring"></div>
+      <div class="inner">
+        <p class="mark">D</p>
+      </div>
+      <p class="domain">DAEESE.ME</p>
+    </div>
+  </body>
+</html>
