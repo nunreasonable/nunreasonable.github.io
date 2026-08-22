@@ -13,6 +13,8 @@ registrado para dar contexto.
 | 5 | `robots.txt` gerenciado pela Cloudflare | ℹ️ comportamento conhecido |
 | 6 | Planilha legível sem autenticação | ⏳ decisão pendente |
 | 7 | Workers publicados só à mão | ✅ **resolvido** em 20/08/2026 |
+| 8 | `clips.daeese.me` fora do ar | ✅ **resolvido** em 22/08/2026 |
+| 9 | Clips sem índice, arquivo do HD invisível | ✅ **resolvido** em 22/08/2026 |
 
 ## 1. HTTP não redireciona para HTTPS
 
@@ -234,3 +236,128 @@ $ curl -s '.../gviz/tq?gid=827170318&tqx=out:json'   -> 200 com USERNAME, DISCOR
 O `noindex` + `robots.txt` já aplicados impedem indexação, mas não acesso direto. A proteção real é
 restringir o compartilhamento da planilha no Google Drive e expor os dados por um endpoint
 autenticado do bot. Decisão pendente do dono do regimento.
+
+## 8. `clips.daeese.me` fora do ar — RESOLVIDO (22/08/2026)
+
+Um **1033** (HTTP 530), primo do item 3 e com a mesma pergunta por trás: o DNS aponta o hostname
+para um tunnel, mas nenhum conector responde por ele. Aqui eram **três causas empilhadas**, e cada
+uma só apareceu depois de resolver a anterior.
+
+**Primeira: o tunnel `clips` nunca era executado.** Existia na conta desde 08/07/2026 com zero
+conexões, e o arquivo de credenciais sequer estava nesta máquina — só o do `cornwall-bot-api`.
+
+```
+$ cloudflared tunnel list
+b8157acc-d34b-4f4a-a046-9010498eccaf  clips             (nenhuma conexao)
+7f9dd9b0-cf95-48e8-b4b1-1c7dfdf55a8a  cornwall-bot-api  2xgru17, 1xsjp01
+```
+
+O `cert.pem` já autorizava puxar o token do tunnel existente, então não foi preciso recriar nada —
+e, como no item 3, o registro DNS não precisou ser tocado:
+
+```bash
+cloudflared tunnel token --cred-file ~/.cloudflared/clips.json b8157acc-...
+```
+
+Como está agora: configuração em `/etc/cloudflared-clips/config.yml`, credenciais em
+`/etc/cloudflared-clips/clips.json` (root, 600), serviço de sistema `cloudflared-clips.service`,
+`enabled`. Deliberadamente **separado** do `cloudflared.service` do bot: reiniciar os clips não
+derruba a API.
+
+**Segunda: a configuração do ingress não estava onde parecia.** Com o serviço no ar, o 530 virou
+502. O log entregou o motivo:
+
+```
+INF Updated to new configuration config="{"ingress":[{"hostname":"clips.daeese.me",
+    "service":"http://localhost:8767"}...]}" version=2
+ERR ... dial tcp [::1]:8767: connect: connection refused
+```
+
+Este tunnel é **gerenciado pelo painel** — a API confirma `"source": "cloudflare"`. Qualquer bloco
+`ingress` no arquivo local é **ignorado**: o `cloudflared` baixa a configuração remota no boot. O
+`config.yml` local ficou com um aviso escrito em cima justamente por isso, porque o arquivo *parece*
+estar mandando e não está. Para mudar o destino:
+
+```
+PUT /accounts/{account}/cfd_tunnel/{tunnel}/configurations
+```
+
+**Terceira: a porta remota estava errada, e `localhost` piorava.** A config apontava para 8767, mas
+o servidor público do Vice escuta na 8766 — e `localhost` resolve para `::1` primeiro, enquanto o
+Vice faz bind só em IPv4 (`0.0.0.0`). É o mesmo IPv6 quebrado do item 3 aparecendo por outro
+caminho. Corrigido para `http://127.0.0.1:8766`, explícito nos dois pontos.
+
+### Duas coisas que não são óbvias
+
+**`port` no Vice não é a porta pública.** Em `~/.config/vice/config.toml`, `port` é a UI de
+controle local; o servidor público é `port + 1`. Ajustar `port` para 8767 tentando casar com o
+tunnel dava público em **8768** — continuaria errado. O `public_port` agora está **fixado em 8766**,
+para o alvo do tunnel parar de depender dessa aritmética.
+
+**O 404 é o sinal de sucesso.** O servidor público do Vice não tem rota para `/`. Depois da
+correção, `curl https://clips.daeese.me/` passou de 530 para 404 — e o 404 certo se distingue do
+404 do catch-all pelo corpo: `content-length: 14`, `404: Not Found`, idêntico ao que o aiohttp do
+Vice responde localmente.
+
+```bash
+systemctl status cloudflared-clips
+cloudflared tunnel info b8157acc-d34b-4f4a-a046-9010498eccaf   # deve listar conectores
+```
+
+## 9. Clips sem índice e arquivo do HD invisível — RESOLVIDO (22/08/2026)
+
+Com o tunnel de pé, sobraram duas limitações do próprio Vice.
+
+**Não havia índice.** O servidor público registra só três rotas (`vice/share.py:638-641`): `/c/`,
+`/v/` e `/t/`. Sem `/`, quem não tivesse o link exato de um clip não via nada.
+
+**Só um diretório, varrido uma vez.** Em `vice/share.py:711-715` o índice sai de um `glob` em
+`cfg.output.directory`, apenas no `start()`. Não soma pastas, e não percebe arquivo que chegue com
+o daemon rodando — o que inviabiliza acompanhar a migração do arquivo antigo para o HD interno.
+
+A resposta foi um serviço à parte, **sem tocar no código do Vice**, que é upstream acompanhado por
+git em `~/Vice`. Um fork viraria dor de merge a cada atualização.
+
+Como está agora:
+
+- `clips-gallery`, aiohttp em `~/.local/share/clips-gallery/`, porta 8790, serviço **de usuário**
+  (`clips-gallery.service`, `enabled`) — precisa ser de usuário porque lê `~/Videos` e `/mnt/HDD`.
+- Duas fontes: `~/Videos/Vice` e `/mnt/HDD/hdusbcontents/Rafael/Vice`.
+- Galeria em `/` protegida por senha (SHA-256 em `~/.config/clips-gallery/password`, sessão em
+  cookie assinado com HMAC). As rotas de clip seguem **públicas**, senão o robô do Discord não
+  consegue montar o embed.
+
+O tunnel passou a rotear **por caminho**, para não quebrar link já compartilhado:
+
+```yaml
+- hostname: clips.daeese.me
+  path: ^/(c|v|t)/          # Vice, embeds e links antigos
+  service: http://127.0.0.1:8766
+- hostname: clips.daeese.me  # galeria
+  service: http://127.0.0.1:8790
+```
+
+### Três coisas que não são óbvias
+
+**`aiohttp` é requisito, não preferência.** O `http.server` da biblioteca padrão não implementa
+HTTP Range; sem `206 Partial Content` o player não deixa arrastar a barra. Medido:
+`curl -r 0-1023` → `206` com `Content-Range: bytes 0-1023/5113629`.
+
+**A varredura ignora arquivo com menos de 30s.** A migração do HD externo está em andamento, e
+indexar uma cópia pela metade daria duração errada e miniatura preta. Somado ao ciclo de 60s, um
+clip novo no HD aparece em até 90s — medido em 80s, **sem reiniciar nada**, que é exatamente o que
+o Vice não faz.
+
+**Diretório ausente é "vazio por enquanto", nunca erro.** HD desmontado ou pasta ainda não criada
+não podem derrubar a galeria. Testado com zero fontes disponíveis: 0 clips, sem exceção. O próprio
+Vice já foi mordido por isso — há um comentário em `share.py` sobre contagens de visualização
+perdidas quando o diretório de saída demorava a montar.
+
+```bash
+systemctl --user status clips-gallery
+curl -s localhost:8790/healthz          # {"ok":true,"clips":N,"sources":{...}}
+~/.local/share/clips-gallery/set-password
+```
+
+A galeria **não passa pelo GitHub Pages** e não tem deploy: o Pages só serve estático, e ela precisa
+listar o disco em tempo real. Roda nesta máquina e chega pelo tunnel.
