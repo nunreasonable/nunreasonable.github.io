@@ -16,6 +16,9 @@ registrado para dar contexto.
 | 8 | `clips.daeese.me` fora do ar | ✅ **resolvido** em 22/08/2026 |
 | 9 | Clips sem índice, arquivo do HD invisível | ✅ **resolvido** em 22/08/2026 |
 | 10 | Embeds de clip não montavam no Discord | ✅ **resolvido** em 22/08/2026 |
+| 11 | Path traversal não autenticado no `clips-gallery` | ✅ **resolvido** em 22/08/2026 |
+| 12 | Tokens de bot no histórico público do `cornwall` | ⚠️ **parcial** — histórico reescrito, blobs sobrevivem |
+| 13 | `.wrangler` no histórico do `github.io` | ⏳ sem conserto por commit (`refs/pull/1/head`) |
 
 ## 1. HTTP não redireciona para HTTPS
 
@@ -450,3 +453,143 @@ curl -s -A 'Discordbot/2.0' https://clips.daeese.me/c/Vice_Clip_1 | grep og:vide
 `Vice_Clip_4.mp4` saiu a 108 Mbps com `crf = 23` no `~/.config/vice/config.toml`, sinal de que o
 encoder (`encoder = "auto"`) está ignorando o CRF. Não afeta mais o embed, mas deixa o player da
 própria página lento pelo tunnel e enche o disco rápido.
+
+## 11. Path traversal no `clips-gallery` — RESOLVIDO (22/08/2026)
+
+`/c/{slug}` alimentava `adopt_fresh(stem)`, e o `stem` ia cru para
+`root / f"{stem}{ext}"`. Não havia `resolve()`, `realpath`, `is_relative_to` nem `commonpath`
+em nenhum dos dois módulos — nenhuma checagem de contenção existia.
+
+Três coisas se somavam, e nenhuma delas é óbvia sozinha:
+
+```
+1. pathlib não colapsa `..`, e caminho absoluto à direita descarta a raiz:
+   '../../../etc/foo' -> /home/daeese/Videos/Vice/../../../etc/foo.mp4
+   '/etc/passwd'      -> /etc/passwd.mp4
+
+2. o aiohttp casa a rota ANTES de decodificar: o yarl mantém %2F codificado em
+   path_safe, então `..%2F..%2F` passa pelo `[^{}/]+` de /c/{slug}
+
+3. e entrega ao handler DECODIFICADO — medido num app isolado:
+   GET /c/..%2F..%2Fetc%2Ffoo -> 200, slug recebido = '../../etc/foo'
+```
+
+O alvo precisava terminar em `.mp4/.mkv/.mov/.webm`, então não era leitura de `/etc/passwd` —
+era leitura de **qualquer vídeo do disco** acessível ao usuário, o HD inteiro incluído. E o clip
+adotado entrava no índice vivo, o que tornava o `cid` dele válido nas rotas públicas `/m/`,
+`/p/` e `/th/`; o `handle_media` servia `clip.path` sem checagem nenhuma.
+
+Pior: como `rel` é lexical e o `..` nunca colapsa, **cada grafia diferente do mesmo arquivo
+gerava um cid diferente**, furando o dedupe da fila de preview. Um laço variando a grafia
+enfileirava encodes libx264 sem limite numa fila `asyncio.Queue()` sem `maxsize`.
+
+Corrigido com validação do slug (`/`, `\`, `..`, NUL, comprimento) mais `resolve()` +
+`is_relative_to`, que fecha também a fuga por symlink. A fila ganhou `maxsize`, e os três
+subprocessos (ffprobe, miniatura, encode) ganharam timeout com `kill` — os dois primeiros
+seguram um `Semaphore(1)`, então um ffprobe travado congelava metadados e miniaturas do
+serviço inteiro.
+
+### O que mais mudou junto
+
+- A senha era **SHA-256 cru**, sem salt e sem iteração. Agora é scrypt com salt; o formato
+  antigo continua sendo aceito no login e é reescrito na primeira entrada, para não trancar
+  ninguém para fora.
+- A chave do MAC da sessão passou a derivar do hash da senha. Antes o payload assinado tinha
+  **só o expiry**, então trocar a senha não invalidava sessão nenhuma — se a senha fosse
+  trocada *porque* vazou, quem tinha o cookie continuava entrando por até 30 dias. Existe
+  `/logout` agora, que também não existia.
+- `_authed` **falha fechada**: apagar o arquivo de senha abria a galeria privada para a
+  internet, em silêncio.
+- `/healthz` era público e entregava a contagem exata de clips privados e se o HD estava
+  montado — de quebra, um medidor de progresso para o ataque de encher o disco.
+- O `clips-gallery.service` ganhou endurecimento (`ProtectHome=read-only`, `NoNewPrivileges`,
+  `SystemCallFilter`, `MemoryMax`). Como a traversal apontava o ffmpeg para arquivos
+  arbitrários, e demuxer de ffmpeg é superfície cheia de CVE, isso rodava com privilégio total
+  sobre a home.
+
+## 12. Tokens no histórico público — REESCRITO, mas leia a ressalva (22/08/2026)
+
+O `cornwall-discord-application` é público e tinha **dois tokens de bot completos** em 10 blobs
+do histórico, em `ConsoleApp1/config/config.json` e em `ConsoleApp1/bin/Debug/net8.0/config.json`
+(o `bin/` era versionado à época). O commit `dbb5a61`, "Removed sensible information", apagou os
+arquivos mas **não reescreveu o histórico**.
+
+O histórico foi reescrito com `git filter-repo` (espelho descartável, nunca no diretório de
+trabalho — o `--force` termina com `git reset --hard`) e force-pushado. Janela de 33 s com o
+`ccore-bot` parado.
+
+**A ressalva, medida e não suposta.** Force-push **não apaga os objetos do lado do GitHub**.
+Depois do push:
+
+```
+raw.githubusercontent.com/.../e27a2f3/ConsoleApp1/config/config.json  -> 404
+contents API no mesmo commit                                          -> 404
+git/blobs/<sha> dos 10 blobs vazados                                  -> 200, ainda servem
+```
+
+Ou seja: sumiu de tudo que se navega, **continua saindo por SHA direto** até a Cloudflare... até
+o **GitHub** rodar GC no repositório. Só um chamado ao GitHub Support força isso.
+
+**Por isso a rotação dos tokens no portal do Discord não é opcional, é a única coisa que de
+fato encerra a exposição.** Ver a seção de pendências no fim deste documento.
+
+Três armadilhas encontradas no caminho, todas capazes de causar perda de dados:
+
+- **O tracking ref de `audit-data` estava 4 commits atrás do remoto.** Filtrar a partir dele e
+  force-pushar teria apagado auditoria real já publicada pelo bot. Por isso o espelho foi
+  clonado na hora, com o bot parado.
+- **`audit-data` não é branch órfã** — compartilha 39 commits com a `DSC-Version`, e essa
+  ancestralidade carregava o token. Não dava para pular a branch. E o push não pode usar
+  `--prune` sem confirmar que ela está no espelho: se sumisse, o `EnsureBranchAsync` a
+  **recriaria vazia** a partir da branch padrão no próximo `/auditpush`, em silêncio.
+- **Não havia credential helper e o remote era HTTPS.** Leitura anônima funcionava — por isso o
+  `ls-remote` respondia — mas o push não tinha caminho de autenticação. Trocado para SSH.
+
+Duas coisas para lembrar:
+
+- **O `ccore-bot.service` executa um binário de dentro de `ConsoleApp1/bin/`**, que é
+  gitignored. É por isso que deu para purgar `bin/` do histórico sem derrubar o bot — e é pelo
+  mesmo motivo que um `git clean -xdf`, ou um dia em que `bin/` volte ao índice, apagaria o
+  executável do bot em execução.
+- **`audit-data` carregar história de código é o que torna toda reescrita futura acoplada e
+  sujeita a corrida.** É uma branch de dados. Re-enraizá-la como órfã faria a próxima reescrita
+  ser uma operação pura na `DSC-Version`, sem parar o bot. O bot não se importa: resolve a
+  branch por nome e a Contents API commita sobre a ponta; nenhum dos dois lê ancestralidade.
+
+## 13. `.wrangler` no histórico do `github.io` — sem conserto por commit
+
+O `cloudflare/api-proxy-worker/.wrangler/cache/wrangler-account.json` foi commitado em
+`74bad8f` e removido em `1cb2f3b`. Reescrever a `main` **não resolve**, e isso foi verificado:
+
+```
+$ git ls-remote origin
+c0136c5...  refs/pull/1/head          <- ref do GitHub, não dá para reescrever nem apagar
+$ git merge-base --is-ancestor 74bad8f origin/pr1 && echo alcançável
+alcançável
+```
+
+`refs/pull/*` pertence ao GitHub. Depois de uma reescrita perfeita da `main`, a URL do commit
+`74bad8f` continua servindo o arquivo.
+
+E o conteúdo não é credencial: um **account ID** da Cloudflare (aparece em URL de painel, inútil
+sem API token) e um e-mail que **já é o autor de todos os commits dos dois repositórios**
+(`git log --all --format='%ae' | sort -u` devolve um valor só). Force-push num site Pages ao
+vivo para esconder um e-mail que está em 90+ cabeçalhos de commit tem custo real e ganho zero.
+
+Registrado como mitigação parcial. O que ajudaria de fato é um chamado ao GitHub Support pedindo
+GC — o mesmo chamado do item 12.
+
+## Pendências que dependem do dono
+
+1. **Resetar o token da aplicação `1479642388837437544`** no portal do Discord. Ela não é
+   referenciada em lugar nenhum do código atual — provavelmente abandonada, e o token está em
+   histórico público que, como medido no item 12, ainda sai por SHA. Resetar ou deletar a
+   aplicação.
+2. **Conferir a aplicação `1482173872848507062`** (bot ccore atual): um token *antigo* dela
+   também está no histórico. Como o token em uso hoje é diferente, ele já foi rotacionado e o
+   antigo já está morto — resetar de novo derrubaria o bot. Só confirmar.
+   A aplicação `1403153848507301939` (Sollarety) nunca teve token commitado.
+3. **Abrir chamado no GitHub Support** pedindo GC dos dois repositórios, que é o único jeito de
+   os SHAs antigos deixarem de responder.
+4. **Item 6 (planilha sem autenticação)** continua pendente. O botão saiu da home pública do
+   ccore, o que reduz a exposição, mas quem tem a URL ainda vê os dados.
