@@ -610,7 +610,11 @@ function formatDateTime(value) {
 function readCount(input, label) {
   const raw = (input.value || "").trim();
   if (raw === "") {
-    return 0;
+    // undefined, e nao 0: o campo omitido sai do JSON e o servidor mantem o
+    // valor atual. Devolver 0 aqui zerava o contador de quem so limpasse a
+    // caixa -- e, no caso de "Batalhas", isso apagava a elegibilidade do
+    // jogador na escada de promocoes, sem aviso e sem confirmacao.
+    return undefined;
   }
 
   const value = Number(raw);

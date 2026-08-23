@@ -39,8 +39,29 @@ const REDIRECTS = [
 // Worker numa subrequisicao, mas nao dependemos desse comportamento.
 const LOOP_GUARD_HEADER = "x-site-router";
 
+// Valor do guarda. O nome do header sozinho era adivinhavel, e mandar
+// `x-site-router: 1` de fora pulava o bloco inteiro de reescrita -- incluindo
+// o X-Robots-Tag dos hosts administrativos. Com segredo, so as subrequisicoes
+// deste Worker batem. Ver `wrangler secret put LOOP_GUARD_TOKEN`.
+function guardToken(env) {
+  return (env && env.LOOP_GUARD_TOKEN) || "1";
+}
+
+
 // Hosts que nao devem aparecer em buscador.
 const NOINDEX_HOSTS = new Set(["spreadsheet.daeese.me", "dashboard.daeese.me"]);
+
+// Cabecalhos que valem para QUALQUER resposta do host, inclusive as servidas
+// pelo atalho de subrequisicao. Ficavam so no caminho longo, entao quem
+// mandasse o header do guarda recebia dashboard.daeese.me sem o noindex.
+function applyHostHeaders(response, hostname) {
+  response.headers.delete("x-github-request-id");
+  response.headers.set("x-served-by", "daeese-site-router");
+  if (NOINDEX_HOSTS.has(hostname)) {
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  }
+  return response;
+}
 
 function buildRobotsTxt(hostname) {
   // robots.txt e por host.
@@ -91,8 +112,16 @@ function findRedirect(pathname) {
   return null;
 }
 
+// Só mídia. Os .src.html do filearchive são fontes de render das imagens
+// (og-banner, widgets), nunca páginas para servir -- e deixá-los passar punha
+// documento HTML na MESMA ORIGEM do dashboard, que guarda o Bearer token em
+// sessionStorage. Não há injeção neles hoje; a questão é não manter superfície
+// HTML de graça ao lado de um armazenamento de credencial.
+const SHARED_MEDIA_EXT = /\.(png|jpe?g|gif|webp|avif|svg|ico|mp4|webm|woff2?)$/i;
+
 function isSharedPath(pathname) {
-  return SHARED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+  return SHARED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+    && SHARED_MEDIA_EXT.test(pathname);
 }
 
 // Traduz o caminho pedido no subdominio para o caminho real dentro do site.
@@ -111,14 +140,17 @@ export function resolveOriginPath(hostname, pathname) {
 }
 
 export default {
-  async fetch(request) {
-    // Subrequisicao nossa: repassa sem redirecionar nem reescrever.
-    if (request.headers.get(LOOP_GUARD_HEADER)) {
-      return fetch(request);
-    }
-
+  async fetch(request, env) {
     const url = new URL(request.url);
     const hostname = url.hostname;
+
+    // Subrequisicao nossa: repassa sem redirecionar nem reescrever -- mas
+    // ainda com os cabecalhos do host, que sao garantia de seguranca e nao
+    // detalhe do caminho longo.
+    if (request.headers.get(LOOP_GUARD_HEADER) === guardToken(env)) {
+      const passthrough = await fetch(request);
+      return applyHostHeaders(new Response(passthrough.body, passthrough), hostname);
+    }
 
     // 1. Caminhos antigos em daeese.me -> 301 para o subdominio.
     if (!(hostname in SITES)) {
@@ -149,21 +181,14 @@ export default {
     originUrl.search = url.search;
 
     const outgoing = new Request(originUrl.toString(), request);
-    outgoing.headers.set(LOOP_GUARD_HEADER, "1");
+    // set, nunca append: se o cliente mandou o header, o valor dele morre aqui.
+    outgoing.headers.set(LOOP_GUARD_HEADER, guardToken(env));
 
     const upstream = await fetch(outgoing, { redirect: "manual" });
 
-    const response = new Response(upstream.body, upstream);
-    // A origem e um detalhe de implementacao; nao vaza para o cliente.
-    response.headers.delete("x-github-request-id");
-    response.headers.set("x-served-by", "daeese-site-router");
-
-    // Vale para qualquer resposta do host, inclusive as que nao sao HTML e
-    // portanto nao teriam como carregar uma meta tag.
-    if (NOINDEX_HOSTS.has(hostname)) {
-      response.headers.set("X-Robots-Tag", "noindex, nofollow");
-    }
-
-    return response;
+    // A origem e um detalhe de implementacao e nao vaza para o cliente; e o
+    // noindex vale para qualquer resposta do host, inclusive as que nao sao
+    // HTML e portanto nao teriam como carregar uma meta tag.
+    return applyHostHeaders(new Response(upstream.body, upstream), hostname);
   }
 };

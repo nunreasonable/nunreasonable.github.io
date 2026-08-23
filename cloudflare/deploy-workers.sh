@@ -23,6 +23,13 @@
 
 set -euo pipefail
 
+# Versao fixa, nao "wrangler@4".
+#
+# O `npx --yes wrangler@4` resolvia para a minor mais nova a cada boot, e roda
+# com o refresh token da conta Cloudflare em escopo: uma release comprometida
+# se publicaria sozinha nesse contexto. Para atualizar, mude aqui de proposito.
+WRANGLER_VERSION="${WRANGLER_VERSION:-4.125.0}"
+
 cd "$(dirname "$0")"
 
 WORKERS=(api-proxy-worker site-router-worker fun-oauth-worker)
@@ -75,7 +82,7 @@ for worker in "${WORKERS[@]}"; do
     # ate o proximo reinicio.
     for attempt in 1 2 3; do
       echo "[deploy-workers] $worker: publicando (tentativa $attempt)..."
-      if npx --yes wrangler@4 deploy; then
+      if npx --yes "wrangler@${WRANGLER_VERSION}" deploy; then
         mkdir -p .wrangler
         printf '%s' "$current" > "$stamp"
         echo "[deploy-workers] $worker: publicado."

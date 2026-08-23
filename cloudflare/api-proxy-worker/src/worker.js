@@ -59,6 +59,28 @@ export default {
       const upstreamUrl = toUpstreamUrl(request.url, env.BOT_API_ORIGIN);
       const outgoingHeaders = new Headers(request.headers);
 
+      // O cliente controla estes dois, e a leitura convencional de
+      // X-Forwarded-For -- pegar o primeiro elemento -- pega exatamente o
+      // pedaco forjado. Apagar aqui e melhor que confiar em cada consumidor
+      // la embaixo lembrar de ignora-los.
+      outgoingHeaders.delete("X-Forwarded-For");
+      outgoingHeaders.delete("X-Real-IP");
+      outgoingHeaders.delete("Forwarded");
+
+      // Prova de que a requisicao passou mesmo por aqui. Sem isto o bot nao
+      // tem como saber se o CF-Connecting-IP veio da borda da Cloudflare ou
+      // de alguem falando direto com 127.0.0.1:5056 -- e e nesse header que
+      // ele apoia o limite de tentativas de login por IP.
+      // Sempre sobrescreve: se o cliente mandou o header, o valor dele morre aqui.
+      if (env.TUNNEL_SECRET) {
+        outgoingHeaders.set("X-Ccore-Tunnel", env.TUNNEL_SECRET);
+      } else {
+        outgoingHeaders.delete("X-Ccore-Tunnel");
+      }
+
+      // Host e header proibido no fetch dos Workers: este set e silenciosamente
+      // ignorado. Quem de fato entrega o Host que o bot roteia e o
+      // originRequest.httpHostHeader do cloudflared. Mantido so por clareza.
       outgoingHeaders.set("Host", new URL(env.BOT_API_ORIGIN).host);
 
       const upstreamResponse = await fetch(upstreamUrl, {
@@ -81,9 +103,12 @@ export default {
       });
     } catch (error) {
       const cors = buildCorsHeaders(origin);
+      // O detalhe vai para o log do Worker, nao para a resposta: quem chama
+      // /api/* nao esta autenticado, e String(error) carrega hostname interno
+      // e motivo da falha de graca para quem estiver sondando.
+      console.error("falha no proxy:", error);
       return new Response(JSON.stringify({
-        error: "Falha no proxy Cloudflare.",
-        details: String(error)
+        error: "Falha no proxy Cloudflare."
       }), {
         status: 502,
         headers: {

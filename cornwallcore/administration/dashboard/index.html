@@ -7,6 +7,27 @@
   <meta name="robots" content="noindex, nofollow, noarchive" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="description" content="Painel administrativo do ccore - 'chavinhoCORE', bot do 12° Regimento de Infantaria &quot;Chaves&quot;. Acesso restrito." />
+  <!--
+    Esta origem guarda o Bearer token do painel em sessionStorage, entao vale
+    uma CSP restritiva. Da para ser estrita de verdade porque a pagina nao tem
+    script nem style inline: o app.js e externo e o CSS mora em style.css.
+
+    connect-src lista daeese.me (o proxy de /api/*) e 127.0.0.1:5056, que e o
+    modo de desenvolvimento local, falando direto com o bot sem passar pelo
+    Worker. img-src precisa do CDN do Discord por causa dos avatares.
+    frame-ancestors nao vale em meta tag; quem impede o enquadramento e o
+    X-Frame-Options que o daeese-site-router aplica no host.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self';
+    style-src 'self' https://fonts.googleapis.com;
+    font-src https://fonts.gstatic.com;
+    img-src 'self' data: https://cdn.discordapp.com;
+    connect-src 'self' https://daeese.me http://127.0.0.1:5056;
+    base-uri 'none';
+    form-action 'none';
+    object-src 'none'" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
@@ -280,6 +301,6 @@
       </section>
     </section>
   </main>
-  <script src="app.js?v=f53fd336"></script>
+  <script src="app.js?v=4e8ef3ed"></script>
 </body>
 </html>

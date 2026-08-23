@@ -394,7 +394,16 @@
 				</div>
 				<div class="actions">
 					<a class="button" href="./status/">Status</a>
-					<a class="button" href="https://spreadsheet.daeese.me/">Spreadsheet Viewer</a>
+					<!--
+						O Spreadsheet Viewer saiu daqui de proposito. Ele nao tem
+						autenticacao nenhuma e mostra o efetivo do regimento; com o
+						botao nesta pagina publica e indexavel, "so quem tem a URL"
+						passava a ser qualquer visitante. O noindex do proprio viewer
+						impede que ele seja indexado, mas nao impede alguem seguir o
+						link. Continua alcancavel por quem sabe o endereco -- fechar
+						de vez depende do item 6 do INFRA.md (restringir o
+						compartilhamento no Drive e servir por rota autenticada).
+					-->
 					<a class="button" href="https://dashboard.daeese.me/">Dashboard</a>
 					<a class="button" href="./termsofservice/">Terms</a>
 					<a class="button" href="./privacypolicy/">Privacy</a>

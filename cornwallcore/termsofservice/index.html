@@ -37,9 +37,30 @@
         padding: 18px 0 24px;
       }
 
+      .intro {
+        margin: 0 0 14px;
+      }
+
+      .intro h1 {
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        margin: 0 0 6px;
+        color: var(--text);
+      }
+
+      .intro p {
+        margin: 0 0 8px;
+        color: var(--muted);
+        line-height: 1.5;
+        max-width: 70ch;
+      }
+
+      .intro a {
+        color: var(--accent);
+      }
+
       .frame {
         width: 100%;
-        height: calc(100vh - 42px);
+        height: calc(100vh - 190px);
         border: 1px solid var(--line);
         border-radius: 22px;
         background: rgba(17, 24, 39, 0.72);
@@ -62,13 +83,24 @@
         }
 
         .frame {
-          height: calc(100vh - 32px);
+          height: calc(100vh - 210px);
         }
       }
     </style>
   </head>
   <body>
     <main class="shell">
+      <!--
+        Este resumo nao e enfeite. A pagina era so o iframe, entao a URL que
+        esta no sitemap E registrada no portal do Discord nao tinha texto
+        nenhum para indexar - e o canonical de tos.html aponta
+        justamente para ca, o que fazia o alvo canonico ser a pagina vazia.
+      -->
+      <div class="intro">
+        <h1>ccore — Terms of Service</h1>
+        <p>These Terms of Service govern the use of ccore (“chavinhoCORE”), the Discord bot of the 12th &quot;The Cornwall&quot; Regiment of Foot. They cover accepted use, the data the bot handles, the limits of liability, and how the terms may change.</p>
+        <p><a href="./tos.html">Read the full Terms of Service</a></p>
+      </div>
       <section class="frame" aria-label="Terms of Service content">
         <iframe title="ccore Terms of Service" src="./tos.html"></iframe>
       </section>

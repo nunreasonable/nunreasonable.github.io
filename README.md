@@ -13,8 +13,9 @@ frente (proxy + rota `/api/*`).
 | `cornwallcore/termsofservice/`, `cornwallcore/privacypolicy/` | Termos de Serviço e Política de Privacidade vigentes do app no Discord. |
 | `cornwallcore/administration/dashboard/` | Painel administrativo do bot, em abas (Moderação, Auditoria, Comunicações, Alistamento, Logs). Fala com a API do bot em `/api/*`. **Acesso restrito** — `noindex`. |
 | `cornwallcore/administration/spreadsheetviewer/` | Leitor da planilha regimental (Google Sheets via `gviz`). **`noindex`** — veja o aviso abaixo. |
+| `cornwallcore/fun/` | Sollarety: página do bot, convite por OAuth2 e as políticas dele. |
 | `gabfirmino/` | "Meias UwU" — página de estudo em HTML/CSS. |
-| `cloudflare/` | Os dois Workers (proxy da API e roteador de subdomínios), o script de deploy e o guia de setup do tunnel. |
+| `cloudflare/` | Os três Workers (proxy da API, roteador de subdomínios e OAuth do Sollarety), o script de deploy e o guia de setup do tunnel. |
 | `filearchive/` | Imagens usadas pelas páginas. |
 
 ## Infra
@@ -30,8 +31,12 @@ A API do bot é servida em `daeese.me/api/*` por um Worker da Cloudflare, que en
 
 O visualizador lê a planilha regimental direto do Google Sheets, no navegador do visitante. Isso só
 funciona porque a planilha está compartilhada como "qualquer pessoa com o link". A página está
-marcada com `noindex` e bloqueada no `robots.txt`, mas **quem tiver a URL continua conseguindo ver
-os dados**. Se o roster passar a ser considerado sensível, o caminho é restringir o
+marcada com `noindex`, mas **quem tiver a URL continua conseguindo ver os dados**. (O
+`robots.txt` da raiz **não** tem `Disallow` para esse caminho: ele foi retirado de propósito,
+porque `/cornwallcore/*` hoje responde 301 para os subdomínios e um `Disallow` impediria os
+buscadores de enxergarem o redirecionamento. A garantia de não-indexação é a meta `noindex` da
+própria página, mais o `X-Robots-Tag` que o `daeese-site-router` aplica no host.)
+O botão que apontava para o viewer saiu da home pública do ccore justamente por isso. Se o roster passar a ser considerado sensível, o caminho é restringir o
 compartilhamento no Google e servir os dados pelo `/api` autenticado, como o dashboard já faz.
 
 ## Desenvolvimento local
@@ -56,7 +61,7 @@ CSS velho não é "um pouco desatualizado", é uma página quebrada, porque as c
 existem na folha antiga. O script carimba o hash do conteúdo na URL
 (`style.css?v=abc12345`), então o par nunca fica descasado. **Rode antes de commitar.**
 
-Os dois Workers em `cloudflare/` não sobem pelo GitHub Pages. Quem os publica é
+Os três Workers em `cloudflare/` não sobem pelo GitHub Pages. Quem os publica é
 [`cloudflare/deploy-workers.sh`](cloudflare/deploy-workers.sh), rodado no boot pelo serviço de
 usuário `ccore-workers-deploy.service` — ele compara o hash do fonte com o da última publicação e
 só chama o `wrangler deploy` quando algo mudou. Para publicar na hora:

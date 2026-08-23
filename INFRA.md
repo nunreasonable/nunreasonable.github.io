@@ -15,6 +15,7 @@ registrado para dar contexto.
 | 7 | Workers publicados só à mão | ✅ **resolvido** em 20/08/2026 |
 | 8 | `clips.daeese.me` fora do ar | ✅ **resolvido** em 22/08/2026 |
 | 9 | Clips sem índice, arquivo do HD invisível | ✅ **resolvido** em 22/08/2026 |
+| 10 | Embeds de clip não montavam no Discord | ✅ **resolvido** em 22/08/2026 |
 
 ## 1. HTTP não redireciona para HTTPS
 
@@ -216,8 +217,15 @@ Allow: /
 
 # https://daeese.me/robots.txt
 User-agent: *
-Disallow: /cornwallcore/administration/
+Allow: /
 ```
+
+**Correção (22/08/2026):** este trecho descrevia um `Disallow: /cornwallcore/administration/`
+que **não existe mais** no arquivo. Ele foi retirado de propósito — `/cornwallcore/*` responde
+301 para os subdomínios, e um `Disallow` impediria o buscador de ver o redirecionamento e
+transferir a reputação. Os caminhos administrativos hoje moram em `dashboard.daeese.me` e
+`spreadsheet.daeese.me`, que têm `robots.txt` próprio servido pelo Worker e recebem
+`X-Robots-Tag: noindex` — agora inclusive no atalho de subrequisição, que antes escapava.
 
 Isso funciona — o Google combina grupos com o mesmo `User-agent`, então o `Disallow` é respeitado —
 mas o resultado tem dois blocos `User-agent: *`, um com `Allow: /` e outro com o `Disallow`. Se
@@ -361,3 +369,84 @@ curl -s localhost:8790/healthz          # {"ok":true,"clips":N,"sources":{...}}
 
 A galeria **não passa pelo GitHub Pages** e não tem deploy: o Pages só serve estático, e ela precisa
 listar o disco em tempo real. Roda nesta máquina e chega pelo tunnel.
+
+## 10. Embeds de clip não montavam no Discord — RESOLVIDO (22/08/2026)
+
+Link de clip colado no Discord aparecia como texto azul e nada mais — nem card de imagem. Valia
+para os dois tipos, `/c/` do Vice e `/g/` da galeria.
+
+O primeiro instinto, depois dos itens 3 e 8, foi procurar rede. Não era: as duas páginas
+respondiam `200 text/html` com Open Graph completo, e as mídias respondiam `200 video/mp4` e
+`200 image/jpeg`. O problema estava no que as metatags **apontavam**.
+
+**Primeira: `og:video` apontava para o arquivo original.**
+
+```
+$ curl -sI https://clips.daeese.me/v/Vice_Clip_4.mp4 | grep content-length
+content-length: 1034011154          # 986 MB, 76 s de vídeo a 108 Mbps
+```
+
+O Discord só monta player para vídeo externo na casa de 8–30 MB. Acima disso ele não degrada para
+card de imagem: descarta o embed inteiro, que é exatamente o sintoma.
+
+**Segunda: o áudio é Opus dentro de MP4.** Vale para todo clip daqui — recentes, replays e os do
+HD. O player do Discord e o Safari não decodificam Opus nesse container; precisa ser AAC. Essa
+sozinha já impediria o embed de tocar mesmo se o tamanho coubesse.
+
+**Terceira: a página `/g/` não emitia `og:video:width` nem `og:video:height`.** O Discord usa esse
+par para dimensionar o player. A página do Vice emitia (`share.py:1051-1052`); a da galeria, não.
+
+A saída foi um **preview** por clip, gerado pelo `clips-gallery`: H.264 + AAC, 720p, `faststart`,
+com bitrate calculado para caber em ~7,6 MB. É só ele que vai nas metatags — o player da página e
+o botão Baixar continuam servindo o original em `/m/`. Medido no primeiro:
+
+```
+$ ffprobe ~/.cache/clips-gallery/previews/replay-...-ece7a4ff.mp4
+h264 1280x720 / aac / 60 s / 6.966.273 bytes        (encode levou 14 s)
+```
+
+Nada disso tocou o código do Vice, pelo mesmo motivo do item 9: é upstream acompanhado por git em
+`~/Vice`, e um fork viraria dor de merge.
+
+### Três coisas que não são óbvias
+
+**`/c/` mudou de dono, `/v/` e `/t/` não.** Como `sharing.base_url` no Vice é
+`https://clips.daeese.me`, o botão de compartilhar dele copia `/c/{slug}` — e essa página é
+justamente a que apontava para o arquivo de 986 MB. O ingress passou a mandar `/c/` para a
+galeria, que reencontra o clip pelo nome do arquivo e serve as metatags certas:
+
+```yaml
+- hostname: clips.daeese.me
+  path: ^/(v|t)/          # mídia do Vice: embed já cacheado aponta para cá
+  service: http://127.0.0.1:8766
+- hostname: clips.daeese.me  # galeria, agora incluindo /c/
+  service: http://127.0.0.1:8790
+```
+
+`/v/` e `/t/` ficaram no Vice de propósito: embed que o Discord já montou aponta para aqueles
+caminhos, e movê-los quebraria mensagem antiga. O preço é que agora um `clips-gallery` fora do ar
+derruba também os links `/c/` — o serviço tem `Restart=on-failure`.
+
+**A página nunca espera o encode.** O robô do Discord desiste em poucos segundos, e encodar leva
+dezenas. Então `ensure_preview` devolve `None` na hora e enfileira; enquanto não fica pronto a
+página cai para `og:type=website` com `twitter:card=summary_large_image`, que mostra um card de
+imagem grande em vez de nada. Pelo mesmo motivo o `ensure_meta` da página tem `wait_for` de 2 s:
+um ffprobe no HD pode passar do tempo do robô, e perder duração é melhor que perder a página.
+
+Só os clips de `~/Videos/Vice` entram na fila sozinhos a cada varredura. Os 141 do arquivo do HD
+ficam sob demanda — encodar todos de uma vez faria a cabeça do disco mecânico passear por horas.
+
+**O Discord cacheia embed por URL.** Depois da correção, repostar o mesmo link continua mostrando o
+resultado velho. Para testar, use um clip que ainda não foi postado.
+
+```bash
+systemctl --user status clips-gallery
+curl -s localhost:8790/healthz        # {"ok":true,"clips":N,"previews":M,...}
+curl -s -A 'Discordbot/2.0' https://clips.daeese.me/c/Vice_Clip_1 | grep og:video
+```
+
+### Anotado, sem decisão
+
+`Vice_Clip_4.mp4` saiu a 108 Mbps com `crf = 23` no `~/.config/vice/config.toml`, sinal de que o
+encoder (`encoder = "auto"`) está ignorando o CRF. Não afeta mais o embed, mas deixa o player da
+própria página lento pelo tunnel e enche o disco rápido.
