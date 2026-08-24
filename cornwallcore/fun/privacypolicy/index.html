@@ -5,6 +5,23 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Sollarety Privacy Policy</title>
 		<link rel="canonical" href="https://ccore.daeese.me/fun/privacypolicy/" />
+		<!--
+		  Cartao de compartilhamento. Estas paginas sao justamente as registradas no
+		  Discord Developer Portal e as coladas em canal do Discord, onde o embed e a
+		  primeira coisa que aparece - e sem og: o link saia sem titulo nem imagem.
+		-->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="daeese.me" />
+		<meta property="og:title" content="Sollarety Privacy Policy" />
+		<meta property="og:description" content="What Sollarety collects, why, how long it is kept and how to request its deletion." />
+		<meta property="og:url" content="https://ccore.daeese.me/fun/privacypolicy/" />
+		<meta property="og:image" content="https://daeese.me/filearchive/sollarety-og.png" />
+		<meta property="og:image:alt" content="The Sollarety emblem: a silver sun ringed by orbits" />
+		<meta property="og:locale" content="en_US" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="Sollarety Privacy Policy" />
+		<meta name="twitter:description" content="What Sollarety collects, why, how long it is kept and how to request its deletion." />
+		<meta name="twitter:image" content="https://daeese.me/filearchive/sollarety-og.png" />
 		<meta name="description" content="Privacy Policy for the Sollarety Discord application." />
 		<link rel="icon" type="image/png" href="../../../filearchive/sollarety.png" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -171,104 +188,106 @@
 				* { transition-duration: 0.001ms !important; }
 			}
 		</style>
+			<link rel="stylesheet" href="../../../filearchive/i18n/i18n.css" />
 	</head>
 	<body>
+		<div data-i18n-switcher class="i18n-floating"></div>
 		<main class="shell">
 			<div class="nav">
-				<a href="../">Sollarety</a>
-				<a href="../termsofservice/">Terms of Service</a>
+				<a data-i18n="sol_pp.sollarety" href="../">Sollarety</a>
+				<a data-i18n="sol_pp.terms_of_service" href="../termsofservice/">Terms of Service</a>
 			</div>
 
 			<article class="card">
-				<p class="eyebrow">Sollarety</p>
-				<h1>Privacy Policy</h1>
-				<span class="pill">Last updated: August 20, 2026</span>
+				<p data-i18n="sol_pp.sollarety" class="eyebrow">Sollarety</p>
+				<h1 data-i18n="sol_pp.privacy_policy">Privacy Policy</h1>
+				<span data-i18n="sol_pp.last_updated_august_20_2026" class="pill">Last updated: August 20, 2026</span>
 
 				<div class="note">
 					<p style="margin: 0">
-						<strong>The Bot does not read your messages.</strong> It does not
+						<strong data-i18n="sol_pp.the_bot_does_not_read">The Bot does not read your messages.</strong> <span data-i18n="sol_pp.it_does_not_request_discord">It does not
 						request Discord's Message Content intent, which means Discord never
 						sends it the text of messages. It cannot store, search or forward
-						something it does not receive.
+						something it does not receive.</span>
 					</p>
 				</div>
 
-				<h2>1. What is stored</h2>
-				<p>Only two things leave the moment they happen:</p>
+				<h2 data-i18n="sol_pp.1_what_is_stored">1. What is stored</h2>
+				<p data-i18n="sol_pp.only_two_things_leave_the">Only two things leave the moment they happen:</p>
 				<ul>
 					<li>
-						<strong>Warnings.</strong> When a moderator runs the warn command,
+						<strong data-i18n="sol_pp.warnings">Warnings.</strong> <span data-i18n="sol_pp.when_a_moderator_runs_the">When a moderator runs the warn command,
 						the Bot saves the Discord user ID of the warned member, the user ID
 						and tag of the moderator, the reason the moderator typed, the server
 						ID, and the date. This is written to a file on the machine that hosts
-						the Bot.
+						the Bot.</span>
 					</li>
 					<li>
-						<strong>Moderation log messages.</strong> Each moderation action is
+						<strong data-i18n="sol_pp.moderation_log_messages">Moderation log messages.</strong> <span data-i18n="sol_pp.each_moderation_action_is_posted">Each moderation action is
 						posted as a message to a channel your administrators choose. That
 						message lives in your server, under your control, like any other
-						message.
+						message.</span>
 					</li>
 				</ul>
 
-				<h2>2. What is held only in memory</h2>
+				<h2 data-i18n="sol_pp.2_what_is_held_only">2. What is held only in memory</h2>
 				<p>
-					The Bot keeps a short buffer of its own console output so that
+					<span data-i18n="sol_pp.the_bot_keeps_a_short">The Bot keeps a short buffer of its own console output so that
 					administrators can diagnose failures without server access. It may
-					contain user IDs and error messages. It is never written to disk and is
-					<strong>erased every time the Bot restarts</strong>.
+					contain user IDs and error messages. It is never written to disk and is</span>
+					<strong data-i18n="sol_pp.erased_every_time_the_bot">erased every time the Bot restarts</strong>.
 				</p>
 
-				<h2>3. What is read but not kept</h2>
-				<p>
+				<h2 data-i18n="sol_pp.3_what_is_read_but">3. What is read but not kept</h2>
+				<p data-i18n="sol_pp.to_check_role_hierarchy_before">
 					To check role hierarchy before a punishment, and to answer the userinfo
 					and serverinfo commands, the Bot reads roles, nicknames and join dates
 					from Discord. That information is used to build the reply and then
 					discarded — nothing is written down.
 				</p>
-				<p>
+				<p data-i18n="sol_pp.the_purge_command_deletes_messages">
 					The purge command deletes messages through the Discord API. It does not
 					read or copy their content before deleting.
 				</p>
 
-				<h2>4. What is never collected</h2>
+				<h2 data-i18n="sol_pp.4_what_is_never_collected">4. What is never collected</h2>
 				<ul>
-					<li>message content, attachments or embeds;</li>
-					<li>direct messages;</li>
-					<li>voice audio;</li>
-					<li>email addresses, IP addresses, payment details or any real-world identity;</li>
-					<li>anything at all from users who never appear in a moderation command.</li>
+					<li data-i18n="sol_pp.message_content_attachments_or_embeds">message content, attachments or embeds;</li>
+					<li data-i18n="sol_pp.direct_messages">direct messages;</li>
+					<li data-i18n="sol_pp.voice_audio">voice audio;</li>
+					<li data-i18n="sol_pp.email_addresses_ip_addresses_payment">email addresses, IP addresses, payment details or any real-world identity;</li>
+					<li data-i18n="sol_pp.anything_at_all_from_users">anything at all from users who never appear in a moderation command.</li>
 				</ul>
 
-				<h2>5. How long warnings are kept</h2>
-				<p>
+				<h2 data-i18n="sol_pp.5_how_long_warnings_are">5. How long warnings are kept</h2>
+				<p data-i18n="sol_pp.until_a_moderator_deletes_them">
 					Until a moderator deletes them. The delwarn command removes a warning
 					permanently, and removing the Bot from your server stops any further
 					records being created. There is no automatic expiry: a warning history
 					that erased itself would defeat its own purpose.
 				</p>
 
-				<h2>6. Who can see it</h2>
-				<p>
+				<h2 data-i18n="sol_pp.6_who_can_see_it">6. Who can see it</h2>
+				<p data-i18n="sol_pp.warnings_are_visible_through_the">
 					Warnings are visible through the Bot only to members with the Moderate
 					Members permission in the server the warning belongs to. A warning
 					recorded in one server is not visible from another. The log channel is
 					visible to whoever your administrators grant access to.
 				</p>
-				<p>
+				<p data-i18n="sol_pp.data_is_not_sold_rented">
 					Data is not sold, rented, or shared with third parties. There is no
 					analytics service and no advertising.
 				</p>
 
-				<h2>7. Where it is stored</h2>
-				<p>
+				<h2 data-i18n="sol_pp.7_where_it_is_stored">7. Where it is stored</h2>
+				<p data-i18n="sol_pp.on_a_single_self_hosted">
 					On a single self-hosted machine operated by the Bot's administrators.
 					The stored data is not sent to any external service; the only network
 					the Bot talks to is Discord's own API.
 				</p>
 
-				<h2>8. Your rights</h2>
-				<p>
+				<h2 data-i18n="sol_pp.8_your_rights">8. Your rights</h2>
+				<p data-i18n="sol_pp.you_may_ask_what_the">
 					You may ask what the Bot has recorded about you, and ask for it to be
 					deleted, by contacting the Bot administrators through the official
 					Discord server channels. Deleting a warning does not delete the message
@@ -276,68 +295,74 @@
 					your server, and a server administrator can remove it.
 				</p>
 
-				<h2>9. Children</h2>
+				<h2 data-i18n="sol_pp.9_children">9. Children</h2>
 				<p>
-					The Bot is not directed at anyone under the minimum age required by the
-					<a href="https://discord.com/terms" target="_blank" rel="noreferrer noopener">Discord Terms of Service</a>
-					in their country. It is not knowingly used to collect information from
-					them.
+					<span data-i18n="sol_pp.the_bot_is_not_directed">The Bot is not directed at anyone under the minimum age required by the</span>
+					<a data-i18n="sol_pp.discord_terms_of_service" href="https://discord.com/terms" target="_blank" rel="noreferrer noopener">Discord Terms of Service</a>
+					<span data-i18n="sol_pp.in_their_country_it_is">in their country. It is not knowingly used to collect information from
+					them.</span>
 				</p>
 
-				<h2>10. Discord's own handling</h2>
+				<h2 data-i18n="sol_pp.10_discord_s_own_handling">10. Discord's own handling</h2>
 				<p>
-					Everything the Bot does passes through Discord, which handles your data
-					under its own
-					<a href="https://discord.com/privacy" target="_blank" rel="noreferrer noopener">Privacy Policy</a>.
-					This policy covers only what the Bot itself does.
+					<span data-i18n="sol_pp.everything_the_bot_does_passes">Everything the Bot does passes through Discord, which handles your data
+					under its own</span>
+					<a data-i18n="sol_pp.privacy_policy" href="https://discord.com/privacy" target="_blank" rel="noreferrer noopener">Privacy Policy</a><span data-i18n="sol_pp.this_policy_covers_only_what">.
+					This policy covers only what the Bot itself does.</span>
 				</p>
 
-				<h2>11. The invite page</h2>
+				<h2 data-i18n="sol_pp.11_the_invite_page">11. The invite page</h2>
 				<p>
-					The invite page at <a href="../invite/">ccore.daeese.me/fun/invite/</a> can
+					<span data-i18n="sol_pp.the_invite_page_at">The invite page at</span> <a data-i18n="sol_pp.ccore_daeese_me_fun_invite" href="../invite/">ccore.daeese.me/fun/invite/</a> <span data-i18n="sol_pp.can_sign_you_in_with">can
 					sign you in with Discord so that it can show you which of your servers you
 					are allowed to add the Bot to. That sign-in asks Discord for two things and
 					nothing else: your username and avatar, and the list of servers you are in.
 					It does not ask for your messages, and it grants the Bot no access to any
-					server on its own.
+					server on its own.</span>
 				</p>
 				<p>
-					What becomes of that data: a small program running at the network edge
+					<span data-i18n="sol_pp.what_becomes_of_that_data">What becomes of that data: a small program running at the network edge
 					exchanges Discord's one-time code for a temporary access token, reads your
 					name and server list once, and throws the token away when the request ends.
 					Nothing is written to a database, a log or a file, because there is none to
 					write to. The list travels back to your browser in the part of the URL after
-					the <strong>#</strong>, which browsers never send to a server, and the page
+					the</span> <strong>#</strong><span data-i18n="sol_pp.which_browsers_never_send_to">, which browsers never send to a server, and the page
 					clears it from the address bar as soon as it has drawn the list. Closing the
-					tab leaves nothing behind.
+					tab leaves nothing behind.</span>
 				</p>
 				<p>
-					Signing in is optional. The same page offers an
-					<strong>add without signing in</strong> link, which hands you straight to
-					Discord's own server picker and tells this site nothing at all.
+					<span data-i18n="sol_pp.signing_in_is_optional_the">Signing in is optional. The same page offers an</span>
+					<strong data-i18n="sol_pp.add_without_signing_in">add without signing in</strong> <span data-i18n="sol_pp.link_which_hands_you_straight">link, which hands you straight to
+					Discord's own server picker and tells this site nothing at all.</span>
 				</p>
 
-				<h2>12. Changes</h2>
-				<p>
+				<h2 data-i18n="sol_pp.12_changes">12. Changes</h2>
+				<p data-i18n="sol_pp.this_policy_may_change_material">
 					This policy may change. Material changes will be reflected here with a
 					new "last updated" date.
 				</p>
 
-				<h2>13. Contact</h2>
-				<p>
+				<h2 data-i18n="sol_pp.13_contact">13. Contact</h2>
+				<p data-i18n="sol_pp.questions_about_this_policy_or">
 					Questions about this policy, or requests about your data, can be raised
 					with the Bot administrators through the official Discord server channels.
 				</p>
 
 				<div class="note">
 					<p style="margin: 0">
-						Sollarety is a separate Discord application from
-						<a href="../../">ccore</a>. They do not share storage, and ccore's
-						privacy policy does not describe this Bot.
+						<span data-i18n="sol_pp.sollarety_is_a_separate_discord">Sollarety is a separate Discord application from</span>
+						<a data-i18n="sol_pp.ccore" href="../../">ccore</a><span data-i18n="sol_pp.they_do_not_share_storage">. They do not share storage, and ccore's
+						privacy policy does not describe this Bot.</span>
 					</p>
+					<p class="i18n-authoritative" data-i18n="i18n.authoritative">This page is also available in Portuguese, as a courtesy translation. In case of any difference between the two, the English version is the one that applies.</p>
 				</div>
 			</article>
-			<footer>Sollarety · <a href="../">overview</a> · <a href="../termsofservice/">terms</a></footer>
+			<footer><span data-i18n="sol_pp.sollarety_2">Sollarety ·</span> <a data-i18n="sol_pp.overview" href="../">overview</a> · <a data-i18n="sol_pp.terms" href="../termsofservice/">terms</a></footer>
 		</main>
+			<!--
+		  Seletor de idioma. O ingles fica no proprio HTML e continua sendo a versao
+		  que vale; o portugues e cortesia, carregado do dicionario.
+		-->
+		<script type="module" src="../../../filearchive/i18n/i18n.js" data-dict="dict/sol_pp.js"></script>
 	</body>
 </html>

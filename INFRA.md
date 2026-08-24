@@ -55,6 +55,14 @@ Correção: Cloudflare → Rules → *Transform Rules* → *Modify Response Head
 `SAMEORIGIN` é seguro aqui: as páginas de política usam `<iframe>` apontando para o próprio
 domínio (`privacypolicy/index.html` → `./pp.html`).
 
+**Já resolvido para os hosts administrativos.** `spreadsheet.daeese.me` e
+`dashboard.daeese.me` não dependem mais desta Transform Rule: o `applyHostHeaders`
+do `daeese-site-router` devolve `Content-Security-Policy: frame-ancestors 'none'`
+e `X-Frame-Options: DENY` neles. Isso foi feito porque o dashboard guarda o Bearer
+token do painel em `sessionStorage` e o comentário da CSP dele afirmava que essa
+proteção já existia — enquanto o Worker não mandava nenhum dos dois cabeçalhos.
+A Transform Rule continua valendo para o resto do site.
+
 Uma `Content-Security-Policy` exige mais cuidado porque as páginas usam `<style>`/`<script>`
 inline. Um ponto de partida realista:
 

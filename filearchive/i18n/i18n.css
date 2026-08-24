@@ -1,0 +1,100 @@
+/*
+ * Seletor de idioma. Estilo proprio e neutro de proposito: ele aparece em
+ * paginas com paletas diferentes (ccore em azul, Sollarety em prata, as de
+ * politica em cinza), entao herda cor do texto em volta em vez de fixar a sua.
+ */
+.i18n-switcher {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  /* A borda em currentColor ficaria dura demais no tom cheio do texto. */
+  border-color: color-mix(in srgb, currentColor 35%, transparent);
+  background: color-mix(in srgb, currentColor 6%, transparent);
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+.i18n-switcher__btn {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 6px 12px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  opacity: 0.72;
+  transition: background-color 120ms ease, opacity 120ms ease;
+}
+
+.i18n-switcher__btn:hover {
+  opacity: 1;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+/* Foco visivel: os botoes sao alcancaveis por teclado e o outline padrao some
+   contra o fundo escuro da maioria destas paginas. */
+.i18n-switcher__btn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  opacity: 1;
+}
+
+.i18n-switcher__btn.is-active {
+  opacity: 1;
+  background: color-mix(in srgb, currentColor 18%, transparent);
+  font-weight: 600;
+}
+
+/* Sem JavaScript o seletor nao faz nada, entao nao deve ocupar espaco nem
+   sugerir que a pagina tem um controle que nao responde. O i18n.js remove esta
+   classe ao montar. */
+.i18n-switcher:empty {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .i18n-switcher__btn {
+    transition: none;
+  }
+}
+
+/*
+ * Posicao flutuante, usada nas paginas que nao tem uma barra de navegacao onde
+ * encaixar o seletor (Sollarety, status e as duas cascas de politica).
+ *
+ * position: fixed e nao absolute: as paginas de politica sao um iframe de altura
+ * cheia, e no absolute o seletor sairia da tela ao rolar.
+ */
+.i18n-floating {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 50;
+  /* O fundo destas paginas e escuro; sem um plano de fundo proprio o seletor
+     some sobre o conteudo que passa por baixo dele ao rolar. */
+  background: rgba(13, 17, 23, 0.82);
+  backdrop-filter: blur(6px);
+}
+
+@media (max-width: 640px) {
+  .i18n-floating {
+    top: 8px;
+    right: 8px;
+    font-size: 0.76rem;
+  }
+}
+
+/*
+ * Nota de "o ingles e a versao que vale", no rodape das quatro paginas
+ * juridicas. Discreta de proposito: e uma ressalva, nao conteudo.
+ */
+.i18n-authoritative {
+  margin-top: 10px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  opacity: 0.68;
+  max-width: 70ch;
+}

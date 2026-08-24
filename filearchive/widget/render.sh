@@ -25,6 +25,13 @@ TARGETS=(
 
 only="${1:-}"
 
+# Limpa o diretorio temporario ate quando o Firefox ou o Pillow abortam: com
+# set -euo pipefail, uma falha encerra o script antes do "rm -rf" da linha
+# final, e o mktemp -d ficava para tras em /tmp. $tmp e reatribuido a cada
+# iteracao, entao no EXIT aponta para o ultimo (o que falhou).
+tmp=""
+trap '[ -n "$tmp" ] && rm -rf "$tmp"' EXIT
+
 for target in "${TARGETS[@]}"; do
   IFS=: read -r name w h <<< "$target"
   [ -n "$only" ] && [ "$only" != "$name" ] && continue

@@ -127,12 +127,16 @@ export default {
 		const url = new URL(request.url);
 		const returnUrl = env.RETURN_URL || "https://ccore.daeese.me/fun/invite/";
 
-		if (!url.pathname.startsWith("/oauth/fun/callback")) {
+		// Igualdade exata, nao startsWith: um endpoint que troca segredo nao deve
+		// aceitar "/oauth/fun/callbackXYZ" nem "/oauth/fun/callback/..".
+		if (url.pathname !== "/oauth/fun/callback") {
 			return new Response("Not found", { status: 404 });
 		}
 
-		// So GET chega aqui de verdade: e um redirect do navegador.
-		if (request.method !== "GET" && request.method !== "HEAD") {
+		// So GET: e um redirect do navegador. HEAD tambem consumia o authorization
+		// code (de uso unico) e gastava uma chamada ao token endpoint do Discord
+		// sem produzir nada util.
+		if (request.method !== "GET") {
 			return new Response("Method not allowed", { status: 405 });
 		}
 

@@ -3,6 +3,10 @@
 .dev.vars
 wrangler.toml.bak
 
+# Cache do Python do stamp-assets.py
+__pycache__/
+*.pyc
+
 # Node
 node_modules/
 npm-debug.log*

@@ -15,8 +15,15 @@
     connect-src lista daeese.me (o proxy de /api/*) e 127.0.0.1:5056, que e o
     modo de desenvolvimento local, falando direto com o bot sem passar pelo
     Worker. img-src precisa do CDN do Discord por causa dos avatares.
-    frame-ancestors nao vale em meta tag; quem impede o enquadramento e o
-    X-Frame-Options que o daeese-site-router aplica no host.
+    frame-ancestors nao vale em meta tag - a diretiva so tem efeito como
+    cabecalho HTTP. Quem impede o enquadramento e o applyHostHeaders do
+    daeese-site-router, que devolve `Content-Security-Policy: frame-ancestors
+    'none'` mais `X-Frame-Options: DENY` nos hosts administrativos.
+
+    Isto ja foi mentira: o comentario afirmava a mesma coisa enquanto o Worker
+    punha apenas x-served-by e X-Robots-Tag, e o INFRA.md listava o
+    X-Frame-Options como Transform Rule sugerida e nunca criada. Se mexer no
+    applyHostHeaders, mexa aqui junto.
   -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
@@ -64,7 +71,13 @@
       <header class="topbar card">
         <div class="topbar-top">
           <div class="profile">
-            <img id="profileAvatar" alt="Avatar do usuário" />
+            <!--
+              src inicial de propósito: sem ele o navegador desenha o ícone de
+              imagem quebrada até o applyUser() rodar. É o mesmo fallback que o
+              app.js usa quando o usuário não tem avatar.
+            -->
+            <img id="profileAvatar" alt="Avatar do usuário"
+                 src="https://cdn.discordapp.com/embed/avatars/0.png" />
             <div>
               <h2 id="profileName"></h2>
               <p id="profilePermission"></p>
@@ -219,8 +232,10 @@
         <article class="card panel">
           <h3>DM em massa</h3>
           <p class="hint">Permissão 2+. Máximo 500 destinatários por envio.</p>
-          <label for="dmRoleId">ID do cargo <em>ou</em> do usuário</label>
+          <p class="hint">Informe o ID do cargo <em>ou</em> o do usuário.</p>
+          <label for="dmRoleId">ID do cargo</label>
           <input id="dmRoleId" placeholder="ID do cargo" />
+          <label for="dmUserId">ID do usuário</label>
           <input id="dmUserId" placeholder="ID do usuário (alternativa ao cargo)" />
           <label for="dmCode">Código (opcional)</label>
           <input id="dmCode" placeholder="Código do jogo" />
@@ -301,6 +316,6 @@
       </section>
     </section>
   </main>
-  <script src="app.js?v=4e8ef3ed"></script>
+  <script src="app.js?v=6daff27c"></script>
 </body>
 </html>

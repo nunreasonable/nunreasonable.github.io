@@ -5,6 +5,23 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>ccore — Status</title>
 		<link rel="canonical" href="https://ccore.daeese.me/status/" />
+		<!--
+		  Cartao de compartilhamento. Estas paginas sao justamente as registradas no
+		  Discord Developer Portal e as coladas em canal do Discord, onde o embed e a
+		  primeira coisa que aparece - e sem og: o link saia sem titulo nem imagem.
+		-->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="daeese.me" />
+		<meta property="og:title" content="ccore — Status" />
+		<meta property="og:description" content="Live status of the ccore Discord bot: uptime, latency, servers and members." />
+		<meta property="og:url" content="https://ccore.daeese.me/status/" />
+		<meta property="og:image" content="https://daeese.me/filearchive/cornwallCOREpfp.png" />
+		<meta property="og:image:alt" content="The cornwallCORE profile picture" />
+		<meta property="og:locale" content="en_US" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="ccore — Status" />
+		<meta name="twitter:description" content="Live status of the ccore Discord bot: uptime, latency, servers and members." />
+		<meta name="twitter:image" content="https://daeese.me/filearchive/cornwallCOREpfp.png" />
 		<meta
 			name="description"
 			content="Live status of ccore - 'chavinhoCORE', the bot of the 12° Regimento de Infantaria &quot;Chaves&quot;."
@@ -216,17 +233,19 @@
 				}
 			}
 		</style>
+			<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
 	</head>
 	<body>
+		<div data-i18n-switcher class="i18n-floating"></div>
 		<main class="shell">
 			<header class="topbar">
 				<div class="brand">
-					<h1 class="brand-title">ccore — Status</h1>
-					<p class="brand-meta">Status of the 12° Regimento de Infantaria "Chaves" bot.</p>
+					<h1 data-i18n="status.ccore_status" class="brand-title">ccore — Status</h1>
+					<p data-i18n="status.status_of_the_12_regimento" class="brand-meta">Status of the 12° Regimento de Infantaria "Chaves" bot.</p>
 				</div>
 				<div class="actions">
-					<a class="button" href="../">Back to ccore</a>
-					<a class="button" href="https://dashboard.daeese.me/">Dashboard</a>
+					<a data-i18n="status.back_to_ccore" class="button" href="../">Back to ccore</a>
+					<a data-i18n="status.dashboard" class="button" href="https://dashboard.daeese.me/">Dashboard</a>
 				</div>
 			</header>
 
@@ -238,18 +257,18 @@
 				<p class="headline-note" id="statusNote">Fetching the current status from the bot's API.</p>
 
 				<dl class="metrics" id="metrics">
-					<div class="metric"><dt>Uptime</dt><dd id="mUptime">—</dd></div>
-					<div class="metric"><dt>Latency</dt><dd id="mLatency">—</dd></div>
-					<div class="metric"><dt>Servers</dt><dd id="mGuilds">—</dd></div>
-					<div class="metric"><dt>Members</dt><dd id="mMembers">—</dd></div>
-					<div class="metric"><dt>Version</dt><dd id="mVersion">—</dd></div>
-					<div class="metric"><dt>Library</dt><dd id="mLibrary">—</dd></div>
+					<div class="metric"><dt data-i18n="status.uptime">Uptime</dt><dd id="mUptime">—</dd></div>
+					<div class="metric"><dt data-i18n="status.latency">Latency</dt><dd id="mLatency">—</dd></div>
+					<div class="metric"><dt data-i18n="status.servers">Servers</dt><dd id="mGuilds">—</dd></div>
+					<div class="metric"><dt data-i18n="status.members">Members</dt><dd id="mMembers">—</dd></div>
+					<div class="metric"><dt data-i18n="status.version">Version</dt><dd id="mVersion">—</dd></div>
+					<div class="metric"><dt data-i18n="status.library">Library</dt><dd id="mLibrary">—</dd></div>
 				</dl>
 
 				<p class="footnote">
-					Refreshes on its own every 15 seconds. Last measurement: <span id="mMeasured">—</span>.
-					Data about the machine hosting the bot is not shown here — it lives in the
-					<em>Logs</em> tab of the <a href="https://dashboard.daeese.me/">admin dashboard</a>, which requires a login.
+					<span data-i18n="status.refreshes_on_its_own_every">Refreshes on its own every 15 seconds. Last measurement:</span> <span id="mMeasured">—</span><span data-i18n="status.data_about_the_machine_hosting">.
+					Data about the machine hosting the bot is not shown here — it lives in the</span>
+					<em data-i18n="status.logs">Logs</em> <span data-i18n="status.tab_of_the">tab of the</span> <a data-i18n="status.admin_dashboard" href="https://dashboard.daeese.me/">admin dashboard</a><span data-i18n="status.which_requires_a_login">, which requires a login.</span>
 				</p>
 			</section>
 		</main>
@@ -288,6 +307,43 @@
 				measured: document.getElementById("mMeasured")
 			};
 
+			const LIVE_STRINGS = {
+				en: {
+					online: "The bot is online",
+					onlineNote: "Connected to the Discord gateway and responding to commands.",
+					offline: "The bot is offline",
+					offlineTimeout: "The API did not answer in time. The bot, or the tunnel that exposes it, may be down.",
+					offlineError: (msg) => `Could not reach the bot's API: ${msg}`
+				},
+				pt: {
+					online: "O bot está online",
+					onlineNote: "Conectado ao gateway do Discord e respondendo aos comandos.",
+					offline: "O bot está offline",
+					offlineTimeout: "A API não respondeu a tempo. O bot, ou o túnel que o expõe, pode estar fora do ar.",
+					offlineError: (msg) => `Não foi possível alcançar a API do bot: ${msg}`
+				}
+			};
+
+			function currentLang() {
+				return String(document.documentElement.lang || "en").toLowerCase().startsWith("pt") ? "pt" : "en";
+			}
+
+			// Texto AO VIVO por idioma: headline/note sao reescritos a cada refresh,
+			// entao NAO podem usar data-i18n (o applyTranslations sobrescreveria o
+			// valor vivo e o proximo tick o traria de volta em ingles). Guardamos o
+			// ultimo desfecho como funcoes do dicionario para reaplicar no novo idioma
+			// quando o visitante troca sem esperar um refresh.
+			let lastHeadline = (s) => s.online;
+			let lastNote = (s) => s.onlineNote;
+			let hasResult = false;
+
+			function applyLiveText() {
+				if (!hasResult) return;
+				const s = LIVE_STRINGS[currentLang()];
+				els.headline.textContent = lastHeadline(s);
+				els.note.textContent = lastNote(s);
+			}
+
 			function setState(state) {
 				els.card.classList.remove("state-online", "state-offline");
 				if (state) {
@@ -309,8 +365,16 @@
 					const controller = new AbortController();
 					const timeout = window.setTimeout(() => controller.abort(), 8000);
 
-					const res = await fetch(API_URL, { signal: controller.signal, cache: "no-store" });
-					window.clearTimeout(timeout);
+					let res;
+					try {
+						res = await fetch(API_URL, { signal: controller.signal, cache: "no-store" });
+					} finally {
+						// No finally: quando o fetch rejeita (rede fora, DNS), o
+						// clearTimeout que ficava so no caminho feliz nunca rodava e
+						// o timer seguia vivo para chamar abort() num controller que
+						// ja tinha se resolvido.
+						window.clearTimeout(timeout);
+					}
 
 					if (!res.ok) {
 						throw new Error(`The API responded ${res.status}.`);
@@ -323,8 +387,10 @@
 					}
 
 					setState("state-online");
-					els.headline.textContent = "The bot is online";
-					els.note.textContent = "Connected to the Discord gateway and responding to commands.";
+					lastHeadline = (s) => s.online;
+					lastNote = (s) => s.onlineNote;
+					hasResult = true;
+					applyLiveText();
 
 					els.uptime.textContent = bot.uptime ?? "—";
 					els.latency.textContent = `${bot.latencyMs} ms`;
@@ -338,19 +404,32 @@
 					// dar. Mostrar isso explicitamente vale mais do que uma tela
 					// em branco ou metricas velhas fingindo estar frescas.
 					setState("state-offline");
-					els.headline.textContent = "The bot is offline";
-					els.note.textContent =
-						err.name === "AbortError"
-							? "The API did not answer in time. The bot, or the tunnel that exposes it, may be down."
-							: `Could not reach the bot's API: ${err.message}`;
+					const wasTimeout = err.name === "AbortError";
+					const detail = err.message;
+					lastHeadline = (s) => s.offline;
+					lastNote = wasTimeout
+						? (s) => s.offlineTimeout
+						: (s) => s.offlineError(detail);
+					hasResult = true;
+					applyLiveText();
 
 					clearMetrics();
 					els.measured.textContent = new Date().toLocaleString("en-US");
 				}
 			}
 
+			// Reaplica o texto vivo quando o visitante troca de idioma, sem
+			// esperar o proximo refresh.
+			document.addEventListener("i18n:change", applyLiveText);
+
 			refresh();
 			window.setInterval(refresh, REFRESH_MS);
 		</script>
+			<!--
+		  Seletor de idioma. O ingles fica no proprio HTML; o modulo carrega so o
+		  dicionario de portugues, entao a pagina continua completa e indexavel
+		  sem JavaScript.
+		-->
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/status.js"></script>
 	</body>
 </html>

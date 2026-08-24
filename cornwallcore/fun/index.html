@@ -5,6 +5,23 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Sollarety</title>
 		<link rel="canonical" href="https://ccore.daeese.me/fun/" />
+		<!--
+		  Cartao de compartilhamento. Estas paginas sao justamente as registradas no
+		  Discord Developer Portal e as coladas em canal do Discord, onde o embed e a
+		  primeira coisa que aparece - e sem og: o link saia sem titulo nem imagem.
+		-->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="daeese.me" />
+		<meta property="og:title" content="Sollarety" />
+		<meta property="og:description" content="A moderation and fun Discord bot for community servers. It never reads your messages." />
+		<meta property="og:url" content="https://ccore.daeese.me/fun/" />
+		<meta property="og:image" content="https://daeese.me/filearchive/sollarety-og.png" />
+		<meta property="og:image:alt" content="The Sollarety emblem: a silver sun ringed by orbits" />
+		<meta property="og:locale" content="en_US" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="Sollarety" />
+		<meta name="twitter:description" content="A moderation and fun Discord bot for community servers. It never reads your messages." />
+		<meta name="twitter:image" content="https://daeese.me/filearchive/sollarety-og.png" />
 		<meta
 			name="description"
 			content="Sollarety - a moderation and fun Discord bot. Commands, terms and privacy policy."
@@ -230,8 +247,10 @@
 				* { transition-duration: 0.001ms !important; }
 			}
 		</style>
+			<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
 	</head>
 	<body>
+		<div data-i18n-switcher class="i18n-floating"></div>
 		<main class="shell">
 			<header class="hero">
 			<svg class="emblem" viewBox="0 0 400 400" role="img" aria-label="Sollarety emblem">
@@ -284,73 +303,79 @@
 
 				<circle cx="200" cy="200" r="8" fill="#ffffff" />
 			</svg>
-				<h1 class="wordmark">SOLLARETY</h1>
+				<h1 data-i18n="sollarety.sollarety" class="wordmark">SOLLARETY</h1>
 			</header>
 
 			<article class="card">
-				<p class="eyebrow">Discord bot</p>
+				<p data-i18n="sollarety.discord_bot" class="eyebrow">Discord bot</p>
 				<p>
-					A moderation and fun bot for community servers. It runs on the same
-					infrastructure as <a href="../">ccore</a>, but the two are separate
-					applications and share no data.
+					<span data-i18n="sollarety.a_moderation_and_fun_bot">A moderation and fun bot for community servers. It runs on the same
+					infrastructure as</span> <a data-i18n="sollarety.ccore" href="../">ccore</a><span data-i18n="sollarety.but_the_two_are_separate">, but the two are separate
+					applications and share no data.</span>
 				</p>
 
-				<p><a class="cta" href="./invite/">Add to Discord</a></p>
+				<p><a data-i18n="sollarety.add_to_discord" class="cta" href="./invite/">Add to Discord</a></p>
 
-				<h2>Moderation</h2>
+				<h2 data-i18n="sollarety.moderation">Moderation</h2>
 				<p>
 					<strong>/ban</strong>, <strong>/kick</strong>, <strong>/timeout</strong>,
 					<strong>/untimeout</strong>, <strong>/purge</strong>,
-					<strong>/slowmode</strong>, <strong>/lock</strong> and
+					<strong>/slowmode</strong>, <strong>/lock</strong> <span data-i18n="sollarety.and">and</span>
 					<strong>/unlock</strong>.
 				</p>
-				<p>
+				<p data-i18n="sollarety.who_may_run_each_one">
 					Who may run each one is decided by your server's own Discord
 					permissions — there is no role to configure. A moderator cannot act on
 					the server owner, on themselves, or on anyone whose highest role sits
 					at or above their own.
 				</p>
 
-				<h2>Warnings</h2>
+				<h2 data-i18n="sollarety.warnings">Warnings</h2>
 				<p>
-					<strong>/warn</strong>, <strong>/warnings</strong> and
-					<strong>/delwarn</strong> keep a written record, so a punishment is not
-					an isolated event with no history behind it.
+					<strong>/warn</strong>, <strong>/warnings</strong> <span data-i18n="sollarety.and">and</span>
+					<strong>/delwarn</strong> <span data-i18n="sollarety.keep_a_written_record_so">keep a written record, so a punishment is not
+					an isolated event with no history behind it.</span>
 				</p>
 
-				<h2>Fun</h2>
+				<h2 data-i18n="sollarety.fun">Fun</h2>
 				<p>
 					<strong>/8ball</strong>, <strong>/roll</strong>,
 					<strong>/coinflip</strong>, <strong>/choose</strong>,
-					<strong>/avatar</strong> and <strong>/say</strong>. All rate limited per
-					user.
+					<strong>/avatar</strong> <span data-i18n="sollarety.and">and</span> <strong>/say</strong><span data-i18n="sollarety.all_rate_limited_per_user">. All rate limited per
+					user.</span>
 				</p>
 
-				<h2>Utility</h2>
+				<h2 data-i18n="sollarety.utility">Utility</h2>
 				<p>
 					<strong>/ping</strong>, <strong>/userinfo</strong>,
 					<strong>/serverinfo</strong>, <strong>/poll</strong>,
-					<strong>/help</strong> and <strong>/logs</strong>.
+					<strong>/help</strong> <span data-i18n="sollarety.and">and</span> <strong>/logs</strong>.
 				</p>
 
 				<div class="note">
 					<p style="margin: 0">
-						<strong>The bot never reads your messages.</strong> It does not
+						<strong data-i18n="sollarety.the_bot_never_reads_your">The bot never reads your messages.</strong> <span data-i18n="sollarety.it_does_not_request_discord">It does not
 						request Discord's Message Content intent, so message text is not
-						received, read or stored. See the
-						<a href="./privacypolicy/">Privacy Policy</a> for the full picture.
+						received, read or stored. See the</span>
+						<a data-i18n="sollarety.privacy_policy" href="./privacypolicy/">Privacy Policy</a> <span data-i18n="sollarety.for_the_full_picture">for the full picture.</span>
 					</p>
 				</div>
 
-				<h2>Links</h2>
+				<h2 data-i18n="sollarety.links">Links</h2>
 				<div class="nav" style="margin-top: 10px">
-					<a href="./invite/">Add to a server</a>
-					<a href="./termsofservice/">Terms of Service</a>
-					<a href="./privacypolicy/">Privacy Policy</a>
-					<a href="../">Back to ccore</a>
+					<a data-i18n="sollarety.add_to_a_server" href="./invite/">Add to a server</a>
+					<a data-i18n="sollarety.terms_of_service" href="./termsofservice/">Terms of Service</a>
+					<a data-i18n="sollarety.privacy_policy" href="./privacypolicy/">Privacy Policy</a>
+					<a data-i18n="sollarety.back_to_ccore" href="../">Back to ccore</a>
 				</div>
 			</article>
-			<footer>Sollarety · C# · hosted alongside ccore at daeese.me</footer>
+			<footer data-i18n="sollarety.sollarety_c_hosted_alongside_ccore">Sollarety · C# · hosted alongside ccore at daeese.me</footer>
 		</main>
+			<!--
+		  Seletor de idioma. O ingles fica no proprio HTML; o modulo carrega so o
+		  dicionario de portugues, entao a pagina continua completa e indexavel
+		  sem JavaScript.
+		-->
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/sollarety.js"></script>
 	</body>
 </html>

@@ -745,7 +745,10 @@
 			}
 
 			function showAlert(code) {
-				el("alert-text").textContent = ERRORS[code] || ERRORS.oauth;
+				// Object.hasOwn e nao ERRORS[code]: o code vem do fragmento da URL,
+				// e "#e=constructor"/"#e=__proto__" alcancavam propriedades herdadas
+				// (renderizando "function Object()..." na tela). So chaves proprias.
+				el("alert-text").textContent = Object.hasOwn(ERRORS, code) ? ERRORS[code] : ERRORS.oauth;
 				el("alert").classList.remove("hidden");
 			}
 

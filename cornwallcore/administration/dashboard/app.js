@@ -43,11 +43,21 @@ function normalizeApiBase(value) {
     if (parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:") {
       return parsedUrl.pathname.startsWith("/api") ? `${parsedUrl.origin}/api` : parsedUrl.origin;
     }
+    // Esquema resolvido mas NAO http(s) (ex.: "javascript:foo"): nao e uma base
+    // valida. Cai no default em vez de devolver o lixo cru - fetch() rejeitaria
+    // de qualquer forma, mas a funcao promete uma base normalizada.
+    return getDefaultApiBase();
   } catch {
   }
 
   if (input.startsWith("/api")) {
     return "/api";
+  }
+
+  // So caminhos relativos chegam aqui (o new URL acima resolveu qualquer coisa
+  // com esquema). Um valor que nao comeca com "/" nao e um caminho de API valido.
+  if (!input.startsWith("/")) {
+    return getDefaultApiBase();
   }
 
   return input.replace(/\/$/, "");
@@ -71,7 +81,14 @@ function shouldForceProxyBase(value) {
 }
 
 const storedApiBase = localStorage.getItem("dashboardApiBase") || "";
-const initialApiBase = shouldForceProxyBase(storedApiBase) ? getDefaultApiBase() : (storedApiBase || getDefaultApiBase());
+// Normalizar ANTES de validar. shouldForceProxyBase so reprova o que casa
+// /^https?:\/\//, entao um valor guardado como "//evil.com" (sem esquema)
+// passava cru pela checagem e, so entao, normalizeApiBase o resolvia contra a
+// origem da pagina virando "https://evil.com" - e o token Bearer ia para o host
+// do atacante. Validar o valor JA normalizado (a mesma ordem do submitLogin)
+// fecha isso. So a CSP connect-src segurava esse caso antes.
+const normalizedStored = normalizeApiBase(storedApiBase);
+const initialApiBase = shouldForceProxyBase(normalizedStored) ? getDefaultApiBase() : normalizedStored;
 
 const state = {
   apiBase: normalizeApiBase(initialApiBase),
@@ -488,12 +505,21 @@ async function ensureTabLoaded(name) {
 
   try {
     await loader();
+    return true;
   } catch (err) {
     loadedTabs.delete(name);
     const target = TAB_ERROR_TARGETS[name]?.();
     if (target) {
       setMessage(target, err.message, true);
     }
+    // Devolve false em vez de propagar: a troca de aba chama isto e nao tem o
+    // que fazer com uma excecao - a mensagem de erro ja foi escrita acima.
+    //
+    // Quem CHAMA de proposito (o botao de atualizar) precisa saber que falhou,
+    // porque antes essa informacao se perdia: o botao seguia direto para o
+    // setMessage de sucesso e pintava "Efetivo atualizado." por cima do erro
+    // que esta funcao acabara de escrever no MESMO elemento.
+    return false;
   }
 }
 
@@ -752,10 +778,12 @@ els.refreshAuditBtn.addEventListener("click", async () => {
   try {
     // Pedido explicito: recarrega esteja a aba de Logs a vista ou nao.
     loadedTabs.delete("logs");
-    await ensureTabLoaded("logs");
-    setMessage(els.loginMessage, "");
-  } catch (err) {
-    setMessage(els.loginMessage, err.message, true);
+    // els.logMsg, e nao els.loginMessage: o #loginMessage vive dentro do
+    // #loginView, que esta .hidden sempre que o painel esta a vista - qualquer
+    // erro deste botao era escrito num elemento invisivel.
+    if (await ensureTabLoaded("logs")) {
+      setMessage(els.logMsg, "Audit log atualizado.", "success");
+    }
   } finally {
     els.refreshAuditBtn.disabled = false;
   }
@@ -967,10 +995,11 @@ els.rosterRefreshBtn.addEventListener("click", async () => {
   els.rosterRefreshBtn.disabled = true;
   try {
     loadedTabs.delete("auditoria");
-    await ensureTabLoaded("auditoria");
-    setMessage(els.rosterMsg, "Efetivo atualizado.", "success");
-  } catch (err) {
-    setMessage(els.rosterMsg, err.message, true);
+    // So anuncia sucesso quando houve sucesso. O ensureTabLoaded ja escreveu o
+    // erro em els.rosterMsg quando falhou.
+    if (await ensureTabLoaded("auditoria")) {
+      setMessage(els.rosterMsg, "Efetivo atualizado.", "success");
+    }
   } finally {
     els.rosterRefreshBtn.disabled = false;
   }
@@ -1069,11 +1098,11 @@ async function runPush(dryRun) {
       result.nothingToDo
         ? "Nada a publicar: o GitHub já está igual ao arquivo local."
         : (dryRun ? "Prévia — nada foi gravado nem enviado." : "Publicado no GitHub."),
-      `Lotes pendentes: ${result.pendingBatches}`,
-      `Lotes consolidados: ${result.batchesApplied}`,
-      `Jogadores atualizados: ${result.playersUpdated}`,
-      `Batalhas somadas: ${result.battlesAdded}`,
-      `Total no efetivo: ${result.totalEntries}`
+      `Lotes pendentes: ${result.pendingBatches ?? 0}`,
+      `Lotes consolidados: ${result.batchesApplied ?? 0}`,
+      `Jogadores atualizados: ${result.playersUpdated ?? 0}`,
+      `Batalhas somadas: ${result.battlesAdded ?? 0}`,
+      `Total no efetivo: ${result.totalEntries ?? 0}`
     ];
 
     if (Array.isArray(result.newPlayers) && result.newPlayers.length > 0) {
@@ -1133,13 +1162,23 @@ let dmPollTimer = null;
 function renderDmJob(job) {
   els.dmProgressWrap.classList.remove("hidden");
 
-  const done = (job.sent || 0) + (job.failed || 0);
-  const percent = job.total > 0 ? Math.round((done / job.total) * 100) : 0;
+  const sent = job.sent ?? 0;
+  const failed = job.failed ?? 0;
+  const total = job.total ?? 0;
+  const targetName = job.targetName ?? "—";
+  const done = sent + failed;
+  const percent = total > 0 ? Math.round((done / total) * 100) : 0;
   els.dmProgressBar.style.width = `${percent}%`;
 
-  const stateLabel = { enviando: "Enviando", concluido: "Concluído", falhou: "Falhou" }[job.state] || job.state;
+  const stateLabel = {
+    enviando: "Enviando",
+    concluido: "Concluído",
+    falhou: "Falhou",
+    abortado: "Abortado",
+    cancelado: "Cancelado"
+  }[job.state] || job.state;
   els.dmProgressText.textContent =
-    `${stateLabel} — ${job.sent} enviada(s), ${job.failed} falha(s) de ${job.total} para ${job.targetName}.`;
+    `${stateLabel} — ${sent} enviada(s), ${failed} falha(s) de ${total} para ${targetName}.`;
 
   if (job.state !== "enviando") {
     stopDmPolling();
@@ -1287,7 +1326,7 @@ async function loadPromotions() {
     els.promotionsBody.appendChild(tr);
   }
 
-  setMessage(els.promotionsMsg, `${data.promotable} elegível(is) de ${data.total} jogador(es).`, "success");
+  setMessage(els.promotionsMsg, `${data.promotable ?? 0} elegível(is) de ${data.total ?? 0} jogador(es).`, "success");
 }
 
 els.promotionsRefreshBtn.addEventListener("click", async () => {
@@ -1316,7 +1355,14 @@ function stopLogAutoRefresh() {
 function startLogAutoRefresh() {
   stopLogAutoRefresh();
   logAutoTimer = window.setInterval(() => {
-    loadLogs().catch(() => stopLogAutoRefresh());
+    loadLogs().catch((err) => {
+      // Nao morrer em silencio: antes o timer parava mas o checkbox seguia
+      // marcado e o operador achava que acompanhava os logs ao vivo. Desmarca e
+      // avisa, como o startDmPolling ja faz.
+      stopLogAutoRefresh();
+      els.logAuto.checked = false;
+      setMessage(els.logMsg, `Atualização automática interrompida: ${err.message}`, true);
+    });
   }, 10000);
 }
 

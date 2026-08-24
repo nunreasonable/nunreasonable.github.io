@@ -5,6 +5,23 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Sollarety Terms of Service</title>
 		<link rel="canonical" href="https://ccore.daeese.me/fun/termsofservice/" />
+		<!--
+		  Cartao de compartilhamento. Estas paginas sao justamente as registradas no
+		  Discord Developer Portal e as coladas em canal do Discord, onde o embed e a
+		  primeira coisa que aparece - e sem og: o link saia sem titulo nem imagem.
+		-->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="daeese.me" />
+		<meta property="og:title" content="Sollarety Terms of Service" />
+		<meta property="og:description" content="The terms that govern the use of the Sollarety Discord application." />
+		<meta property="og:url" content="https://ccore.daeese.me/fun/termsofservice/" />
+		<meta property="og:image" content="https://daeese.me/filearchive/sollarety-og.png" />
+		<meta property="og:image:alt" content="The Sollarety emblem: a silver sun ringed by orbits" />
+		<meta property="og:locale" content="en_US" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="Sollarety Terms of Service" />
+		<meta name="twitter:description" content="The terms that govern the use of the Sollarety Discord application." />
+		<meta name="twitter:image" content="https://daeese.me/filearchive/sollarety-og.png" />
 		<meta name="description" content="Terms of Service for the Sollarety Discord application." />
 		<link rel="icon" type="image/png" href="../../../filearchive/sollarety.png" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -171,117 +188,125 @@
 				* { transition-duration: 0.001ms !important; }
 			}
 		</style>
+			<link rel="stylesheet" href="../../../filearchive/i18n/i18n.css" />
 	</head>
 	<body>
+		<div data-i18n-switcher class="i18n-floating"></div>
 		<main class="shell">
 			<div class="nav">
-				<a href="../">Sollarety</a>
-				<a href="../privacypolicy/">Privacy Policy</a>
+				<a data-i18n="sol_tos.sollarety" href="../">Sollarety</a>
+				<a data-i18n="sol_tos.privacy_policy" href="../privacypolicy/">Privacy Policy</a>
 			</div>
 
 			<article class="card">
-				<p class="eyebrow">Sollarety</p>
-				<h1>Terms of Service</h1>
-				<span class="pill">Last updated: August 20, 2026</span>
+				<p data-i18n="sol_tos.sollarety" class="eyebrow">Sollarety</p>
+				<h1 data-i18n="sol_tos.terms_of_service">Terms of Service</h1>
+				<span data-i18n="sol_tos.last_updated_august_20_2026" class="pill">Last updated: August 20, 2026</span>
 
-				<h2>1. Agreement</h2>
-				<p>
+				<h2 data-i18n="sol_tos.1_agreement">1. Agreement</h2>
+				<p data-i18n="sol_tos.by_adding_sollarety_the_bot">
 					By adding Sollarety (the "Bot") to a Discord server, or by using any
 					of its commands, you agree to these Terms. If you do not agree, remove
 					the Bot from your server and stop using its commands.
 				</p>
 
-				<h2>2. What the Bot does</h2>
-				<p>
+				<h2 data-i18n="sol_tos.2_what_the_bot_does">2. What the Bot does</h2>
+				<p data-i18n="sol_tos.the_bot_provides_moderation_commands">
 					The Bot provides moderation commands (ban, kick, timeout, message
 					purge, channel slowmode and lock), a warning record, and a set of
 					entertainment and utility commands. All of them are Discord slash
 					commands.
 				</p>
 
-				<h2>3. Who may use the moderation commands</h2>
-				<p>
+				<h2 data-i18n="sol_tos.3_who_may_use_the">3. Who may use the moderation commands</h2>
+				<p data-i18n="sol_tos.access_is_governed_entirely_by">
 					Access is governed entirely by your server's own Discord permissions.
 					The Bot does not maintain its own list of staff: if Discord says you may
 					ban members, the ban command is available to you, and if it does not,
 					the command is not even shown.
 				</p>
-				<p>
+				<p data-i18n="sol_tos.the_bot_additionally_refuses_to">
 					The Bot additionally refuses to act on the server owner, on the person
 					issuing the command, or on any member whose highest role is at or above
 					the issuer's own. This is a safeguard, not a substitute for configuring
 					your roles correctly.
 				</p>
 
-				<h2>4. Acceptable use</h2>
-				<p>You agree not to use the Bot to:</p>
+				<h2 data-i18n="sol_tos.4_acceptable_use">4. Acceptable use</h2>
+				<p data-i18n="sol_tos.you_agree_not_to_use">You agree not to use the Bot to:</p>
 				<ul>
-					<li>harass, threaten or target any person or group;</li>
-					<li>evade Discord's rate limits, or automate abuse of the Discord API;</li>
-					<li>impersonate the server staff through the say command;</li>
-					<li>break the <a href="https://discord.com/terms" target="_blank" rel="noreferrer noopener">Discord Terms of Service</a> or Community Guidelines.</li>
+					<li data-i18n="sol_tos.harass_threaten_or_target_any">harass, threaten or target any person or group;</li>
+					<li data-i18n="sol_tos.evade_discord_s_rate_limits">evade Discord's rate limits, or automate abuse of the Discord API;</li>
+					<li data-i18n="sol_tos.impersonate_the_server_staff_through">impersonate the server staff through the say command;</li>
+					<li><span data-i18n="sol_tos.break_the">break the</span> <a data-i18n="sol_tos.discord_terms_of_service" href="https://discord.com/terms" target="_blank" rel="noreferrer noopener">Discord Terms of Service</a> <span data-i18n="sol_tos.or_community_guidelines">or Community Guidelines.</span></li>
 				</ul>
 
-				<h2>5. Your responsibility as a server administrator</h2>
-				<p>
+				<h2 data-i18n="sol_tos.5_your_responsibility_as_a">5. Your responsibility as a server administrator</h2>
+				<p data-i18n="sol_tos.you_decide_which_roles_hold">
 					You decide which roles hold moderation permissions, and therefore who
 					can act through the Bot. You are responsible for that configuration and
 					for the moderation decisions made on your server. The Bot carries out
 					instructions; it does not review them.
 				</p>
 
-				<h2>6. Data</h2>
+				<h2 data-i18n="sol_tos.6_data">6. Data</h2>
 				<p>
-					The Bot stores warnings you create and writes moderation actions to a
-					log channel you configure. It does not read message content. The
-					<a href="../privacypolicy/">Privacy Policy</a> describes exactly what is
-					kept and for how long, and forms part of these Terms.
+					<span data-i18n="sol_tos.the_bot_stores_warnings_you">The Bot stores warnings you create and writes moderation actions to a
+					log channel you configure. It does not read message content. The</span>
+					<a data-i18n="sol_tos.privacy_policy" href="../privacypolicy/">Privacy Policy</a> <span data-i18n="sol_tos.describes_exactly_what_is_kept">describes exactly what is
+					kept and for how long, and forms part of these Terms.</span>
 				</p>
 
-				<h2>7. Availability</h2>
-				<p>
+				<h2 data-i18n="sol_tos.7_availability">7. Availability</h2>
+				<p data-i18n="sol_tos.the_bot_is_provided_as">
 					The Bot is provided as is, without any guarantee of uptime. It is run on
 					a single self-hosted machine and may be offline for maintenance, restarts,
 					network issues or Discord outages, without notice.
 				</p>
 
-				<h2>8. Limitation of liability</h2>
-				<p>
+				<h2 data-i18n="sol_tos.8_limitation_of_liability">8. Limitation of liability</h2>
+				<p data-i18n="sol_tos.to_the_extent_permitted_by">
 					To the extent permitted by law, the Bot's operators are not liable for
 					any loss arising from its use, including moderation actions taken through
 					it, messages deleted by the purge command, or data lost during an outage.
 					Moderation actions are performed by your staff, not by the operators.
 				</p>
 
-				<h2>9. Termination</h2>
-				<p>
+				<h2 data-i18n="sol_tos.9_termination">9. Termination</h2>
+				<p data-i18n="sol_tos.you_may_stop_using_the">
 					You may stop using the Bot at any time by removing it from your server.
 					The operators may withdraw the Bot from any server at any time,
 					particularly where these Terms are being broken.
 				</p>
 
-				<h2>10. Changes</h2>
-				<p>
+				<h2 data-i18n="sol_tos.10_changes">10. Changes</h2>
+				<p data-i18n="sol_tos.these_terms_may_change_material">
 					These Terms may change. Material changes will be reflected on this page
 					with a new "last updated" date. Continuing to use the Bot after a change
 					means accepting the revised Terms.
 				</p>
 
-				<h2>11. Contact</h2>
-				<p>
+				<h2 data-i18n="sol_tos.11_contact">11. Contact</h2>
+				<p data-i18n="sol_tos.questions_about_these_terms_can">
 					Questions about these Terms can be raised with the Bot administrators
 					through the official Discord server channels.
 				</p>
 
 				<div class="note">
 					<p style="margin: 0">
-						Sollarety is a separate Discord application from
-						<a href="../../">ccore</a>. The two do not share data, and ccore's
-						terms do not apply here.
+						<span data-i18n="sol_tos.sollarety_is_a_separate_discord">Sollarety is a separate Discord application from</span>
+						<a data-i18n="sol_tos.ccore" href="../../">ccore</a><span data-i18n="sol_tos.the_two_do_not_share">. The two do not share data, and ccore's
+						terms do not apply here.</span>
 					</p>
+					<p class="i18n-authoritative" data-i18n="i18n.authoritative">This page is also available in Portuguese, as a courtesy translation. In case of any difference between the two, the English version is the one that applies.</p>
 				</div>
 			</article>
-			<footer>Sollarety · <a href="../">overview</a> · <a href="../privacypolicy/">privacy</a></footer>
+			<footer><span data-i18n="sol_tos.sollarety_2">Sollarety ·</span> <a data-i18n="sol_tos.overview" href="../">overview</a> · <a data-i18n="sol_tos.privacy" href="../privacypolicy/">privacy</a></footer>
 		</main>
+			<!--
+		  Seletor de idioma. O ingles fica no proprio HTML e continua sendo a versao
+		  que vale; o portugues e cortesia, carregado do dicionario.
+		-->
+		<script type="module" src="../../../filearchive/i18n/i18n.js" data-dict="dict/sol_tos.js"></script>
 	</body>
 </html>

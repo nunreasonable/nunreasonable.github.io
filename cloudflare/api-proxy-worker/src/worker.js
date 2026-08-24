@@ -3,6 +3,9 @@
 // que ainda serve os caminhos antigos ate os 301 propagarem. Em
 // desenvolvimento local o dashboard fala direto com http://127.0.0.1:5056 e nao
 // passa por este Worker, entao nao ha origem de dev para liberar aqui.
+// Mesmo teto do MaxRequestBodyBytes do bot (64 KB).
+const MAX_BODY_BYTES = 64 * 1024;
+
 const ALLOWED_ORIGINS = new Set([
   "https://dashboard.daeese.me",
   "https://ccore.daeese.me",
@@ -20,6 +23,28 @@ function buildCorsHeaders(origin) {
     "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
     "Access-Control-Allow-Headers": "Authorization, Content-Type"
   };
+}
+
+// Recusa sequencias de travessia no caminho antes de repassar ao bot. new URL()
+// colapsa ".." literais, mas NAO decodifica "%2e%2e" nem "..%2f", entao
+// "/api/..%2f..%2finterno" chegava ao bot com a sequencia intacta - e se o bot
+// decodificar antes de rotear, e travessia. Mesma defesa do escapesPrefix do
+// site-router; barata e ausente so aqui.
+function escapesPath(pathname) {
+  let decoded = pathname;
+  // Duas passadas: %252e -> %2e -> "."
+  for (let i = 0; i < 2; i++) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch {
+      // Percent-encoding malformado nao tem por que existir num caminho de API.
+      return true;
+    }
+  }
+
+  return decoded.includes("..") || decoded.includes("\\");
 }
 
 function toUpstreamUrl(requestUrl, upstreamBase) {
@@ -52,6 +77,34 @@ export default {
       return new Response(null, {
         status: 204,
         headers: buildCorsHeaders(origin)
+      });
+    }
+
+    // Teto de corpo na borda.
+    //
+    // O bot ja recusa acima de 64 KB, mas so DEPOIS de o corpo atravessar o
+    // tunel. Barrar aqui evita gastar o tunel com algo que sera recusado do
+    // outro lado. Content-Length ausente (chunked) segue adiante: quem decide
+    // nesse caso e a leitura em streaming do bot, que tambem tem o teto.
+    const declaredLength = Number(request.headers.get("Content-Length") ?? "0");
+    if (Number.isFinite(declaredLength) && declaredLength > MAX_BODY_BYTES) {
+      return new Response(JSON.stringify({ error: "Request body too large." }), {
+        status: 413,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          ...buildCorsHeaders(origin)
+        }
+      });
+    }
+
+    // Recusa travessia antes de montar a URL upstream.
+    if (escapesPath(new URL(request.url).pathname)) {
+      return new Response(JSON.stringify({ error: "Bad request." }), {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          ...buildCorsHeaders(origin)
+        }
       });
     }
 
@@ -107,8 +160,10 @@ export default {
       // /api/* nao esta autenticado, e String(error) carrega hostname interno
       // e motivo da falha de graca para quem estiver sondando.
       console.error("falha no proxy:", error);
+      // Em ingles: quem consome /api/* inclui ccore.daeese.me/status/, que e
+      // uma pagina em ingles. O detalhe do erro fica no log do Worker.
       return new Response(JSON.stringify({
-        error: "Falha no proxy Cloudflare."
+        error: "Cloudflare proxy failure."
       }), {
         status: 502,
         headers: {

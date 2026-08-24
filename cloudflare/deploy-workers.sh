@@ -19,6 +19,18 @@
 #   ./deploy-workers.sh           # publica so o que mudou
 #   ./deploy-workers.sh --force   # publica tudo, ignorando o carimbo
 #
+# Segredos NAO sao publicados por aqui - eles vivem na Cloudflare, nao no
+# repositorio. Cada um so precisa ser posto uma vez, e vale conferir depois de
+# recriar um Worker:
+#
+#   npx wrangler secret put DISCORD_CLIENT_SECRET   # daeese-fun-oauth
+#   npx wrangler secret put TUNNEL_SECRET           # daese-api-proxy
+#   npx wrangler secret put LOOP_GUARD_TOKEN        # daeese-site-router
+#
+# O LOOP_GUARD_TOKEN e obrigatorio: sem ele o site-router recusa o atalho de
+# subrequisicao por completo (falha fechada). O valor e livre - qualquer string
+# aleatoria longa serve; ele so precisa ser dificil de adivinhar de fora.
+#
 # Roda no boot pelo servico de usuario ccore-workers-deploy.service.
 
 set -euo pipefail

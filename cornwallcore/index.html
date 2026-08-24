@@ -5,6 +5,23 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>ccore - 'chavinhoCORE' Bot</title>
 		<link rel="canonical" href="https://ccore.daeese.me/" />
+		<!--
+		  Cartao de compartilhamento. Estas paginas sao justamente as registradas no
+		  Discord Developer Portal e as coladas em canal do Discord, onde o embed e a
+		  primeira coisa que aparece - e sem og: o link saia sem titulo nem imagem.
+		-->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="daeese.me" />
+		<meta property="og:title" content="ccore — 'chavinhoCORE'" />
+		<meta property="og:description" content="The Discord bot of the 12° Regimento de Infantaria “Chaves”: enlistment, deployments and regimental administration." />
+		<meta property="og:url" content="https://ccore.daeese.me/" />
+		<meta property="og:image" content="https://daeese.me/filearchive/cornwallCOREpfp.png" />
+		<meta property="og:image:alt" content="The cornwallCORE profile picture" />
+		<meta property="og:locale" content="en_US" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="ccore — 'chavinhoCORE'" />
+		<meta name="twitter:description" content="The Discord bot of the 12° Regimento de Infantaria “Chaves”: enlistment, deployments and regimental administration." />
+		<meta name="twitter:image" content="https://daeese.me/filearchive/cornwallCOREpfp.png" />
 		<meta
 			name="description"
 			content="ccore is a Discord bot for the 12° Regt. de Infantaria community."
@@ -383,17 +400,18 @@
 				}
 			}
 		</style>
+			<link rel="stylesheet" href="../filearchive/i18n/i18n.css" />
 	</head>
 	<body>
 		<main class="shell">
 			<header class="topbar">
 				<div class="brand">
-					<h1 class="brand-title">ccore - 'chavinhoCORE'</h1>
-					<p class="brand-meta">The lovely CLANKER of 12° Regimento de Infantaria "Chaves" in NW Rulecy's British Army!
+					<h1 data-i18n="ccore.ccore_chavinhocore" class="brand-title">ccore - 'chavinhoCORE'</h1>
+					<p data-i18n="ccore.the_lovely_clanker_of_12" class="brand-meta">The lovely CLANKER of 12° Regimento de Infantaria "Chaves" in NW Rulecy's British Army!
 					</p>
 				</div>
 				<div class="actions">
-					<a class="button" href="./status/">Status</a>
+					<a data-i18n="ccore.status" class="button" href="./status/">Status</a>
 					<!--
 						O Spreadsheet Viewer saiu daqui de proposito. Ele nao tem
 						autenticacao nenhuma e mostra o efetivo do regimento; com o
@@ -404,33 +422,34 @@
 						de vez depende do item 6 do INFRA.md (restringir o
 						compartilhamento no Drive e servir por rota autenticada).
 					-->
-					<a class="button" href="https://dashboard.daeese.me/">Dashboard</a>
-					<a class="button" href="./termsofservice/">Terms</a>
-					<a class="button" href="./privacypolicy/">Privacy</a>
+					<a data-i18n="ccore.dashboard" class="button" href="https://dashboard.daeese.me/">Dashboard</a>
+					<a data-i18n="ccore.terms" class="button" href="./termsofservice/">Terms</a>
+					<a data-i18n="ccore.privacy" class="button" href="./privacypolicy/">Privacy</a>
+					<div data-i18n-switcher></div>
 				</div>
 			</header>
 
-			<section class="hero" aria-label="Bot overview">
+			<section data-i18n-attr="aria-label:ccore.bot_overview" class="hero" aria-label="Bot overview">
 				<article class="card intro">
-					<p class="eyebrow">This shit is:</p>
-					<h2 class="managed-by">The 12° version of BA CORE Family bots, managed by <a href="https://daeese.me" target="_blank" rel="noreferrer noopener">@daeese</a>.</h2>
-					<p class="subtitle">ccore - 'chavinhoCORE' is server-locked and only meant to work for the <a href="https://discord.gg/constantes" target="_blank" rel="noreferrer noopener">CONSTANTES</a> server. It's not a public multi-server bot.</p>
+					<p data-i18n="ccore.this_shit_is" class="eyebrow">This shit is:</p>
+					<h2 class="managed-by"><span data-i18n="ccore.the_12_version_of_ba">The 12° version of BA CORE Family bots, managed by</span> <a data-i18n="ccore.daeese" href="https://daeese.me" target="_blank" rel="noreferrer noopener">@daeese</a>.</h2>
+					<p class="subtitle"><span data-i18n="ccore.ccore_chavinhocore_is_server_locked">ccore - 'chavinhoCORE' is server-locked and only meant to work for the</span> <a data-i18n="ccore.constantes" href="https://discord.gg/constantes" target="_blank" rel="noreferrer noopener">CONSTANTES</a> <span data-i18n="ccore.server_it_s_not_a">server. It's not a public multi-server bot.</span></p>
 
-					<div class="pill-row" aria-label="Highlights">
-						<span class="pill">Single-Server</span>
-						<span class="pill">NW</span>
-						<span class="pill">Regimental Administration Utility</span>
-						<span class="pill">Slash commands</span>
-						<span class="pill">C#</span>
-						<span class="pill">.NET</span>
+					<div data-i18n-attr="aria-label:ccore.highlights" class="pill-row" aria-label="Highlights">
+						<span data-i18n="ccore.single_server" class="pill">Single-Server</span>
+						<span data-i18n="ccore.nw" class="pill">NW</span>
+						<span data-i18n="ccore.regimental_administration_utility" class="pill">Regimental Administration Utility</span>
+						<span data-i18n="ccore.slash_commands" class="pill">Slash commands</span>
+						<span data-i18n="ccore.c" class="pill">C#</span>
+						<span data-i18n="ccore.net" class="pill">.NET</span>
 					</div>
 				</article>
 
 				<aside class="card panel">
-					<div class="bot-identity" aria-label="Bot profile">
-								<img class="bot-pfp" src="../filearchive/newpfp.png" alt="cornwallCORE profile picture" />
+					<div data-i18n-attr="aria-label:ccore.bot_profile" class="bot-identity" aria-label="Bot profile">
+								<img data-i18n-attr="alt:ccore.cornwallcore_profile_picture" class="bot-pfp" src="../filearchive/newpfp.png" alt="cornwallCORE profile picture" />
 						<div class="bot-name-row">
-							<p class="bot-name">chavinhoCORE</p>
+							<p data-i18n="ccore.chavinhocore" class="bot-name">chavinhoCORE</p>
 							<svg class="verified-app-icon" viewBox="0 0 51 19" aria-hidden="true" focusable="false">
 								<rect x="0" y="0" width="51" height="19" rx="5" fill="#5865F2"/>
 								<path fill="#ffffff" fill-opacity="0" d="M0 5h16v9H0z"/>
@@ -439,153 +458,159 @@
 							</svg>
 						</div>
 					</div>
-					<h2>Quick action</h2>
-					<p>
+					<h2 data-i18n="ccore.quick_action">Quick action</h2>
+					<p data-i18n="ccore.the_button_below_will_invite">
 						The button below will invite the bot to your server, however i must tell you that IT WILL NOT WORK outside of it's main server. I will not look to patch that, this website was made as a showcase not for you to add it to yourself. This invite should be used by Rulecy's BA General Staff only.
 					</p>
 					<div class="actions" style="margin-top: 16px;">
-						<a class="button primary" href="https://discord.com/oauth2/authorize?client_id=1482173872848507062&scope=bot%20applications.commands" target="_blank" rel="noreferrer noopener">Add to Discord</a>
+						<a data-i18n="ccore.add_to_discord" class="button primary" href="https://discord.com/oauth2/authorize?client_id=1482173872848507062&scope=bot%20applications.commands" target="_blank" rel="noreferrer noopener">Add to Discord</a>
 					</div>
 				</aside>
 			</section>
 
-			<section class="section-grid" aria-label="More information">
+			<section data-i18n-attr="aria-label:ccore.more_information" class="section-grid" aria-label="More information">
 				<article class="card section">
-					<h2>What it does</h2>
-					<p>It... Works for the GREAT DECAFODEBRECHT, CO of 12° Regt. Infantaria!!!</p>
+					<h2 data-i18n="ccore.what_it_does">What it does</h2>
+					<p data-i18n="ccore.it_works_for_the_great">It... Works for the GREAT DECAFODEBRECHT, CO of 12° Regt. Infantaria!!!</p>
 					<ul>
-						<li>Makes Regimental Administration easier</li>
-						<li>Disses chebob :p</li>
-						<li>Makes me go crazy 😭</li>
+						<li data-i18n="ccore.makes_regimental_administration_easier">Makes Regimental Administration easier</li>
+						<li data-i18n="ccore.disses_chebob_p">Disses chebob :p</li>
+						<li data-i18n="ccore.makes_me_go_crazy">Makes me go crazy 😭</li>
 					</ul>
 				</article>
 
 				<article class="card section">
-					<h2>Server note</h2>
-					<p>
+					<h2 data-i18n="ccore.server_note">Server note</h2>
+					<p data-i18n="ccore.the_clanker_will_not_work">
 						The clanker will not work outside of it's default server, good luck adding it... Make a fork on github if you'd like to use it on your server!!!
 					</p>
 					<ul>
-						<li>chebob</li>
-						<li>is the biggest</li>
-						<li>goon to ever live</li>
+						<li data-i18n="ccore.chebob">chebob</li>
+						<li data-i18n="ccore.is_the_biggest">is the biggest</li>
+						<li data-i18n="ccore.goon_to_ever_live">goon to ever live</li>
 					</ul>
 				</article>
 
 				<article class="card section full-width">
-					<h2>ccore Discord App - Documentation</h2>
-					<p>Useful info? Yezz.</p>
+					<h2 data-i18n="ccore.ccore_discord_app_documentation">ccore Discord App - Documentation</h2>
+					<p data-i18n="ccore.useful_info_yezz">Useful info? Yezz.</p>
 
-					<h3>Bot Commands</h3>
+					<h3 data-i18n="ccore.bot_commands">Bot Commands</h3>
 
-					<h3>Enlistment & Verification</h3>
+					<h3 data-i18n="ccore.enlistment_verification">Enlistment & Verification</h3>
 					<ul>
-						<li><strong>/enlistuser</strong> - Enlists a user with automatic ROBLOX verification
+						<li><strong>/enlistuser</strong> <span data-i18n="ccore.enlists_a_user_with_automatic">- Enlists a user with automatic ROBLOX verification</span>
 							<ul>
-								<li>Requires: Permission role configured</li>
-								<li>Parameters: user, ROBLOX username</li>
-								<li>Function: Anti-ALT verification + role assignment + nickname + log</li>
+								<li data-i18n="ccore.requires_permission_role_configured">Requires: Permission role configured</li>
+								<li data-i18n="ccore.parameters_user_roblox_username">Parameters: user, ROBLOX username</li>
+								<li data-i18n="ccore.function_anti_alt_verification_role">Function: Anti-ALT verification + role assignment + nickname + log</li>
 							</ul>
 						</li>
-						<li><strong>/alistar-se</strong> - Self-enlistment with interactive form
+						<li><strong>/alistar-se</strong> <span data-i18n="ccore.self_enlistment_with_interactive_form">- Self-enlistment with interactive form</span>
 							<ul>
-								<li>Specific channel required</li>
-								<li>Function: Complete form + automatic ROBLOX verification</li>
+								<li data-i18n="ccore.specific_channel_required">Specific channel required</li>
+								<li data-i18n="ccore.function_complete_form_automatic_roblox">Function: Complete form + automatic ROBLOX verification</li>
 							</ul>
 						</li>
 					</ul>
 
-					<h3>Spreadsheet & Information</h3>
+					<h3 data-i18n="ccore.spreadsheet_information">Spreadsheet & Information</h3>
 					<ul>
-						<li><strong>/checkspreadsheetinfo</strong> - Queries regimental spreadsheet information
+						<li><strong>/checkspreadsheetinfo</strong> <span data-i18n="ccore.queries_regimental_spreadsheet_information">- Queries regimental spreadsheet information</span>
 							<ul>
-								<li>Parameter: username in spreadsheet</li>
-								<li>Function: Searches data in spreadsheet Roster tab</li>
+								<li data-i18n="ccore.parameter_username_in_spreadsheet">Parameter: username in spreadsheet</li>
+								<li data-i18n="ccore.function_searches_data_in_spreadsheet">Function: Searches data in spreadsheet Roster tab</li>
 							</ul>
 						</li>
 					</ul>
 
-					<h3>Messages & Communications</h3>
+					<h3 data-i18n="ccore.messages_communications">Messages & Communications</h3>
 					<ul>
-						<li><strong>/deployment</strong> - Sends deployment message
+						<li><strong>/deployment</strong> <span data-i18n="ccore.sends_deployment_message">- Sends deployment message</span>
 							<ul>
-								<li>Requires: Permission role configured</li>
-								<li>Parameter: game code</li>
-								<li>Function: Embed with roles ping + access buttons</li>
+								<li data-i18n="ccore.requires_permission_role_configured">Requires: Permission role configured</li>
+								<li data-i18n="ccore.parameter_game_code">Parameter: game code</li>
+								<li data-i18n="ccore.function_embed_with_roles_ping">Function: Embed with roles ping + access buttons</li>
 							</ul>
 						</li>
-						<li><strong>/dmrole</strong> - Sends DM to role/user (with code)
+						<li><strong>/dmrole</strong> <span data-i18n="ccore.sends_dm_to_role_user">- Sends DM to role/user (with code)</span>
 							<ul>
-								<li>Requires: Permission role configured</li>
-								<li>Parameters: role/user, code, message</li>
-								<li>Limit: 500 members per execution</li>
+								<li data-i18n="ccore.requires_permission_role_configured">Requires: Permission role configured</li>
+								<li data-i18n="ccore.parameters_role_user_code_message">Parameters: role/user, code, message</li>
+								<li data-i18n="ccore.limit_500_members_per_execution">Limit: 500 members per execution</li>
 							</ul>
 						</li>
-						<li><strong>/dmrolemsg</strong> - Sends DM to role/user (without code)
+						<li><strong>/dmrolemsg</strong> <span data-i18n="ccore.sends_dm_to_role_user_2">- Sends DM to role/user (without code)</span>
 							<ul>
-								<li>Requires: Permission role configured</li>
-								<li>Parameters: role/user, message</li>
-								<li>Limit: 500 members per execution</li>
+								<li data-i18n="ccore.requires_permission_role_configured">Requires: Permission role configured</li>
+								<li data-i18n="ccore.parameters_role_user_message">Parameters: role/user, message</li>
+								<li data-i18n="ccore.limit_500_members_per_execution">Limit: 500 members per execution</li>
 							</ul>
 						</li>
 					</ul>
 
-					<h3>Repost System</h3>
+					<h3 data-i18n="ccore.repost_system">Repost System</h3>
 					<ul>
-						<li><strong>/messages</strong> - Checks message storage status
+						<li><strong>/messages</strong> <span data-i18n="ccore.checks_message_storage_status">- Checks message storage status</span>
 							<ul>
-								<li>Function: System statistics and progress</li>
+								<li data-i18n="ccore.function_system_statistics_and_progress">Function: System statistics and progress</li>
 							</ul>
 						</li>
-						<li><strong>/repost</strong> - Reposts random stored message
+						<li><strong>/repost</strong> <span data-i18n="ccore.reposts_random_stored_message">- Reposts random stored message</span>
 							<ul>
-								<li>Requires: Minimum of stored messages</li>
-								<li>Cooldown: 2 hours after manual use</li>
-							</ul>
-						</li>
-					</ul>
-
-					<h3>Utilities</h3>
-					<ul>
-						<li><strong>/ping</strong> - Tests bot latency
-							<ul>
-								<li>Function: Returns response time in ms</li>
+								<li data-i18n="ccore.requires_minimum_of_stored_messages">Requires: Minimum of stored messages</li>
+								<li data-i18n="ccore.cooldown_2_hours_after_manual">Cooldown: 2 hours after manual use</li>
 							</ul>
 						</li>
 					</ul>
 
-					<h3>Administration Commands</h3>
+					<h3 data-i18n="ccore.utilities">Utilities</h3>
 					<ul>
-						<li><strong>vsfdliliane</strong> - Special restricted command
+						<li><strong>/ping</strong> <span data-i18n="ccore.tests_bot_latency">- Tests bot latency</span>
 							<ul>
-								<li>Requires: Specific user ID</li>
-								<li>Function: Custom responses</li>
+								<li data-i18n="ccore.function_returns_response_time_in">Function: Returns response time in ms</li>
 							</ul>
 						</li>
 					</ul>
 
-					<h3>Configuration</h3>
-					<p>The bot uses the <code>config.json</code> file for configurations of:</p>
+					<h3 data-i18n="ccore.administration_commands">Administration Commands</h3>
 					<ul>
-						<li>Channel and role IDs</li>
-						<li>Spreadsheet URLs and links</li>
-						<li>Command permissions</li>
-						<li>Custom messages</li>
-						<li>Blocked terms list and automatic blacklist response</li>
+						<li><strong data-i18n="ccore.vsfdliliane">vsfdliliane</strong> <span data-i18n="ccore.special_restricted_command">- Special restricted command</span>
+							<ul>
+								<li data-i18n="ccore.requires_specific_user_id">Requires: Specific user ID</li>
+								<li data-i18n="ccore.function_custom_responses">Function: Custom responses</li>
+							</ul>
+						</li>
 					</ul>
-					<p><strong>Note:</strong> the bot now uses the <code>MessageContent</code> intent to read message text and detect blocked terms. This intent also needs to be enabled in the Discord application panel.</p>
 
-					<h3>Requirements</h3>
+					<h3 data-i18n="ccore.configuration">Configuration</h3>
+					<p><span data-i18n="ccore.the_bot_uses_the">The bot uses the</span> <code>config.json</code> <span data-i18n="ccore.file_for_configurations_of">file for configurations of:</span></p>
 					<ul>
-						<li>.NET 8.0+</li>
-						<li>DisCatSharp</li>
-						<li>Proper configuration in <code>config.json</code></li>
-						<li>Bot permissions in the Discord server</li>
+						<li data-i18n="ccore.channel_and_role_ids">Channel and role IDs</li>
+						<li data-i18n="ccore.spreadsheet_urls_and_links">Spreadsheet URLs and links</li>
+						<li data-i18n="ccore.command_permissions">Command permissions</li>
+						<li data-i18n="ccore.custom_messages">Custom messages</li>
+						<li data-i18n="ccore.blocked_terms_list_and_automatic">Blocked terms list and automatic blacklist response</li>
+					</ul>
+					<p><strong data-i18n="ccore.note">Note:</strong> <span data-i18n="ccore.the_bot_now_uses_the">the bot now uses the</span> <code>MessageContent</code> <span data-i18n="ccore.intent_to_read_message_text">intent to read message text and detect blocked terms. This intent also needs to be enabled in the Discord application panel.</span></p>
+
+					<h3 data-i18n="ccore.requirements">Requirements</h3>
+					<ul>
+						<li data-i18n="ccore.net_8_0">.NET 8.0+</li>
+						<li data-i18n="ccore.discatsharp">DisCatSharp</li>
+						<li><span data-i18n="ccore.proper_configuration_in">Proper configuration in</span> <code>config.json</code></li>
+						<li data-i18n="ccore.bot_permissions_in_the_discord">Bot permissions in the Discord server</li>
 					</ul>
 				</article>
 			</section>
 
-			<p class="footer">ccore shit ass showcase :p</p>
+			<p data-i18n="ccore.ccore_shit_ass_showcase_p" class="footer">ccore shit ass showcase :p</p>
 		</main>
+			<!--
+		  Seletor de idioma. O ingles fica no proprio HTML; o modulo carrega so o
+		  dicionario de portugues, entao a pagina continua completa e indexavel
+		  sem JavaScript.
+		-->
+		<script type="module" src="../filearchive/i18n/i18n.js" data-dict="dict/ccore.js"></script>
 	</body>
 </html>

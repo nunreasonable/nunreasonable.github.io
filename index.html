@@ -1763,7 +1763,10 @@
         }
 
         if (ctx.state === "suspended") {
-          ctx.resume();
+          // .resume() devolve Promise e rejeita sob a politica de autoplay
+          // (contexto criado fora de um gesto do usuario); sem o catch, cada beep
+          // gerava um "Unhandled Promise Rejection" no console.
+          ctx.resume().catch(() => {});
         }
 
         const osc = ctx.createOscillator();

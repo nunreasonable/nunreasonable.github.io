@@ -6,6 +6,24 @@
 		<title>ccore Administration Data Viewer</title>
 		<meta name="robots" content="noindex, nofollow, noarchive" />
 		<meta name="referrer" content="strict-origin-when-cross-origin" />
+		<!--
+		  CSP defensiva. A pagina carregava dados por JSONP (um <script> de
+		  docs.google.com), e SEM CSP qualquer host de script/estilo/frame era
+		  permitido. Esta politica tranca tudo em 'self' e libera so o minimo:
+		  o script do gviz (docs.google.com) e as fontes do Google. object-src e
+		  form-action ficam em 'none' e frame-ancestors bloqueia enquadramento.
+
+		  PENDENTE (precisa de teste ao vivo contra a planilha): trocar o JSONP por
+		  um fetch() do CSV publicado + parse local removeria de vez a execucao de
+		  script de terceiro e permitiria remover docs.google.com do script-src. Nao
+		  foi feito aqui porque o gviz devolve JSON tipado (cols/rows) que a
+		  deteccao de cabecalho abaixo consome, e o CSV muda esse contrato; alem de
+		  o fetch cross-origin depender de CORS que precisa ser verificado no host.
+		-->
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="default-src 'self'; script-src 'self' 'unsafe-inline' https://docs.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'none'"
+		/>
 		<link rel="icon" type="image/png" href="../../../filearchive/newpfp.png" />
 		<meta
 			name="description"

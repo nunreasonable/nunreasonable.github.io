@@ -4,6 +4,24 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ccore Privacy Policy</title>
+    <link rel="canonical" href="https://ccore.daeese.me/privacypolicy/" />
+    <!--
+      Cartao de compartilhamento. Estas paginas sao justamente as registradas no
+      Discord Developer Portal e as coladas em canal do Discord, onde o embed e a
+      primeira coisa que aparece - e sem og: o link saia sem titulo nem imagem.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="daeese.me" />
+    <meta property="og:title" content="ccore Privacy Policy" />
+    <meta property="og:description" content="What ccore collects, why, how long it is kept and how to request its deletion." />
+    <meta property="og:url" content="https://ccore.daeese.me/privacypolicy/" />
+    <meta property="og:image" content="https://daeese.me/filearchive/cornwallCOREpfp.png" />
+    <meta property="og:image:alt" content="The cornwallCORE profile picture" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ccore Privacy Policy" />
+    <meta name="twitter:description" content="What ccore collects, why, how long it is kept and how to request its deletion." />
+    <meta name="twitter:image" content="https://daeese.me/filearchive/cornwallCOREpfp.png" />
     <meta name="description" content="Direct entry point for the ccore APP Privacy Policy." />
     <link rel="icon" type="image/png" href="../../filearchive/newpfp.png" />
     <style>
@@ -87,8 +105,10 @@
         }
       }
     </style>
+      <link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
   </head>
   <body>
+    <div data-i18n-switcher class="i18n-floating"></div>
     <main class="shell">
       <!--
         Este resumo nao e enfeite. A pagina era so o iframe, entao a URL que
@@ -97,13 +117,19 @@
         justamente para ca, o que fazia o alvo canonico ser a pagina vazia.
       -->
       <div class="intro">
-        <h1>ccore — Privacy Policy</h1>
-        <p>This Privacy Policy explains what data ccore (“chavinhoCORE”) collects, why it is collected, how long it is kept, who it is shared with, and how to request its deletion.</p>
-        <p><a href="./pp.html">Read the full Privacy Policy</a></p>
+        <h1 data-i18n="ccore_pp_shell.ccore_privacy_policy">ccore — Privacy Policy</h1>
+        <p data-i18n="ccore_pp_shell.this_privacy_policy_explains_what">This Privacy Policy explains what data ccore (“chavinhoCORE”) collects, why it is collected, how long it is kept, who it is shared with, and how to request its deletion.</p>
+        <p><a data-i18n="ccore_pp_shell.read_the_full_privacy_policy" href="./pp.html">Read the full Privacy Policy</a></p>
       </div>
-      <section class="frame" aria-label="Privacy Policy content">
+      <section data-i18n-attr="aria-label:ccore_pp_shell.privacy_policy_content" class="frame" aria-label="Privacy Policy content">
         <iframe title="ccore Privacy Policy" src="./pp.html"></iframe>
       </section>
     </main>
+      <!--
+      Seletor de idioma. O ingles fica no proprio HTML; o modulo carrega so o
+      dicionario de portugues, entao a pagina continua completa e indexavel
+      sem JavaScript.
+    -->
+    <script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/ccore_pp_shell.js"></script>
   </body>
 </html>
