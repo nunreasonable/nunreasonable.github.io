@@ -19,6 +19,7 @@ registrado para dar contexto.
 | 11 | Path traversal não autenticado no `clips-gallery` | ✅ **resolvido** em 22/08/2026 |
 | 12 | Tokens de bot no histórico público do `cornwall` | ⚠️ **parcial** — histórico reescrito, blobs sobrevivem |
 | 13 | `.wrangler` no histórico do `github.io` | ⏳ sem conserto por commit (`refs/pull/1/head`) |
+| 14 | Player servia o arquivo bruto; embed nascia quebrado | ✅ **resolvido** em 30/08/2026 |
 
 ## 1. HTTP não redireciona para HTTPS
 
@@ -341,7 +342,9 @@ Como está agora:
 
 - `clips-gallery`, aiohttp em `~/.local/share/clips-gallery/`, porta 8790, serviço **de usuário**
   (`clips-gallery.service`, `enabled`) — precisa ser de usuário porque lê `~/Videos` e `/mnt/HDD`.
-- Duas fontes: `~/Videos/Vice` e `/mnt/HDD/hdusbcontents/Rafael/Vice`.
+- Duas fontes: a pasta de gravação recente em `~/Videos/Vice` e o arquivo antigo no HD
+  interno, montado em `/mnt/HDD`. Os caminhos em si não vão para repositório nenhum —
+  desde 30/08/2026 eles vêm de `~/.config/clips-gallery/sources` (ver item 14).
 - Galeria em `/` protegida por senha (SHA-256 em `~/.config/clips-gallery/password`, sessão em
   cookie assinado com HMAC). As rotas de clip seguem **públicas**, senão o robô do Discord não
   consegue montar o embed.
@@ -461,6 +464,11 @@ curl -s -A 'Discordbot/2.0' https://clips.daeese.me/c/Vice_Clip_1 | grep og:vide
 `Vice_Clip_4.mp4` saiu a 108 Mbps com `crf = 23` no `~/.config/vice/config.toml`, sinal de que o
 encoder (`encoder = "auto"`) está ignorando o CRF. Não afeta mais o embed, mas deixa o player da
 própria página lento pelo tunnel e enche o disco rápido.
+
+**Atualização de 30/08/2026:** a metade do player caiu no item 14 — a página não serve mais o
+arquivo bruto, então o bitrate do original deixou de ser o que o espectador baixa. O encoder
+ignorando o `crf` continua aberto: ele ainda enche o disco, e cada clip novo custa um encode a
+mais para virar rendition web.
 
 ## 11. Path traversal no `clips-gallery` — RESOLVIDO (22/08/2026)
 
@@ -586,6 +594,69 @@ vivo para esconder um e-mail que está em 90+ cabeçalhos de commit tem custo re
 
 Registrado como mitigação parcial. O que ajudaria de fato é um chamado ao GitHub Support pedindo
 GC — o mesmo chamado do item 12.
+
+## 14. Player servia o arquivo bruto e o embed nascia quebrado — RESOLVIDO (30/08/2026)
+
+Duas coisas que o item 10 deixou de pé, uma em cada ponta do mesmo clip.
+
+**Primeira: o player da própria página tocava o original.**
+
+A rota `/m/` serve o arquivo como o Vice gravou: H.264 1080p a **120 fps**, áudio **Opus dentro de
+MP4**, 13 a 573 MB. Isso quebra em três lugares diferentes.
+
+- Opus em MP4 não toca no Safari nem no iOS — a página abria com um player mudo ou vazio.
+- 120 fps a level 5.1 estoura o decoder de hardware de boa parte dos celulares, que caem para
+  software e engasgam.
+- E cada espectador puxava centenas de MB da conexão de casa, pelo tunnel.
+
+Como está agora: existe `/w/{cid}.mp4`, e é o que o player toca. 1080p60, H.264 **High level 4.2**
+— o teto que decoder de celular aceita, e exatamente o que o original estoura —, `crf 21` com
+`maxrate` de 6 Mbps para o pico não passar da banda de casa, AAC 128 kbps estéreo e `+faststart`.
+Diferente do preview do Discord, tem a **duração inteira**: é para assistir, não para caber em
+8 MB. No clip de referência, **26 MB no lugar de 101 MB**.
+
+O original não sumiu — ficou no botão *Baixar* e num seletor de qualidade explícito, com o aviso
+do lado. O cache dos renditions tem teto de 8 GiB, podado por LRU; os `.tmp.mp4` de encode em
+andamento ficam fora da poda de propósito, senão trocaríamos um problema de disco por um arquivo
+corrompido. Encode que falha entra em backoff de 10 min, para um arquivo quebrado não refazer o
+ffmpeg a cada visita.
+
+**Segunda: o embed nascia como card de imagem — e ficava assim para sempre.**
+
+O Vice copia o link no instante em que a gravação para. O preview leva uns 18 s para encodar. Nessa
+janela, `_og_tags` caía para o ramo de card de imagem, porque ele valia também quando havia encode
+**em voo** — e não só quando não havia preview nenhum a caminho. Quem colava ali recebia um card de
+imagem, e o Discord cacheia embed por URL: aquele link ficava quebrado permanentemente, mesmo
+depois de o preview existir.
+
+Como está agora, o ramo de card de imagem só vale quando não há preview pronto **nem** job na fila.
+Com um encode a caminho a página promete `og:video` assim mesmo e deixa o `/p/` segurar a espera —
+o robô busca a página primeiro e o vídeo depois, e tolera vídeo lento muito melhor que página
+lenta. Os tetos de espera existem para não prometer vídeo que dará 404: 1,5 s na página (o
+suficiente para pegar o ffmpeg que falha na hora, em arquivo corrompido) e 45 s no `/p/`.
+
+Saiu também um `twitter:card=player` que existia **sem** a `twitter:player` correspondente. Player
+card inválido não vira player: só serve para o Discord degradar para card de imagem. As og tags de
+vídeo sozinhas são o que ele usa.
+
+**De quebra:** `/m/` e `/w/` ganharam `Cache-Control`, que não tinham. Dá para cachear porque o
+`cid` carrega o hash do caminho, então a URL é imutável na prática. A exceção é o 302 que o `/w/`
+devolve enquanto o rendition não existe: esse vai sem cache, senão a borda guardaria o desvio e a
+visita seguinte nunca chegaria no arquivo pronto.
+
+```bash
+systemctl --user status clips-gallery
+curl -sI localhost:8790/w/<cid>.mp4    # 302 enquanto encoda, 200 video/mp4 depois
+curl -s -A 'Discordbot/2.0' https://clips.daeese.me/c/<slug> | grep 'og:video"'
+```
+
+O aviso do item 10 continua valendo: o Discord cacheia embed por URL, então repostar o mesmo link
+mostra o resultado velho. Para testar, use um clip que ainda não foi postado.
+
+O código do `clips-gallery` não tem repositório no GitHub — vive em `~/.local/share/clips-gallery`
+com git local. Os caminhos das fontes saíram do código no mesmo dia e passaram a vir de
+`~/.config/clips-gallery/sources`, ao lado de `secret` e `password`, para o caminho do arquivo do
+HD não entrar em backup nem em repositório.
 
 ## Pendências que dependem do dono
 
