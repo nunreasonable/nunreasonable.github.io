@@ -21,6 +21,22 @@ registrado para dar contexto.
 | 13 | `.wrangler` no histórico do `github.io` | ⏳ sem conserto por commit (`refs/pull/1/head`) |
 | 14 | Player servia o arquivo bruto; embed nascia quebrado | ✅ **resolvido** em 30/08/2026 |
 
+**Reverificado em 09/09/2026, já nesta máquina (Gentoo/OpenRC).** Os itens 1 e 2 continuam
+abertos e foram medidos de novo: `curl -I http://daeese.me/` ainda responde `200 OK` em texto
+claro, e `https://daeese.me/` não devolve nenhum header de segurança. Os itens 3 e 8 foram
+resolvidos na máquina anterior e o registro vale para ela; **aqui** dependem dos serviços
+`cloudflared` e `cloudflared-clips` estarem de pé, e na reverificação `api.daeese.me` e
+`clips.daeese.me` respondiam 530 porque nenhum dos dois havia sido iniciado desde a migração. O
+estado dessa migração vive em `~/daeesewrkspc/.stage/PROXIMOS-PASSOS.md`, fora deste repositório.
+
+Uma ressalva de método, porque ela já custou uma conclusão errada: o DNS desta máquina falha de
+forma intermitente — o `/etc/resolv.conf` lista um nameserver IPv6 *link-local* numa rede sem IPv6
+funcional. Uma medição feita no meio de uma dessas falhas fez os headers administrativos de
+`dashboard.daeese.me` parecerem ausentes, quando estão lá. Verificação que importe deve usar
+`curl -4 --resolve host:443:<ip>` para tirar o resolvedor da jogada, e uma falha isolada não é
+prova de serviço fora do ar.
+
+
 ## 1. HTTP não redireciona para HTTPS
 
 Estado observado:
