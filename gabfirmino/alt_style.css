@@ -1,3 +1,33 @@
+/*
+  Paleta em variaveis.
+
+  O site usava um unico magenta #db0bbf cru como fundo de header, footer, botao,
+  cartoes e formulario, com texto preto por cima. Area grande na saturacao
+  maxima e o que cansa a vista, e preto sobre esse rosa vibra. Aqui o mesmo rosa
+  virou uma escala: tom claro para superficie, tom forte so como acento.
+  Nenhuma regra de layout foi tocada.
+
+  POR QUE HEADER E FOOTER FICARAM CLAROS: o kitten, o instagram e a seta sao
+  glifos PRETOS em PNG transparente (medido: rgb 0,0,0). Em barra escura eles
+  sumiriam. O unico icone que vai sobre cor forte e a seta do botao, e por isso
+  ela leva filter para virar branca.
+*/
+:root {
+    --page:       #fdf7fa; /*fundo da pagina, rosa quase branco*/
+    --surface:    #fdeaf5; /*cartoes e formulario*/
+    --bar:        #f7dcec; /*header e footer*/
+    --line:       #eec8de; /*bordas finas*/
+    --ink:        #3a2438; /*texto*/
+    --brand:      #b4308f; /*acento: botoes e hover*/
+    --brand-deep: #8a1f6c; /*acento no hover*/
+    --on-brand:   #fff5fb; /*texto sobre o acento*/
+}
+
+body {
+    background-color: var(--page);
+    color: var(--ink);
+}
+
 *{
     font-family: sans-serif;
     box-sizing: border-box;
@@ -7,11 +37,11 @@
 
 header{
     padding: 2rem; /*espaço dentro de caixa*/
-    box-shadow: 0 10px #f0f0f0; /*shadow sombra e 0 e pq não colocamos horizontal só vertical*/
+    box-shadow: 0 6px 18px rgba(58, 36, 56, 0.10); /*shadow sombra e 0 e pq não colocamos horizontal só vertical -- agora com blur: sem ele virava uma faixa cinza dura*/
     position: sticky; /*posição fixa, grudada nosso header não mexe quando movemos a pagina*/
     top: 0; /*gruda no topo*/
     left: 0;
-    background-color:#db0bbf;
+    background-color: var(--bar);
     z-index: 1;
 }
 
@@ -36,12 +66,14 @@ nav ul a{
 }
 
 .nav-item{
-    color: black; /*cor da letra*/
+    color: var(--ink); /*cor da letra*/
     text-decoration: none; /*tirar sublinhado*/
 }
 
 .nav-item:hover {
-    color: rgb(255, 136, 0);
+    /* brand-deep, e nao brand: em 16px negrito o link de nav nao conta como
+       "texto grande" na WCAG, entao precisa de 4.5:1 e o tom claro dava 4.36. */
+    color: var(--brand-deep);
 }
 
 main{
@@ -50,7 +82,7 @@ main{
 }
 
 footer {
-    background-color: #db0bbf;
+    background-color: var(--bar);
     padding: 1rem;
     /*pra quem quer as letras brancas (color: #fff;)*/
     position: sticky; /*grudar*/
@@ -58,17 +90,17 @@ footer {
     display: flex; /*definir um eixo principal e um eixo auxiliar*/
     justify-content: space-around; /*organize os elementos em função do espaço que existe em torno deles*/
     font-size: bold; /*negrito*/
-    box-shadow: 0 -5px 10px #f0f0f0; /* -porque a sombra e ao contrario agora*/
+    box-shadow: 0 -6px 18px rgba(58, 36, 56, 0.10); /* -porque a sombra e ao contrario agora*/
 }
 
 footer a {
     text-decoration: none;
-    color: black;
+    color: var(--ink);
 }
 
 #hero {
     display: flex; /*define os filhos em uma linha*/
-    color: #db0bbf;
+    color: var(--ink);
 }
 
 #appealing-content {
@@ -97,7 +129,8 @@ footer a {
     padding: 0.8rem 0;
     display: flex;
     justify-content: center;
-    background-color: #db0bbf;
+    background-color: var(--brand);
+    color: var(--on-brand);
     border-radius: 30px; /*borda circular*/
     font-weight: bold; /* negrito */
 }
@@ -109,7 +142,13 @@ footer a {
 }
 
 #cta:hover {
-    background-color: rgb(255, 136, 0);
+    background-color: var(--brand-deep);
+}
+
+/* A seta e um PNG preto; sobre o rosa forte ela ficaria suja. O filter
+   transforma qualquer cor em branco puro. */
+#cta > img {
+    filter: brightness(0) invert(1);
 }
 
 #about {
@@ -117,7 +156,7 @@ footer a {
     justify-content: center;
     align-items: center;
     margin: 5rem auto;
-    color: #db0bbf;
+    color: var(--ink);
     scroll-margin-top: 10rem; /*ajusta a posição ao clicar no link*/
 }
 
@@ -133,7 +172,7 @@ footer a {
 
 #employees-container > h2 {
     margin: 2rem 0;
-    color: #000;
+    color: var(--ink);
 }
 #about img {
     max-width: 300px;
@@ -156,8 +195,9 @@ footer a {
     flex-direction: column;
     align-items: center; /*alinhar na horizontal*/
     width: 400px;
-    background-color: #db0bbf;
-    color: black;
+    background-color: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--line);
     font-weight: bold; /*negrito*/
     border-radius: 30px;
     padding: 1rem; /*espaço do conteúdo para a borda*/
@@ -183,8 +223,9 @@ footer a {
     width: 25%;
     display: flex;
     flex-direction: column;
-    background-color: #db0bbf;
-    color: black;
+    background-color: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--line);
     height: fit-content; /*altura suficiente para a tag abrigar todo o código dentro dela*/
     padding: 2rem;
     border-radius: 30px;
@@ -198,6 +239,8 @@ footer a {
 
 .input-wrapper > input {
     padding: 0.2rem;
+    border: 1px solid var(--line);
+    color: var(--ink);
     font-weight: bold
     /*flex-grow 1; /*cresce quando dá espaço seu pai deixa que você cresça*/
 }
@@ -212,6 +255,6 @@ footer a {
     border-radius: 10px;
     font-weight: bold;
     font-size: 1rem;
-    background-color: #f0f0f0;
-    color: #db0bbf;
+    background-color: var(--brand);
+    color: var(--on-brand);
 }
