@@ -2,7 +2,7 @@
  * Portugues da vitrine do ccore.
  *
  * Chave ausente = fica em ingles. Por isso nome proprio e termo tecnico
- * (chavinhoCORE, CONSTANTES, chebob, @daeese, C#, .NET, DisCatSharp, NW, os
+ * (CONSTANTES, chebob, @daeese, C#, .NET, DisCatSharp, NW, os
  * comandos de barra) simplesmente nao aparecem aqui.
  *
  * O tom debochado do original e proposital e foi mantido: esta pagina e a
@@ -18,8 +18,8 @@ export const pt = {
   "ccore.bot_overview": "Visão geral do bot",
   "ccore.this_shit_is": "Essa budega é:",
   "ccore.the_12_version_of_ba": "A versão do 12° dos bots da família BA CORE, mantida por",
-  "ccore.ccore_chavinhocore_is_server_locked":
-    "ccore - 'chavinhoCORE' é travado por servidor e só foi feito para funcionar no",
+  "ccore.ccore_is_server_locked":
+    "ccore é travado por servidor e só foi feito para funcionar no",
   "ccore.server_it_s_not_a": ". Não é um bot público de vários servidores.",
   "ccore.highlights": "Destaques",
   "ccore.single_server": "Servidor único",

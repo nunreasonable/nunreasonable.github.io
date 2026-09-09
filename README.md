@@ -8,7 +8,7 @@ frente (proxy + rota `/api/*`).
 | Caminho | O que é |
 |---|---|
 | `index.html` | Página inicial — perfil, links, projetos e o "Now Playing" do Spotify via [Lanyard](https://github.com/Phineas/lanyard). |
-| `cornwallcore/` | Showcase do bot **ccore - 'chavinhoCORE'** (12° Regimento de Infantaria "Chaves"). |
+| `cornwallcore/` | Showcase do bot **ccore** (12° Regimento de Infantaria "Chaves"). |
 | `cornwallcore/status/` | Página **pública** de estado do bot: uptime, latência, servidores e membros, lidos de `GET /api/status`. Sem dados da máquina. |
 | `cornwallcore/termsofservice/`, `cornwallcore/privacypolicy/` | Termos de Serviço e Política de Privacidade vigentes do app no Discord. |
 | `cornwallcore/administration/dashboard/` | Painel administrativo do bot, em abas (Moderação, Auditoria, Comunicações, Alistamento, Logs). Fala com a API do bot em `/api/*`. **Acesso restrito** — `noindex`. |

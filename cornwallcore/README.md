@@ -1,4 +1,4 @@
-# ccore - 'chavinhoCORE' Discord Bot
+# ccore Discord Bot
 
 Bot Discord para o 12° Regimento de Infantaria "Chaves" (servidor CONSTANTES) com funcionalidades de alistamento, deployments e mensagens.
 
