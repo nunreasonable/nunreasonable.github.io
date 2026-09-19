@@ -1,8 +1,13 @@
 # Infraestrutura
 
 Itens que **não** dá para corrigir com um commit neste repositório — ficam no painel da Cloudflare
-ou na máquina que hospeda o bot. Levantados na auditoria de 19/08/2026; o estado observado está
-registrado para dar contexto.
+ou numa das máquinas que hospedam o bot. Levantados na auditoria de 19/08/2026; o estado observado
+está registrado para dar contexto.
+
+> **Leia a seção "Duas máquinas" antes de confiar em qualquer estado descrito aqui.** Este
+> repositório é operado por **duas** máquinas com a stack inteira instalada, e boa parte do que
+> está registrado abaixo foi medido em uma delas. "Está de pé" nunca é uma propriedade do projeto
+> — é uma propriedade de qual máquina estava ligada na hora da medição.
 
 | # | Item | Estado |
 |---|---|---|
@@ -20,21 +25,107 @@ registrado para dar contexto.
 | 12 | Tokens de bot no histórico público do `cornwall` | ⚠️ **parcial** — histórico reescrito, blobs sobrevivem |
 | 13 | `.wrangler` no histórico do `github.io` | ⏳ sem conserto por commit (`refs/pull/1/head`) |
 | 14 | Player servia o arquivo bruto; embed nascia quebrado | ✅ **resolvido** em 30/08/2026 |
+| 15 | `network-online.target` era no-op nas units de usuário | ✅ **resolvido** em 19/09/2026 |
+| 16 | Bots rodavam o binário de Debug em produção | ✅ **resolvido** em 19/09/2026 |
+| 17 | Estado de execução diverge entre as duas máquinas | ⚠️ **por desenho** — ver "Duas máquinas" |
+| 18 | Units versionadas são só de systemd; Gentoo usa OpenRC | ⏳ pendente (sem equivalente no repo) |
 
-**Reverificado em 09/09/2026, já nesta máquina (Gentoo/OpenRC).** Os itens 1 e 2 continuam
-abertos e foram medidos de novo: `curl -I http://daeese.me/` ainda responde `200 OK` em texto
-claro, e `https://daeese.me/` não devolve nenhum header de segurança. Os itens 3 e 8 foram
-resolvidos na máquina anterior e o registro vale para ela; **aqui** dependem dos serviços
-`cloudflared` e `cloudflared-clips` estarem de pé, e na reverificação `api.daeese.me` e
-`clips.daeese.me` respondiam 530 porque nenhum dos dois havia sido iniciado desde a migração. O
-estado dessa migração vive em `~/daeesewrkspc/.stage/PROXIMOS-PASSOS.md`, fora deste repositório.
+## Duas máquinas
 
-Uma ressalva de método, porque ela já custou uma conclusão errada: o DNS desta máquina falha de
-forma intermitente — o `/etc/resolv.conf` lista um nameserver IPv6 *link-local* numa rede sem IPv6
+Não houve migração concluída de uma máquina para outra. **Duas** máquinas têm a stack inteira
+instalada e servem o mesmo domínio, e quem responde é simplesmente quem estiver ligada:
+
+| Máquina | Init | Como reconhecer | Último estado medido |
+|---|---|---|---|
+| **Fedora 44 Workstation** | systemd | `hostnamectl` → `Fedora Linux 44`, kernel `*.fc44` | 19/09/2026 — tudo de pé (detalhe abaixo) |
+| **Gentoo** | OpenRC | ausência de `systemctl`; `~/daeesewrkspc/.stage/` existe | 09/09/2026 — ver ressalvas abaixo |
+
+Isso **não é failover**: nada arbitra, nada promove, nada sincroniza. É o mesmo par de repositórios
+clonado em dois lugares, com as mesmas credenciais, e o resultado depende de qual estava ligada.
+
+### O que as duas compartilham
+
+A conta da Cloudflare, as credenciais do tunnel, **o token de cada bot** e este repositório. É
+justamente por compartilharem que as duas subirem juntas é um problema de verdade, não um
+detalhe:
+
+- **Bot Discord com o mesmo token nos dois lados** — as duas sessões de gateway recebem os mesmos
+  eventos. Cada comando é processado duas vezes: dois bans, duas mensagens, dois tickets.
+- **Mesmas credenciais de tunnel** — os dois conectores se registram no mesmo tunnel e a Cloudflare
+  distribui as requisições entre eles. `api.daeese.me` passa a cair, requisição a requisição, em
+  bots com estado local diferente.
+- **`clips-gallery` serve arquivo do HD local** — o acervo não é o mesmo nas duas. O mesmo link de
+  clip dá 200 ou 404 conforme o conector que a Cloudflare escolher.
+
+### O que *não* é compartilhado e diverge calado
+
+Tudo que é gitignored por ser estado de execução:
+
+- `CommunityBot/bin/Release/net9.0/data/` — `tickets.json`, `guild-settings.json`
+- `ConsoleApp1/data/` — auditoria, pendências, alistamento
+- os `config.jsonc` e `dashboard_auth.json` de cada máquina
+- os carimbos `.wrangler/.deployed-hash` que o `deploy-workers.sh` usa para decidir se publica
+
+Nada disso viaja por commit. Um ticket aberto na Fedora não existe na Gentoo, e a auditoria de uma
+não sabe da outra. **Antes de trocar qual máquina serve, esse estado tem que ser copiado à mão** —
+não há mecanismo que faça isso.
+
+Os carimbos do `.wrangler` são a exceção benigna: sendo por máquina, cada uma decide sozinha se
+republica os Workers. No máximo gera uma versão redundante na Cloudflare; não quebra nada.
+
+### Ao registrar qualquer coisa aqui
+
+Datar e **dizer em qual máquina**. Uma linha como "o serviço está de pé" não significa nada neste
+repositório sem essa informação — a reverificação de 09/09 abaixo é exatamente o que acontece
+quando ela falta.
+
+### Fedora — medido em 19/09/2026
+
+Tudo no ar: as cinco units de usuário (`ccore-bot`, `community-bot`, `clips-gallery`,
+`daeese-presence`, `ccore-workers-deploy`) `active`, e os três `cloudflared` de sistema
+(`cloudflared`, `cloudflared-clips`, `cloudflared-ssh`) com 4/4 conexões cada. `daeese.me`,
+`api.daeese.me/api/health`, `dashboard` e `spreadsheet` em 200; `clips` em 302 para `/login`. Os
+três Workers batendo hash com o repositório. SELinux `Enforcing` e `Linger` ligado, como a seção 3b
+descreve.
+
+O DNS aqui **não** tem o defeito descrito na ressalva da Gentoo: o `/etc/resolv.conf` aponta para
+resolvedores locais (`127.0.2.2`, `127.0.2.3`), e dez resoluções seguidas de `discord.com`
+passaram sem uma falha.
+
+Dois problemas foram corrigidos nessa auditoria e valem para **as duas** máquinas, porque estão no
+código versionado — ver seção 3c.
+
+### Gentoo — reverificação de 09/09/2026
+
+Os itens 1 e 2 continuam abertos e foram medidos de novo: `curl -I http://daeese.me/` ainda
+responde `200 OK` em texto claro, e `https://daeese.me/` não devolve nenhum header de segurança.
+Reconfirmado na Fedora em 19/09/2026 — os dois seguem pendentes no painel.
+
+Os itens 3 e 8 foram resolvidos na máquina anterior e o registro vale para ela; **na Gentoo**
+dependem de `cloudflared` e `cloudflared-clips` estarem de pé, e na reverificação `api.daeese.me` e
+`clips.daeese.me` respondiam 530 porque nenhum dos dois havia sido iniciado ali. Isso ilustra o
+ponto da seção: o 530 não dizia que o serviço estava quebrado, dizia que *aquela* máquina não o
+estava servindo.
+
+Uma ressalva de método, porque ela já custou uma conclusão errada: o DNS da Gentoo falhava de forma
+intermitente — o `/etc/resolv.conf` listava um nameserver IPv6 *link-local* numa rede sem IPv6
 funcional. Uma medição feita no meio de uma dessas falhas fez os headers administrativos de
 `dashboard.daeese.me` parecerem ausentes, quando estão lá. Verificação que importe deve usar
 `curl -4 --resolve host:443:<ip>` para tirar o resolvedor da jogada, e uma falha isolada não é
-prova de serviço fora do ar.
+prova de serviço fora do ar. **O dono corrigiu os erros de rede da Gentoo depois disso**; a
+ressalva fica registrada porque o método continua valendo, não porque o defeito continue lá.
+
+O estado da configuração da Gentoo vive em `~/daeesewrkspc/.stage/PROXIMOS-PASSOS.md`, fora deste
+repositório — e portanto invisível para quem estiver na Fedora.
+
+### Pendência conhecida: as units são só de systemd
+
+O que este repositório versiona — `ccore-workers-deploy.service`, e as units irmãs em
+`community-discord-bot/community-bot.service` e `cornwall-discord-application/ccore-bot.service` —
+é **systemd**, com caminho absoluto `/home/daeese/daeesewrkspc/...` embutido. Na Gentoo, com
+OpenRC, nenhuma delas serve: não há equivalente versionado, e os init scripts correspondentes não
+existem neste repositório. Enquanto isso não for resolvido, subir a stack na Gentoo é um
+procedimento manual e não registrado.
 
 
 ## 1. HTTP não redireciona para HTTPS
@@ -153,6 +244,67 @@ Verificado: `kill -9` no processo e o serviço trouxe o bot de volta sozinho em 
 **Atenção ao desenvolver:** o serviço ocupa a porta 5056. Rodar `dotnet run` à mão em paralelo
 falha com `HttpListenerException (98): Address already in use`. Pare o serviço antes
 (`systemctl --user stop ccore-bot`).
+
+## 3c. Duas correções nas units — RESOLVIDO (19/09/2026)
+
+Vale para as duas máquinas: está no código versionado, não na configuração de uma delas.
+
+### `network-online.target` nunca ordenou nada (item 15)
+
+As três units de usuário — `ccore-bot`, `community-bot`, `ccore-workers-deploy` — traziam
+`After=network-online.target` e `Wants=network-online.target`. **Esse target só existe no systemd
+de sistema.** No gerenciador de usuário ele não existe:
+
+```
+$ systemctl --user status network-online.target
+Unit network-online.target could not be found.
+```
+
+E `Wants=` para unidade inexistente não é erro — é ignorado calado. As duas linhas eram no-op desde
+sempre. O efeito aparecia em todo boot:
+
+```
+15:40:38 systemd: Started ccore-bot.service
+15:40:39 ConsoleApp1: HttpRequestException: Resource temporarily unavailable (discord.com:443)
+```
+
+O bot subia antes da rede e só se recuperava no retry de 7s do DSharpPlus. No
+`ccore-workers-deploy` o risco era maior que log sujo: sendo `oneshot`, ele tem uma chance por
+boot, e rodar antes do DNS queima as três tentativas do `deploy-workers.sh` — a borda ficaria
+desatualizada até o próximo reinício, exatamente a garantia que o script existe para dar.
+
+A substituição é um gate de DNS real:
+
+```ini
+ExecStartPre=-/usr/bin/timeout 60 /usr/bin/bash -c 'until getent ahostsv4 discord.com >/dev/null 2>&1; do sleep 1; done'
+```
+
+O prefixo `-` é deliberado: se os 60s estourarem, o serviço sobe assim mesmo e o retry da
+aplicação volta a ser a rede de segurança. O gate melhora o caso comum sem inventar um jeito novo
+de o serviço não subir.
+
+### Os bots rodavam o binário de Debug (item 16)
+
+Os dois `ExecStart` apontavam para `bin/Debug/net9.0/` — sem otimização de JIT e com as asserções
+ligadas. Agora apontam para `bin/Release/net9.0/`.
+
+**A troca não é simétrica entre os dois bots, e a diferença destrói estado:**
+
+| Bot | Resolve `config/` e `data/` por | Trocar Debug↔Release move o estado? |
+|---|---|---|
+| `ccore` | caminho relativo cru, preso ao `WorkingDirectory` | **não** |
+| `CommunityBot` | `AppContext.BaseDirectory` (`AppPaths.cs`) | **sim** |
+
+O `CommunityBot` lê o estado do diretório do *executável*. Trocar o `ExecStart` sem mais nada faria
+o bot subir lendo um `bin/Release/net9.0/data/` que não existia — `tickets.json` e
+`guild-settings.json` zerados, sem erro nenhum no log. O `data/` teve de ser copiado à mão de
+`bin/Debug/net9.0/data/` antes do restart, e o log confirmou a leitura:
+
+```
+[tickets] ligado em "Coro Solto": categoria "🐛 SUPORTE", 4 tipo(s) de ticket.
+```
+
+Quem repetir isso na Gentoo tem de copiar o `data/` junto. A armadilha está anotada nas duas units.
 
 ## 4. CORS do Worker reflete qualquer Origin — RESOLVIDO (19/08/2026)
 
@@ -688,3 +840,11 @@ HD não entrar em backup nem em repositório.
    os SHAs antigos deixarem de responder.
 4. **Item 6 (planilha sem autenticação)** continua pendente. O botão saiu da home pública do
    ccore, o que reduz a exposição, mas quem tem a URL ainda vê os dados.
+5. **Decidir o que fazer com as duas máquinas** (itens 17 e 18). Hoje as duas podem subir a mesma
+   stack com as mesmas credenciais, e nada impede que subam juntas — o custo disso está na seção
+   "Duas máquinas". Três saídas, em ordem de esforço: (a) tratar uma como a única de produção e
+   desligar os serviços da outra de vez; (b) versionar os init scripts de OpenRC para a Gentoo
+   deixar de ser procedimento manual; (c) escrever o passo a passo de troca de máquina, incluindo
+   a cópia do `data/` de cada bot, que hoje só existe na cabeça de quem fez.
+6. **Itens 1 e 2 (HTTPS e headers)** seguem pendentes no painel da Cloudflare, remedidos em
+   19/09/2026 na Fedora. São os dois itens mais antigos ainda abertos do documento.
