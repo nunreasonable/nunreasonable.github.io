@@ -268,7 +268,7 @@ sempre. O efeito aparecia em todo boot:
 15:40:39 ConsoleApp1: HttpRequestException: Resource temporarily unavailable (discord.com:443)
 ```
 
-O bot subia antes da rede e só se recuperava no retry de 7s do DSharpPlus. No
+O bot subia antes da rede e só se recuperava no retry de 7s do DisCatSharp. No
 `ccore-workers-deploy` o risco era maior que log sujo: sendo `oneshot`, ele tem uma chance por
 boot, e rodar antes do DNS queima as três tentativas do `deploy-workers.sh` — a borda ficaria
 desatualizada até o próximo reinício, exatamente a garantia que o script existe para dar.
