@@ -18,13 +18,22 @@
 Description=Publica os Workers da Cloudflare do ccore quando o codigo muda
 Documentation=https://github.com/nunreasonable/nunreasonable.github.io/blob/main/INFRA.md
 # O wrangler precisa de DNS e saida para a API da Cloudflare.
-After=network-online.target
-Wants=network-online.target
+#
+# NAO use After/Wants=network-online.target aqui: esse target so existe no
+# systemd de SISTEMA. No gerenciador de usuario ele nao existe, entao as duas
+# diretivas viravam no-op silencioso e este oneshot podia rodar antes do DNS
+# subir - gastando as tres tentativas do script e deixando a borda
+# desatualizada ate o proximo boot. O gate abaixo e o substituto real.
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
 WorkingDirectory=/home/daeese/daeesewrkspc/nunreasonable.github.io/cloudflare
+
+# Espera o DNS da API da Cloudflare resolver, no maximo 60s. O prefixo "-" faz
+# o systemd ignorar o codigo de saida: se estourar, o script roda assim mesmo e
+# usa o proprio retry de 3 tentativas.
+ExecStartPre=-/usr/bin/timeout 60 /usr/bin/bash -c 'until getent ahostsv4 api.cloudflare.com >/dev/null 2>&1; do sleep 1; done'
 ExecStart=/home/daeese/daeesewrkspc/nunreasonable.github.io/cloudflare/deploy-workers.sh
 
 # O IPv6 de saida desta maquina nao funciona (ver INFRA.md secao 3): sem isto o
