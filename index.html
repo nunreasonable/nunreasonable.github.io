@@ -2873,16 +2873,51 @@
         // borrado fica desconfortavel de ler.
         const MAX = 4;
 
-        card.addEventListener("mousemove", (event) => {
-          const r = card.getBoundingClientRect();
-          const px = (event.clientX - r.left) / r.width - 0.5;
-          const py = (event.clientY - r.top) / r.height - 0.5;
+        // Mesmo motivo do brilho do cursor, e aqui pesa mais: este elemento tem
+        // backdrop-filter e preserve-3d, entao cada escrita de transform manda
+        // reborrar o fundo inteiro do card. Sem o rAF, um mouse de 1000Hz pedia
+        // esse trabalho centenas de vezes por quadro desenhado.
+        let rect = null;
+        let px = 0;
+        let py = 0;
+        let pendente = false;
+
+        function aplicar() {
+          pendente = false;
           card.style.transform =
             `perspective(1200px) rotateY(${px * MAX}deg) rotateX(${-py * MAX}deg)`;
+        }
+
+        // getBoundingClientRect() forca o layout a ser recalculado na hora. Lido
+        // dentro do mousemove, logo depois de ter escrito style.transform no
+        // evento anterior, ele vira layout sincrono a cada evento - o classico
+        // read-after-write. O retangulo so muda quando a pagina se mexe, entao
+        // e medido na entrada do ponteiro e invalidado em scroll/resize.
+        function medir() {
+          rect = card.getBoundingClientRect();
+        }
+
+        card.addEventListener("mouseenter", medir);
+        window.addEventListener("scroll", () => { rect = null; }, { passive: true });
+        window.addEventListener("resize", () => { rect = null; }, { passive: true });
+
+        card.addEventListener("mousemove", (event) => {
+          if (!rect) {
+            medir();
+          }
+
+          px = (event.clientX - rect.left) / rect.width - 0.5;
+          py = (event.clientY - rect.top) / rect.height - 0.5;
+
+          if (!pendente) {
+            pendente = true;
+            requestAnimationFrame(aplicar);
+          }
         }, { passive: true });
 
         card.addEventListener("mouseleave", () => {
           card.style.transform = "";
+          rect = null;
         });
       })();
 
