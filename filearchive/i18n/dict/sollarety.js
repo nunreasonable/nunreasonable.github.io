@@ -36,7 +36,7 @@ export const pt = {
   "sollarety.terms_of_service": "Termos de Serviço",
   "sollarety.back_to_ccore": "Voltar para o ccore",
   "sollarety.sollarety_c_hosted_alongside_ccore":
-    "Sollarety · C# · hospedado junto do ccore em daeese.me"
+    "Sollarety · C# / .NET 10 · hospedado junto do ccore em daeese.me"
 };
 
 export default pt;

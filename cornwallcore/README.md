@@ -66,7 +66,7 @@ hospeda o bot só aparecem no painel administrativo autenticado.
 
 ## Configuração
 
-O bot utiliza o arquivo `config.json` para configurações de:
+O bot utiliza o arquivo `config.jsonc` para configurações de:
 - IDs de canais e cargos
 - URLs de planilhas e links
 - Permissões de comandos
@@ -77,7 +77,7 @@ Observação: o bot agora usa o intent `MessageContent` para ler o texto das men
 
 ## Requisitos
 
-- .NET 9.0
+- .NET 10 (LTS)
 - DisCatSharp
-- Configuração adequada no `config.json`
+- Configuração adequada no `config.jsonc`
 - Permissões do bot no servidor Discord

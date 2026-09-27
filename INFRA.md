@@ -29,6 +29,7 @@ está registrado para dar contexto.
 | 16 | Bots rodavam o binário de Debug em produção | ✅ **resolvido** em 19/09/2026 |
 | 17 | Estado de execução diverge entre as duas máquinas | ⚠️ **por desenho** — ver "Duas máquinas" |
 | 18 | Units versionadas são só de systemd; Gentoo usa OpenRC | ⏳ pendente (sem equivalente no repo) |
+| 19 | Bots em .NET 9 (STS, suporte acaba em 10/11/2026) | ✅ **resolvido** na Fedora em 26/09/2026 — Gentoo pendente |
 
 ## Duas máquinas
 
@@ -61,7 +62,8 @@ detalhe:
 
 Tudo que é gitignored por ser estado de execução:
 
-- `CommunityBot/bin/Release/net9.0/data/` — `tickets.json`, `guild-settings.json`
+- `CommunityBot/bin/Release/net10.0/data/` — `tickets.json`, `guild-settings.json` (era `net9.0/`
+  até 26/09/2026, ver seção 3d)
 - `ConsoleApp1/data/` — auditoria, pendências, alistamento
 - os `config.jsonc` e `dashboard_auth.json` de cada máquina
 - os carimbos `.wrangler/.deployed-hash` que o `deploy-workers.sh` usa para decidir se publica
@@ -305,6 +307,55 @@ o bot subir lendo um `bin/Release/net9.0/data/` que não existia — `tickets.js
 ```
 
 Quem repetir isso na Gentoo tem de copiar o `data/` junto. A armadilha está anotada nas duas units.
+Desde 26/09/2026 o caminho é `bin/Release/net10.0/` — a mesma armadilha voltou na troca de TFM, ver
+seção 3d.
+
+## 3d. Subida para o .NET 10 — RESOLVIDO na Fedora (26/09/2026)
+
+Os dois bots eram `net9.0`, com o `global.json` fixando o SDK 9.0.x. O .NET 9 é STS e o suporte
+acaba em **10/11/2026**. Os dois passaram para `net10.0` (LTS), com o SDK fixado em 10.0.x. O
+DisCatSharp 10.7.0 já publica build para `net10.0`, então nenhum pacote precisou trocar de versão.
+
+Na Fedora: `sudo dnf install dotnet-sdk-10.0` (SDK 10.0.112, runtime 10.0.12). O
+`fedora-post-install` agora instala o `dotnet-sdk-10.0` no lugar do 9.
+
+O que mudou junto, nos dois `.csproj`:
+
+- **Aviso de vulnerabilidade High sumiu sozinho.** O `System.Net.Security` 4.3.0, que chegava
+  transitivo via `System.Net.WebSockets.Client` 4.3.2, é podado pelo SDK 10 porque o framework já
+  fornece a versão dele.
+- **`NuGet.Protocol` 7.9.0 referenciado direto.** O DisCatSharp puxa a 7.3.0, que tem o aviso
+  `GHSA-g4vj-cjjj-v7hg` (severidade baixa). A referência direta sobe o grafo inteiro do `NuGet.*`.
+- **Aviso CS9057 removido.** O gerador do `Backport.System.Threading.Lock` exige um compilador mais
+  novo que o do SDK 10.0.1xx e não rodava; no `net10.0` o `System.Threading.Lock` é nativo, então
+  ele é removido antes da compilação. `DV2001` foi silenciado.
+- Build Release dos dois com **0 avisos**, e nenhum CS0618 (API obsoleta) antes ou depois.
+
+**A armadilha da seção 3c voltou.** O `CommunityBot` lê o estado de `AppContext.BaseDirectory`, e
+trocar o TFM muda a pasta de saída. O `data/` foi copiado antes do restart:
+
+```bash
+cp -a CommunityBot/bin/Release/net9.0/data CommunityBot/bin/Release/net10.0/
+```
+
+e o log confirmou a leitura com a mesma linha de antes (`[tickets] ligado em "Coro Solto" ...`). O
+`ccore` não precisou de nada, porque o estado dele está preso ao `WorkingDirectory`.
+
+Verificado na Fedora em 26/09/2026: os dois processos rodando `Microsoft.NETCore.App/10.0.12`,
+gateway conectado, e `GET http://127.0.0.1:5056/api/status` com `online: true`.
+
+### O CommunityBot estava fora do ar havia 11 horas, com o systemd dizendo que não
+
+Descoberto na revisão que antecedeu a migração. Uma queda de rede às 12:01 fez o DisCatSharp
+esgotar as tentativas de reconexão; às 12:03 ele registrou `Could not connect to Discord.` e parou.
+O `Main` fica parado num `Task.Delay(Infinite)` e os handlers de `SocketErrored`/`Zombied` só
+registram em log, então o processo nunca saiu e o `Restart=on-failure` nunca disparou: a unit
+seguiu `active (running)` com o bot desconectado até o restart da migração, às 23:42. O `ccore`
+passou pela mesma queda e voltou sozinho.
+
+É defeito de código, não de infra, e **continua em aberto**: a próxima queda longa de rede repete o
+problema. O conserto é um watchdog que encerre o processo com código diferente de zero (ou refaça
+o `ConnectAsync`) quando o gateway ficar desconectado por tempo demais.
 
 ## 4. CORS do Worker reflete qualquer Origin — RESOLVIDO (19/08/2026)
 
@@ -848,3 +899,6 @@ HD não entrar em backup nem em repositório.
    a cópia do `data/` de cada bot, que hoje só existe na cabeça de quem fez.
 6. **Itens 1 e 2 (HTTPS e headers)** seguem pendentes no painel da Cloudflare, remedidos em
    19/09/2026 na Fedora. São os dois itens mais antigos ainda abertos do documento.
+7. **Item 19 na Gentoo.** Instalar o SDK do .NET 10, reconstruir os dois bots e copiar o `data/`
+   do `CommunityBot` de `bin/Release/net9.0/` para `bin/Release/net10.0/` antes de subir — o
+   passo a passo está na seção 3d.
