@@ -201,7 +201,7 @@
 			<article class="card">
 				<p data-i18n="sol_pp.sollarety" class="eyebrow">Sollarety</p>
 				<h1 data-i18n="sol_pp.privacy_policy">Privacy Policy</h1>
-				<span data-i18n="sol_pp.last_updated_august_20_2026" class="pill">Last updated: August 20, 2026</span>
+				<span data-i18n="sol_pp.last_updated_september_28_2026" class="pill">Last updated: September 28, 2026</span>
 
 				<div class="note">
 					<p style="margin: 0">
@@ -213,7 +213,7 @@
 				</div>
 
 				<h2 data-i18n="sol_pp.1_what_is_stored">1. What is stored</h2>
-				<p data-i18n="sol_pp.only_two_things_leave_the">Only two things leave the moment they happen:</p>
+				<p data-i18n="sol_pp.only_three_things_outlast_the">Only three things outlast the moment they happen:</p>
 				<ul>
 					<li>
 						<strong data-i18n="sol_pp.warnings">Warnings.</strong> <span data-i18n="sol_pp.when_a_moderator_runs_the">When a moderator runs the warn command,
@@ -227,6 +227,15 @@
 						posted as a message to a channel your administrators choose. That
 						message lives in your server, under your control, like any other
 						message.</span>
+					</li>
+					<li>
+						<strong data-i18n="sol_pp.roblox_account_links">Roblox account links.</strong> <span data-i18n="sol_pp.when_you_verify_with_the">When you verify with the verify
+						command, the Bot saves your Discord user ID together with your Roblox
+						user ID, Roblox username and display name, the date your Roblox account
+						was created, and the date you verified. This is written to a file on
+						the machine that hosts the Bot, and it applies in every server that
+						uses the Bot. It is created only when you complete the verification
+						yourself.</span>
 					</li>
 				</ul>
 
@@ -249,6 +258,13 @@
 					The purge command deletes messages through the Discord API. It does not
 					read or copy their content before deleting.
 				</p>
+				<p data-i18n="sol_pp.to_apply_roblox_verification_the">
+					To apply Roblox verification, the Bot reads from Roblox's public API the
+					current name of a linked Roblox account, when it was created, and which
+					Roblox groups it belongs to with which rank — the same things anyone can
+					see on a Roblox profile. The answer is kept in memory for at most five
+					minutes, to avoid asking twice, and is never written down.
+				</p>
 
 				<h2 data-i18n="sol_pp.4_what_is_never_collected">4. What is never collected</h2>
 				<ul>
@@ -256,15 +272,22 @@
 					<li data-i18n="sol_pp.direct_messages">direct messages;</li>
 					<li data-i18n="sol_pp.voice_audio">voice audio;</li>
 					<li data-i18n="sol_pp.email_addresses_ip_addresses_payment">email addresses, IP addresses, payment details or any real-world identity;</li>
-					<li data-i18n="sol_pp.anything_at_all_from_users">anything at all from users who never appear in a moderation command.</li>
+					<li data-i18n="sol_pp.your_discord_or_roblox_password">your Discord or Roblox password — both sign-ins happen on Discord's and Roblox's own sites;</li>
+					<li data-i18n="sol_pp.anything_at_all_from_users">anything at all from users who never appear in a moderation command and never verify a Roblox account.</li>
 				</ul>
 
-				<h2 data-i18n="sol_pp.5_how_long_warnings_are">5. How long warnings are kept</h2>
+				<h2 data-i18n="sol_pp.5_how_long_it_is">5. How long it is kept</h2>
 				<p data-i18n="sol_pp.until_a_moderator_deletes_them">
 					Until a moderator deletes them. The delwarn command removes a warning
 					permanently, and removing the Bot from your server stops any further
 					records being created. There is no automatic expiry: a warning history
 					that erased itself would defeat its own purpose.
+				</p>
+				<p data-i18n="sol_pp.a_roblox_link_is_kept">
+					A Roblox link is kept until you remove it with the unverify command,
+					which deletes it at once, for every server. Removing the Bot from a
+					server does not delete links: a link belongs to the person who made it,
+					not to any one server.
 				</p>
 
 				<h2 data-i18n="sol_pp.6_who_can_see_it">6. Who can see it</h2>
@@ -274,6 +297,11 @@
 					recorded in one server is not visible from another. The log channel is
 					visible to whoever your administrators grant access to.
 				</p>
+				<p data-i18n="sol_pp.a_roblox_link_can_be">
+					A Roblox link can be looked up with the whois command by members of any
+					server that uses the Bot and that you are in — telling which Roblox
+					account belongs to whom is what verification is for. Nobody else sees it.
+				</p>
 				<p data-i18n="sol_pp.data_is_not_sold_rented">
 					Data is not sold, rented, or shared with third parties. There is no
 					analytics service and no advertising.
@@ -282,8 +310,10 @@
 				<h2 data-i18n="sol_pp.7_where_it_is_stored">7. Where it is stored</h2>
 				<p data-i18n="sol_pp.on_a_single_self_hosted">
 					On a single self-hosted machine operated by the Bot's administrators.
-					The stored data is not sent to any external service; the only network
-					the Bot talks to is Discord's own API.
+					The stored data is not sent to any external service. Besides Discord's
+					own API, the Bot talks only to Roblox's public API, to read the
+					information listed in section 3, and to the verification program
+					described in section 12, to collect a finished verification.
 				</p>
 
 				<h2 data-i18n="sol_pp.8_your_rights">8. Your rights</h2>
@@ -293,6 +323,10 @@
 					Discord server channels. Deleting a warning does not delete the message
 					already posted in the server's log channel — that message belongs to
 					your server, and a server administrator can remove it.
+				</p>
+				<p data-i18n="sol_pp.you_can_delete_your_own">
+					You can delete your own Roblox link at any time with the unverify
+					command, without asking anyone.
 				</p>
 
 				<h2 data-i18n="sol_pp.9_children">9. Children</h2>
@@ -336,13 +370,38 @@
 					Discord's own server picker and tells this site nothing at all.</span>
 				</p>
 
-				<h2 data-i18n="sol_pp.12_changes">12. Changes</h2>
+				<h2 data-i18n="sol_pp.12_roblox_verification">12. Roblox verification</h2>
+				<p data-i18n="sol_pp.the_verify_command_sends_you">
+					The verify command sends you to a page at daeese.me that signs you in
+					twice: first with Discord, to learn which Discord account is using the
+					browser, and then with Roblox, through Roblox's official sign-in. The
+					Discord sign-in asks only for your username. The Roblox sign-in asks only
+					for your Roblox user ID, username, display name, account creation date and
+					avatar link. The Bot never sees your password on either site.
+				</p>
+				<p data-i18n="sol_pp.what_becomes_of_that_data_2">
+					What becomes of that data: a small program at the network edge exchanges
+					each one-time code for a temporary token, reads the account details once,
+					and revokes both tokens straight away, so no ongoing access to either
+					account remains. It then holds the pair — your Discord user ID and your
+					Roblox account details — for up to 30 minutes, until the Bot collects it.
+					Collecting it deletes it. From then on the link lives only in the file
+					described in section 1.
+				</p>
+				<p data-i18n="sol_pp.a_short_lived_signed_cookie">
+					Between the two sign-ins, the page keeps a signed cookie in your browser
+					for up to ten minutes, so it can tell that both sign-ins came from the
+					same place. It holds no password or token, and it is deleted when the
+					verification ends.
+				</p>
+
+				<h2 data-i18n="sol_pp.13_changes">13. Changes</h2>
 				<p data-i18n="sol_pp.this_policy_may_change_material">
 					This policy may change. Material changes will be reflected here with a
 					new "last updated" date.
 				</p>
 
-				<h2 data-i18n="sol_pp.13_contact">13. Contact</h2>
+				<h2 data-i18n="sol_pp.14_contact">14. Contact</h2>
 				<p data-i18n="sol_pp.questions_about_this_policy_or">
 					Questions about this policy, or requests about your data, can be raised
 					with the Bot administrators through the official Discord server channels.

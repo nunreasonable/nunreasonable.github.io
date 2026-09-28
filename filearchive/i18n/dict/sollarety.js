@@ -12,7 +12,7 @@
 export const pt = {
   "sollarety.discord_bot": "Bot de Discord",
   "sollarety.a_moderation_and_fun_bot":
-    "Um bot de moderação e diversão para servidores de comunidade. Roda na mesma infraestrutura do",
+    "Um bot de moderação, verificação Roblox e diversão para servidores de comunidade. Roda na mesma infraestrutura do",
   "sollarety.but_the_two_are_separate":
     ", mas os dois são aplicações separadas e não compartilham dado nenhum.",
   "sollarety.add_to_discord": "Adicionar ao Discord",
@@ -23,6 +23,13 @@ export const pt = {
   "sollarety.warnings": "Advertências",
   "sollarety.keep_a_written_record_so":
     "mantêm um registro escrito, para que uma punição não seja um evento isolado sem histórico por trás.",
+  "sollarety.roblox_verification": "Verificação Roblox",
+  "sollarety.link_a_discord_account_to":
+    ". Os membros vinculam a conta Roblox pelo login oficial do Roblox, então o bot nunca vê senha nenhuma, e o vínculo vale em todo servidor que usa o Sollarety.",
+  "sollarety.each_server_decides_what_verification":
+    "Cada servidor decide o que a verificação dá: um cargo de verificado, um cargo para quem ainda não verificou, cargos por grupo e rank do Roblox com",
+  "sollarety.a_nickname_taken_from_the":
+    ", um apelido tirado do nome no Roblox e uma idade mínima de conta Roblox para barrar alts recém-criadas. Quem já verificou em outro servidor recebe os cargos assim que entra.",
   "sollarety.fun": "Diversão",
   "sollarety.all_rate_limited_per_user": ". Todos com limite de uso por pessoa.",
   "sollarety.utility": "Utilidade",

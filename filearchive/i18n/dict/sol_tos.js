@@ -12,7 +12,7 @@ export const pt = {
 
   "sol_tos.privacy_policy": "Política de Privacidade",
   "sol_tos.terms_of_service": "Termos de Serviço",
-  "sol_tos.last_updated_august_20_2026": "Última atualização: 20 de agosto de 2026",
+  "sol_tos.last_updated_september_28_2026": "Última atualização: 28 de setembro de 2026",
 
   "sol_tos.1_agreement": "1. Aceite",
   "sol_tos.by_adding_sollarety_the_bot":
@@ -20,7 +20,9 @@ export const pt = {
 
   "sol_tos.2_what_the_bot_does": "2. O que o Bot faz",
   "sol_tos.the_bot_provides_moderation_commands":
-    "O Bot oferece comandos de moderação (banir, expulsar, silenciar, limpar mensagens, modo lento e trancar canal), um registro de advertências e um conjunto de comandos de entretenimento e utilidade. Todos são comandos de barra do Discord.",
+    "O Bot oferece comandos de moderação (banir, expulsar, silenciar, limpar mensagens, modo lento e trancar canal), um registro de advertências, verificação de conta Roblox e um conjunto de comandos de entretenimento e utilidade. Todos são comandos de barra do Discord.",
+  "sol_tos.the_bot_is_not_affiliated":
+    "O Bot não é afiliado à Roblox Corporation nem à Discord Inc., nem endossado ou operado por elas. A verificação Roblox usa o login oficial e a API pública do Roblox, sob os termos do próprio Roblox.",
 
   "sol_tos.3_who_may_use_the": "3. Quem pode usar os comandos de moderação",
   "sol_tos.access_is_governed_entirely_by":
@@ -36,6 +38,7 @@ export const pt = {
     "burlar os limites de taxa do Discord, ou automatizar abuso da API do Discord;",
   "sol_tos.impersonate_the_server_staff_through":
     "se passar pela equipe do servidor através do comando say;",
+  "sol_tos.link_or_try_to_link": "vincular, ou tentar vincular, uma conta Roblox que não é sua;",
   "sol_tos.break_the": "violar os",
   "sol_tos.or_community_guidelines": "ou as Diretrizes da Comunidade.",
   "sol_tos.discord_terms_of_service": "Termos de Serviço do Discord",
@@ -43,10 +46,12 @@ export const pt = {
   "sol_tos.5_your_responsibility_as_a": "5. A sua responsabilidade como administrador do servidor",
   "sol_tos.you_decide_which_roles_hold":
     "Você decide quais cargos têm permissão de moderação e, portanto, quem consegue agir através do Bot. A responsabilidade por essa configuração e pelas decisões de moderação tomadas no seu servidor é sua. O Bot executa instruções; ele não as revisa.",
+  "sol_tos.the_same_goes_for_roblox":
+    "O mesmo vale para a verificação Roblox: você escolhe quais cargos ela dá, quais grupos e ranks do Roblox contam, e o que esses cargos podem fazer no seu servidor.",
 
   "sol_tos.6_data": "6. Dados",
   "sol_tos.the_bot_stores_warnings_you":
-    "O Bot guarda as advertências que você cria e escreve as ações de moderação num canal de log que você configura. Ele não lê o conteúdo das mensagens. A",
+    "O Bot guarda as advertências que você cria e a conta Roblox que você vincula com o comando de verificação, e escreve as ações de moderação num canal de log que você configura. Ele não lê o conteúdo das mensagens. A",
   "sol_tos.describes_exactly_what_is_kept":
     "descreve exatamente o que é guardado e por quanto tempo, e faz parte destes Termos.",
 
@@ -56,7 +61,7 @@ export const pt = {
 
   "sol_tos.8_limitation_of_liability": "8. Limitação de responsabilidade",
   "sol_tos.to_the_extent_permitted_by":
-    "Na medida permitida por lei, os operadores do Bot não se responsabilizam por qualquer perda decorrente do uso dele, incluindo ações de moderação tomadas através do Bot, mensagens apagadas pelo comando de limpeza, ou dados perdidos durante uma indisponibilidade. As ações de moderação são executadas pela sua equipe, não pelos operadores.",
+    "Na medida permitida por lei, os operadores do Bot não se responsabilizam por qualquer perda decorrente do uso dele, incluindo ações de moderação tomadas através do Bot, mensagens apagadas pelo comando de limpeza, cargos dados ou retirados pela verificação Roblox, ou dados perdidos durante uma indisponibilidade. As ações de moderação são executadas pela sua equipe, não pelos operadores.",
 
   "sol_tos.9_termination": "9. Encerramento",
   "sol_tos.you_may_stop_using_the":

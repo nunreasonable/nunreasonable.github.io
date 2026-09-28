@@ -593,8 +593,8 @@
 							<span class="title">Full</span>
 							<span class="detail">
 								Everything the commands need: Ban, Kick, Timeout,
-								Manage Messages, Manage Channels and Manage Roles, plus
-								reading and posting in channels.
+								Manage Messages, Manage Channels, Manage Roles and
+								Manage Nicknames, plus reading and posting in channels.
 							</span>
 						</label>
 						<label class="preset">
@@ -603,7 +603,8 @@
 							<span class="detail">
 								Reading and posting only. The moderation commands still
 								show up in the server, but they will refuse to run
-								because the bot has no permission to carry them out.
+								because the bot has no permission to carry them out, and
+								Roblox verification links accounts without giving roles.
 							</span>
 						</label>
 					</div>
@@ -717,9 +718,12 @@
 			// Somas dos bits que os [ApplicationCommandRequireBotPermissions] do bot
 			// exigem. "fun" e so a base de ler/escrever/reagir; "full" acrescenta
 			// Kick(2) Ban(4) ManageChannels(16) ManageMessages(8192)
-			// ManageRoles(1<<28) ModerateMembers(1<<40).
+			// ManageNicknames(1<<27) ManageRoles(1<<28) ModerateMembers(1<<40).
+			// ManageNicknames entrou com a verificacao Roblox, que poe o nome do
+			// Roblox no apelido; servidor convidado antes precisa dar a permissao
+			// ao cargo do bot a mao.
 			const PERMISSIONS = {
-				full: "1374658358358",
+				full: "1374792576086",
 				fun: "274878286912"
 			};
 
