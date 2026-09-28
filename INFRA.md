@@ -62,8 +62,10 @@ detalhe:
 
 Tudo que é gitignored por ser estado de execução:
 
-- `CommunityBot/bin/Release/net10.0/data/` — `tickets.json`, `guild-settings.json` (era `net9.0/`
-  até 26/09/2026, ver seção 3d)
+- `CommunityBot/bin/Release/net10.0/data/` — `tickets.json`, `guild-settings.json`,
+  `roblox-links.json` (era `net9.0/` até 26/09/2026, ver seção 3d). O `roblox-links.json` é o
+  pior de perder: são os vínculos Roblox de **todo** mundo que verificou, em todos os servidores,
+  e refazê-los exige cada pessoa passar pelo OAuth de novo
 - `ConsoleApp1/data/` — auditoria, pendências, alistamento
 - os `config.jsonc` e `dashboard_auth.json` de cada máquina
 - os carimbos `.wrangler/.deployed-hash` que o `deploy-workers.sh` usa para decidir se publica
@@ -877,6 +879,41 @@ com git local. Os caminhos das fontes saíram do código no mesmo dia e passaram
 `~/.config/clips-gallery/sources`, ao lado de `secret` e `password`, para o caminho do arquivo do
 HD não entrar em backup nem em repositório.
 
+## 15. Verificação Roblox do Sollarety — Worker novo, com estado (28/09/2026)
+
+O Sollarety passou a verificar conta Roblox no molde do BloxLink (`/verify`, binds de grupo,
+cargos na entrada). A posse da conta é provada por OAuth, e o OAuth mora num Worker novo:
+[`cloudflare/roblox-verify-worker`](cloudflare/roblox-verify-worker) (`daeese-roblox-verify`,
+rota `daeese.me/oauth/roblox/*`). Ele já está na lista do `deploy-workers.sh`, então sobe no
+próximo boot de qualquer uma das duas máquinas.
+
+```
+/verify no Discord → botão → daeese.me/oauth/roblox/start
+  → login Discord (identify) → /oauth/roblox/discord
+  → login Roblox (openid profile, PKCE) → /oauth/roblox/callback
+  → Durable Object guarda "Discord X = Roblox Y" por 30 min
+bot → GET /oauth/roblox/result?d=X  (Authorization: Bearer BOT_API_SECRET)  → lê e apaga
+```
+
+### Três coisas que não são óbvias
+
+**É o primeiro Worker com estado.** Os outros três não guardam nada. Este tem um Durable Object
+SQLite (`PendingLinks`, uma instância só) para os resultados pendentes. Não é KV de propósito: o
+KV cacheia na borda até a leitura de chave **inexistente** e demora até um minuto para propagar uma
+escrita, e o bot pergunta "já tem?" a cada 4 s. Com KV, a primeira pergunta sem resultado prendia o
+"não" no cache. SQLite é o backend de Durable Object do plano Free.
+
+**O bot não abre porta.** O caminho é o inverso do ccore (seção 3): o Worker não tem como avisar o
+bot, então é o bot que busca. Por isso não houve tunnel novo nem regra de ingress, e o
+`BOT_API_SECRET` é a única coisa que liga os dois — o mesmo valor em `robloxVerify.apiSecret` no
+`config.jsonc` de cada máquina.
+
+**O Discord entra no navegador para fechar um golpe.** Um link de verificação com código do
+`/verify` poderia ser repassado: a vítima autorizaria o Roblox dela e a conta cairia no Discord de
+quem mandou. Provando o Discord no mesmo navegador que o Roblox, o link é estático e não carrega
+identidade nenhuma. Por isso o Worker precisa do `DISCORD_CLIENT_SECRET` (o mesmo valor do
+fun-oauth) e de um redirect a mais cadastrado no portal do Discord.
+
 ## Pendências que dependem do dono
 
 1. **Resetar o token da aplicação `1479642388837437544`** no portal do Discord. Ela não é
@@ -902,3 +939,15 @@ HD não entrar em backup nem em repositório.
 7. **Item 19 na Gentoo.** Instalar o SDK do .NET 10, reconstruir os dois bots e copiar o `data/`
    do `CommunityBot` de `bin/Release/net9.0/` para `bin/Release/net10.0/` antes de subir — o
    passo a passo está na seção 3d.
+8. **Redirect do login do convite do Sollarety.** O "Sign in with Discord" de
+   `ccore.daeese.me/fun/invite/` dá *Invalid OAuth2 redirect_uri*. A página e o `fun-oauth-worker`
+   mandam a mesma URI e o Worker responde nela; o que falta é o cadastro. Em Developer Portal →
+   Sollarety (`1403153848507301939`) → OAuth2 → Redirects precisam estar, caractere a caractere:
+   `https://daeese.me/oauth/fun/callback`, `https://ccore.daeese.me/fun/invite/` e, para a
+   verificação Roblox, `https://daeese.me/oauth/roblox/discord`.
+9. **Ligar a verificação Roblox** (seção 15): registrar o app OAuth no Creator Hub do Roblox
+   (exige conta com ID verificado; redirect `https://daeese.me/oauth/roblox/callback`), pôr o
+   Client ID em `ROBLOX_CLIENT_ID` no `wrangler.toml`, pôr os quatro secrets do Worker
+   (`DISCORD_CLIENT_SECRET`, `ROBLOX_CLIENT_SECRET`, `SESSION_KEY`, `BOT_API_SECRET`) e o
+   `robloxVerify.apiSecret` nas duas máquinas. Depois de testar, publicar o app para a revisão da
+   Roblox: em modo privado ele só aceita poucos usuários.

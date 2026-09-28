@@ -1,0 +1,42 @@
+name = "daeese-roblox-verify"
+main = "src/worker.js"
+compatibility_date = "2026-08-20"
+workers_dev = false
+
+[vars]
+# Application ID do Sollarety - o mesmo do fun-oauth-worker. Publico.
+DISCORD_CLIENT_ID = "1403153848507301939"
+
+# As duas redirect URIs precisam bater caractere a caractere com o que esta
+# cadastrado em cada portal:
+#   Discord Developer Portal > Sollarety > OAuth2 > Redirects
+#   Creator Hub > OAuth 2.0 > app do Sollarety > Redirect URLs
+DISCORD_REDIRECT_URI = "https://daeese.me/oauth/roblox/discord"
+ROBLOX_REDIRECT_URI = "https://daeese.me/oauth/roblox/callback"
+
+# Client ID do app OAuth do Roblox. E publico - vai na URL de autorizacao -, mas
+# so existe depois de registrar o app no Creator Hub. Vazio, o Worker responde
+# "Verification is not set up yet" em vez de mandar a pessoa para um erro do
+# Roblox.
+ROBLOX_CLIENT_ID = "1492951332915769405"
+
+# Os segredos entram fora do repositorio, uma vez:
+#   npx wrangler secret put DISCORD_CLIENT_SECRET   # o mesmo valor do daeese-fun-oauth
+#   npx wrangler secret put ROBLOX_CLIENT_SECRET
+#   npx wrangler secret put SESSION_KEY             # aleatorio longo; assina o cookie de sessao
+#   npx wrangler secret put BOT_API_SECRET          # aleatorio longo; o MESMO do robloxVerify.apiSecret do bot
+
+# Resultados pendentes. SQLite, que e o backend de Durable Object do plano Free.
+[[durable_objects.bindings]]
+name = "PENDING"
+class_name = "PendingLinks"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["PendingLinks"]
+
+# /oauth/fun/* e do fun-oauth-worker, /api/* do api-proxy-worker e os
+# subdominios do site-router-worker. Este prefixo nao disputa rota com ninguem.
+[[routes]]
+pattern = "daeese.me/oauth/roblox/*"
+zone_name = "daeese.me"

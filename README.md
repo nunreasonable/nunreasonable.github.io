@@ -13,9 +13,9 @@ frente (proxy + rota `/api/*`).
 | `cornwallcore/termsofservice/`, `cornwallcore/privacypolicy/` | Termos de Serviço e Política de Privacidade vigentes do app no Discord. |
 | `cornwallcore/administration/dashboard/` | Painel administrativo do bot, em abas (Moderação, Auditoria, Comunicações, Alistamento, Logs). Fala com a API do bot em `/api/*`. **Acesso restrito** — `noindex`. |
 | `cornwallcore/administration/spreadsheetviewer/` | Leitor da planilha regimental (Google Sheets via `gviz`). **`noindex`** — veja o aviso abaixo. |
-| `cornwallcore/fun/` | Sollarety: página do bot, convite por OAuth2 e as políticas dele. |
+| `cornwallcore/fun/` | Sollarety: página do bot, convite por OAuth2 e as políticas dele. A verificação Roblox do bot passa pelo `cloudflare/roblox-verify-worker`. |
 | `gabfirmino/` | "Meias UwU" — página de estudo em HTML/CSS. |
-| `cloudflare/` | Os três Workers (proxy da API, roteador de subdomínios e OAuth do Sollarety), o script de deploy e o guia de setup do tunnel. |
+| `cloudflare/` | Os quatro Workers (proxy da API, roteador de subdomínios, OAuth do convite do Sollarety e verificação Roblox do Sollarety), o script de deploy e o guia de setup do tunnel. |
 | `filearchive/` | Imagens usadas pelas páginas. |
 
 ## Infra
@@ -61,7 +61,7 @@ CSS velho não é "um pouco desatualizado", é uma página quebrada, porque as c
 existem na folha antiga. O script carimba o hash do conteúdo na URL
 (`style.css?v=abc12345`), então o par nunca fica descasado. **Rode antes de commitar.**
 
-Os três Workers em `cloudflare/` não sobem pelo GitHub Pages. Quem os publica é
+Os quatro Workers em `cloudflare/` não sobem pelo GitHub Pages. Quem os publica é
 [`cloudflare/deploy-workers.sh`](cloudflare/deploy-workers.sh), rodado no boot pelo serviço de
 usuário `ccore-workers-deploy.service` — ele compara o hash do fonte com o da última publicação e
 só chama o `wrangler deploy` quando algo mudou. Para publicar na hora:

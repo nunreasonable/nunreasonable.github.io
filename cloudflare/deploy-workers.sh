@@ -26,6 +26,14 @@
 #   npx wrangler secret put DISCORD_CLIENT_SECRET   # daeese-fun-oauth
 #   npx wrangler secret put TUNNEL_SECRET           # daese-api-proxy
 #   npx wrangler secret put LOOP_GUARD_TOKEN        # daeese-site-router
+#   npx wrangler secret put DISCORD_CLIENT_SECRET   # daeese-roblox-verify (mesmo valor do fun-oauth)
+#   npx wrangler secret put ROBLOX_CLIENT_SECRET    # daeese-roblox-verify
+#   npx wrangler secret put SESSION_KEY             # daeese-roblox-verify
+#   npx wrangler secret put BOT_API_SECRET          # daeese-roblox-verify (= robloxVerify.apiSecret do bot)
+#
+# Os do daeese-roblox-verify rodam de dentro de cloudflare/roblox-verify-worker.
+# Sem eles o Worker sobe mesmo assim e responde "Verification is not set up yet":
+# nada quebra, a verificacao so fica desligada.
 #
 # O LOOP_GUARD_TOKEN e obrigatorio: sem ele o site-router recusa o atalho de
 # subrequisicao por completo (falha fechada). O valor e livre - qualquer string
@@ -44,7 +52,7 @@ WRANGLER_VERSION="${WRANGLER_VERSION:-4.125.0}"
 
 cd "$(dirname "$0")"
 
-WORKERS=(api-proxy-worker site-router-worker fun-oauth-worker)
+WORKERS=(api-proxy-worker site-router-worker fun-oauth-worker roblox-verify-worker)
 FORCE=0
 if [[ "${1:-}" == "--force" ]]; then
   FORCE=1
