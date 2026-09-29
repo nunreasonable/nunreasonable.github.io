@@ -287,6 +287,19 @@ O prefixo `-` é deliberado: se os 60s estourarem, o serviço sobe assim mesmo e
 aplicação volta a ser a rede de segurança. O gate melhora o caso comum sem inventar um jeito novo
 de o serviço não subir.
 
+**Atualização de 28/09/2026: nos dois bots o gate passou a ser de HTTPS, com o de DNS como
+fallback.** Depois de um reinício abrupto da Fedora, o DNS já resolvia `discord.com` mas por quase
+um minuto o HTTPS devolveu um certificado que não era do Discord (`RemoteCertificateNameMismatch`,
+típico de roteador ainda subindo). O gate de DNS deixou o CommunityBot subir nesse intervalo, e
+três conexões falhas renderam 30 linhas de erro no `/logs`. Agora o `ExecStartPre` chama
+`wait-for-discord.sh` (um por repositório): até 60s esperando
+`https://discord.com/api/v10/gateway` responder com certificado válido, e só então, se não
+firmar, o teste antigo de DNS por mais até 15s. Saiu junto um segundo defeito: o gate esperava
+60s, mas o systemd de usuário corta o start em **45s** por padrão — numa rede lenta ele matava a
+espera e marcava o start como falho. As units agora têm `TimeoutStartSec=100` acima do
+`timeout 85` do gate. O `ccore-workers-deploy` não mudou: é `oneshot`, com 10 min de prazo de
+start, bem acima do gate dele.
+
 ### Os bots rodavam o binário de Debug (item 16)
 
 Os dois `ExecStart` apontavam para `bin/Debug/net9.0/` — sem otimização de JIT e com as asserções
