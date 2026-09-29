@@ -28,6 +28,30 @@ const MAX_NAME_LENGTH = 100;
 const ERR_DENIED = "denied";     // o usuario clicou em cancelar
 const ERR_CONFIG = "config";     // falta client id ou secret na borda
 const ERR_OAUTH = "oauth";       // qualquer falha da conversa com o Discord
+const ERR_BUSY = "busy";         // rate limit por IP estourado
+
+// O state volta refletido no Location. A pagina gera 32 caracteres; o teto so
+// existe para ninguem usar este Worker como refletor de cabecalho gigante.
+const MAX_STATE_LENGTH = 512;
+
+// Chave do rate limit: o IP que a borda viu, com IPv6 agrupado no /64 - quem
+// tem um /64 inteiro trocaria de endereco a cada tentativa. Mesma funcao dos
+// outros Workers, copiada porque cada um e um arquivo autocontido.
+function limiterKey(request) {
+	const ip = request.headers.get("CF-Connecting-IP") || "";
+	if (!ip.includes(":") || ip.includes(".")) {
+		return ip || "unknown";
+	}
+
+	const [head, tail] = ip.toLowerCase().split("::");
+	const headGroups = head ? head.split(":") : [];
+	const tailGroups = tail ? tail.split(":") : [];
+	const groups = tail === undefined
+		? headGroups
+		: [...headGroups, ...Array(8 - headGroups.length - tailGroups.length).fill("0"), ...tailGroups];
+
+	return `${groups.slice(0, 4).map((g) => g.replace(/^0+(?=.)/, "")).join(":")}::/64`;
+}
 
 function base64urlEncode(text) {
 	// btoa so aceita latin1, e nome de servidor tem emoji e acento a vontade.
@@ -146,8 +170,22 @@ export default {
 		const state = url.searchParams.get("state") || "";
 		const code = url.searchParams.get("code");
 
+		if (state.length > MAX_STATE_LENGTH) {
+			return new Response("Bad request", { status: 400 });
+		}
+
 		if (!code) {
 			return failTo(returnUrl, ERR_DENIED, state);
+		}
+
+		// Todo code, ate lixo, custa uma chamada ao token endpoint do Discord - e
+		// o rate limit do Discord e da aplicacao, nao de quem abusa. So conta
+		// quem traz code: o "cancelar" acima nao chama ninguem.
+		if (env.OAUTH_LIMITER) {
+			const { success } = await env.OAUTH_LIMITER.limit({ key: limiterKey(request) });
+			if (!success) {
+				return failTo(returnUrl, ERR_BUSY, state);
+			}
 		}
 
 		if (!env.DISCORD_CLIENT_ID || !env.DISCORD_CLIENT_SECRET) {

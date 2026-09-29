@@ -16,6 +16,7 @@ frente (proxy + rota `/api/*`).
 | `cornwallcore/fun/` | Sollarety: página do bot, convite por OAuth2 e as políticas dele. A verificação Roblox do bot passa pelo `cloudflare/roblox-verify-worker`. |
 | `gabfirmino/` | "Meias UwU" — página de estudo em HTML/CSS. |
 | `cloudflare/` | Os quatro Workers (proxy da API, roteador de subdomínios, OAuth do convite do Sollarety e verificação Roblox do Sollarety), o script de deploy e o guia de setup do tunnel. |
+| `cloudflare/zone-security/` | Regras de borda da zona (rate limit do WAF, regras custom, cache do site estático) aplicadas pela API da Cloudflare. Ver [INFRA.md, seção 16](INFRA.md#16-proteção-contra-ddos-rate-limit-e-tetos-de-requisição-29092026). |
 | `filearchive/` | Imagens usadas pelas páginas. |
 
 ## Infra

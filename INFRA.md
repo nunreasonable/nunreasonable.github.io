@@ -30,6 +30,7 @@ está registrado para dar contexto.
 | 17 | Estado de execução diverge entre as duas máquinas | ⚠️ **por desenho** — ver "Duas máquinas" |
 | 18 | Units versionadas são só de systemd; Gentoo usa OpenRC | ⏳ pendente (sem equivalente no repo) |
 | 19 | Bots em .NET 9 (STS, suporte acaba em 10/11/2026) | ✅ **resolvido** na Fedora em 26/09/2026 — Gentoo pendente |
+| 20 | Sem proteção de volume: nenhuma regra de borda, Workers e clips sem rate limit | ⚠️ **parcial** — código pronto em 29/09/2026; regras da zona dependem do token (seção 16) |
 
 ## Duas máquinas
 
@@ -400,7 +401,7 @@ Consequência de tudo passar por Worker + tunnel: o bot escuta em `127.0.0.1` e 
 `127.0.0.1`. Qualquer lógica por cliente que dependa dele trata o mundo inteiro
 como um único visitante — foi assim que o rate limit de login do dashboard
 acabou sendo global (corrigido em `cornwall-discord-application`, commit
-`fd5209e`).
+`29fcfed`).
 
 O que de fato chega ao bot, capturado em 19/08/2026:
 
@@ -927,6 +928,112 @@ quem mandou. Provando o Discord no mesmo navegador que o Roblox, o link é está
 identidade nenhuma. Por isso o Worker precisa do `DISCORD_CLIENT_SECRET` (o mesmo valor do
 fun-oauth) e de um redirect a mais cadastrado no portal do Discord.
 
+## 16. Proteção contra DDoS, rate limit e tetos de requisição (29/09/2026)
+
+Até aqui a única defesa de volume era o mitigador automático de DDoS L3/L4/L7 que a Cloudflare dá
+a todo plano. Não havia regra de WAF nem de rate limit na zona. Os Workers aceitavam qualquer
+método, URL e volume. `api.daeese.me` respondia direto pelo tunnel, pulando o Worker. E o
+clips-gallery disparava ffmpeg em rotas públicas sem teto nenhum. A API do ccore era a exceção,
+com teto de requisições em voo, de corpo e de POST por rota.
+
+A defesa agora é em camadas, cada uma cobrindo o que a de cima deixa passar:
+
+| Camada | Onde mora | O que barra |
+|---|---|---|
+| Borda (WAF) | [`cloudflare/zone-security/`](cloudflare/zone-security) | Volume por IP **antes** de gastar Worker ou tunnel; método, POST fora de lugar, URL gigante, acesso direto a `api.daeese.me` |
+| Cache de borda | mesma pasta, regra `daeese-cache-static` | Enxurrada no site estático morre na Cloudflare, não no GitHub Pages |
+| Workers | `[[ratelimits]]` em cada `wrangler.toml` | Abuso das trocas de token com Discord/Roblox, volume para o tunnel |
+| ccore | `DashboardHttpService.cs` | O que chegar à máquina: orçamento por cliente, prazo de corpo, trava de acesso direto |
+| clips-gallery | `~/.local/share/clips-gallery/server.py` | Encode e banda de casa |
+
+### Os limites
+
+| Onde | Limite | Chave |
+|---|---|---|
+| WAF `daeese-rl-origin` | 60 req / 10 s, bloqueio de 10 s | IP. Caminhos `/api/`, `/oauth/` (menos `/oauth/roblox/result`), `/login`, `/w/`, `/p/`, `/g/`, `/c/`; bots verificados de fora |
+| `daese-api-proxy` (`API_LIMITER`, namespace `1001`) | 120 / min | IP (IPv6 por /64) |
+| `daeese-fun-oauth` (`OAUTH_LIMITER`, `1002`) | 10 / min, só `/callback` com `code` | IP |
+| `daeese-roblox-verify` (`VERIFY_LIMITER`, `1003`) | 20 / min; `/result` com Bearer isento | IP |
+| ccore, qualquer rota | 240 / min | `ClientKey` (IPv6 por /64) |
+| ccore, POST | 30 / min por rota; 3 / min em `/api/dm`, `/api/audit/push`, `/api/deployment` | sessão ou IP |
+| ccore, corpo | 64 KB e **10 s** para chegar inteiro (408) | — |
+| clips, `/g/ /c/ /p/ /w/ /api/rescan` | 60 / min | IP (IPv6 por /64) |
+| clips, resto (fora `/static/` e `/m/`) | 120 / min | IP |
+| clips, `/m/` (original) | 4 streams simultâneos | IP |
+| clips, fila de `/w/` | 4 jobs; acima disso só redireciona para o preview | — |
+
+Quem está logado na galeria de clips não passa pelos limites dela. Os `namespace_id` dos Workers
+são únicos **na conta**: dois bindings com o mesmo id dividem contador, mesmo em Workers
+diferentes. Um Worker novo com limiter pega o próximo número livre desta tabela.
+
+### Para aplicar a borda
+
+O OAuth do wrangler não serve para isto: ele não tem escopo de WAF nem de configuração de zona.
+
+1. Criar o token no painel: *My Profile → API Tokens → Create Token → Custom*.
+   - Escopos: Zone:Read, DNS:Read, Zone Settings:Edit, Zone WAF:Edit, Cache Rules:Edit e
+     Analytics:Read.
+   - *Zone Resources*: só `daeese.me`.
+2. Gravar o token em `~/.config/daeese/cloudflare-zone-token` com modo `600`. O script recusa
+   outro modo. Cada máquina tem o seu, como as credenciais do wrangler.
+3. Rodar a partir de `cloudflare/zone-security/`:
+
+   ```bash
+   ./apply.sh plan      # diff entre a zona e o rulesets.json
+   ./apply.sh apply
+   ./apply.sh check     # DNS sem proxy, development_mode, security_level
+   ```
+
+   As regras não dependem de qual máquina está ligada: valem na borda para as duas.
+
+### Quatro coisas que não são óbvias
+
+**O limiter dentro do Worker não salva a cota.** A requisição que o `API_LIMITER` recusa já foi
+uma invocação. As 100 mil por dia do plano Free são da conta inteira, e esgotá-las derruba os
+quatro Workers até a meia-noite UTC: API, subdomínios e OAuth. Só o WAF, que roda antes do
+Worker, barra sem gastar cota. Mesmo ele só barra rajada: um único IP a 1,2 req/s, abaixo de
+qualquer limite razoável, esgota a cota num dia. Contra esse gotejamento a única saída de verdade
+é o Workers Paid (US$ 5/mês, 10 milhões de requisições).
+
+**A subrequisição do Worker pode ser contada duas vezes.** A doc da Cloudflare avisa que uma
+subrequisição de Worker para o mesmo zone passa de novo pela regra de rate limit. É o caso do
+`/api/*`, que o proxy reenvia para `api.daeese.me/api/*`. O limite de 60 já assume essa conta em
+dobro: dá 30 requisições reais por 10 s por IP. No Free a expressão só aceita `path`, então o
+`cf.worker.upstream_zone`, que a doc recomenda para excluir a subrequisição, não está
+disponível. Se a verificação mostrar o bloqueio caindo num IP da Cloudflare em vez do IP do
+cliente, `/api/` sai da regra e fica coberto pelo `API_LIMITER`.
+
+**A trava de acesso direto tornou barulhento o erro de `tunnelSecret`.** O ccore passou a
+recusar com 403 tudo que chega pela Cloudflare sem o `X-Ccore-Tunnel` certo, junto com a regra
+`daeese-api-direct` do WAF. Antes, segredo errado só degradava o rate limit, em silêncio. Agora
+derruba a API inteira pela borda. Por isso `curl https://daeese.me/api/health` virou a
+conferência: 200 é bom, 403 é segredo divergente. Ver o README do bot.
+
+**`under-attack` é botão de pânico, não modo de operação.**
+
+```bash
+./apply.sh under-attack on
+./apply.sh under-attack off
+```
+
+Com ele ligado, todo visitante passa por um desafio de navegador. Três coisas quebram enquanto
+ele está ligado:
+
+- a página de status, porque o desafio é por host e o fetch cruza de `ccore.` para `daeese.me`;
+- o polling do CommunityBot no `/oauth/roblox/result`;
+- os embeds de clip no Discord.
+
+O `off` devolve o `security_level` que estava antes.
+
+### O que ficou de fora
+
+- **Bot Fight Mode.** No Free ele não aceita exceção, e o `HttpClient` do CommunityBot no
+  `/result` e o robô do Discord nos clips seriam desafiados.
+- **Vice.** As rotas `/v/` e `/t/` continuam cobertas só pela borda, porque é código upstream.
+- **`LOOP_GUARD_TOKEN`.** Ele cai para `"1"` quando falta o secret
+  (`site-router-worker/src/worker.js:65-69`), o que contradiz o comentário do `deploy-workers.sh`.
+  Não é proteção de volume, mas está anotado.
+
 ## Pendências que dependem do dono
 
 1. **Resetar o token da aplicação `1479642388837437544`** no portal do Discord. Ela não é
@@ -964,3 +1071,25 @@ fun-oauth) e de um redirect a mais cadastrado no portal do Discord.
    (`DISCORD_CLIENT_SECRET`, `ROBLOX_CLIENT_SECRET`, `SESSION_KEY`, `BOT_API_SECRET`) e o
    `robloxVerify.apiSecret` nas duas máquinas. Depois de testar, publicar o app para a revisão da
    Roblox: em modo privado ele só aceita poucos usuários.
+10. **Criar o token da zona e aplicar a borda** (seção 16). Sem isso, as regras de WAF e de cache
+    existem só no repositório.
+11. **Ligar o alerta de DDoS:** Notifications → Add → *HTTP DDoS Attack Alert*, por e-mail. Sem
+    ele, um ataque mitigado passa sem ninguém saber.
+12. **Fechar a LAN para o Vice e o `node`.** O Vice escuta em `0.0.0.0:8766`, com o endereço
+    fixo no código upstream, e há um `node` em `*:8787`. O firewalld da zona FedoraWorkstation
+    libera `1025-65535`, então quem está na mesma rede fala direto com eles e pula a Cloudflare.
+    Fechar só as duas portas, sem mexer na faixa que outros programas da estação usam:
+
+    ```bash
+    sudo firewall-cmd --permanent --zone=FedoraWorkstation --add-rich-rule='rule port port="8766" protocol="tcp" reject'
+    sudo firewall-cmd --permanent --zone=FedoraWorkstation --add-rich-rule='rule port port="8787" protocol="tcp" reject'
+    sudo firewall-cmd --reload
+    ```
+
+    Regra de rejeição do firewalld é avaliada antes das portas liberadas. Os `cloudflared` conectam
+    pelo loopback e não são afetados.
+13. **Conferir a sobra do `cloudflared-ssh`.** O serviço e o `sshd` estão desligados, mas o
+    hostname pode ter ficado no DNS ou numa aplicação do Access. `./apply.sh check` lista qualquer
+    registro com "ssh" no nome.
+14. **Decidir sobre o Workers Paid.** É a única proteção contra o esgotamento lento da cota
+    diária (seção 16).

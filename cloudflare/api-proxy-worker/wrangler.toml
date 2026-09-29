@@ -9,3 +9,16 @@ BOT_API_ORIGIN = "https://api.daeese.me"
 [[routes]]
 pattern = "daeese.me/api/*"
 zone_name = "daeese.me"
+
+# Rate limit por IP (Workers Rate Limiting API). O contador e por data center e
+# eventualmente consistente: e teto contra enxurrada, nao contabilidade exata.
+# 120/min cobre com folga o dashboard (polling de 4 s e 10 s) e a pagina de
+# status (15 s por aba). O namespace_id e unico na conta; a tabela de todos
+# esta no INFRA.md, secao 16.
+[[ratelimits]]
+name = "API_LIMITER"
+namespace_id = "1001"
+
+  [ratelimits.simple]
+  limit = 120
+  period = 60

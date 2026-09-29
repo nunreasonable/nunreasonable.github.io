@@ -1,0 +1,74 @@
+{
+  "http_ratelimit": {
+    "description": "daeese.me - rate limit por IP antes dos Workers e dos tunnels (plano Free: 1 regra)",
+    "rules": [
+      {
+        "ref": "daeese-rl-origin",
+        "description": "Rotas que custam Worker, tunnel ou chamada a Discord/Roblox: 60 req/10 s por IP",
+        "expression": "(starts_with(http.request.uri.path, \"/api/\") or (starts_with(http.request.uri.path, \"/oauth/\") and http.request.uri.path ne \"/oauth/roblox/result\") or http.request.uri.path eq \"/login\" or starts_with(http.request.uri.path, \"/w/\") or starts_with(http.request.uri.path, \"/p/\") or starts_with(http.request.uri.path, \"/g/\") or starts_with(http.request.uri.path, \"/c/\")) and not cf.bot_management.verified_bot",
+        "action": "block",
+        "ratelimit": {
+          "characteristics": [
+            "cf.colo.id",
+            "ip.src"
+          ],
+          "period": 10,
+          "requests_per_period": 60,
+          "mitigation_timeout": 10
+        },
+        "enabled": true
+      }
+    ]
+  },
+  "http_request_firewall_custom": {
+    "description": "daeese.me - regras custom (plano Free: 5; uma fica livre para emergencia)",
+    "rules": [
+      {
+        "ref": "daeese-api-direct",
+        "description": "api.daeese.me so atende o daese-api-proxy; acesso direto ao tunnel pula todos os limites do Worker",
+        "expression": "http.host eq \"api.daeese.me\" and cf.worker.upstream_zone ne \"daeese.me\"",
+        "action": "block",
+        "enabled": true
+      },
+      {
+        "ref": "daeese-methods",
+        "description": "Nenhuma origem atende outro metodo",
+        "expression": "not http.request.method in {\"GET\" \"HEAD\" \"POST\" \"OPTIONS\"}",
+        "action": "block",
+        "enabled": true
+      },
+      {
+        "ref": "daeese-post-scope",
+        "description": "POST so onde existe rota que o recebe; o site estatico nunca recebe POST. /cdn-cgi/ e da propria Cloudflare (beacon, resolucao de desafio)",
+        "expression": "http.request.method eq \"POST\" and not (http.host eq \"daeese.me\" and starts_with(http.request.uri.path, \"/api/\")) and http.host ne \"api.daeese.me\" and not (http.host eq \"clips.daeese.me\" and http.request.uri.path in {\"/login\" \"/logout\" \"/api/rescan\"}) and not starts_with(http.request.uri.path, \"/cdn-cgi/\")",
+        "action": "block",
+        "enabled": true
+      },
+      {
+        "ref": "daeese-uri-cap",
+        "description": "Caminho + query acima de 4 KB nao e uso real de nenhuma pagina",
+        "expression": "len(http.request.uri) gt 4096",
+        "action": "block",
+        "enabled": true
+      }
+    ]
+  },
+  "http_request_cache_settings": {
+    "description": "daeese.me - cache de borda do site estatico",
+    "rules": [
+      {
+        "ref": "daeese-cache-static",
+        "description": "HTML do GitHub Pages elegivel para cache, respeitando o max-age=600 da origem",
+        "expression": "http.host eq \"daeese.me\" and not starts_with(http.request.uri.path, \"/api/\") and not starts_with(http.request.uri.path, \"/oauth/\")",
+        "action": "set_cache_settings",
+        "action_parameters": {
+          "cache": true,
+          "edge_ttl": {
+            "mode": "respect_origin"
+          }
+        },
+        "enabled": true
+      }
+    ]
+  }
+}

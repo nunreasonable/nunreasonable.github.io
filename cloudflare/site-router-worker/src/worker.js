@@ -238,6 +238,16 @@ export default {
     const url = new URL(request.url);
     const hostname = url.hostname;
 
+    // Site estatico: nada aqui aceita outro metodo. Barrar antes de buscar na
+    // origem evita gastar subrequisicao com POST de robo -- e a regra
+    // daeese-post-scope do WAF ja barra antes, isto e o segundo cinto.
+    if (request.method !== "GET" && request.method !== "HEAD") {
+      return applyHostHeaders(new Response("Method not allowed", {
+        status: 405,
+        headers: { "Allow": "GET, HEAD" }
+      }), hostname, url.pathname);
+    }
+
     // Subrequisicao nossa: repassa sem redirecionar nem reescrever -- mas
     // ainda com os cabecalhos do host, que sao garantia de seguranca e nao
     // detalhe do caminho longo.

@@ -26,3 +26,14 @@ RETURN_URL = "https://ccore.daeese.me/fun/invite/"
 [[routes]]
 pattern = "daeese.me/oauth/fun/*"
 zone_name = "daeese.me"
+
+# Rate limit por IP no /callback com code: cada tentativa custa tres chamadas ao
+# Discord. 10/min e muito acima de quem so esta fazendo login. namespace_id
+# unico na conta - tabela no INFRA.md, secao 16.
+[[ratelimits]]
+name = "OAUTH_LIMITER"
+namespace_id = "1002"
+
+  [ratelimits.simple]
+  limit = 10
+  period = 60

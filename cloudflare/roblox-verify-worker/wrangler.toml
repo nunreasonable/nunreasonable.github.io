@@ -35,6 +35,18 @@ class_name = "PendingLinks"
 tag = "v1"
 new_sqlite_classes = ["PendingLinks"]
 
+# Rate limit por IP em /start, /discord e /callback (o polling do bot no /result
+# fica de fora). Um login completo sao tres requisicoes; 20/min cobre quem erra
+# e recomeca algumas vezes. namespace_id unico na conta - tabela no INFRA.md,
+# secao 16.
+[[ratelimits]]
+name = "VERIFY_LIMITER"
+namespace_id = "1003"
+
+  [ratelimits.simple]
+  limit = 20
+  period = 60
+
 # /oauth/fun/* e do fun-oauth-worker, /api/* do api-proxy-worker e os
 # subdominios do site-router-worker. Este prefixo nao disputa rota com ninguem.
 [[routes]]

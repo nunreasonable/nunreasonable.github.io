@@ -41,6 +41,25 @@ const RESULT_TTL_MS = 30 * 60 * 1000;
 
 const DISCORD_ID = /^\d{17,20}$/;
 
+// Chave do rate limit: o IP que a borda viu, com IPv6 agrupado no /64 - quem
+// tem um /64 inteiro trocaria de endereco a cada tentativa. Mesma funcao dos
+// outros Workers, copiada porque cada um e um arquivo autocontido.
+function limiterKey(request) {
+	const ip = request.headers.get("CF-Connecting-IP") || "";
+	if (!ip.includes(":") || ip.includes(".")) {
+		return ip || "unknown";
+	}
+
+	const [head, tail] = ip.toLowerCase().split("::");
+	const headGroups = head ? head.split(":") : [];
+	const tailGroups = tail ? tail.split(":") : [];
+	const groups = tail === undefined
+		? headGroups
+		: [...headGroups, ...Array(8 - headGroups.length - tailGroups.length).fill("0"), ...tailGroups];
+
+	return `${groups.slice(0, 4).map((g) => g.replace(/^0+(?=.)/, "")).join(":")}::/64`;
+}
+
 // ---------------------------------------------------------------------------
 // Durable Object: os resultados pendentes
 // ---------------------------------------------------------------------------
@@ -284,6 +303,14 @@ function errorPage(kind) {
 				"One of the sign-ins was cancelled, so nothing was linked.",
 				RESTART
 			]);
+		case "busy": {
+			const response = page(429, "Too many attempts", [
+				"Too many sign-in attempts came from your network. Wait a minute, then try again.",
+				RESTART
+			]);
+			response.headers.set("Retry-After", "60");
+			return response;
+		}
 		case "session":
 			return page(400, "This sign-in expired", [
 				"The sign-in took too long, was started in another tab, or cookies are blocked for this site. Nothing was linked.",
@@ -512,6 +539,23 @@ export default {
 		// no /result, o resultado pendente, sem entregar nada a ninguem.
 		if (request.method !== "GET") {
 			return new Response("Method not allowed", { status: 405, headers: { ...SECURITY_HEADERS, Allow: "GET" } });
+		}
+
+		// Rate limit por IP antes de qualquer rota. O cookie de sessao nao e de uso
+		// unico: com ele e o state de um /start, da para repetir /discord?code=lixo
+		// por dez minutos, e cada repeticao custa uma troca de token no Discord.
+		//
+		// Fica de fora so o polling do bot no /result - vem com Bearer, sai do IP
+		// de casa a cada 4 s por verificacao pendente e, com varias ao mesmo
+		// tempo, estouraria o limite de quem esta so fazendo login. Um Bearer
+		// falso nao ganha nada com a isencao: custa dois SHA-256 e leva 401.
+		const botPoll = url.pathname === `${PREFIX}/result`
+			&& (request.headers.get("Authorization") || "").startsWith("Bearer ");
+		if (!botPoll && env.VERIFY_LIMITER) {
+			const { success } = await env.VERIFY_LIMITER.limit({ key: limiterKey(request) });
+			if (!success) {
+				return errorPage("busy");
+			}
 		}
 
 		// Igualdade exata em cada rota, nao startsWith: "/oauth/roblox/callbackX"

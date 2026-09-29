@@ -6,6 +6,20 @@
 // Mesmo teto do MaxRequestBodyBytes do bot (64 KB).
 const MAX_BODY_BYTES = 64 * 1024;
 
+// Nenhuma rota do bot usa URL perto disto: o maior caso real e /api/logs com
+// meia duzia de filtros. Serve so para barrar lixo antes do tunel.
+const MAX_URL_LENGTH = 2048;
+
+// O bot so roteia estes. PUT/DELETE/PATCH atravessavam o tunel para receber
+// 404 do outro lado.
+const ALLOWED_METHODS = new Set(["GET", "HEAD", "POST", "OPTIONS"]);
+
+// O unico endpoint publico, lido pela pagina de status a cada 15 s. O bot ja
+// guarda a resposta por 10 s; guardar o mesmo tempo na borda faz uma enxurrada
+// nele morrer aqui em vez de atravessar o tunel ate a maquina de casa.
+const EDGE_CACHED_PATH = "/api/status";
+const EDGE_CACHE_SECONDS = 10;
+
 const ALLOWED_ORIGINS = new Set([
   "https://dashboard.daeese.me",
   "https://ccore.daeese.me",
@@ -21,8 +35,45 @@ function buildCorsHeaders(origin) {
     "Access-Control-Allow-Origin": allowed,
     "Vary": "Origin",
     "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-    "Access-Control-Allow-Headers": "Authorization, Content-Type"
+    "Access-Control-Allow-Headers": "Authorization, Content-Type",
+    // Toda chamada do dashboard leva Authorization e por isso faz preflight.
+    // Sem Max-Age o navegador repetia o OPTIONS antes de cada uma, dobrando as
+    // invocacoes -- e a cota diaria do plano Free e da conta inteira.
+    "Access-Control-Max-Age": "600"
   };
+}
+
+function jsonError(status, message, origin, extraHeaders = {}) {
+  return new Response(JSON.stringify({ error: message }), {
+    status,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      ...buildCorsHeaders(origin),
+      ...extraHeaders
+    }
+  });
+}
+
+// Chave do rate limit: o IP que a borda viu. CF-Connecting-IP e confiavel
+// aqui -- a Cloudflare recusa na borda quem tenta manda-lo (INFRA.md, 4b).
+//
+// IPv6 vai agrupado no /64. Um provedor residencial entrega um /64 inteiro, e
+// quem tem um /64 escolhe um endereco novo por requisicao: por endereco
+// completo, o contador nunca repetiria chave.
+function limiterKey(request) {
+  const ip = request.headers.get("CF-Connecting-IP") || "";
+  if (!ip.includes(":") || ip.includes(".")) {
+    return ip || "unknown";
+  }
+
+  const [head, tail] = ip.toLowerCase().split("::");
+  const headGroups = head ? head.split(":") : [];
+  const tailGroups = tail ? tail.split(":") : [];
+  const groups = tail === undefined
+    ? headGroups
+    : [...headGroups, ...Array(8 - headGroups.length - tailGroups.length).fill("0"), ...tailGroups];
+
+  return `${groups.slice(0, 4).map((g) => g.replace(/^0+(?=.)/, "")).join(":")}::/64`;
 }
 
 // Recusa sequencias de travessia no caminho antes de repassar ao bot. new URL()
@@ -80,6 +131,28 @@ export default {
       });
     }
 
+    if (!ALLOWED_METHODS.has(request.method)) {
+      return jsonError(405, "Method not allowed.", origin, { "Allow": "GET, HEAD, POST, OPTIONS" });
+    }
+
+    if (request.url.length > MAX_URL_LENGTH) {
+      return jsonError(414, "URI too long.", origin);
+    }
+
+    // Rate limit por IP, antes de qualquer coisa que custe tunel. O OPTIONS
+    // fica de fora: e respondido aqui mesmo e nao chega ao bot.
+    //
+    // O contador e por data center e eventualmente consistente -- serve de teto
+    // contra enxurrada, nao de contabilidade exata. E nao salva a cota diaria
+    // de Workers: a requisicao barrada ja foi uma invocacao. Quem barra antes
+    // da invocacao e a regra de rate limit do WAF (cloudflare/zone-security).
+    if (env.API_LIMITER) {
+      const { success } = await env.API_LIMITER.limit({ key: limiterKey(request) });
+      if (!success) {
+        return jsonError(429, "Too many requests. Try again in a minute.", origin, { "Retry-After": "60" });
+      }
+    }
+
     // Teto de corpo na borda.
     //
     // O bot ja recusa acima de 64 KB, mas so DEPOIS de o corpo atravessar o
@@ -88,24 +161,12 @@ export default {
     // nesse caso e a leitura em streaming do bot, que tambem tem o teto.
     const declaredLength = Number(request.headers.get("Content-Length") ?? "0");
     if (Number.isFinite(declaredLength) && declaredLength > MAX_BODY_BYTES) {
-      return new Response(JSON.stringify({ error: "Request body too large." }), {
-        status: 413,
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-          ...buildCorsHeaders(origin)
-        }
-      });
+      return jsonError(413, "Request body too large.", origin);
     }
 
     // Recusa travessia antes de montar a URL upstream.
     if (escapesPath(new URL(request.url).pathname)) {
-      return new Response(JSON.stringify({ error: "Bad request." }), {
-        status: 400,
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-          ...buildCorsHeaders(origin)
-        }
-      });
+      return jsonError(400, "Bad request.", origin);
     }
 
     try {
@@ -136,11 +197,23 @@ export default {
       // originRequest.httpHostHeader do cloudflared. Mantido so por clareza.
       outgoingHeaders.set("Host", new URL(env.BOT_API_ORIGIN).host);
 
+      // Cache de borda so para a leitura publica: sem query (o ?detail=host exige
+      // nivel 2) e sem Authorization. Resposta de erro nao entra no cache, senao
+      // um 530 de tunel caido ficaria preso mesmo depois de o bot voltar.
+      const incomingUrl = new URL(request.url);
+      const edgeCacheable = request.method === "GET"
+        && incomingUrl.pathname === EDGE_CACHED_PATH
+        && incomingUrl.search === ""
+        && !request.headers.has("Authorization");
+
       const upstreamResponse = await fetch(upstreamUrl, {
         method: request.method,
         headers: outgoingHeaders,
         body: request.method === "GET" || request.method === "HEAD" ? undefined : request.body,
-        redirect: "manual"
+        redirect: "manual",
+        cf: edgeCacheable
+          ? { cacheEverything: true, cacheTtlByStatus: { "200-299": EDGE_CACHE_SECONDS, "300-599": 0 } }
+          : undefined
       });
 
       const responseHeaders = new Headers(upstreamResponse.headers);
