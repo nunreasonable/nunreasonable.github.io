@@ -201,7 +201,7 @@
 			<article class="card">
 				<p data-i18n="sol_pp.sollarety" class="eyebrow">Sollarety</p>
 				<h1 data-i18n="sol_pp.privacy_policy">Privacy Policy</h1>
-				<span data-i18n="sol_pp.last_updated_september_28_2026" class="pill">Last updated: September 28, 2026</span>
+				<span data-i18n="sol_pp.last_updated_september_30_2026" class="pill">Last updated: September 30, 2026</span>
 
 				<div class="note">
 					<p style="margin: 0">
@@ -246,6 +246,13 @@
 					contain user IDs and error messages. It is never written to disk and is</span>
 					<strong data-i18n="sol_pp.erased_every_time_the_bot">erased every time the Bot restarts</strong>.
 				</p>
+				<p data-i18n="sol_pp.while_music_is_playing_the">
+					While music is playing, the Bot keeps the server's queue in memory: the
+					title and link of each song and the user ID of whoever asked for it. The
+					queue is dropped when the Bot leaves the voice channel. Tic-tac-toe games
+					are likewise held in memory, and dropped when the game ends or after
+					three minutes without a move.
+				</p>
 
 				<h2 data-i18n="sol_pp.3_what_is_read_but">3. What is read but not kept</h2>
 				<p data-i18n="sol_pp.to_check_role_hierarchy_before">
@@ -265,12 +272,25 @@
 					see on a Roblox profile. The answer is kept in memory for at most five
 					minutes, to avoid asking twice, and is never written down.
 				</p>
+				<p data-i18n="sol_pp.when_you_use_the_play">
+					When you use the play command, the link or search terms you typed are
+					sent to YouTube, through the open-source yt-dlp program running on the
+					machine that hosts the Bot, to find the video. Nothing that identifies
+					you goes with them. The song's audio is downloaded to a temporary folder
+					on that machine, played into the voice channel, and deleted as soon as
+					the song ends, is skipped, or the music is stopped.
+				</p>
+				<p data-i18n="sol_pp.the_roleplay_commands_ask_the">
+					The roleplay commands ask the public nekos.best service for a random GIF
+					of the action. The request names only the action; it carries nothing
+					about you or your server.
+				</p>
 
 				<h2 data-i18n="sol_pp.4_what_is_never_collected">4. What is never collected</h2>
 				<ul>
 					<li data-i18n="sol_pp.message_content_attachments_or_embeds">message content, attachments or embeds;</li>
 					<li data-i18n="sol_pp.direct_messages">direct messages;</li>
-					<li data-i18n="sol_pp.voice_audio">voice audio;</li>
+					<li data-i18n="sol_pp.voice_audio_the_bot_plays">voice audio — the Bot plays music into voice channels but never receives or records what anyone says;</li>
 					<li data-i18n="sol_pp.email_addresses_ip_addresses_payment">email addresses, IP addresses, payment details or any real-world identity;</li>
 					<li data-i18n="sol_pp.your_discord_or_roblox_password">your Discord or Roblox password — both sign-ins happen on Discord's and Roblox's own sites;</li>
 					<li data-i18n="sol_pp.anything_at_all_from_users">anything at all from users who never appear in a moderation command and never verify a Roblox account.</li>

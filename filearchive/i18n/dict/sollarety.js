@@ -12,7 +12,7 @@
 export const pt = {
   "sollarety.discord_bot": "Bot de Discord",
   "sollarety.a_moderation_and_fun_bot":
-    "Um bot de moderação, verificação Roblox e diversão para servidores de comunidade. Roda na mesma infraestrutura do",
+    "Um bot de moderação, verificação Roblox, música e diversão para servidores de comunidade. Roda na mesma infraestrutura do",
   "sollarety.but_the_two_are_separate":
     ", mas os dois são aplicações separadas e não compartilham dado nenhum.",
   "sollarety.add_to_discord": "Adicionar ao Discord",
@@ -30,8 +30,15 @@ export const pt = {
     "Cada servidor decide o que a verificação dá: um cargo de verificado, um cargo para quem ainda não verificou, cargos por grupo e rank do Roblox com",
   "sollarety.a_nickname_taken_from_the":
     ", um apelido tirado do nome no Roblox e uma idade mínima de conta Roblox para barrar alts recém-criadas. Quem já verificou em outro servidor recebe os cargos assim que entra.",
+  "sollarety.music": "Música",
+  "sollarety.play_from_youtube_by_link":
+    ". Toca do YouTube por link ou busca. Cada música é baixada, tocada e apagada logo em seguida — nenhum áudio fica guardado, e a fila vive só na memória.",
+  "sollarety.whoever_requested_the_current_song":
+    "Quem pediu a música atual, quem tem Mover Membros ou quem está sozinho com o bot pula ou para na hora; os demais votam, e a maioria de quem está ouvindo decide.",
   "sollarety.fun": "Diversão",
   "sollarety.all_rate_limited_per_user": ". Todos com limite de uso por pessoa.",
+  "sollarety.roleplay_gifs_come_from":
+    "Os GIFs do roleplay vêm da API pública do nekos.best, e quem recebe pode devolver com um botão só.",
   "sollarety.utility": "Utilidade",
   "sollarety.the_bot_never_reads_your": "O bot nunca lê as suas mensagens.",
   "sollarety.it_does_not_request_discord":

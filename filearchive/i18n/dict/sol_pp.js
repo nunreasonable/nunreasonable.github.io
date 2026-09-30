@@ -12,7 +12,7 @@ export const pt = {
 
   "sol_pp.terms_of_service": "Termos de Serviço",
   "sol_pp.privacy_policy": "Política de Privacidade",
-  "sol_pp.last_updated_september_28_2026": "Última atualização: 28 de setembro de 2026",
+  "sol_pp.last_updated_september_30_2026": "Última atualização: 30 de setembro de 2026",
 
   "sol_pp.the_bot_does_not_read": "O Bot não lê as suas mensagens.",
   "sol_pp.it_does_not_request_discord":
@@ -34,6 +34,8 @@ export const pt = {
   "sol_pp.the_bot_keeps_a_short":
     "O Bot mantém um buffer curto da própria saída de console, para que os administradores consigam diagnosticar falhas sem acesso ao servidor. Ele pode conter IDs de usuário e mensagens de erro. Nunca é gravado em disco e é",
   "sol_pp.erased_every_time_the_bot": "apagado toda vez que o Bot reinicia",
+  "sol_pp.while_music_is_playing_the":
+    "Enquanto toca música, o Bot mantém a fila do servidor na memória: o título e o link de cada música e o ID de usuário de quem a pediu. A fila é descartada quando o Bot sai do canal de voz. As partidas de jogo da velha também ficam só na memória e são descartadas quando o jogo acaba ou depois de três minutos sem jogada.",
 
   "sol_pp.3_what_is_read_but": "3. O que é lido mas não guardado",
   "sol_pp.to_check_role_hierarchy_before":
@@ -43,10 +45,14 @@ export const pt = {
   "sol_pp.to_apply_roblox_verification_the":
     "Para aplicar a verificação Roblox, o Bot lê na API pública do Roblox o nome atual de uma conta Roblox vinculada, quando ela foi criada e em quais grupos do Roblox ela está, com qual rank — o mesmo que qualquer pessoa vê num perfil do Roblox. A resposta fica na memória por no máximo cinco minutos, para não perguntar duas vezes, e nunca é anotada.",
 
+  "sol_pp.when_you_use_the_play":
+    "Quando você usa o comando play, o link ou os termos de busca que você digitou são enviados ao YouTube, pelo programa de código aberto yt-dlp rodando na máquina que hospeda o Bot, para encontrar o vídeo. Nada que identifique você vai junto. O áudio da música é baixado para uma pasta temporária nessa máquina, tocado no canal de voz e apagado assim que a música acaba, é pulada ou a música é parada.",
+  "sol_pp.the_roleplay_commands_ask_the":
+    "Os comandos de roleplay pedem ao serviço público nekos.best um GIF aleatório da ação. O pedido informa só a ação; não leva nada sobre você ou o seu servidor.",
   "sol_pp.4_what_is_never_collected": "4. O que nunca é coletado",
   "sol_pp.message_content_attachments_or_embeds": "conteúdo de mensagens, anexos ou embeds;",
   "sol_pp.direct_messages": "mensagens diretas;",
-  "sol_pp.voice_audio": "áudio de voz;",
+  "sol_pp.voice_audio_the_bot_plays": "áudio de voz — o Bot toca música nos canais de voz, mas nunca recebe nem grava o que alguém fala;",
   "sol_pp.email_addresses_ip_addresses_payment":
     "endereços de e-mail, endereços IP, dados de pagamento ou qualquer identidade do mundo real;",
   "sol_pp.your_discord_or_roblox_password":

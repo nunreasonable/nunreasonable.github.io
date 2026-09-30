@@ -594,14 +594,16 @@
 							<span class="detail">
 								Everything the commands need: Ban, Kick, Timeout,
 								Manage Messages, Manage Channels, Manage Roles and
-								Manage Nicknames, plus reading and posting in channels.
+								Manage Nicknames, plus reading and posting in channels
+								and Connect and Speak for music.
 							</span>
 						</label>
 						<label class="preset">
 							<input type="radio" name="preset" value="fun" />
 							<span class="title">Fun only</span>
 							<span class="detail">
-								Reading and posting only. The moderation commands still
+								Reading and posting, plus Connect and Speak for music.
+								The moderation commands still
 								show up in the server, but they will refuse to run
 								because the bot has no permission to carry them out, and
 								Roblox verification links accounts without giving roles.
@@ -722,9 +724,12 @@
 			// ManageNicknames entrou com a verificacao Roblox, que poe o nome do
 			// Roblox no apelido; servidor convidado antes precisa dar a permissao
 			// ao cargo do bot a mao.
+			// Connect(1<<20) e Speak(1<<21) entraram com a musica, nos DOIS
+			// presets: tocar musica e diversao, nao moderacao. O /play confere as
+			// duas no canal de voz e recusa dizendo o que falta.
 			const PERMISSIONS = {
-				full: "1374792576086",
-				fun: "274878286912"
+				full: "1374795721814",
+				fun: "274881432640"
 			};
 
 			const STATE_KEY = "sollarety-invite-state";

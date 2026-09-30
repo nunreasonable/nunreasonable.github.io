@@ -12,7 +12,7 @@ export const pt = {
 
   "sol_tos.privacy_policy": "Política de Privacidade",
   "sol_tos.terms_of_service": "Termos de Serviço",
-  "sol_tos.last_updated_september_28_2026": "Última atualização: 28 de setembro de 2026",
+  "sol_tos.last_updated_september_30_2026": "Última atualização: 30 de setembro de 2026",
 
   "sol_tos.1_agreement": "1. Aceite",
   "sol_tos.by_adding_sollarety_the_bot":
@@ -20,9 +20,9 @@ export const pt = {
 
   "sol_tos.2_what_the_bot_does": "2. O que o Bot faz",
   "sol_tos.the_bot_provides_moderation_commands":
-    "O Bot oferece comandos de moderação (banir, expulsar, silenciar, limpar mensagens, modo lento e trancar canal), um registro de advertências, verificação de conta Roblox e um conjunto de comandos de entretenimento e utilidade. Todos são comandos de barra do Discord.",
+    "O Bot oferece comandos de moderação (banir, expulsar, silenciar, limpar mensagens, modo lento e trancar canal), um registro de advertências, verificação de conta Roblox, música do YouTube tocada em canais de voz e um conjunto de comandos de entretenimento e utilidade. Todos são comandos de barra do Discord.",
   "sol_tos.the_bot_is_not_affiliated":
-    "O Bot não é afiliado à Roblox Corporation nem à Discord Inc., nem endossado ou operado por elas. A verificação Roblox usa o login oficial e a API pública do Roblox, sob os termos do próprio Roblox.",
+    "O Bot não é afiliado à Roblox Corporation, à Discord Inc. nem ao YouTube, nem endossado ou operado por eles. A verificação Roblox usa o login oficial e a API pública do Roblox, sob os termos do próprio Roblox.",
 
   "sol_tos.3_who_may_use_the": "3. Quem pode usar os comandos de moderação",
   "sol_tos.access_is_governed_entirely_by":
