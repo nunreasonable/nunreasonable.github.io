@@ -28,6 +28,7 @@
         --accent-lit: #ff2d62;
         --accent-glow: rgba(255, 45, 98, 0.55);
         --accent-line: rgba(255, 45, 98, 0.32);
+        --line: rgba(255, 255, 255, 0.12);
       }
 
       * {
@@ -41,6 +42,12 @@
         place-items: start;
       }
 
+      /*
+       * Banner do portfolio: a esquerda o nome, como no hero da home; a
+       * direita as capas dos projetos em leque, as mesmas imagens dos cards de
+       * "Selected work". O embed passa a dizer "portfolio" antes de qualquer
+       * texto ser lido.
+       */
       .frame {
         width: 1200px;
         height: 630px;
@@ -49,12 +56,12 @@
         font-family: "Space Grotesk", system-ui, sans-serif;
         color: var(--text);
         background:
-          radial-gradient(46% 60% at 18% 26%, rgba(255, 45, 98, 0.26) 0%, transparent 70%),
-          radial-gradient(40% 50% at 84% 78%, rgba(120, 0, 40, 0.3) 0%, transparent 72%),
+          radial-gradient(46% 60% at 14% 22%, rgba(255, 45, 98, 0.24) 0%, transparent 70%),
+          radial-gradient(44% 60% at 88% 70%, rgba(158, 0, 47, 0.34) 0%, transparent 72%),
           linear-gradient(160deg, var(--bg-start) 0%, var(--bg-mid) 62%, var(--bg-end) 100%);
       }
 
-      /* Mesma trama de pontos do site, na mesma opacidade. */
+      /* Mesma trama de pontos do site. */
       .frame::before {
         content: "";
         position: absolute;
@@ -64,53 +71,80 @@
         background-size: 3px 3px;
       }
 
-      /* Fio de luz no topo, como a borda do card. */
-      .frame::after {
-        content: "";
+      .copy {
         position: absolute;
-        inset: 0 0 auto 0;
-        height: 3px;
-        background: linear-gradient(90deg, transparent, var(--accent-line) 20%, var(--accent-lit) 50%, var(--accent-line) 80%, transparent);
+        z-index: 2;
+        left: 72px;
+        top: 64px;
+        bottom: 56px;
+        width: 560px;
+        display: flex;
+        flex-direction: column;
       }
 
-      .inner {
-        position: relative;
-        z-index: 1;
-        height: 100%;
-        display: grid;
-        grid-template-columns: 300px 1fr;
+      .id {
+        display: flex;
         align-items: center;
-        gap: 62px;
-        padding: 0 78px;
-      }
-
-      .avatar-shell {
-        position: relative;
-        width: 300px;
-        height: 300px;
+        gap: 18px;
       }
 
       .avatar {
-        width: 300px;
-        height: 300px;
+        width: 76px;
+        height: 76px;
         border-radius: 50%;
         object-fit: cover;
-        border: 6px solid var(--accent-lit);
-        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.7), 0 0 90px -10px var(--accent-glow);
+        border: 3px solid var(--accent-lit);
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.7), 0 0 40px -6px var(--accent-glow);
       }
 
       .eyebrow {
-        margin: 0 0 10px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-size: 22px;
-        letter-spacing: 0.22em;
+        margin: 0;
+        font-size: 19px;
+        line-height: 1.45;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
-        color: var(--accent-lit);
+        color: var(--muted);
       }
 
-      .eyebrow::before {
+      .eyebrow strong {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      h1 {
+        margin: 34px 0 0;
+        font-family: "Bebas Neue", sans-serif;
+        font-weight: 400;
+        font-size: 196px;
+        line-height: 0.8;
+        letter-spacing: 2px;
+        background: linear-gradient(180deg, #ffffff 0%, #ffd9e2 50%, var(--accent-lit) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 26px rgba(255, 45, 98, 0.28));
+      }
+
+      .tagline {
+        margin: 26px 0 0;
+        font-size: 27px;
+        line-height: 1.35;
+        color: #d2deee;
+        max-width: 520px;
+      }
+
+      .foot {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-size: 20px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .foot::before {
         content: "";
         width: 34px;
         height: 3px;
@@ -119,75 +153,93 @@
         box-shadow: 0 0 12px var(--accent-glow);
       }
 
-      h1 {
-        margin: 0;
-        font-family: "Bebas Neue", sans-serif;
-        font-size: 148px;
-        line-height: 0.86;
-        letter-spacing: 2px;
-        background: linear-gradient(180deg, #ffffff 0%, #ffd9e2 50%, var(--accent-lit) 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
+      .foot b {
+        color: var(--accent-lit);
+        font-weight: 500;
       }
 
-      .tagline {
-        margin: 18px 0 0;
-        font-size: 30px;
-        line-height: 1.35;
-        color: var(--muted);
-        max-width: 640px;
-      }
-
-      .stack {
-        margin: 30px 0 0;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        padding: 0;
-        list-style: none;
-      }
-
-      .stack li {
-        padding: 10px 20px;
-        border: 1px solid var(--accent-line);
-        border-radius: 999px;
-        font-size: 22px;
-        color: #ffe7ed;
-        background: rgba(255, 45, 98, 0.1);
-      }
-
-      .domain {
+      /* --- Capas em leque ----------------------------------------------- */
+      .shot {
         position: absolute;
-        right: 78px;
-        bottom: 46px;
         z-index: 1;
-        font-size: 26px;
-        letter-spacing: 0.16em;
-        color: var(--muted);
+        margin: 0;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: #000;
+        box-shadow: 0 30px 60px -18px rgba(0, 0, 0, 0.9), 0 0 60px -30px var(--accent-glow);
+      }
+
+      .shot img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top center;
+      }
+
+      .shot figcaption {
+        position: absolute;
+        left: 12px;
+        bottom: 12px;
+        padding: 7px 13px;
+        border-radius: 999px;
+        font-size: 15px;
+        letter-spacing: 0.06em;
+        color: var(--text);
+        background: rgba(4, 2, 3, 0.78);
+        border: 1px solid var(--accent-line);
+      }
+
+      .shot-oath {
+        width: 300px;
+        height: 375px;
+        left: 668px;
+        top: 150px;
+        transform: rotate(-7deg);
+      }
+
+      .shot-sol {
+        width: 280px;
+        height: 350px;
+        left: 905px;
+        top: 52px;
+        transform: rotate(6deg);
+      }
+
+      .shot-ii {
+        z-index: 2;
+        width: 470px;
+        height: 264px;
+        left: 712px;
+        top: 318px;
+        transform: rotate(-1.5deg);
+        border-color: var(--accent-line);
       }
     </style>
   </head>
   <body>
     <div class="frame" id="frame">
-      <div class="inner">
-        <div class="avatar-shell">
+      <figure class="shot shot-oath">
+        <img src="./projects/blood-oath/poster.webp" alt="" />
+      </figure>
+      <figure class="shot shot-sol">
+        <img src="./projects/sollarety/poster.webp" alt="" />
+      </figure>
+      <figure class="shot shot-ii">
+        <img src="./projects/ii-windows/desktop.webp" alt="" />
+        <figcaption>ii on Windows 11</figcaption>
+      </figure>
+
+      <div class="copy">
+        <div class="id">
           <img class="avatar" src="./pfp22.jpeg" alt="" />
+          <p class="eyebrow"><strong>Fullstack developer</strong><br />Portfolio</p>
         </div>
-        <div>
-          <p class="eyebrow">Fullstack Developer</p>
-          <h1>DAEESE</h1>
-          <p class="tagline">Bots, dashboards and interfaces &mdash; from C# on the backend to the browser.</p>
-          <ul class="stack">
-            <li>C#</li>
-            <li>JavaScript</li>
-            <li>HTML</li>
-            <li>CSS</li>
-            <li>.NET</li>
-          </ul>
-        </div>
+        <h1>DAEESE</h1>
+        <p class="tagline">Roblox games, Discord bots and desktop shells, from C# and Luau to <span style="white-space: nowrap">C++</span>.</p>
+        <p class="foot"><b>daeese.me</b>&nbsp;· 6 projects</p>
       </div>
-      <p class="domain">daeese.me</p>
     </div>
   </body>
 </html>
