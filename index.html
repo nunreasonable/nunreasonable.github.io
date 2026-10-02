@@ -1479,6 +1479,14 @@
         display: block;
       }
 
+      /* Icone em 2:1 - dois logos lado a lado, sem moldura. */
+      .project-thumb.is-wide {
+        width: 84px;
+        object-fit: contain;
+        border: 0;
+        border-radius: 0;
+      }
+
       .project-heading {
         display: block;
         min-width: 0;
@@ -1647,6 +1655,21 @@
         color: var(--text);
         text-decoration: underline;
         text-underline-offset: 4px;
+      }
+
+      /* Logo do projeto no rodape do card aberto, ocupando as duas colunas. */
+      .project-logo {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: center;
+        padding-top: 26px;
+        border-top: 1px solid var(--line);
+      }
+
+      .project-logo img {
+        width: min(420px, 80%);
+        height: auto;
+        display: block;
       }
 
       /* --- Galeria ------------------------------------------------------ */
@@ -2491,8 +2514,10 @@
        *
        * tagline e o texto do card fechado; details, images e links so aparecem
        * com o card aberto. images[0] e tambem a capa do card - sem imagem, a
-       * capa usa `image` (o logo) centralizado. `theme` liga um tema de cores no
-       * site inteiro enquanto o card estiver aberto.
+       * capa usa `image` (o logo) centralizado. thumbWide deixa o icone pequeno
+       * do card em 2:1 (o do ii e o logo do projeto ao lado do do Windows);
+       * `logo` aparece no rodape do card aberto. `theme` liga um tema de cores
+       * no site inteiro enquanto o card estiver aberto.
        *
        * Tudo aqui e texto puro: o render escapa cada campo, entao link vai em
        * `links`, nunca como <a> dentro do texto.
@@ -2541,7 +2566,9 @@
             tagline: "end-4's illogical-impulse Quickshell desktop, ported from Hyprland to Windows 11.",
             status: "Work in progress",
             tags: ["C++", "C++/WinRT", "Qt 6 / QML", "Quickshell"],
-            image: "./filearchive/projects/ii-windows/icon.webp",
+            image: "./filearchive/projects/ii-windows/thumb.webp",
+            thumbWide: true,
+            logo: { src: "./filearchive/projects/ii-windows/logo.webp", w: 1000, h: 310, alt: "illogical-impulse for Windows" },
             details: [
               "illogical-impulse (ii) is end-4's Quickshell desktop shell for Hyprland: the bar, sidebars, overview and widgets. This port gets it running on a real Windows 11 desktop, and it takes two forks to get there.",
               "The first is Quickshell itself, with its core made portable and a new native Windows backend. It reserves screen space as an AppBar, draws translucent frameless windows on Direct3D 11, tracks windows and virtual desktops behind the same Quickshell.Hyprland API that ii already uses, and wires up global hotkeys (a lone Super press included), Core Audio, battery and power modes, Start menu apps and media controls. Every WinRT service runs on its own multithreaded-apartment thread and posts results back to Qt.",
@@ -3319,7 +3346,7 @@
                 <img ${imageAttrs(cover)} alt="" loading="lazy" decoding="async" />
               </span>
               <span class="project-head">
-                <img class="project-thumb" src="${escapeHtml(project.image)}" alt="" loading="lazy" decoding="async" />
+                <img class="project-thumb${project.thumbWide ? " is-wide" : ""}" src="${escapeHtml(project.image)}" alt="" loading="lazy" decoding="async" />
                 <span class="project-heading">
                   <span class="project-title">${escapeHtml(project.title)}</span>
                   <span class="project-tagline">${escapeHtml(project.tagline)}</span>
@@ -3336,6 +3363,7 @@
               <button class="project-close" type="button">Close project</button>
             </div>
             ${renderGallery(project)}
+            ${project.logo ? `<div class="project-logo"><img ${imageAttrs(project.logo, true)} alt="${escapeHtml(project.logo.alt || "")}" decoding="async" /></div>` : ""}
           </div>`;
 
         return card;
