@@ -107,7 +107,7 @@ export const pt = {
   "p.ii-windows.title": "ii no Windows 11",
   "p.ii-windows.tagline":
     "O desktop illogical-impulse do end-4, feito em Quickshell, portado do Hyprland para o Windows 11.",
-  "p.ii-windows.status": "Em andamento",
+  "p.ii-windows.status": "Primeira versão · v0.1.0",
   "p.ii-windows.d0":
     "O illogical-impulse (ii) é o shell de desktop em Quickshell que o end-4 fez para o Hyprland: a barra, as barras laterais, o overview e os widgets. Este port faz ele rodar num desktop de verdade do Windows 11, e chegar lá exige dois forks.",
   "p.ii-windows.d1":
@@ -115,17 +115,25 @@ export const pt = {
   "p.ii-windows.d2":
     "O segundo é o ii por cima: o histórico da config separado do repositório de dotfiles, para as mudanças do upstream continuarem entrando, com cada comando de Linux trocado por uma API nativa ou desligado sem erro. O ii pega o wallpaper do Windows e monta a paleta Material You com o matugen, e a mesma paleta veste o Windows Terminal: esquema de cores, perfil e um prompt do Oh My Posh nas cores do ii, gerados por um port em C++ do código de cores de terminal do ii que bate bit a bit com a versão em Python.",
   "p.ii-windows.d3":
-    "Já testado na VM: a barra, a barra lateral direita, o overview com prévias ao vivo, as notificações, os modos claro e escuro e os esquemas de cores, o seletor de wallpaper, recortes de tela com OCR, desktops virtuais, uma taskbar que só aparece na borda de baixo e o cheatsheet de atalhos, que segue o layout do teclado. Tudo é compilado a partir do Linux com clang-cl, xwin e Qt 6.11. O próximo passo é empacotar tudo num instalador.",
+    "Já testado na VM: a barra, a barra lateral direita, o overview com prévias ao vivo, as notificações, os modos claro e escuro e os esquemas de cores, o seletor de wallpaper, recortes de tela com OCR, desktops virtuais, uma taskbar que só aparece na borda de baixo e o cheatsheet de atalhos, que segue o layout do teclado. Tudo é compilado a partir do Linux com clang-cl, xwin e Qt 6.11.",
+  "p.ii-windows.d4":
+    "A versão 0.1.0 já saiu. Um instalador gráfico pequeno, feito em Rust com Tauri, baixa o pacote do release no GitHub, confere o SHA-256 e instala tudo para o usuário atual, sem precisar de administrador. O mesmo instalador atualiza, repara e desinstala, e a desinstalação devolve o wallpaper, o modo claro ou escuro, a cor de destaque e a configuração da taskbar que ele encontrou. É experimental e só para Windows 11, e o instalador ainda não é assinado, então o SmartScreen pode avisar.",
+  "p.ii-windows.link0": "Baixar o instalador",
+  "p.ii-windows.link1": "ii-windows no GitHub",
+  "p.ii-windows.link2": "Fork do Quickshell",
+  "p.ii-windows.link3": "Fork do ii",
   "p.ii-windows.cap0": "As cores do ii tiradas do wallpaper do Windows; a taskbar só aparece na borda de baixo",
-  "p.ii-windows.cap1": "Windows Terminal com as cores do ii e um prompt do Oh My Posh",
-  "p.ii-windows.cap2": "Cheatsheet de atalhos no Super+/, seguindo o layout do teclado",
-  "p.ii-windows.cap3": "Barra lateral direita: atalhos rápidos, notificações e calendário",
-  "p.ii-windows.cap4": "Overview dos workspaces, aberto com a tecla Super",
+  "p.ii-windows.cap1": "O instalador: instala, atualiza, repara e desinstala, tudo por usuário",
+  "p.ii-windows.cap2": "Windows Terminal com as cores do ii e um prompt do Oh My Posh",
+  "p.ii-windows.cap3": "Cheatsheet de atalhos no Super+/, seguindo o layout do teclado",
+  "p.ii-windows.cap4": "Barra lateral direita: atalhos rápidos, notificações e calendário",
+  "p.ii-windows.cap5": "Overview dos workspaces, aberto com a tecla Super",
   "p.ii-windows.alt0": "Desktop do Windows 11 com a barra e o relógio do ii, coloridos a partir de um wallpaper de anime",
-  "p.ii-windows.alt1": "Janelas do Windows Terminal na paleta rosa do ii com um prompt do Oh My Posh",
-  "p.ii-windows.alt2": "Cheatsheet de atalhos do ii com os atalhos do shell, de mídia, de janelas e de apps",
-  "p.ii-windows.alt3": "Barra lateral direita do ii aberta, com atalhos rápidos, notificações e um calendário",
-  "p.ii-windows.alt4": "Overview dos workspaces do ii com um campo de busca",
+  "p.ii-windows.alt1": "O instalador do ii-windows na página de opções, com chaves para iniciar com o Windows e configurar o terminal",
+  "p.ii-windows.alt2": "Janelas do Windows Terminal na paleta rosa do ii com um prompt do Oh My Posh",
+  "p.ii-windows.alt3": "Cheatsheet de atalhos do ii com os atalhos do shell, de mídia, de janelas e de apps",
+  "p.ii-windows.alt4": "Barra lateral direita do ii aberta, com atalhos rápidos, notificações e um calendário",
+  "p.ii-windows.alt5": "Overview dos workspaces do ii com um campo de busca",
 
   // --- Sollarety -------------------------------------------------------------
   "p.sollarety.tagline": "Um bot de moderação, verificação Roblox, música e diversão para comunidades no Discord.",
