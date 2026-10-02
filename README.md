@@ -7,7 +7,7 @@ frente (proxy + rota `/api/*`).
 
 | Caminho | O que é |
 |---|---|
-| `index.html` | Página inicial — perfil, links, projetos e o "Now Playing" do Spotify via [Lanyard](https://github.com/Phineas/lanyard). |
+| `index.html` | Portfólio — perfil, projetos clicáveis que expandem com texto e galeria (dados em `profileData.projects`, imagens em `filearchive/projects/`), links e o "Now Playing" do Spotify via [Lanyard](https://github.com/Phineas/lanyard). O card do Sollarety troca o site para o tema preto/prata enquanto está aberto; `#work/<slug>` abre um projeto direto. |
 | `cornwallcore/` | Showcase do bot **ccore** (12° Regimento de Infantaria "Chaves"). |
 | `cornwallcore/status/` | Página **pública** de estado do bot: uptime, latência, servidores e membros, lidos de `GET /api/status`. Sem dados da máquina. |
 | `cornwallcore/termsofservice/`, `cornwallcore/privacypolicy/` | Termos de Serviço e Política de Privacidade vigentes do app no Discord. |
