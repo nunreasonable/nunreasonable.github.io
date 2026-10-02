@@ -69,6 +69,7 @@
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="./filearchive/i18n/i18n.css" />
     <style>
       /*
        * Cores que trocam com o tema. Registradas com @property para o
@@ -1176,9 +1177,26 @@
         color: var(--accent-lit);
       }
 
+      .nav-end {
+        display: flex;
+        align-items: center;
+        gap: clamp(14px, 3vw, 30px);
+      }
+
       .nav-links {
         display: flex;
         gap: clamp(14px, 3vw, 30px);
+      }
+
+      /* O seletor de idioma (estilo base em filearchive/i18n/i18n.css) herda a
+         cor do texto; aqui so encolhe para caber na altura da barra. */
+      .nav .i18n-switcher {
+        font-size: 0.74rem;
+        color: var(--text);
+      }
+
+      .nav .i18n-switcher__btn {
+        padding: 5px 10px;
       }
 
       .nav-links a {
@@ -1977,6 +1995,26 @@
           letter-spacing: 0.08em;
         }
 
+        .nav-end,
+        .nav-links {
+          gap: 12px;
+        }
+
+        /* "English | Portugues" nao cabe ao lado dos tres links num celular:
+           vira "EN | PT". O nome inteiro continua no botao para leitor de
+           tela - so o desenho muda, pelo data-lang que o i18n.js ja poe. */
+        .nav .i18n-switcher__btn {
+          font-size: 0;
+          padding: 5px 8px;
+        }
+
+        .nav .i18n-switcher__btn::before {
+          content: attr(data-lang);
+          font-size: 0.7rem;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+        }
+
         .hero {
           padding-top: calc(var(--nav-h) + 28px);
         }
@@ -2199,7 +2237,7 @@
     </div>
 
     <div class="blur-overlay" id="blurOverlay">
-      <div class="blur-message">click to enter</div>
+      <div class="blur-message" data-i18n="home.gate">click to enter</div>
     </div>
 
     <!--
@@ -2209,21 +2247,27 @@
     -->
     <div class="intro" id="intro" aria-hidden="true">
       <div class="intro-terminal">
-        <p class="intro-line" style="--i: 0"><span class="p">&gt;</span> initializing daeese.me<span class="cur"></span></p>
-        <p class="intro-line" style="--i: 1"><span class="p">&gt;</span> loading modules<span class="dots">.........</span> <span class="ok">ok</span></p>
-        <p class="intro-line" style="--i: 2"><span class="p">&gt;</span> discord gateway<span class="dots">.........</span> <span class="ok">ok</span></p>
+        <p class="intro-line" style="--i: 0"><span class="p">&gt;</span> <span data-i18n="home.intro.init">initializing daeese.me</span><span class="cur"></span></p>
+        <p class="intro-line" style="--i: 1"><span class="p">&gt;</span> <span data-i18n="home.intro.modules">loading modules</span><span class="dots" data-i18n="home.intro.modulesDots">.........</span> <span class="ok">ok</span></p>
+        <p class="intro-line" style="--i: 2"><span class="p">&gt;</span> <span data-i18n="home.intro.gateway">discord gateway</span><span class="dots" data-i18n="home.intro.gatewayDots">.........</span> <span class="ok">ok</span></p>
         <p class="intro-line" style="--i: 3"><span class="p">&gt;</span> spotify<span class="dots">.................</span> <span class="ok">live</span></p>
-        <p class="intro-line" style="--i: 4"><span class="p">&gt;</span> ready.</p>
+        <p class="intro-line" style="--i: 4"><span class="p">&gt;</span> <span data-i18n="home.intro.ready">ready.</span></p>
       </div>
     </div>
 
     <header class="nav" id="nav">
       <a class="nav-brand" href="#top">daeese<span>.</span></a>
-      <nav class="nav-links" aria-label="Sections">
-        <a href="#work">Work</a>
-        <a href="#links">Links</a>
-        <a href="#contact">Contact</a>
-      </nav>
+      <div class="nav-end">
+        <nav class="nav-links" aria-label="Sections" data-i18n-attr="aria-label:home.nav.label">
+          <a href="#work" data-i18n="home.nav.work">Work</a>
+          <a href="#links" data-i18n="home.nav.links">Links</a>
+          <a href="#contact" data-i18n="home.nav.contact">Contact</a>
+        </nav>
+        <!-- Mesmo seletor da pagina do Sollarety (filearchive/i18n), so que
+             encaixado na barra em vez de flutuando: flutuando ele cairia em
+             cima dos links da nav. -->
+        <div data-i18n-switcher></div>
+      </div>
     </header>
 
     <main class="site">
@@ -2236,6 +2280,7 @@
                 id="avatar"
                 src="./filearchive/pfp22.jpeg"
                 alt="Profile avatar"
+                data-i18n-attr="alt:home.avatarAlt"
               />
               <span
                 class="discord-status-badge"
@@ -2245,30 +2290,30 @@
                 title="Discord status"
               ></span>
             </div>
-            <p class="eyebrow"><strong>Fullstack developer</strong><br />C# · JavaScript · Web</p>
+            <p class="eyebrow"><strong data-i18n="home.role">Fullstack developer</strong><br />C# · JavaScript · Web</p>
           </div>
           <div class="name-wrap reveal">
             <h1 class="name" id="displayName">DAEESE</h1>
             <p class="handle" id="handle">@daeese</p>
           </div>
-          <p class="bio reveal" id="bio"></p>
+          <p class="bio reveal" id="bio" data-i18n="home.bio"></p>
           <ul class="badges reveal" id="badges"></ul>
           <div class="socials-inline reveal" id="socialLinksInline"></div>
         </div>
 
         <aside class="hero-side reveal" id="contact">
-          <p class="section-title">Get in touch</p>
+          <p class="section-title" data-i18n="home.getInTouch">Get in touch</p>
           <div class="links" id="mainLinks"></div>
         </aside>
 
-        <a class="scroll-cue" href="#work">Selected work</a>
+        <a class="scroll-cue" href="#work" data-i18n="home.scrollCue">Selected work</a>
       </section>
 
       <section class="section" id="work" aria-labelledby="workTitle">
         <header class="section-head">
           <span class="section-num">01</span>
-          <h2 id="workTitle">Selected work</h2>
-          <p class="section-lede">Click a project to open it.</p>
+          <h2 id="workTitle" data-i18n="home.work.title">Selected work</h2>
+          <p class="section-lede" data-i18n="home.work.lede">Click a project to open it.</p>
         </header>
         <div class="projects" id="projectsList"></div>
       </section>
@@ -2276,15 +2321,15 @@
       <section class="section" id="links" aria-labelledby="linksTitle">
         <header class="section-head">
           <span class="section-num">02</span>
-          <h2 id="linksTitle">Links</h2>
-          <p class="section-lede">Policies and community invites.</p>
+          <h2 id="linksTitle" data-i18n="home.links.title">Links</h2>
+          <p class="section-lede" data-i18n="home.links.lede">Policies and community invites.</p>
         </header>
         <div class="links link-index" id="policyLinks"></div>
       </section>
 
       <footer class="footer">
-        <p id="footerText">online now</p>
-        <a href="#top">Back to top &uarr;</a>
+        <p id="footerText" data-i18n="home.footer">online now</p>
+        <a href="#top" data-i18n="home.backToTop">Back to top &uarr;</a>
       </footer>
     </main>
 
@@ -2296,11 +2341,11 @@
       aria-labelledby="playerTrackTitle"
     >
       <div class="player-modal-content">
-        <button class="player-close-btn" id="playerCloseBtn" type="button" aria-label="Close player">
+        <button class="player-close-btn" id="playerCloseBtn" type="button" aria-label="Close player" data-i18n-attr="aria-label:home.player.close">
           ✕
         </button>
         <div class="player-disc">
-          <img class="player-album-art" id="playerAlbumArt" src="" alt="Album artwork" />
+          <img class="player-album-art" id="playerAlbumArt" src="" alt="Album artwork" data-i18n-attr="alt:home.player.art" />
         </div>
         <h2 class="player-track-title" id="playerTrackTitle">Not Playing</h2>
         <p class="player-track-artist" id="playerTrackArtist"></p>
@@ -2312,18 +2357,18 @@
           <span id="playerTimeCurrent">0:00</span>
           <span id="playerTimeTotal">0:00</span>
         </div>
-        <a class="player-listen-btn" id="playerListenBtn" href="https://open.spotify.com" target="_blank" rel="noopener noreferrer">Listen too!</a>
+        <a class="player-listen-btn" id="playerListenBtn" href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" data-i18n="home.player.listen">Listen too!</a>
       </div>
     </div>
 
-    <dialog class="lightbox" id="lightbox" aria-label="Image viewer">
-      <button class="lightbox-btn lightbox-close" id="lightboxClose" type="button" aria-label="Close image">✕</button>
-      <button class="lightbox-btn lightbox-prev" id="lightboxPrev" type="button" aria-label="Previous image">&larr;</button>
+    <dialog class="lightbox" id="lightbox" aria-label="Image viewer" data-i18n-attr="aria-label:home.lightbox.label">
+      <button class="lightbox-btn lightbox-close" id="lightboxClose" type="button" aria-label="Close image" data-i18n-attr="aria-label:home.lightbox.close">✕</button>
+      <button class="lightbox-btn lightbox-prev" id="lightboxPrev" type="button" aria-label="Previous image" data-i18n-attr="aria-label:home.lightbox.prev">&larr;</button>
       <figure>
         <img id="lightboxImg" src="data:," alt="" />
         <figcaption id="lightboxCaption"></figcaption>
       </figure>
-      <button class="lightbox-btn lightbox-next" id="lightboxNext" type="button" aria-label="Next image">&rarr;</button>
+      <button class="lightbox-btn lightbox-next" id="lightboxNext" type="button" aria-label="Next image" data-i18n-attr="aria-label:home.lightbox.next">&rarr;</button>
     </dialog>
 
     <script>
@@ -2392,6 +2437,44 @@
           .replaceAll('"', "&quot;")
           .replaceAll("'", "&#39;");
       }
+
+      // ` data-i18n="..."` para concatenar numa tag; vazio sem chave.
+      function i18nAttr(key) {
+        return key ? ` data-i18n="${escapeHtml(key)}"` : "";
+      }
+
+      // --- Idioma (seletor EN/PT) -------------------------------------------
+      /*
+       * O seletor e o modulo filearchive/i18n/i18n.js, o mesmo das paginas do
+       * Sollarety e do ccore. Ele traduz sozinho tudo que tem data-i18n, mas
+       * texto AO VIVO (Now Playing, status do Discord, legenda da galeria) e
+       * reescrito por este script e nao pode usar data-i18n - seria
+       * sobrescrito pelo dicionario e voltaria no proximo tick. Para esse texto
+       * existe homeT(): ele le o mesmo dicionario, importado aqui no primeiro
+       * i18n:change para portugues, e refreshLiveText() reaplica tudo.
+       */
+      let pageLang = "en";
+      let pagePt = null;
+
+      function homeT(key, english) {
+        if (pageLang === "pt" && pagePt && typeof pagePt[key] === "string") {
+          return pagePt[key];
+        }
+        return english;
+      }
+
+      document.addEventListener("i18n:change", async (event) => {
+        const lang = event.detail && event.detail.lang === "pt" ? "pt" : "en";
+        if (lang === "pt" && !pagePt) {
+          try {
+            pagePt = (await import("./filearchive/i18n/dict/home.js")).pt;
+          } catch (error) {
+            pagePt = null;
+          }
+        }
+        pageLang = lang;
+        refreshLiveText();
+      });
 
       // Uma consulta so, reutilizada: quem pediu menos movimento ao sistema nao
       // recebe particula, brilho de cursor, transicao de card nem digitacao
@@ -2529,7 +2612,7 @@
         avatar: "./filearchive/pfp22.jpeg",
             badges: ["C#", "JavaScript", "HTML", "CSS", "UTC-3"],
         links: [
-          { label: "Contact Me", href: "mailto:rafaelpasquarella@gmail.com", tag: "E-Mail" },
+          { label: "Contact Me", href: "mailto:rafaelpasquarella@gmail.com", tag: "E-Mail", i18n: "home.link.contact", i18nTag: "home.link.contactTag" },
           { id: "nowPlaying", label: "Now Playing", href: "https://open.spotify.com", tag: "Spotify" }
         ],
         spotify: {
@@ -2666,10 +2749,10 @@
           { label: "Discord", href: "https://discord.com/users/1402344358199689348" }
         ],
         policyLinks: [
-          { label: "Terms of Service", href: "https://ccore.daeese.me/termsofservice/", tag: "ccore" },
-            { label: "Privacy Policy", href: "https://ccore.daeese.me/privacypolicy/", tag: "ccore" },
-            { label: "VLTRA INVITE", href: "https://discord.gg/3qdvhkNSS8", tag: "Vltra"},
-            { label: "BLOOD OATH INVITE", href: "https://discord.com/invite/fdD6Mc6CAw", tag: "Blood Oath"}
+          { label: "Terms of Service", href: "https://ccore.daeese.me/termsofservice/", tag: "ccore", i18n: "home.policy.tos" },
+            { label: "Privacy Policy", href: "https://ccore.daeese.me/privacypolicy/", tag: "ccore", i18n: "home.policy.privacy" },
+            { label: "VLTRA INVITE", href: "https://discord.gg/3qdvhkNSS8", tag: "Vltra", i18n: "home.policy.vltra" },
+            { label: "BLOOD OATH INVITE", href: "https://discord.com/invite/fdD6Mc6CAw", tag: "Blood Oath", i18n: "home.policy.bloodOath" }
         ],
         footer: "Last updated October 2, 2026"
       };
@@ -2802,7 +2885,10 @@
           offline: "Offline"
         };
 
-        discordStatusBadgeEl.title = `Discord status: ${statusLabelMap[normalizedStatus] || "Offline"}`;
+        discordStatusBadgeEl.title = `${homeT("live.discordStatus", "Discord status")}: ${homeT(
+          `live.status.${normalizedStatus}`,
+          statusLabelMap[normalizedStatus] || "Offline"
+        )}`;
       }
 
       const linksEl = document.getElementById("mainLinks");
@@ -2815,12 +2901,12 @@
         a.target = "_blank";
         a.rel = "noreferrer noopener";
         a.style.animationDelay = `${100 + i * 75}ms`;
-        a.innerHTML = `<span class="left">${escapeHtml(link.label)}</span><span class="right">${escapeHtml(link.tag)}</span>`;
+        a.innerHTML = `<span class="left"${i18nAttr(link.i18n)}>${escapeHtml(link.label)}</span><span class="right"${i18nAttr(link.i18nTag)}>${escapeHtml(link.tag)}</span>`;
         linksEl.appendChild(a);
       });
 
       function formatNowPlayingLabel(trackTitle, artistName) {
-        return `Now Playing: ${trackTitle} - ${artistName}`;
+        return `${homeT("live.nowPlaying", "Now Playing")}: ${trackTitle} - ${artistName}`;
       }
 
       function refreshNowPlayingTitleFit() {
@@ -2893,16 +2979,16 @@
         // Everything below is third-party data from Lanyard, so it is escaped
         // before it reaches innerHTML.
         if (!state || !state.isPlaying) {
-          const idleMessage = state && state.message ? state.message : "Spotify status idle";
+          const idleMessage = state && state.message ? state.message : homeT("live.idle", "Spotify status idle");
           left.innerHTML = `
             <span class="now-playing-left">
               <img
                 class="now-playing-cover"
                 src="${escapeHtml(FALLBACK_ALBUM_ART)}"
-                alt="No track artwork"
+                alt="${escapeHtml(homeT("live.noArtwork", "No track artwork"))}"
               />
               <span class="now-playing-text">
-                <span class="now-playing-title"><span class="now-playing-title-inner">Not listening right now</span></span>
+                <span class="now-playing-title"><span class="now-playing-title-inner">${escapeHtml(homeT("live.notListening", "Not listening right now"))}</span></span>
                 <span class="now-playing-subtitle">${escapeHtml(idleMessage)}</span>
               </span>
             </span>
@@ -2917,14 +3003,14 @@
         const coverUrl = safeImageUrl(state.imageUrl, FALLBACK_ALBUM_ART);
         left.innerHTML = `
           <span class="now-playing-left">
-            <img class="now-playing-cover" src="${escapeHtml(coverUrl)}" alt="Album artwork" />
+            <img class="now-playing-cover" src="${escapeHtml(coverUrl)}" alt="${escapeHtml(homeT("live.albumArtwork", "Album artwork"))}" />
             <span class="now-playing-text">
               <span class="now-playing-title"><span class="now-playing-title-inner">${escapeHtml(formatNowPlayingLabel(state.title, state.artist))}</span></span>
-              <span class="now-playing-subtitle">${escapeHtml(state.album || "Live on Spotify")}</span>
+              <span class="now-playing-subtitle">${escapeHtml(state.album || homeT("live.liveOnSpotify", "Live on Spotify"))}</span>
             </span>
           </span>
         `;
-        right.textContent = "Live";
+        right.textContent = homeT("live.live", "Live");
         nowPlayingLink.dataset.url = state.trackUrl;
         nowPlayingLink.href = normalizeUrl(state.trackUrl) || "https://open.spotify.com";
         refreshNowPlayingTitleFit();
@@ -3146,8 +3232,8 @@
 
       function updatePlayerDisplay() {
         if (!currentNowPlayingState || !currentNowPlayingState.isPlaying) {
-          document.getElementById("playerTrackTitle").textContent = "Not Playing";
-          document.getElementById("playerTrackArtist").textContent = "Start listening on Spotify";
+          document.getElementById("playerTrackTitle").textContent = homeT("live.notPlaying", "Not Playing");
+          document.getElementById("playerTrackArtist").textContent = homeT("live.startListening", "Start listening on Spotify");
           document.getElementById("playerTrackAlbum").textContent = "";
           document.getElementById("playerAlbumArt").src = FALLBACK_ALBUM_ART;
           playerListenBtn.href = "https://open.spotify.com";
@@ -3159,7 +3245,8 @@
 
         document.getElementById("playerTrackTitle").textContent = currentNowPlayingState.title;
         document.getElementById("playerTrackArtist").textContent = currentNowPlayingState.artist;
-        document.getElementById("playerTrackAlbum").textContent = currentNowPlayingState.album || "Live on Spotify";
+        document.getElementById("playerTrackAlbum").textContent =
+          currentNowPlayingState.album || homeT("live.liveOnSpotify", "Live on Spotify");
         document.getElementById("playerAlbumArt").src = safeImageUrl(
           currentNowPlayingState.imageUrl,
           FALLBACK_ALBUM_ART
@@ -3291,6 +3378,21 @@
         return `${deferred ? "data-src" : "src"}="${escapeHtml(image.src)}"${size}`;
       }
 
+      /*
+       * Legenda e texto alternativo de uma imagem no idioma atual. As chaves
+       * seguem a posicao: p.<slug>.cap0 / p.<slug>.alt0 para a primeira imagem.
+       */
+      function imageText(project, index, field) {
+        const image = project.images[index] || {};
+        const key = `p.${project.slug}.${field === "alt" ? "alt" : "cap"}${index}`;
+        return homeT(key, image[field] || "");
+      }
+
+      function thumbLabel(project, index) {
+        const caption = imageText(project, index, "caption") || imageText(project, index, "alt");
+        return `${homeT("live.showImage", "Show image")} ${index + 1}: ${caption}`;
+      }
+
       function renderGallery(project) {
         const images = project.images || [];
         if (images.length === 0) {
@@ -3299,20 +3401,20 @@
 
         const first = images[0];
         const thumbs = images.length > 1
-          ? `<div class="gallery-thumbs" role="group" aria-label="${escapeHtml(project.title)} images">${images
+          ? `<div class="gallery-thumbs" role="group" aria-label="Images" data-i18n-attr="aria-label:home.gallery.group">${images
               .map(
                 (image, i) =>
-                  `<button class="gallery-thumb" type="button" data-index="${i}" aria-label="Show image ${i + 1}: ${escapeHtml(image.caption || image.alt || "")}"${i === 0 ? ' aria-current="true"' : ""}><img ${imageAttrs(image, true)} alt="" decoding="async" /></button>`
+                  `<button class="gallery-thumb" type="button" data-index="${i}" aria-label="${escapeHtml(thumbLabel(project, i))}"${i === 0 ? ' aria-current="true"' : ""}><img ${imageAttrs(image, true)} alt="" decoding="async" /></button>`
               )
               .join("")}</div>`
           : "";
 
         return `
           <div class="gallery">
-            <button class="gallery-main" type="button" aria-label="Open image in full size">
-              <img ${imageAttrs(first, true)} alt="${escapeHtml(first.alt || "")}" decoding="async" />
+            <button class="gallery-main" type="button" aria-label="Open image in full size" data-i18n-attr="aria-label:home.gallery.open">
+              <img ${imageAttrs(first, true)} alt="${escapeHtml(imageText(project, 0, "alt"))}" decoding="async" />
             </button>
-            <p class="gallery-caption">${escapeHtml(first.caption || "")}</p>
+            <p class="gallery-caption">${escapeHtml(imageText(project, 0, "caption"))}</p>
             ${thumbs}
           </div>`;
       }
@@ -3321,15 +3423,22 @@
         const images = project.images || [];
         const usesLogoCover = images.length === 0 || images[0].src === project.image;
         const cover = usesLogoCover ? { src: project.image } : images[0];
+        // Chaves do dicionario de portugues (filearchive/i18n/dict/home.js):
+        // p.<slug>.tagline, .status, .d0..dN (paragrafos), .link0..linkN.
+        const key = (suffix) => `p.${project.slug}.${suffix}`;
         const status = project.status
-          ? `<span class="project-status">${escapeHtml(project.status)}</span>`
+          ? `<span class="project-status"${i18nAttr(key("status"))}>${escapeHtml(project.status)}</span>`
           : "";
-        const tags = (project.tags || []).map((tag) => `<li>${escapeHtml(tag)}</li>`).join("");
-        const paragraphs = (project.details || []).map((text) => `<p>${escapeHtml(text)}</p>`).join("");
+        const tags = (project.tags || [])
+          .map((tag) => `<li${i18nAttr(`tag.${tag}`)}>${escapeHtml(tag)}</li>`)
+          .join("");
+        const paragraphs = (project.details || [])
+          .map((text, i) => `<p${i18nAttr(key(`d${i}`))}>${escapeHtml(text)}</p>`)
+          .join("");
         const actions = (project.links || [])
           .map(
-            (link) =>
-              `<a class="project-action${link.primary ? " is-primary" : ""}" href="${escapeHtml(normalizeUrl(link.href) || "#")}" target="_blank" rel="noreferrer noopener">${escapeHtml(link.label)}</a>`
+            (link, i) =>
+              `<a class="project-action${link.primary ? " is-primary" : ""}" href="${escapeHtml(normalizeUrl(link.href) || "#")}" target="_blank" rel="noreferrer noopener"${i18nAttr(key(`link${i}`))}>${escapeHtml(link.label)}</a>`
           )
           .join("");
 
@@ -3349,19 +3458,19 @@
               <span class="project-head">
                 <img class="project-thumb${project.thumbWide ? " is-wide" : ""}" src="${escapeHtml(project.image)}" alt="" loading="lazy" decoding="async" />
                 <span class="project-heading">
-                  <span class="project-title">${escapeHtml(project.title)}</span>
-                  <span class="project-tagline">${escapeHtml(project.tagline)}</span>
+                  <span class="project-title"${i18nAttr(key("title"))}>${escapeHtml(project.title)}</span>
+                  <span class="project-tagline"${i18nAttr(key("tagline"))}>${escapeHtml(project.tagline)}</span>
                 </span>
                 <span class="project-plus" aria-hidden="true">+</span>
               </span>
             </button>
           </h3>
-          <ul class="project-tags" aria-label="Stack">${tags}</ul>
+          <ul class="project-tags" aria-label="Stack" data-i18n-attr="aria-label:home.project.stack">${tags}</ul>
           <div class="project-details" id="details-${escapeHtml(project.slug)}" role="region" aria-label="${escapeHtml(project.title)}" hidden>
             <div class="project-body">
               ${paragraphs}
               ${actions ? `<div class="project-actions">${actions}</div>` : ""}
-              <button class="project-close" type="button">Close project</button>
+              <button class="project-close" type="button" data-i18n="home.project.close">Close project</button>
             </div>
             ${renderGallery(project)}
             ${project.logo ? `<div class="project-logo"><img ${imageAttrs(project.logo, true)} alt="${escapeHtml(project.logo.alt || "")}" decoding="async" /></div>` : ""}
@@ -3468,12 +3577,12 @@
 
         const mainImg = card.querySelector(".gallery-main img");
         mainImg.src = image.src;
-        mainImg.alt = image.alt || "";
+        mainImg.alt = imageText(project, index, "alt");
         if (image.w && image.h) {
           mainImg.width = image.w;
           mainImg.height = image.h;
         }
-        card.querySelector(".gallery-caption").textContent = image.caption || "";
+        card.querySelector(".gallery-caption").textContent = imageText(project, index, "caption");
         card.dataset.galleryIndex = String(index);
         card.querySelectorAll(".gallery-thumb").forEach((thumb) => {
           if (Number(thumb.dataset.index) === index) {
@@ -3514,7 +3623,7 @@
 
         if (event.target.closest(".gallery-main")) {
           playSFX("open");
-          openLightbox(projectBySlug[card.dataset.slug].images, Number(card.dataset.galleryIndex || 0));
+          openLightbox(projectBySlug[card.dataset.slug], Number(card.dataset.galleryIndex || 0));
           return;
         }
 
@@ -3529,28 +3638,27 @@
       const lightboxCaption = document.getElementById("lightboxCaption");
       const lightboxPrev = document.getElementById("lightboxPrev");
       const lightboxNext = document.getElementById("lightboxNext");
-      let lightboxImages = [];
+      let lightboxProject = null;
       let lightboxIndex = 0;
 
       function showLightboxImage(index) {
-        const total = lightboxImages.length;
+        const total = lightboxProject.images.length;
         lightboxIndex = (index + total) % total;
-        const image = lightboxImages[lightboxIndex];
+        const image = lightboxProject.images[lightboxIndex];
+        const caption = imageText(lightboxProject, lightboxIndex, "caption");
         lightboxImg.src = image.src;
-        lightboxImg.alt = image.alt || "";
-        lightboxCaption.textContent = total > 1
-          ? `${image.caption || ""} (${lightboxIndex + 1}/${total})`
-          : image.caption || "";
+        lightboxImg.alt = imageText(lightboxProject, lightboxIndex, "alt");
+        lightboxCaption.textContent = total > 1 ? `${caption} (${lightboxIndex + 1}/${total})` : caption;
         lightboxPrev.hidden = total < 2;
         lightboxNext.hidden = total < 2;
       }
 
-      function openLightbox(images, index) {
-        if (!images || images.length === 0 || typeof lightbox.showModal !== "function") {
+      function openLightbox(project, index) {
+        if (!project || !project.images || project.images.length === 0 || typeof lightbox.showModal !== "function") {
           return;
         }
 
-        lightboxImages = images;
+        lightboxProject = project;
         showLightboxImage(index);
         if (!lightbox.open) {
           lightbox.showModal();
@@ -3580,6 +3688,34 @@
 
       lightbox.addEventListener("close", () => playSFX("close"));
 
+      // --- Texto ao vivo na troca de idioma ---------------------------------
+      // Chamado pelo listener de i18n:change (la em cima). Reescreve so o que
+      // o modulo de i18n nao alcanca; o resto ele ja traduziu pelo data-i18n.
+      function refreshLiveText() {
+        setNowPlayingState(currentNowPlayingState);
+        if (isPlayerModalOpen()) {
+          updatePlayerDisplay();
+        }
+
+        document.querySelectorAll(".project-card").forEach((card) => {
+          const project = projectBySlug[card.dataset.slug];
+          if (!project || !card.querySelector(".gallery")) {
+            return;
+          }
+
+          const index = Number(card.dataset.galleryIndex || 0);
+          card.querySelector(".gallery-caption").textContent = imageText(project, index, "caption");
+          card.querySelector(".gallery-main img").alt = imageText(project, index, "alt");
+          card.querySelectorAll(".gallery-thumb").forEach((thumb) => {
+            thumb.setAttribute("aria-label", thumbLabel(project, Number(thumb.dataset.index)));
+          });
+        });
+
+        if (lightbox.open && lightboxProject) {
+          showLightboxImage(lightboxIndex);
+        }
+      }
+
       // --- Links (politicas e convites) -------------------------------------
       const policyLinksEl = document.getElementById("policyLinks");
       profileData.policyLinks.forEach((link, i) => {
@@ -3590,7 +3726,7 @@
         a.target = "_blank";
         a.rel = "noreferrer noopener";
         a.style.animationDelay = `${100 + i * 75}ms`;
-        a.innerHTML = `<span class="left">${escapeHtml(link.label)}</span><span class="right">${escapeHtml(link.tag)}</span>`;
+        a.innerHTML = `<span class="left"${i18nAttr(link.i18n)}>${escapeHtml(link.label)}</span><span class="right">${escapeHtml(link.tag)}</span>`;
         policyLinksEl.appendChild(a);
       });
 
@@ -3865,5 +4001,9 @@
         }, 85);
       })();
     </script>
+    <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
+         depois do script acima (modulo e sempre adiado), entao os cards de
+         projeto ja existem quando ele le o ingles do DOM. -->
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js"></script>
   </body>
 </html>
