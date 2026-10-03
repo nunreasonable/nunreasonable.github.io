@@ -2645,23 +2645,25 @@
           },
           {
             slug: "ii-windows",
-            title: "ii on Windows 11",
-            tagline: "end-4's illogical-impulse Quickshell desktop, ported from Hyprland to Windows 11.",
-            status: "Early release · v0.1.0",
+            title: "ii on Windows",
+            tagline: "end-4's illogical-impulse Quickshell desktop, ported from Hyprland to Windows 11 and 10.",
+            status: "Early release · v0.2.0",
             tags: ["C++", "C++/WinRT", "Qt 6 / QML", "Quickshell"],
             image: "./filearchive/projects/ii-windows/thumb.webp",
             thumbWide: true,
             logo: { src: "./filearchive/projects/ii-windows/logo.webp", w: 1000, h: 310, alt: "illogical-impulse for Windows" },
             details: [
-              "illogical-impulse (ii) is end-4's Quickshell desktop shell for Hyprland: the bar, sidebars, overview and widgets. This port gets it running on a real Windows 11 desktop, and it takes two forks to get there.",
+              "illogical-impulse (ii) is end-4's Quickshell desktop shell for Hyprland: the bar, sidebars, overview and widgets. This port gets it running on a real Windows desktop, 11 or 10, and it takes two forks to get there.",
               "The first is Quickshell itself, with its core made portable and a new native Windows backend. It reserves screen space as an AppBar, draws translucent frameless windows on Direct3D 11, and tracks windows and virtual desktops behind the same Quickshell.Hyprland API that ii already uses. Around that sit global hotkeys (a lone Super press included), Core Audio, media controls, live window capture for the overview previews, a notification server that mirrors Windows toasts, OCR, blur behind panels and a crash handler that writes a minidump and relaunches the shell. Every WinRT service runs on its own multithreaded-apartment thread and posts results back to Qt.",
               "The second is ii on top: the config's history split out of the dots repository, so upstream changes still merge, with every Linux command mapped to a native API or switched off cleanly. ii takes the Windows wallpaper and builds its Material You palette with matugen, and the same palette themes Windows Terminal: a color scheme, a profile and an Oh My Posh prompt in ii's colors, from a C++ port of ii's terminal color code that matches the Python version bit for bit.",
               "Tested on the VM so far: the bar, the right sidebar, the overview with live previews, notifications, light and dark mode and the color schemes, the wallpaper picker, region screenshots with OCR, virtual desktops, a taskbar that only shows up at the bottom edge and the keybind cheatsheet, which follows the keyboard layout. All of it is cross-compiled from Linux with clang-cl, xwin and Qt 6.11.",
-              "Version 0.1.0 is out. A small GUI setup, written in Rust with Tauri, downloads the package from the GitHub release, checks its SHA-256 and installs everything for the current user, with no administrator rights needed. The same setup updates, repairs and uninstalls, and uninstalling puts back the wallpaper, light or dark mode, accent color and taskbar setting it found. It's experimental and Windows 11 only, and the setup isn't signed yet, so SmartScreen may warn about it."
+              "Version 0.1.0 came out on October 2 with a small GUI setup, written in Rust with Tauri, that downloads the package from the GitHub release, checks its SHA-256 and installs everything for the current user, with no administrator rights needed. The same setup updates, repairs and uninstalls, and uninstalling puts back the wallpaper, light or dark mode, accent color and taskbar setting it found. 0.1.1 went after mouse and keyboard lag on real hardware by moving window events off ii's main thread.",
+              "0.2.0 brings Windows 10 (version 2004 or newer): virtual desktops, blur behind panels and the hover-only taskbar, on any screen edge, work there too, and the setup checks for WebView2 and installs Windows Terminal or winget when they're missing. It also ships the Visual C++ runtime, which 0.1.x needed already installed, and brightness now works on laptop screens, dimming in software on monitors without DDC/CI. It's still experimental, and the setup isn't signed yet, so SmartScreen may warn about it."
             ],
             images: [
               { src: "./filearchive/projects/ii-windows/themed.webp", w: 1600, h: 900, alt: "Windows 11 desktop with the ii bar and clock, colored from an anime wallpaper", caption: "ii's colors taken from the Windows wallpaper; the taskbar only shows up at the bottom edge" },
               { src: "./filearchive/projects/ii-windows/installer.webp", w: 980, h: 660, alt: "The ii-windows setup on its options page, with toggles for starting with Windows and the terminal setup", caption: "The setup: install, update, repair and uninstall, all per user" },
+              { src: "./filearchive/projects/ii-windows/windows10.webp", w: 1024, h: 768, alt: "ii's workspace overview and clock on a Windows 10 desktop", caption: "The same overview on Windows 10, new in 0.2.0" },
               { src: "./filearchive/projects/ii-windows/terminal.webp", w: 1600, h: 900, alt: "Windows Terminal windows in ii's pink palette with an Oh My Posh prompt", caption: "Windows Terminal themed with ii's colors and an Oh My Posh prompt" },
               { src: "./filearchive/projects/ii-windows/cheatsheet.webp", w: 1600, h: 900, alt: "ii keybind cheatsheet listing shell, media, window and app shortcuts", caption: "Keybind cheatsheet on Super+/, following the keyboard layout" },
               { src: "./filearchive/projects/ii-windows/sidebar.webp", w: 1600, h: 900, alt: "ii right sidebar open with quick toggles, notifications and a calendar", caption: "Right sidebar: quick toggles, notifications and calendar" },
