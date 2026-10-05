@@ -71,26 +71,6 @@
     />
     <link rel="stylesheet" href="./filearchive/i18n/i18n.css" />
     <style>
-      /*
-       * Cores que trocam com o tema. Registradas com @property para o
-       * navegador saber que sao <color> e conseguir INTERPOLAR: sem registro, a
-       * troca para o tema do Sollarety seria um corte seco. Tudo que deriva
-       * delas (brilho, borda, gradientes do fundo) usa color-mix sobre estas
-       * variaveis, entao anima junto sem regra extra.
-       */
-      @property --accent-lit { syntax: "<color>"; inherits: true; initial-value: #ff2d62; }
-      @property --accent-deep { syntax: "<color>"; inherits: true; initial-value: #9e002f; }
-      @property --accent { syntax: "<color>"; inherits: true; initial-value: #9e002f; }
-      @property --accent-2 { syntax: "<color>"; inherits: true; initial-value: #440114; }
-      @property --bg-start { syntax: "<color>"; inherits: true; initial-value: #040203; }
-      @property --bg-mid { syntax: "<color>"; inherits: true; initial-value: #0b0408; }
-      @property --bg-end { syntax: "<color>"; inherits: true; initial-value: #1d0813; }
-      @property --text { syntax: "<color>"; inherits: true; initial-value: #e7eef7; }
-      @property --muted { syntax: "<color>"; inherits: true; initial-value: #9caac0; }
-      @property --soft-text { syntax: "<color>"; inherits: true; initial-value: #d2deee; }
-      @property --name-mid { syntax: "<color>"; inherits: true; initial-value: #ffd9e2; }
-      @property --hover-text { syntax: "<color>"; inherits: true; initial-value: #d98aa8; }
-
       :root {
         --bg-start: #040203;
         --bg-mid: #0b0408;
@@ -126,20 +106,6 @@
         --nav-h: 64px;
         --gutter: clamp(16px, 4vw, 48px);
         --theme-ease: 800ms cubic-bezier(0.4, 0, 0.2, 1);
-
-        transition:
-          --accent-lit var(--theme-ease),
-          --accent-deep var(--theme-ease),
-          --accent var(--theme-ease),
-          --accent-2 var(--theme-ease),
-          --bg-start var(--theme-ease),
-          --bg-mid var(--theme-ease),
-          --bg-end var(--theme-ease),
-          --text var(--theme-ease),
-          --muted var(--theme-ease),
-          --soft-text var(--theme-ease),
-          --name-mid var(--theme-ease),
-          --hover-text var(--theme-ease);
       }
 
       /*
@@ -193,120 +159,157 @@
         color: var(--text);
       }
 
-      body::before {
+      /*
+       * A trama de pontos e uma imagem de 2x2 (um pixel branco quase
+       * transparente) repetida, e nao um radial-gradient de 2px: desenhar
+       * centenas de milhares de gradientes minusculos era a parte mais cara de
+       * rasterizar o fundo, e isso acontecia a cada troca de tema.
+       */
+      /*
+       * O fundo inteiro numa camada so, pintada uma vez.
+       *
+       * Antes eram sete camadas de tela cheia empilhadas - fundo, aurora,
+       * dois halos, trama de pontos, particulas, brilho do cursor - e a GPU
+       * misturava todas a cada quadro. Medido num monitor de 200 Hz com GPU
+       * integrada: sem os efeitos a pagina rodava a 200 fps; com eles, 58. So a
+       * aurora (camada de 1,6x a tela girando e escalando sem parar) derrubava
+       * para 98. Aqui aurora, halos e trama viram gradientes desta camada,
+       * parados na posicao media da antiga animacao, e o resultado visual e o
+       * mesmo. Ordem: trama por cima, depois halos, aurora e o degrade base.
+       *
+       * As porcentagens da aurora foram convertidas do elemento antigo
+       * (inset: -30%, ou seja 160% da tela) para a tela; as opacidades das
+       * camadas antigas ja estao multiplicadas nas cores.
+       */
+      /*
+       * Tema do Sollarety: duas camadas de fundo prontas, e nao uma animada.
+       *
+       * A troca de tema animava 12 cores registradas no :root, e cada quadro
+       * da transicao repintava a pagina inteira - medido: abrir o Sollarety
+       * caia para 42 fps num monitor de 200 Hz. Agora o fundo carmim
+       * (body::before) e o prateado (body::after) sao pintados uma vez com as
+       * cores fixas, e a troca e so a opacidade do prateado, que o compositor
+       * anima sozinho. O resto das cores (texto, bordas, botoes) troca na hora,
+       * por baixo desse fade.
+       */
+      body::before,
+      body::after {
         content: "";
         position: fixed;
         inset: 0;
         z-index: -1;
         pointer-events: none;
-        background: radial-gradient(
+        /* As duas camadas ja nascem prontas na GPU. Sem isto, o fade do tema
+           rasterizava a camada prateada inteira no primeiro quadro - medido:
+           um quadro de 40ms bem na troca. */
+        will-change: opacity;
+      }
+
+      body::before {
+        background:
+          url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEElEQVR42mP4//8/LwMyAAAwmAMLV0ERlQAAAABJRU5ErkJggg==") 0 0 / 2px 2px,
+          radial-gradient(
+            circle 410px at 90px 70px,
+            color-mix(in srgb, #ff2d62 19%, transparent) 0,
+            color-mix(in srgb, #ff2d62 7%, transparent) 156px,
+            transparent 287px
+          ),
+          radial-gradient(
+            circle 360px at calc(100% - 60px) calc(100% - 80px),
+            color-mix(in srgb, #9e002f 20%, transparent) 0,
+            color-mix(in srgb, #9e002f 7%, transparent) 144px,
+            transparent 252px
+          ),
+          radial-gradient(
+            61% 48% at 5% 12%,
+            color-mix(in srgb, #ff2d62 12%, transparent) 0%,
+            transparent 70%
+          ),
+          radial-gradient(
+            54% 45% at 95% 85%,
+            color-mix(in srgb, #9e002f 18%, transparent) 0%,
+            transparent 72%
+          ),
+          radial-gradient(
             circle at 16% 14%,
-            color-mix(in srgb, var(--accent-deep) 24%, transparent) 0,
+            color-mix(in srgb, #9e002f 24%, transparent) 0,
             transparent 40%
           ),
           radial-gradient(
             circle at 84% 84%,
-            color-mix(in srgb, var(--accent-deep) 16%, transparent) 0,
+            color-mix(in srgb, #9e002f 16%, transparent) 0,
             transparent 46%
           ),
-          linear-gradient(160deg, var(--bg-start) 0%, var(--bg-mid) 64%, var(--bg-end) 100%);
+          linear-gradient(160deg, #040203 0%, #0b0408 64%, #1d0813 100%);
+      }
+
+      body::after {
+        opacity: 0;
+        transition: opacity 500ms cubic-bezier(0.4, 0, 0.2, 1);
+        background:
+          url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEElEQVR42mP4//8/LwMyAAAwmAMLV0ERlQAAAABJRU5ErkJggg==") 0 0 / 2px 2px,
+          radial-gradient(
+            circle 410px at 90px 70px,
+            color-mix(in srgb, #e8ebf0 19%, transparent) 0,
+            color-mix(in srgb, #e8ebf0 7%, transparent) 156px,
+            transparent 287px
+          ),
+          radial-gradient(
+            circle 360px at calc(100% - 60px) calc(100% - 80px),
+            color-mix(in srgb, #6c7078 20%, transparent) 0,
+            color-mix(in srgb, #6c7078 7%, transparent) 144px,
+            transparent 252px
+          ),
+          radial-gradient(
+            61% 48% at 5% 12%,
+            color-mix(in srgb, #e8ebf0 12%, transparent) 0%,
+            transparent 70%
+          ),
+          radial-gradient(
+            54% 45% at 95% 85%,
+            color-mix(in srgb, #6c7078 18%, transparent) 0%,
+            transparent 72%
+          ),
+          radial-gradient(
+            circle at 16% 14%,
+            color-mix(in srgb, #6c7078 24%, transparent) 0,
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 84% 84%,
+            color-mix(in srgb, #6c7078 16%, transparent) 0,
+            transparent 46%
+          ),
+          linear-gradient(160deg, #050506 0%, #0b0b0e 64%, #15161a 100%);
+      }
+
+      :root[data-theme="sollarety"] body::after {
+        opacity: 1;
+      }
+
+      /* Com o prateado inteiro por cima, o carmim embaixo so gastava GPU:
+         some depois do fade de entrada e volta na hora na saida. */
+      body::before {
+        transition: visibility 0s;
+      }
+
+      :root[data-theme="sollarety"] body::before {
+        visibility: hidden;
+        transition: visibility 0s linear 500ms;
       }
 
       body.modal-open {
         overflow: hidden;
       }
 
-      .noise {
-        position: fixed;
-        inset: 0;
-        z-index: 1;
-        pointer-events: none;
-        opacity: 0.08;
-        background-image: radial-gradient(#ffffff 0.45px, transparent 0.45px);
-        background-size: 2px 2px;
-      }
-
-      /*
-       * Halos parados e sem filter: blur. Um blur de 70-80px numa camada
-       * animada e refeito pela GPU a cada quadro - era o efeito mais caro da
-       * pagina para um deslocamento de 10px que ninguem notava. O gradiente
-       * radial, aberto ate a borda, ja da a luz difusa sozinho.
-       */
-      .halo {
-        position: fixed;
-        z-index: 1;
-        border-radius: 999px;
-        opacity: 0.38;
-        pointer-events: none;
-      }
-
-      /*
-       * Os halos eram #080000b2 e #00000088 - preto sobre um fundo ja quase
-       * preto, ou seja, invisiveis. Agora sao carmim de verdade, grandes e bem
-       * borrados: o que se ve e a luz, nao o circulo.
-       */
-      .halo-1 {
-        width: 620px;
-        height: 620px;
-        top: -240px;
-        left: -220px;
-        width: 820px;
-        height: 820px;
-        top: -340px;
-        left: -320px;
-        background: radial-gradient(circle, color-mix(in srgb, var(--accent-lit) 34%, transparent) 0%, color-mix(in srgb, var(--accent-lit) 12%, transparent) 38%, transparent 70%);
-        opacity: 0.55;
-      }
-
-      .halo-2 {
-        width: 520px;
-        height: 520px;
-        right: -200px;
-        bottom: -180px;
-        width: 720px;
-        height: 720px;
-        right: -300px;
-        bottom: -280px;
-        background: radial-gradient(circle, color-mix(in srgb, var(--accent-deep) 40%, transparent) 0%, color-mix(in srgb, var(--accent-deep) 14%, transparent) 40%, transparent 70%);
-        opacity: 0.5;
-      }
-
-      /*
-       * Aurora: duas manchas largas que giram devagar e em ritmos diferentes.
-       * Sozinhas nao chamam atencao - o efeito e o fundo deixar de ser chapado.
-       */
-      .aurora {
-        position: fixed;
-        inset: -30%;
-        z-index: 0;
-        pointer-events: none;
-        opacity: 0.5;
-        background:
-          radial-gradient(38% 30% at 22% 26%, color-mix(in srgb, var(--accent-lit) 24%, transparent) 0%, transparent 70%),
-          radial-gradient(34% 28% at 78% 72%, color-mix(in srgb, var(--accent-deep) 36%, transparent) 0%, transparent 72%);
-        animation: aurora-drift 26s ease-in-out infinite alternate;
-        animation-play-state: paused;
-        will-change: transform;
-      }
-
       /*
        * Nada se mexe atras do portao. Ele tem backdrop-filter: blur(22px) na
-       * tela inteira, e cada quadro que muda o que esta embaixo (aurora, pulso
-       * do avatar, particulas, brilho do cursor) obriga a refazer esse blur.
-       * As animacoes de fundo so comecam depois do clique (body.has-entered).
+       * tela inteira, e cada quadro que muda o que esta embaixo (pulso do
+       * avatar, particulas, brilho do cursor) obriga a refazer esse blur. As
+       * animacoes so comecam depois do clique (body.has-entered).
        */
-      body.has-entered .aurora,
       body.has-entered .avatar-shell::after {
         animation-play-state: running;
-      }
-
-      @keyframes aurora-drift {
-        from {
-          transform: translate3d(-3%, -2%, 0) rotate(0deg) scale(1);
-        }
-        to {
-          transform: translate3d(3%, 2%, 0) rotate(8deg) scale(1.12);
-        }
       }
 
       /* Campo de particulas: fica atras de tudo, inclusive da aurora. */
@@ -1431,6 +1434,9 @@
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
         scroll-margin-top: calc(var(--nav-h) + 16px);
         transition: transform 240ms ease, border-color 240ms ease;
+        /* Mudanca dentro de um card nao faz o navegador recalcular o resto da
+           pagina. Sem `paint`: a sombra (::before) precisa vazar do card. */
+        contain: layout style;
       }
 
       /*
@@ -1651,7 +1657,10 @@
         grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
         gap: 28px clamp(24px, 4vw, 48px);
         padding: 22px 24px 26px;
-        animation: details-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        /* So opacidade, e curta: o deslize do card (FLIP) ja da o movimento, e
+           um translateY aqui obrigava a mover uma camada do tamanho do card
+           aberto - medido: tirar o movimento daqui rendia ~15 fps na abertura. */
+        animation: details-in 220ms ease-out both;
       }
 
       .project-details[hidden] {
@@ -1659,8 +1668,8 @@
       }
 
       @keyframes details-in {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+        from { opacity: 0; }
+        to { opacity: 1; }
       }
 
       .project-body p {
@@ -2008,15 +2017,27 @@
         transition: opacity var(--theme-ease), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
       }
 
-      .sol-emblem svg {
+      /*
+       * O giro fica num div em volta do <svg>, e nao no proprio <svg>: girando
+       * o svg, o Chrome redesenhava o vetor (gradientes e tudo) a cada quadro -
+       * medido: 130 fps com o Sollarety aberto, 187 sem o giro. Num div com
+       * will-change, o desenho vira uma textura uma vez e a GPU so gira.
+       */
+      .sol-spin {
         width: 100%;
         height: 100%;
-        display: block;
+        will-change: transform;
         animation: sol-spin 140s linear infinite;
         animation-play-state: paused;
       }
 
-      :root[data-theme="sollarety"] .sol-emblem svg {
+      .sol-spin svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      :root[data-theme="sollarety"] .sol-spin {
         animation-play-state: running;
       }
 
@@ -2192,8 +2213,6 @@
        * cards continuavam animando - foi o que o teste pegou.
        */
       @media (prefers-reduced-motion: reduce) {
-        .aurora,
-        .halo,
         .blur-message,
         .blur-message::after,
         .avatar-shell::after,
@@ -2201,7 +2220,7 @@
         .intro-line,
         .intro-line .cur,
         .scroll-cue::before,
-        .sol-emblem svg,
+        .sol-spin,
         .project-details,
         body.is-entering .site,
         body.is-entering .reveal {
@@ -2221,7 +2240,7 @@
           transition: none;
         }
 
-        :root {
+        body::after {
           transition: none;
         }
 
@@ -2230,15 +2249,12 @@
   </head>
   <body>
     <canvas id="particles" aria-hidden="true"></canvas>
-    <div class="aurora" aria-hidden="true"></div>
     <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
-    <div class="noise"></div>
-    <div class="halo halo-1"></div>
-    <div class="halo halo-2"></div>
 
     <!-- Sol do Sollarety (mesmo desenho de cornwallcore/fun/). Invisivel ate o
          card do Sollarety ser aberto. -->
     <div class="sol-emblem" aria-hidden="true">
+      <div class="sol-spin">
       <svg viewBox="0 0 400 400">
         <defs>
           <linearGradient id="solSphere" x1="0.18" y1="0.08" x2="0.82" y2="0.95">
@@ -2277,6 +2293,7 @@
         </g>
         <circle cx="200" cy="200" r="8" fill="#ffffff" />
       </svg>
+      </div>
     </div>
 
     <div class="blur-overlay" id="blurOverlay">
@@ -2440,6 +2457,13 @@
         return audioContext;
       }
 
+      /*
+       * Volume geral dos sons de interacao. Estava alto demais (houve
+       * reclamacao): os beeps usavam ganho 0.15-0.25 direto. Agora todos passam
+       * por este fator, e o do hover - o que mais toca - e o mais baixo.
+       */
+      const SFX_MASTER = 0.25;
+
       function playBeep(frequency = 800, duration = 100, volume = 0.3) {
         const ctx = ensureAudioContext();
         if (!ctx) {
@@ -2459,8 +2483,13 @@
         gain.connect(ctx.destination);
         osc.frequency.value = frequency;
         osc.type = "sine";
-        gain.gain.setValueAtTime(volume, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration / 1000);
+        // Ataque de 5ms (sem ele o inicio estala) e queda ate quase zero. A
+        // queda ia ate 0.01, que com o volume novo seria SUBIR o som.
+        const peak = volume * SFX_MASTER;
+        const now = ctx.currentTime;
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(peak, now + 0.005);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration / 1000);
         osc.start(ctx.currentTime);
         osc.stop(ctx.currentTime + duration / 1000);
       }
@@ -2469,7 +2498,7 @@
         if (type === 'click') playBeep(600, 80, 0.2);
         else if (type === 'open') playBeep(1000, 120, 0.25);
         else if (type === 'close') playBeep(400, 120, 0.2);
-        else if (type === 'hover') playBeep(700, 50, 0.15);
+        else if (type === 'hover') playBeep(700, 50, 0.08);
       }
 
       function escapeHtml(value) {
@@ -3398,9 +3427,10 @@
       // --- Tema do site -----------------------------------------------------
       /*
        * Um projeto pode trocar as cores do site inteiro enquanto esta aberto
-       * (o Sollarety pinta tudo de preto e prata). O CSS anima a troca porque
-       * as cores sao @property; aqui so se troca o atributo, a cor da barra do
-       * navegador e se avisa quem desenha em canvas (as particulas).
+       * (o Sollarety pinta tudo de preto e prata). O fundo faz um fade entre
+       * duas camadas prontas (body::before/::after, ver o CSS); aqui so se
+       * troca o atributo, a cor da barra do navegador e se avisa quem desenha
+       * em canvas (as particulas, que fazem o proprio fade de cor).
        */
       const themeColorMeta = document.querySelector('meta[name="theme-color"]');
       const THEME_BAR_COLORS = { default: "#ff2d62", sollarety: "#050506" };
@@ -3465,6 +3495,16 @@
         return /\/projects\/.+\.webp$/.test(image.src) ? image.src.replace(/\.webp$/, ".thumb.webp") : image.src;
       }
 
+      // Imagem do quadro principal da galeria: versao media (<nome>.mid.webp,
+      // ate 1000x625), que e o tamanho em que ela aparece. A original, de ate
+      // 1600px, so carrega no lightbox.
+      function midOf(image) {
+        if (image.mid) {
+          return image.mid;
+        }
+        return /\/projects\/.+\.webp$/.test(image.src) ? image.src.replace(/\.webp$/, ".mid.webp") : image.src;
+      }
+
       function renderGallery(project) {
         const images = project.images || [];
         if (images.length === 0) {
@@ -3484,7 +3524,7 @@
         return `
           <div class="gallery">
             <button class="gallery-main" type="button" aria-label="Open image in full size" data-i18n-attr="aria-label:home.gallery.open">
-              <img ${imageAttrs(first, true)} alt="${escapeHtml(imageText(project, 0, "alt"))}" decoding="async" />
+              <img ${imageAttrs({ ...first, src: midOf(first) }, true)} alt="${escapeHtml(imageText(project, 0, "alt"))}" decoding="async" />
             </button>
             <p class="gallery-caption">${escapeHtml(imageText(project, 0, "caption"))}</p>
             ${thumbs}
@@ -3594,6 +3634,14 @@
           if (Math.abs(dx) < 1 && Math.abs(dy) < 1) {
             continue;
           }
+          // Fora da tela antes e depois: ninguem ve o deslize, e animar ainda
+          // obrigaria o navegador a rasterizar o elemento numa camada propria.
+          const vh = window.innerHeight;
+          const offBefore = from.bottom < 0 || from.top > vh;
+          const offAfter = to.bottom < 0 || to.top > vh;
+          if (offBefore && offAfter) {
+            continue;
+          }
           const animation = el.animate(
             [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }],
             { duration: 420, easing: LAYOUT_EASE }
@@ -3604,12 +3652,65 @@
         return Promise.all(running);
       }
 
+      /*
+       * Carrega e DECODIFICA as imagens do card antes do clique: no hover ou no
+       * foco. Sem isso, a decodificacao e a rasterizacao das imagens caiam nos
+       * primeiros quadros da abertura - eram os engasgos de 15-35ms medidos
+       * logo depois do clique. Roda uma vez por card.
+       */
+      function hydrateProject(card) {
+        if (card.dataset.hydrated) {
+          return;
+        }
+        card.dataset.hydrated = "1";
+        card.querySelectorAll("img[data-src]").forEach((img) => {
+          img.src = img.dataset.src;
+          img.removeAttribute("data-src");
+          if (typeof img.decode === "function") {
+            img.decode().catch(() => {});
+          }
+        });
+      }
+
+      projectsEl.addEventListener("pointerover", (event) => {
+        const card = event.target.closest(".project-card");
+        if (card) {
+          hydrateProject(card);
+        }
+      });
+
+      projectsEl.addEventListener("focusin", (event) => {
+        const card = event.target.closest(".project-card");
+        if (card) {
+          hydrateProject(card);
+        }
+      });
+
+      /*
+       * O card aberto ocupa a linha inteira. Sem nada, ele descia para a linha
+       * de baixo (os outros da linha dele ficavam em cima), e quase toda
+       * abertura terminava rolando a pagina ~600px - uma segunda animacao
+       * pesada logo depois do deslize. Aqui ele vira o PRIMEIRO da propria
+       * linha (via `order`): fica na mesma altura, e os vizinhos da esquerda
+       * deslizam para depois dele.
+       */
+      function placeOpenCard(card) {
+        const cards = [...projectsEl.querySelectorAll(".project-card")];
+        cards.forEach((c, i) => {
+          c.style.order = String(i * 2);
+        });
+        if (!card) {
+          return;
+        }
+        const columns = getComputedStyle(projectsEl).gridTemplateColumns.split(" ").filter(Boolean).length || 1;
+        const index = cards.indexOf(card);
+        const rowStart = index - (index % columns);
+        card.style.order = String(rowStart * 2 - 1);
+      }
+
       function setProjectOpen(card, open) {
         if (open) {
-          card.querySelectorAll("img[data-src]").forEach((img) => {
-            img.src = img.dataset.src;
-            img.removeAttribute("data-src");
-          });
+          hydrateProject(card);
         }
         card.classList.toggle("is-open", open);
         card.querySelector(".project-toggle").setAttribute("aria-expanded", String(open));
@@ -3618,6 +3719,34 @@
 
       function scrollToProject(card) {
         card.scrollIntoView({ behavior: reduceMotionQuery.matches ? "auto" : "smooth", block: "start" });
+      }
+
+      /*
+       * So rola se o card aberto ficou fora de uma posicao confortavel (topo
+       * escondido atras da barra, ou comecando la embaixo da tela). Rolar
+       * sempre somava uma segunda animacao logo depois do deslize, e quase
+       * sempre o card ja estava a vista.
+       */
+      function revealProject(card) {
+        const top = card.getBoundingClientRect().top;
+        const navH = document.getElementById("nav").offsetHeight;
+        if (top < navH || top > window.innerHeight * 0.45) {
+          scrollToProject(card);
+        }
+      }
+
+      /*
+       * O tema segue o card aberto, mas so DEPOIS que o deslize dos cards
+       * termina. Trocar o tema repinta a pagina inteira (todas as cores mudam),
+       * e abrir o card ja custa um quadro pesado (layout novo + rasterizar o
+       * conteudo aberto); no mesmo quadro, os dois somavam ~50ms - o engasgo
+       * medido ao abrir o Sollarety. Separados, cada um cabe num quadro bem
+       * menor. Le o estado na hora (e nao o card do clique), entao cliques
+       * rapidos em sequencia terminam sempre no tema certo.
+       */
+      function syncThemeWithOpenCard() {
+        const project = openProjectCard ? projectBySlug[openProjectCard.dataset.slug] : null;
+        setSiteTheme((project && project.theme) || null);
       }
 
       function openProject(card, { animate = true, scroll = true } = {}) {
@@ -3632,13 +3761,14 @@
             setProjectOpen(previous, false);
           }
           setProjectOpen(card, true);
+          placeOpenCard(card);
           openProjectCard = card;
-          setSiteTheme(project.theme || null);
         };
 
         const done = animate ? withLayoutAnimation(update) : (update(), Promise.resolve());
+        done.then(syncThemeWithOpenCard);
         if (scroll) {
-          done.then(() => scrollToProject(card));
+          done.then(() => revealProject(card));
         }
 
         // Link compartilhavel: #work/<slug> abre o mesmo card no carregamento.
@@ -3653,9 +3783,10 @@
 
         withLayoutAnimation(() => {
           setProjectOpen(card, false);
+          placeOpenCard(null);
           openProjectCard = null;
-          setSiteTheme(null);
         }).then(() => {
+          syncThemeWithOpenCard();
           // O card encolheu: se o topo dele ficou acima da tela, traz de volta.
           if (card.getBoundingClientRect().top < 0) {
             scrollToProject(card);
@@ -3678,7 +3809,7 @@
         }
 
         const mainImg = card.querySelector(".gallery-main img");
-        mainImg.src = image.src;
+        mainImg.src = midOf(image);
         mainImg.alt = imageText(project, index, "alt");
         if (image.w && image.h) {
           mainImg.width = image.w;
@@ -3916,24 +4047,34 @@
         let frame = null;
 
         /*
-         * Cor das particulas = --accent-lit. Ela e lida do CSS (e nao fixada
-         * aqui) para acompanhar o tema: durante a troca, que e animada, a cor
-         * e relida a cada quadro; fora dela fica em cache.
+         * Cor das particulas: o --accent-lit de cada tema. Na troca, a cor vai
+         * da atual para a nova em 500ms, no mesmo ritmo do fade do fundo - o
+         * CSS troca as cores na hora, entao o fade daqui e feito a mao.
          */
-        const rootEl = document.documentElement;
-        let particleColor = "#ff2d62";
-        let rereadUntil = 0;
+        const PARTICLE_RGB = { default: [255, 45, 98], sollarety: [232, 235, 240] };
+        let rgbNow = PARTICLE_RGB[document.documentElement.dataset.theme] || PARTICLE_RGB.default;
+        let rgbFrom = rgbNow;
+        let rgbTo = rgbNow;
+        let fadeStart = 0;
+        const FADE_MS = 500;
+        let particleColor = `rgb(${rgbNow.join(", ")})`;
 
-        function readParticleColor() {
-          const cor = getComputedStyle(rootEl).getPropertyValue("--accent-lit").trim();
-          if (cor) {
-            particleColor = cor;
+        function stepParticleColor(now) {
+          if (rgbNow === rgbTo) {
+            return;
           }
+          const k = Math.min(1, (now - fadeStart) / FADE_MS);
+          const e = k * (2 - k);
+          const mix = rgbFrom.map((c, i) => Math.round(c + (rgbTo[i] - c) * e));
+          rgbNow = k >= 1 ? rgbTo : mix;
+          particleColor = `rgb(${mix.join(", ")})`;
         }
 
-        readParticleColor();
-        document.addEventListener("themechange", () => {
-          rereadUntil = performance.now() + 1100;
+        document.addEventListener("themechange", (event) => {
+          rgbFrom = particleColor.match(/\d+/g).map(Number);
+          rgbTo = PARTICLE_RGB[event.detail && event.detail.theme] || PARTICLE_RGB.default;
+          rgbNow = rgbFrom;
+          fadeStart = performance.now();
         });
         let width = 0;
         let height = 0;
@@ -3989,9 +4130,7 @@
 
           ctx.clearRect(0, 0, width, height);
 
-          if (performance.now() < rereadUntil) {
-            readParticleColor();
-          }
+          stepParticleColor(now);
           ctx.fillStyle = particleColor;
 
           for (const p of particles) {
