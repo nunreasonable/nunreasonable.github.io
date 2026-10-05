@@ -177,9 +177,28 @@
         image-rendering: -webkit-optimize-contrast;
       }
 
+      /*
+       * Fundo numa camada fixa propria, e nao no body com
+       * `background-attachment: fixed`: fundo fixo no body tira a rolagem do
+       * compositor, e o navegador repintava a tela inteira (gradientes e tudo)
+       * a cada quadro de rolagem. Como camada `position: fixed`, ele e pintado
+       * uma vez e so recomposto.
+       */
+      html {
+        background: var(--bg-start);
+      }
+
       body {
         font-family: "Space Grotesk", sans-serif;
         color: var(--text);
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
         background: radial-gradient(
             circle at 16% 14%,
             color-mix(in srgb, var(--accent-deep) 24%, transparent) 0,
@@ -191,9 +210,6 @@
             transparent 46%
           ),
           linear-gradient(160deg, var(--bg-start) 0%, var(--bg-mid) 64%, var(--bg-end) 100%);
-        background-size: auto, auto, auto;
-        background-position: auto, auto, auto;
-        background-attachment: fixed;
       }
 
       body.modal-open {
@@ -210,14 +226,18 @@
         background-size: 2px 2px;
       }
 
+      /*
+       * Halos parados e sem filter: blur. Um blur de 70-80px numa camada
+       * animada e refeito pela GPU a cada quadro - era o efeito mais caro da
+       * pagina para um deslocamento de 10px que ninguem notava. O gradiente
+       * radial, aberto ate a borda, ja da a luz difusa sozinho.
+       */
       .halo {
         position: fixed;
         z-index: 1;
         border-radius: 999px;
-        filter: blur(42px);
         opacity: 0.38;
         pointer-events: none;
-        animation: float 12s ease-in-out infinite;
       }
 
       /*
@@ -230,8 +250,11 @@
         height: 620px;
         top: -240px;
         left: -220px;
-        background: radial-gradient(circle, color-mix(in srgb, var(--accent-lit) 50%, transparent) 0%, transparent 68%);
-        filter: blur(70px);
+        width: 820px;
+        height: 820px;
+        top: -340px;
+        left: -320px;
+        background: radial-gradient(circle, color-mix(in srgb, var(--accent-lit) 34%, transparent) 0%, color-mix(in srgb, var(--accent-lit) 12%, transparent) 38%, transparent 70%);
         opacity: 0.55;
       }
 
@@ -240,10 +263,12 @@
         height: 520px;
         right: -200px;
         bottom: -180px;
-        background: radial-gradient(circle, color-mix(in srgb, var(--accent-deep) 55%, transparent) 0%, transparent 70%);
-        filter: blur(80px);
+        width: 720px;
+        height: 720px;
+        right: -300px;
+        bottom: -280px;
+        background: radial-gradient(circle, color-mix(in srgb, var(--accent-deep) 40%, transparent) 0%, color-mix(in srgb, var(--accent-deep) 14%, transparent) 40%, transparent 70%);
         opacity: 0.5;
-        animation-delay: -6s;
       }
 
       /*
@@ -260,7 +285,19 @@
           radial-gradient(38% 30% at 22% 26%, color-mix(in srgb, var(--accent-lit) 24%, transparent) 0%, transparent 70%),
           radial-gradient(34% 28% at 78% 72%, color-mix(in srgb, var(--accent-deep) 36%, transparent) 0%, transparent 72%);
         animation: aurora-drift 26s ease-in-out infinite alternate;
+        animation-play-state: paused;
         will-change: transform;
+      }
+
+      /*
+       * Nada se mexe atras do portao. Ele tem backdrop-filter: blur(22px) na
+       * tela inteira, e cada quadro que muda o que esta embaixo (aurora, pulso
+       * do avatar, particulas, brilho do cursor) obriga a refazer esse blur.
+       * As animacoes de fundo so comecam depois do clique (body.has-entered).
+       */
+      body.has-entered .aurora,
+      body.has-entered .avatar-shell::after {
+        animation-play-state: running;
       }
 
       @keyframes aurora-drift {
@@ -413,8 +450,10 @@
       }
 
       @keyframes reveal-in {
-        from { transform: scale(0.965); opacity: 0; filter: blur(6px); }
-        to { transform: scale(1); opacity: 1; filter: blur(0); }
+        /* Sem filter: blur aqui - borrar a pagina inteira por 700ms travava
+           justamente a entrada, o primeiro movimento que a pessoa ve. */
+        from { transform: scale(0.965); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
       }
 
       /*
@@ -464,8 +503,7 @@
         border-radius: 50%;
         object-fit: cover;
         border: 3px solid var(--accent-lit);
-        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 26px -4px var(--accent-glow);
-        animation: avatar-pulse 3.6s ease-in-out infinite;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 22px -6px var(--accent-glow);
         margin-top: 0;
         z-index: 1;
         image-rendering: -webkit-optimize-contrast;
@@ -553,9 +591,26 @@
         50%, 100% { opacity: 0; }
       }
 
+      /*
+       * Pulso do avatar. Animar box-shadow repinta o avatar (que tem filter)
+       * a cada quadro, para sempre; aqui o brilho maior e um pseudo-elemento
+       * parado e so a opacidade dele anima, o que o compositor faz sozinho.
+       */
+      .avatar-shell::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        box-shadow: 0 0 34px 0 var(--accent-glow);
+        opacity: 0;
+        pointer-events: none;
+        animation: avatar-pulse 3.6s ease-in-out infinite;
+        animation-play-state: paused;
+      }
+
       @keyframes avatar-pulse {
-        0%, 100% { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 22px -6px var(--accent-glow); }
-        50% { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 34px 0 var(--accent-glow); }
+        0%, 100% { opacity: 0; }
+        50% { opacity: 1; }
       }
 
       .handle {
@@ -811,17 +866,6 @@
         }
       }
 
-      @keyframes float {
-        0%,
-        100% {
-          transform: translate(0, 0);
-        }
-
-        50% {
-          transform: translate(10px, -12px);
-        }
-      }
-
       @keyframes marquee-x {
         from {
           transform: translateX(0);
@@ -847,9 +891,6 @@
             transparent 46%
           ),
           linear-gradient(160deg, var(--bg-start) 0%, var(--bg-mid) 64%, var(--bg-end) 100%);
-        background-size: auto, auto, auto;
-        background-position: auto, auto, auto;
-        background-attachment: fixed;
         z-index: 1000;
         place-items: center;
         animation: fade-in 0.3s ease both;
@@ -866,7 +907,6 @@
         border-radius: 28px;
         padding: 40px 24px;
         text-align: center;
-        backdrop-filter: blur(12px);
         box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
         position: relative;
       }
@@ -1152,16 +1192,17 @@
         gap: 16px;
         padding: 0 var(--gutter);
         border-bottom: 1px solid transparent;
-        transition: background 300ms ease, border-color 300ms ease, backdrop-filter 300ms ease;
+        transition: background 300ms ease, border-color 300ms ease;
       }
 
       /* Transparente no topo; ganha vidro so depois de rolar, quando passa a
          ficar por cima de conteudo. */
       .nav.is-scrolled {
-        background: color-mix(in srgb, var(--bg-start) 72%, transparent);
+        /* Quase opaca e sem backdrop-filter: embaixo da barra ficam as
+           particulas, que mudam a cada quadro, e um blur ali era refeito a
+           cada quadro enquanto a pagina estivesse rolada. */
+        background: color-mix(in srgb, var(--bg-start) 92%, transparent);
         border-bottom-color: var(--line);
-        backdrop-filter: blur(16px) saturate(1.2);
-        -webkit-backdrop-filter: blur(16px) saturate(1.2);
       }
 
       .nav-brand {
@@ -1474,10 +1515,8 @@
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--text);
-        background: color-mix(in srgb, var(--bg-start) 70%, transparent);
+        background: color-mix(in srgb, var(--bg-start) 86%, transparent);
         border: 1px solid var(--accent-line);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
       }
 
       .project-head {
@@ -1788,9 +1827,7 @@
       }
 
       .lightbox::backdrop {
-        background: color-mix(in srgb, var(--bg-start) 88%, transparent);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        background: color-mix(in srgb, var(--bg-start) 94%, transparent);
       }
 
       .lightbox[open] {
@@ -1932,13 +1969,18 @@
         margin-top: -39vmin;
         pointer-events: none;
         opacity: 0;
+        visibility: hidden;
         transform: scale(0.92) rotate(-20deg);
-        transition: opacity var(--theme-ease), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1);
+        /* visibility so muda DEPOIS do fade de saida: escondido, o emblema sai
+           da composicao e o giro dele para de custar quadro. */
+        transition: opacity var(--theme-ease), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 800ms;
       }
 
       :root[data-theme="sollarety"] .sol-emblem {
         opacity: 0.09;
+        visibility: visible;
         transform: scale(1) rotate(0deg);
+        transition: opacity var(--theme-ease), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
       }
 
       .sol-emblem svg {
@@ -1946,6 +1988,11 @@
         height: 100%;
         display: block;
         animation: sol-spin 140s linear infinite;
+        animation-play-state: paused;
+      }
+
+      :root[data-theme="sollarety"] .sol-emblem svg {
+        animation-play-state: running;
       }
 
       @keyframes sol-spin {
@@ -2148,7 +2195,7 @@
         .halo,
         .blur-message,
         .blur-message::after,
-        .avatar,
+        .avatar-shell::after,
         .intro,
         .intro-line,
         .intro-line .cur,
@@ -2495,7 +2542,8 @@
         document.querySelectorAll(".reveal").forEach((el, i) => {
           el.style.setProperty("--i", String(i));
         });
-        document.body.classList.add("is-entering");
+        document.body.classList.add("is-entering", "has-entered");
+        document.dispatchEvent(new Event("site:entered"));
 
         /*
          * A classe sai assim que a entrada termina, e isso NAO e limpeza
@@ -2596,8 +2644,12 @@
        * Projetos.
        *
        * tagline e o texto do card fechado; details, images e links so aparecem
-       * com o card aberto. images[0] e tambem a capa do card - sem imagem, a
-       * capa usa `image` (o logo) centralizado. thumbWide deixa o icone pequeno
+       * com o card aberto. `cover` e a capa do card fechado, ja recortada no
+       * tamanho dele (760x475); sem cover, a capa usa `image` (o logo)
+       * centralizado. `image` e o icone pequeno: arquivos de 96px, nao o logo
+       * original - um PNG de 2048px decodificado para virar 42px pesava a
+       * pagina toda. Cada imagem da galeria tem uma miniatura `<nome>.thumb.webp`
+       * ao lado (ou `thumb` explicito). thumbWide deixa o icone pequeno
        * do card em 2:1 (o do ii e o logo do projeto ao lado do do Windows);
        * `logo` aparece no rodape do card aberto. `theme` liga um tema de cores
        * no site inteiro enquanto o card estiver aberto.
@@ -2627,7 +2679,8 @@
             tagline: "An open-world Roblox game set in the backlands of northeastern Brazil, 1898.",
             status: "In development",
             tags: ["Roblox", "Luau", "Rojo"],
-            image: "./filearchive/bloodoath.png",
+            image: "./filearchive/icons/bloodoath-96.webp",
+            cover: { src: "./filearchive/projects/blood-oath/cover.webp", w: 760, h: 475 },
             details: [
               "An open-world online game in the spirit of Red Dead Redemption 2, set in the sertão of northeastern Brazil before 1910: the age of the cangaço, when Antônio Silvino rode the backlands and Lampião was still a name nobody knew.",
               "Players take a side between four factions (cangaceiros, the Volante police, jagunços and sertanejos) and build up fame, bounties and a story told in chapters. Names, clothes, firearms, shops and money in réis all come from the period.",
@@ -2650,6 +2703,7 @@
             status: "Early release · v0.2.0",
             tags: ["C++", "C++/WinRT", "Qt 6 / QML", "Quickshell"],
             image: "./filearchive/projects/ii-windows/thumb.webp",
+            cover: { src: "./filearchive/projects/ii-windows/cover.webp", w: 760, h: 475 },
             thumbWide: true,
             logo: { src: "./filearchive/projects/ii-windows/logo.webp", w: 1000, h: 310, alt: "illogical-impulse for Windows" },
             details: [
@@ -2681,7 +2735,8 @@
             title: "Sollarety",
             tagline: "A moderation, Roblox verification, music and fun bot for Discord communities.",
             tags: ["C#", ".NET 10", "DisCatSharp"],
-            image: "./filearchive/sollarety.png",
+            image: "./filearchive/icons/sollarety-96.webp",
+            cover: { src: "./filearchive/projects/sollarety/cover.webp", w: 760, h: 475 },
             theme: "sollarety",
             details: [
               "Sollarety is a Discord bot for community servers: moderation, warnings, Roblox verification, music and a pile of fun commands. It runs on the same infrastructure as ccore, but the two are separate applications and share no data.",
@@ -2703,14 +2758,15 @@
             title: "ccore Discord Application",
             tagline: "Utility and automation bot for the 12° Regimento de Infantaria in CONSTANTES.",
             tags: ["C#", ".NET 10", "Slash commands"],
-            image: "./filearchive/newpfp.png",
+            image: "./filearchive/icons/ccore-96.webp",
+            cover: { src: "./filearchive/projects/ccore/cover.webp", w: 760, h: 475 },
             details: [
               "ccore is the administration bot of the 12° Regimento de Infantaria \"Chaves\", a regiment of the CONSTANTES community. It takes care of enlistment with automatic Roblox verification, deployments, the regiment's spreadsheet and its announcements.",
               "It's server-locked on purpose: built for one community, not as a public multi-server bot. It's also where Sollarety's infrastructure came from. The two share hosting, not data."
             ],
             images: [
               { src: "./filearchive/projects/ccore/page.webp", w: 1120, h: 800, alt: "The ccore website", caption: "The ccore page on daeese.me" },
-              { src: "./filearchive/cornwallCOREpfp.png", w: 394, h: 394, alt: "ccore emblem", caption: "ccore's emblem" }
+              { src: "./filearchive/icons/ccore-emblem.webp", thumb: "./filearchive/icons/ccore-emblem.thumb.webp", w: 394, h: 394, alt: "ccore emblem", caption: "ccore's emblem" }
             ],
             links: [
               { label: "Website", href: "https://ccore.daeese.me", primary: true },
@@ -2723,6 +2779,7 @@
             tagline: "Unofficial Portage overlay that brings Mocktail, Roblox's Android client on Linux, to Gentoo.",
             tags: ["Gentoo", "Portage", "ebuilds"],
             image: "./filearchive/githublogo.png",
+            cover: { src: "./filearchive/projects/mocktail/cover.webp", w: 760, h: 475 },
             details: [
               "Mocktail is the compatibility runtime that runs the Android x86-64 Roblox client on Linux. This is a third-party, unofficial Portage overlay with ebuilds for it, so Gentoo users can install it with emerge like anything else.",
               "The overlay has a source build, a live -9999 ebuild that follows the main branch, and a prebuilt binary package as a fallback. It isn't affiliated with Mocktail, Roblox or VinegarHQ: I maintain the ebuilds, not the software."
@@ -2740,13 +2797,13 @@
             title: "VLTRA Entertainment",
             tagline: "Fullstack developer at VLTRA Entertainment.",
             tags: ["Fullstack"],
-            image: "./filearchive/vltrasupport.png",
+            image: "./filearchive/icons/vltra-256.webp",
             details: [
               "I work as a fullstack developer at VLTRA Entertainment.",
               "The studio's community lives on Discord, and that's the place to follow what it's working on."
             ],
             images: [
-              { src: "./filearchive/vltrasupport.png", w: 1024, h: 1024, alt: "VLTRA Entertainment logo", caption: "VLTRA Entertainment" }
+              { src: "./filearchive/icons/vltra-800.webp", thumb: "./filearchive/icons/vltra.thumb.webp", w: 800, h: 800, alt: "VLTRA Entertainment logo", caption: "VLTRA Entertainment" }
             ],
             links: [
               { label: "Join the VLTRA Discord", href: "https://discord.gg/3qdvhkNSS8", primary: true }
@@ -2845,7 +2902,7 @@
         const normalizedHref = String(href || "").toLowerCase();
 
         if (normalizedLabel.includes("discord") || normalizedHref.includes("discord.com")) {
-          return '<img src="./filearchive/discordlogo.png" alt="" aria-hidden="true" />';
+          return '<img src="./filearchive/icons/discord-48.webp" alt="" aria-hidden="true" />';
         }
 
         if (
@@ -3402,6 +3459,16 @@
         return `${homeT("live.showImage", "Show image")} ${index + 1}: ${caption}`;
       }
 
+      // Miniatura da galeria (168x112, o dobro do botao). Sem ela, abrir um
+      // card decodificava todas as imagens grandes de uma vez, no meio da
+      // animacao de abertura.
+      function thumbOf(image) {
+        if (image.thumb) {
+          return image.thumb;
+        }
+        return /\/projects\/.+\.webp$/.test(image.src) ? image.src.replace(/\.webp$/, ".thumb.webp") : image.src;
+      }
+
       function renderGallery(project) {
         const images = project.images || [];
         if (images.length === 0) {
@@ -3413,7 +3480,7 @@
           ? `<div class="gallery-thumbs" role="group" aria-label="Images" data-i18n-attr="aria-label:home.gallery.group">${images
               .map(
                 (image, i) =>
-                  `<button class="gallery-thumb" type="button" data-index="${i}" aria-label="${escapeHtml(thumbLabel(project, i))}"${i === 0 ? ' aria-current="true"' : ""}><img ${imageAttrs(image, true)} alt="" decoding="async" /></button>`
+                  `<button class="gallery-thumb" type="button" data-index="${i}" aria-label="${escapeHtml(thumbLabel(project, i))}"${i === 0 ? ' aria-current="true"' : ""}><img ${imageAttrs({ ...image, src: thumbOf(image), w: 168, h: 112 }, true)} alt="" decoding="async" /></button>`
               )
               .join("")}</div>`
           : "";
@@ -3430,8 +3497,8 @@
 
       function renderProjectCard(project) {
         const images = project.images || [];
-        const usesLogoCover = images.length === 0 || images[0].src === project.image;
-        const cover = usesLogoCover ? { src: project.image } : images[0];
+        const usesLogoCover = !project.cover;
+        const cover = project.cover || { src: project.image };
         // Chaves do dicionario de portugues (filearchive/i18n/dict/home.js):
         // p.<slug>.tagline, .status, .d0..dN (paragrafos), .link0..linkN.
         const key = (suffix) => `p.${project.slug}.${suffix}`;
@@ -3848,7 +3915,9 @@
         function resize() {
           // Densidade limitada: num monitor grande, "uma particula a cada N
           // pixels" sem teto vira um numero absurdo de objetos por quadro.
-          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          // Teto de 1.5: os pontos tem 0.5-2px, e em tela 2x/3x o canvas cheio
+          // custava 4x/9x os pixels por quadro sem diferenca visivel.
+          const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
           width = window.innerWidth;
           height = window.innerHeight;
 
@@ -3871,7 +3940,27 @@
           }));
         }
 
-        function draw() {
+        /*
+         * 30 quadros por segundo, e nao 60: as particulas andam menos de 0,3px
+         * por quadro, entao a metade dos quadros nao se ve - mas cada quadro e
+         * o canvas inteiro limpo e redesenhado. O passo dobra para manter a
+         * mesma velocidade. Com o player ou o lightbox cobrindo a tela, nem
+         * desenha.
+         */
+        const FRAME_MS = 1000 / 30;
+        let lastDraw = 0;
+
+        function draw(now) {
+          frame = requestAnimationFrame(draw);
+          if (now - lastDraw < FRAME_MS - 2) {
+            return;
+          }
+          lastDraw = now;
+
+          if (document.body.classList.contains("modal-open") || lightbox.open) {
+            return;
+          }
+
           ctx.clearRect(0, 0, width, height);
 
           if (performance.now() < rereadUntil) {
@@ -3880,8 +3969,8 @@
           ctx.fillStyle = particleColor;
 
           for (const p of particles) {
-            p.x += p.vx;
-            p.y += p.vy;
+            p.x += p.vx * 2;
+            p.y += p.vy * 2;
 
             // Sobe, sai por cima e volta por baixo: o campo nunca esvazia.
             if (p.y < -8) {
@@ -3897,8 +3986,6 @@
             ctx.fill();
           }
           ctx.globalAlpha = 1;
-
-          frame = requestAnimationFrame(draw);
         }
 
         function start() {
@@ -3915,16 +4002,29 @@
         }
 
         resize();
-        start();
 
-        window.addEventListener("resize", resize);
+        // So comeca depois do portao: atras dele o canvas mudando a cada quadro
+        // obrigava o backdrop-filter do portao a reborrar a tela inteira.
+        let entered = false;
+        document.addEventListener("site:entered", () => {
+          entered = true;
+          start();
+        }, { once: true });
+
+        // Redimensionar refaz as particulas; com debounce, porque arrastar a
+        // janela dispara dezenas de resize por segundo.
+        let resizeTimer = null;
+        window.addEventListener("resize", () => {
+          window.clearTimeout(resizeTimer);
+          resizeTimer = window.setTimeout(resize, 150);
+        });
 
         // Aba em segundo plano nao pode ficar queimando CPU desenhando algo que
         // ninguem esta vendo.
         document.addEventListener("visibilitychange", () => {
           if (document.hidden) {
             stop();
-          } else {
+          } else if (entered) {
             start();
           }
         });
@@ -3934,7 +4034,7 @@
           if (e.matches) {
             stop();
             ctx.clearRect(0, 0, width, height);
-          } else {
+          } else if (entered) {
             start();
           }
         });
@@ -3960,6 +4060,11 @@
         }
 
         window.addEventListener("mousemove", (event) => {
+          // Atras do portao (que borra a tela inteira) o brilho mexendo obrigaria
+          // a refazer o blur a cada movimento do mouse.
+          if (!document.body.classList.contains("has-entered")) {
+            return;
+          }
           x = event.clientX;
           y = event.clientY;
           glow.classList.add("is-live");
