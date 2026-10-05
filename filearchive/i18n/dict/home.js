@@ -107,7 +107,7 @@ export const pt = {
   "p.ii-windows.title": "ii no Windows",
   "p.ii-windows.tagline":
     "O desktop illogical-impulse do end-4, feito em Quickshell, portado do Hyprland para o Windows 11 e 10.",
-  "p.ii-windows.status": "Versão experimental · v0.2.0",
+  "p.ii-windows.status": "Versão experimental · v0.3.1",
   "p.ii-windows.d0":
     "O illogical-impulse (ii) é o shell de desktop em Quickshell que o end-4 fez para o Hyprland: a barra, as barras laterais, o overview e os widgets. Este port faz ele rodar num desktop de verdade do Windows, 11 ou 10, e chegar lá exige dois forks.",
   "p.ii-windows.d1":
@@ -119,25 +119,29 @@ export const pt = {
   "p.ii-windows.d4":
     "A versão 0.1.0 saiu em 2 de outubro com um instalador gráfico pequeno, feito em Rust com Tauri, que baixa o pacote do release no GitHub, confere o SHA-256 e instala tudo para o usuário atual, sem precisar de administrador. O mesmo instalador atualiza, repara e desinstala, e a desinstalação devolve o wallpaper, o modo claro ou escuro, a cor de destaque e a configuração da taskbar que ele encontrou. A 0.1.1 atacou o travamento de mouse e teclado em hardware de verdade, tirando os eventos de janela da thread principal do ii.",
   "p.ii-windows.d5":
-    "A 0.2.0 traz o Windows 10 (versão 2004 ou mais nova): desktops virtuais, blur atrás dos painéis e a taskbar que só aparece com o ponteiro, em qualquer borda da tela, funcionam lá também, e o instalador confere o WebView2 e instala o Windows Terminal ou o winget quando faltam. Ela também já vem com o runtime do Visual C++, que a 0.1.x exigia instalado, e o brilho agora funciona na tela de notebooks, escurecendo por software em monitores sem DDC/CI. Continua experimental, e o instalador ainda não é assinado, então o SmartScreen pode avisar.",
+    "A 0.2.0 traz o Windows 10 (versão 2004 ou mais nova): desktops virtuais, blur atrás dos painéis e a taskbar que só aparece com o ponteiro, em qualquer borda da tela, funcionam lá também, e o instalador confere o WebView2 e instala o Windows Terminal ou o winget quando faltam. Ela também já vem com o runtime do Visual C++, que a 0.1.x exigia instalado, e o brilho agora funciona na tela de notebooks, escurecendo por software em monitores sem DDC/CI.",
+  "p.ii-windows.d6":
+    "A 0.3.0, de 5 de outubro, grava a tela com a captura e o codificador H.264 do próprio Windows, então o FFmpeg deixou de ser necessário, põe uma bandeja do sistema na barra do ii que divide os ícones com a do Explorer e leva o wallpaper e os widgets para dentro da área de trabalho do Windows, atrás dos ícones. O tradutor e o tradutor de tela, o reconhecimento de música (SongRec) e o LaTeX no chat de IA (um MicroTeX compilado para Windows) agora funcionam no Windows também. Ela está mesclada com o Quickshell 0.3.1 e o ii mais recente do end-4, e o instalador agora procura um release mais novo no GitHub toda vez que abre e se atualiza antes. A 0.3.1 veio no mesmo dia com duas correções: o blur do Windows 10 não aparece mais como uma faixa nas pontas arredondadas da barra flutuante, e a janela do instalador abre na parte livre da tela em vez de embaixo da barra do ii. Continua experimental, e o instalador ainda não é assinado, então o SmartScreen pode avisar.",
   "p.ii-windows.link0": "Baixar o instalador",
   "p.ii-windows.link1": "ii-windows no GitHub",
   "p.ii-windows.link2": "Fork do Quickshell",
   "p.ii-windows.link3": "Fork do ii",
   "p.ii-windows.cap0": "As cores do ii tiradas do wallpaper do Windows; a taskbar só aparece na borda de baixo",
   "p.ii-windows.cap1": "O instalador: instala, atualiza, repara e desinstala, tudo por usuário",
-  "p.ii-windows.cap2": "O mesmo overview no Windows 10, novidade da 0.2.0",
-  "p.ii-windows.cap3": "Windows Terminal com as cores do ii e um prompt do Oh My Posh",
-  "p.ii-windows.cap4": "Cheatsheet de atalhos no Super+/, seguindo o layout do teclado",
-  "p.ii-windows.cap5": "Barra lateral direita: atalhos rápidos, notificações e calendário",
-  "p.ii-windows.cap6": "Overview dos workspaces, aberto com a tecla Super",
+  "p.ii-windows.cap2": "Windows 10 (0.2.0), com o wallpaper e o relógio atrás dos ícones da área de trabalho (0.3.0)",
+  "p.ii-windows.cap3": "O tradutor na barra lateral esquerda, novidade da 0.3.0",
+  "p.ii-windows.cap4": "Windows Terminal com as cores do ii e um prompt do Oh My Posh",
+  "p.ii-windows.cap5": "Cheatsheet de atalhos no Super+/, seguindo o layout do teclado",
+  "p.ii-windows.cap6": "Barra lateral direita: atalhos rápidos, notificações e calendário",
+  "p.ii-windows.cap7": "Overview dos workspaces, aberto com a tecla Super",
   "p.ii-windows.alt0": "Desktop do Windows 11 com a barra e o relógio do ii, coloridos a partir de um wallpaper de anime",
   "p.ii-windows.alt1": "O instalador do ii-windows na página de opções, com chaves para iniciar com o Windows e configurar o terminal",
-  "p.ii-windows.alt2": "O overview dos workspaces e o relógio do ii num desktop do Windows 10",
-  "p.ii-windows.alt3": "Janelas do Windows Terminal na paleta rosa do ii com um prompt do Oh My Posh",
-  "p.ii-windows.alt4": "Cheatsheet de atalhos do ii com os atalhos do shell, de mídia, de janelas e de apps",
-  "p.ii-windows.alt5": "Barra lateral direita do ii aberta, com atalhos rápidos, notificações e um calendário",
-  "p.ii-windows.alt6": "Overview dos workspaces do ii com um campo de busca",
+  "p.ii-windows.alt2": "Área de trabalho do Windows 10 em que o wallpaper e o relógio do ii ficam atrás dos ícones",
+  "p.ii-windows.alt3": "O tradutor da barra lateral esquerda do ii passando uma frase em português para o inglês",
+  "p.ii-windows.alt4": "Janelas do Windows Terminal na paleta rosa do ii com um prompt do Oh My Posh",
+  "p.ii-windows.alt5": "Cheatsheet de atalhos do ii com os atalhos do shell, de mídia, de janelas e de apps",
+  "p.ii-windows.alt6": "Barra lateral direita do ii aberta, com atalhos rápidos, notificações e um calendário",
+  "p.ii-windows.alt7": "Overview dos workspaces do ii com um campo de busca",
 
   // --- Sollarety -------------------------------------------------------------
   "p.sollarety.tagline": "Um bot de moderação, verificação Roblox, música e diversão para comunidades no Discord.",
