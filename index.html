@@ -31,7 +31,7 @@
       sem trocar a URL o banner novo nao aparece. Suba o numero a cada vez que
       og-banner.png for refeito.
     -->
-    <meta property="og:image" content="https://daeese.me/filearchive/og-banner.png?v=2" />
+    <meta property="og:image" content="https://daeese.me/filearchive/og-banner.png?v=3" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -49,7 +49,7 @@
       name="twitter:description"
       content="Fullstack developer. Roblox games, Discord bots and desktop shells, from C# and Luau to C++."
     />
-    <meta name="twitter:image" content="https://daeese.me/filearchive/og-banner.png?v=2" />
+    <meta name="twitter:image" content="https://daeese.me/filearchive/og-banner.png?v=3" />
     <meta
       name="twitter:image:alt"
       content="daeese portfolio: Blood Oath, Sollarety and ii on Windows 11."
@@ -1429,21 +1429,46 @@
         border: 1px solid var(--line);
         border-radius: 18px;
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
-        overflow: hidden;
         scroll-margin-top: calc(var(--nav-h) + 16px);
-        transition: transform 240ms ease, border-color 240ms ease, box-shadow 240ms ease;
+        transition: transform 240ms ease, border-color 240ms ease;
+      }
+
+      /*
+       * Sombra/brilho num pseudo-elemento que so troca de opacidade. Animar o
+       * box-shadow do card repintava uma sombra borrada enorme a cada quadro -
+       * no card aberto, da largura da pagina - e era parte do travamento ao
+       * abrir. Por isso o overflow: hidden mora no conteudo (.project-clip) e
+       * nao no card: a sombra precisa vazar para fora.
+       */
+      .project-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.9), 0 0 50px -26px var(--accent-glow);
+        opacity: 0;
+        transition: opacity 240ms ease;
+        pointer-events: none;
       }
 
       .project-card:not(.is-open):hover {
         transform: translateY(-4px);
         border-color: var(--accent-line);
-        box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.9), 0 0 50px -26px var(--accent-glow);
+      }
+
+      .project-card:not(.is-open):hover::before,
+      .project-card.is-open::before {
+        opacity: 1;
       }
 
       .project-card.is-open {
         grid-column: 1 / -1;
         border-color: var(--accent-line);
-        box-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.95), 0 0 90px -50px var(--accent-glow);
+      }
+
+      .project-clip {
+        border-radius: inherit;
+        overflow: hidden;
       }
 
       .project-toggle {
@@ -2157,30 +2182,6 @@
         font: inherit;
       }
 
-      /*
-       * Transicao entre "card fechado" e "card aberto". Cada card tem o seu
-       * view-transition-name (posto pelo JS), entao o navegador desliza cada um
-       * da posicao antiga para a nova em vez de cortar.
-       */
-      #links {
-        view-transition-name: links-section;
-      }
-
-      .footer {
-        view-transition-name: site-footer;
-      }
-
-      ::view-transition-group(*) {
-        animation-duration: 460ms;
-        animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-      }
-
-      ::view-transition-old(*),
-      ::view-transition-new(*) {
-        height: 100%;
-        object-fit: cover;
-        object-position: top;
-      }
 
       /*
        * Movimento reduzido: fica no FIM da folha de proposito.
@@ -2224,11 +2225,6 @@
           transition: none;
         }
 
-        ::view-transition-group(*),
-        ::view-transition-old(*),
-        ::view-transition-new(*) {
-          animation: none !important;
-        }
       }
     </style>
   </head>
@@ -3522,9 +3518,9 @@
         card.className = "project-card";
         card.id = `work-${project.slug}`;
         card.dataset.slug = project.slug;
-        card.style.setProperty("view-transition-name", `project-${project.slug}`);
 
         card.innerHTML = `
+          <div class="project-clip">
           <h3 class="project-h">
             <button class="project-toggle" type="button" aria-expanded="false" aria-controls="details-${escapeHtml(project.slug)}">
               <span class="project-cover${usesLogoCover ? " is-logo" : ""}">
@@ -3550,6 +3546,7 @@
             </div>
             ${renderGallery(project)}
             ${project.logo ? `<div class="project-logo"><img ${imageAttrs(project.logo, true)} alt="${escapeHtml(project.logo.alt || "")}" decoding="async" /></div>` : ""}
+          </div>
           </div>`;
 
         return card;
@@ -3561,21 +3558,50 @@
       });
 
       /*
-       * View Transitions: com elas, os outros cards DESLIZAM para o lugar novo
-       * quando um abre e ocupa a linha inteira. Sem suporte (ou com menos
-       * movimento pedido), a troca acontece seca - o conteudo e o mesmo.
+       * Animacao de layout (FLIP): mede onde cada card, a secao de links e o
+       * rodape estao, aplica a mudanca, mede de novo e faz cada um que mudou
+       * de lugar DESLIZAR da posicao antiga para a nova so com transform.
+       *
+       * Substitui a View Transitions API, que travava a abertura: ela tira um
+       * "print" da pagina inteira e de cada elemento nomeado antes e depois da
+       * troca, e rasterizar isso (o card aberto e enorme) a cada clique pesava
+       * muito numa GPU integrada. Aqui sao duas medicoes e animacoes de
+       * transform, que o compositor faz sozinho.
        */
-      function withViewTransition(update) {
-        if (!document.startViewTransition || reduceMotionQuery.matches) {
+      const LAYOUT_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
+
+      function withLayoutAnimation(update) {
+        if (reduceMotionQuery.matches || typeof Element.prototype.animate !== "function") {
           update();
           return Promise.resolve();
         }
 
-        const transition = document.startViewTransition(update);
-        // Uma transicao abortada (aba escondida, outra transicao comecando)
-        // rejeita `ready`; o update roda do mesmo jeito, entao so silencia.
-        transition.ready.catch(() => {});
-        return transition.finished.catch(() => {});
+        const tracked = [
+          ...projectsEl.querySelectorAll(".project-card"),
+          document.getElementById("links"),
+          document.querySelector(".footer")
+        ].filter(Boolean);
+        const before = new Map(tracked.map((el) => [el, el.getBoundingClientRect()]));
+
+        update();
+
+        const running = [];
+        for (const el of tracked) {
+          const from = before.get(el);
+          const to = el.getBoundingClientRect();
+          const dx = from.left - to.left;
+          const dy = from.top - to.top;
+          if (Math.abs(dx) < 1 && Math.abs(dy) < 1) {
+            continue;
+          }
+          const animation = el.animate(
+            [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }],
+            { duration: 420, easing: LAYOUT_EASE }
+          );
+          running.push(animation.finished.catch(() => {}));
+        }
+
+        return Promise.all(running);
       }
 
       function setProjectOpen(card, open) {
@@ -3610,7 +3636,7 @@
           setSiteTheme(project.theme || null);
         };
 
-        const done = animate ? withViewTransition(update) : (update(), Promise.resolve());
+        const done = animate ? withLayoutAnimation(update) : (update(), Promise.resolve());
         if (scroll) {
           done.then(() => scrollToProject(card));
         }
@@ -3625,7 +3651,7 @@
           return;
         }
 
-        withViewTransition(() => {
+        withLayoutAnimation(() => {
           setProjectOpen(card, false);
           openProjectCard = null;
           setSiteTheme(null);
