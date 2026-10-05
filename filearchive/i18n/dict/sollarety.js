@@ -31,10 +31,13 @@ export const pt = {
   "sollarety.a_nickname_taken_from_the":
     ", um apelido tirado do nome no Roblox e uma idade mínima de conta Roblox para barrar alts recém-criadas. Quem já verificou em outro servidor recebe os cargos assim que entra.",
   "sollarety.music": "Música",
-  "sollarety.play_from_youtube_by_link":
-    ". Toca do YouTube por link ou busca. Cada música é baixada, tocada e apagada logo em seguida — nenhum áudio fica guardado, e a fila vive só na memória.",
+  "sollarety.play_from_youtube_soundcloud_or":
+    ". Toca do YouTube, do SoundCloud ou do Spotify — faixas, playlists e álbuns — ou busca pelo nome. Música do YouTube é baixada, tocada e apagada logo em seguida; o SoundCloud toca por streaming; link do Spotify é procurado no SoundCloud ou no YouTube. Nenhum áudio fica guardado, e a fila vive só na memória.",
   "sollarety.whoever_requested_the_current_song":
     "Quem pediu a música atual, quem tem Mover Membros ou quem está sozinho com o bot pula ou para na hora; os demais votam, e a maioria de quem está ouvindo decide.",
+  "sollarety.levels_and_economy": "Níveis e economia",
+  "sollarety.both_are_off_until_a":
+    ". Os dois ficam desligados até um servidor ligar. Os membros ganham XP conversando — o bot conta que você mandou uma mensagem, nunca o que ela diz — e recebem uma DM quando sobem de nível, que dá para desligar. A carteira de SOL$ é global, como um passaporte: o mesmo saldo em todo servidor que usa a economia.",
   "sollarety.fun": "Diversão",
   "sollarety.all_rate_limited_per_user": ". Todos com limite de uso por pessoa.",
   "sollarety.roleplay_gifs_come_from":

@@ -201,7 +201,7 @@
 			<article class="card">
 				<p data-i18n="sol_pp.sollarety" class="eyebrow">Sollarety</p>
 				<h1 data-i18n="sol_pp.privacy_policy">Privacy Policy</h1>
-				<span data-i18n="sol_pp.last_updated_september_30_2026" class="pill">Last updated: September 30, 2026</span>
+				<span data-i18n="sol_pp.last_updated_october_5_2026" class="pill">Last updated: October 5, 2026</span>
 
 				<div class="note">
 					<p style="margin: 0">
@@ -213,7 +213,7 @@
 				</div>
 
 				<h2 data-i18n="sol_pp.1_what_is_stored">1. What is stored</h2>
-				<p data-i18n="sol_pp.only_three_things_outlast_the">Only three things outlast the moment they happen:</p>
+				<p data-i18n="sol_pp.only_these_things_outlast_the">Only these things outlast the moment they happen:</p>
 				<ul>
 					<li>
 						<strong data-i18n="sol_pp.warnings">Warnings.</strong> <span data-i18n="sol_pp.when_a_moderator_runs_the">When a moderator runs the warn command,
@@ -236,6 +236,20 @@
 						the machine that hosts the Bot, and it applies in every server that
 						uses the Bot. It is created only when you complete the verification
 						yourself.</span>
+					</li>
+					<li>
+						<strong data-i18n="sol_pp.levels">Levels.</strong> <span data-i18n="sol_pp.in_servers_that_turn_levels">In servers that turn levels on, the
+						Bot keeps, for each member who chats there, their Discord user ID and
+						the XP they have earned in that server. It counts that you sent a
+						message — at most once a minute — and never what the message says. It
+						also remembers if you turned off level-up DMs.</span>
+					</li>
+					<li>
+						<strong data-i18n="sol_pp.sol_wallets">SOL$ wallets.</strong> <span data-i18n="sol_pp.if_you_use_the_economy">If you use the economy commands, the
+						Bot keeps your Discord user ID with your SOL$ balance, when you last
+						claimed the daily reward and last worked, and your daily streak. The
+						wallet is the same in every server that uses the economy. SOL$ is a
+						virtual currency with no real-world value.</span>
 					</li>
 				</ul>
 
@@ -272,13 +286,17 @@
 					see on a Roblox profile. The answer is kept in memory for at most five
 					minutes, to avoid asking twice, and is never written down.
 				</p>
-				<p data-i18n="sol_pp.when_you_use_the_play">
+				<p data-i18n="sol_pp.when_you_use_the_play_command">
 					When you use the play command, the link or search terms you typed are
-					sent to YouTube, through the open-source yt-dlp program running on the
-					machine that hosts the Bot, to find the video. Nothing that identifies
-					you goes with them. The song's audio is downloaded to a temporary folder
-					on that machine, played into the voice channel, and deleted as soon as
-					the song ends, is skipped, or the music is stopped.
+					sent to the service they belong to — YouTube, SoundCloud or Spotify —
+					from the machine that hosts the Bot, through the open-source yt-dlp
+					program or, for Spotify, by reading Spotify's public embed page. A
+					Spotify song is then looked up by its name and artist on SoundCloud or
+					YouTube. Nothing that identifies you goes with any of these requests.
+					YouTube audio is downloaded to a temporary folder on that machine,
+					played into the voice channel, and deleted as soon as the song ends, is
+					skipped, or the music is stopped. SoundCloud audio is streamed and never
+					saved.
 				</p>
 				<p data-i18n="sol_pp.the_roleplay_commands_ask_the">
 					The roleplay commands ask the public nekos.best service for a random GIF
@@ -293,7 +311,7 @@
 					<li data-i18n="sol_pp.voice_audio_the_bot_plays">voice audio — the Bot plays music into voice channels but never receives or records what anyone says;</li>
 					<li data-i18n="sol_pp.email_addresses_ip_addresses_payment">email addresses, IP addresses, payment details or any real-world identity;</li>
 					<li data-i18n="sol_pp.your_discord_or_roblox_password">your Discord or Roblox password — both sign-ins happen on Discord's and Roblox's own sites;</li>
-					<li data-i18n="sol_pp.anything_at_all_from_users">anything at all from users who never appear in a moderation command and never verify a Roblox account.</li>
+					<li data-i18n="sol_pp.anything_at_all_from_users_who">anything at all from users who never appear in a moderation command, never verify a Roblox account, never chat in a server with levels turned on and never use the economy commands.</li>
 				</ul>
 
 				<h2 data-i18n="sol_pp.5_how_long_it_is">5. How long it is kept</h2>
@@ -309,6 +327,13 @@
 					server does not delete links: a link belongs to the person who made it,
 					not to any one server.
 				</p>
+				<p data-i18n="sol_pp.xp_is_kept_while_the">
+					XP is kept while the Bot is in the server — also while levels are turned
+					off, so turning them back on picks up where it left off — and a wallet is
+					kept until you ask for it to be deleted (section 8). Removing the Bot
+					from a server does not delete the XP earned there; ask the Bot
+					administrators if you want it gone.
+				</p>
 
 				<h2 data-i18n="sol_pp.6_who_can_see_it">6. Who can see it</h2>
 				<p data-i18n="sol_pp.warnings_are_visible_through_the">
@@ -322,18 +347,26 @@
 					server that uses the Bot and that you are in — telling which Roblox
 					account belongs to whom is what verification is for. Nobody else sees it.
 				</p>
+				<p data-i18n="sol_pp.levels_and_sol_balances_are">
+					Levels and SOL$ balances are visible to other members through the rank,
+					leaderboard, balance and profile commands. The global leaderboards show
+					your Discord name with your level or balance to members of every server
+					that uses these features — but never which servers you are in.
+				</p>
 				<p data-i18n="sol_pp.data_is_not_sold_rented">
 					Data is not sold, rented, or shared with third parties. There is no
 					analytics service and no advertising.
 				</p>
 
 				<h2 data-i18n="sol_pp.7_where_it_is_stored">7. Where it is stored</h2>
-				<p data-i18n="sol_pp.on_a_single_self_hosted">
+				<p data-i18n="sol_pp.on_a_single_self_hosted_machine">
 					On a single self-hosted machine operated by the Bot's administrators.
 					The stored data is not sent to any external service. Besides Discord's
-					own API, the Bot talks only to Roblox's public API, to read the
-					information listed in section 3, and to the verification program
-					described in section 12, to collect a finished verification.
+					own API, the Bot talks to Roblox's public API and to the verification
+					program described in section 12, and — for the music and roleplay
+					commands described in section 3 — to YouTube, SoundCloud, Spotify's
+					public embed pages and nekos.best. None of these requests carries what
+					section 1 stores.
 				</p>
 
 				<h2 data-i18n="sol_pp.8_your_rights">8. Your rights</h2>
@@ -347,6 +380,11 @@
 				<p data-i18n="sol_pp.you_can_delete_your_own">
 					You can delete your own Roblox link at any time with the unverify
 					command, without asking anyone.
+				</p>
+				<p data-i18n="sol_pp.you_can_turn_level_up">
+					You can turn level-up DMs off at any time with the No button on the DM
+					or with the level-dms command. To have your XP or your wallet deleted,
+					contact the Bot administrators as described above.
 				</p>
 
 				<h2 data-i18n="sol_pp.9_children">9. Children</h2>

@@ -12,14 +12,14 @@ export const pt = {
 
   "sol_pp.terms_of_service": "Termos de Serviço",
   "sol_pp.privacy_policy": "Política de Privacidade",
-  "sol_pp.last_updated_september_30_2026": "Última atualização: 30 de setembro de 2026",
+  "sol_pp.last_updated_october_5_2026": "Última atualização: 5 de outubro de 2026",
 
   "sol_pp.the_bot_does_not_read": "O Bot não lê as suas mensagens.",
   "sol_pp.it_does_not_request_discord":
     "Ele não pede o intent de Message Content do Discord, o que significa que o Discord nunca lhe envia o texto das mensagens. Ele não tem como guardar, pesquisar ou repassar algo que não recebe.",
 
   "sol_pp.1_what_is_stored": "1. O que é guardado",
-  "sol_pp.only_three_things_outlast_the": "Só três coisas sobrevivem ao momento em que acontecem:",
+  "sol_pp.only_these_things_outlast_the": "Só estas coisas sobrevivem ao momento em que acontecem:",
   "sol_pp.warnings": "Advertências.",
   "sol_pp.when_a_moderator_runs_the":
     "Quando um moderador roda o comando de advertência, o Bot guarda o ID de usuário do Discord do membro advertido, o ID e a tag do moderador, o motivo que o moderador digitou, o ID do servidor e a data. Isso é gravado num arquivo na máquina que hospeda o Bot.",
@@ -29,6 +29,12 @@ export const pt = {
   "sol_pp.roblox_account_links": "Vínculos de conta Roblox.",
   "sol_pp.when_you_verify_with_the":
     "Quando você se verifica com o comando de verificação, o Bot guarda o seu ID de usuário do Discord junto do seu ID de usuário no Roblox, do nome de usuário e do nome de exibição no Roblox, da data em que a conta Roblox foi criada e da data em que você se verificou. Isso é gravado num arquivo na máquina que hospeda o Bot, e vale em todo servidor que usa o Bot. Só é criado quando você mesmo conclui a verificação.",
+  "sol_pp.levels": "Níveis.",
+  "sol_pp.in_servers_that_turn_levels":
+    "Nos servidores que ligam os níveis, o Bot guarda, de cada membro que conversa ali, o ID de usuário do Discord e o XP que ele ganhou naquele servidor. Ele conta que você mandou uma mensagem — no máximo uma vez por minuto — e nunca o que a mensagem diz. Também lembra se você desligou as DMs de level up.",
+  "sol_pp.sol_wallets": "Carteiras de SOL$.",
+  "sol_pp.if_you_use_the_economy":
+    "Se você usa os comandos de economia, o Bot guarda o seu ID de usuário do Discord com o seu saldo de SOL$, quando você pegou a recompensa diária e trabalhou pela última vez, e a sua sequência de dias. A carteira é a mesma em todo servidor que usa a economia. SOL$ é uma moeda virtual sem nenhum valor no mundo real.",
 
   "sol_pp.2_what_is_held_only": "2. O que fica só na memória",
   "sol_pp.the_bot_keeps_a_short":
@@ -45,8 +51,8 @@ export const pt = {
   "sol_pp.to_apply_roblox_verification_the":
     "Para aplicar a verificação Roblox, o Bot lê na API pública do Roblox o nome atual de uma conta Roblox vinculada, quando ela foi criada e em quais grupos do Roblox ela está, com qual rank — o mesmo que qualquer pessoa vê num perfil do Roblox. A resposta fica na memória por no máximo cinco minutos, para não perguntar duas vezes, e nunca é anotada.",
 
-  "sol_pp.when_you_use_the_play":
-    "Quando você usa o comando play, o link ou os termos de busca que você digitou são enviados ao YouTube, pelo programa de código aberto yt-dlp rodando na máquina que hospeda o Bot, para encontrar o vídeo. Nada que identifique você vai junto. O áudio da música é baixado para uma pasta temporária nessa máquina, tocado no canal de voz e apagado assim que a música acaba, é pulada ou a música é parada.",
+  "sol_pp.when_you_use_the_play_command":
+    "Quando você usa o comando play, o link ou os termos de busca que você digitou são enviados ao serviço a que pertencem — YouTube, SoundCloud ou Spotify — a partir da máquina que hospeda o Bot, pelo programa de código aberto yt-dlp ou, no caso do Spotify, lendo a página pública de embed do Spotify. Uma música do Spotify é então procurada pelo nome e pelo artista no SoundCloud ou no YouTube. Nada que identifique você vai junto em nenhum desses pedidos. O áudio do YouTube é baixado para uma pasta temporária nessa máquina, tocado no canal de voz e apagado assim que a música acaba, é pulada ou a música é parada. O áudio do SoundCloud é transmitido e nunca é salvo.",
   "sol_pp.the_roleplay_commands_ask_the":
     "Os comandos de roleplay pedem ao serviço público nekos.best um GIF aleatório da ação. O pedido informa só a ação; não leva nada sobre você ou o seu servidor.",
   "sol_pp.4_what_is_never_collected": "4. O que nunca é coletado",
@@ -57,32 +63,38 @@ export const pt = {
     "endereços de e-mail, endereços IP, dados de pagamento ou qualquer identidade do mundo real;",
   "sol_pp.your_discord_or_roblox_password":
     "a sua senha do Discord ou do Roblox — os dois logins acontecem nos próprios sites do Discord e do Roblox;",
-  "sol_pp.anything_at_all_from_users":
-    "absolutamente nada de usuários que nunca aparecem num comando de moderação e nunca verificam uma conta Roblox.",
+  "sol_pp.anything_at_all_from_users_who":
+    "absolutamente nada de quem nunca aparece num comando de moderação, nunca verifica uma conta Roblox, nunca conversa num servidor com níveis ligados e nunca usa os comandos de economia.",
 
   "sol_pp.5_how_long_it_is": "5. Por quanto tempo fica guardado",
   "sol_pp.until_a_moderator_deletes_them":
     "Até um moderador apagá-las. O comando delwarn remove uma advertência em definitivo, e remover o Bot do seu servidor impede que novos registros sejam criados. Não há expiração automática: um histórico de advertências que se apagasse sozinho perderia o próprio sentido.",
   "sol_pp.a_roblox_link_is_kept":
     "Um vínculo Roblox fica guardado até você removê-lo com o comando unverify, que o apaga na hora, para todos os servidores. Remover o Bot de um servidor não apaga vínculos: um vínculo pertence a quem o criou, não a um servidor específico.",
+  "sol_pp.xp_is_kept_while_the":
+    "O XP fica guardado enquanto o Bot está no servidor — também com os níveis desligados, para que religar continue de onde parou —, e a carteira fica até você pedir que ela seja apagada (seção 8). Tirar o Bot de um servidor não apaga o XP ganho ali; peça aos administradores do Bot se quiser que ele suma.",
 
   "sol_pp.6_who_can_see_it": "6. Quem consegue ver",
   "sol_pp.warnings_are_visible_through_the":
     "Pelo Bot, as advertências só são visíveis a membros com a permissão Moderar Membros no servidor a que a advertência pertence. Uma advertência registrada num servidor não é visível de outro. O canal de log é visível para quem os seus administradores derem acesso.",
   "sol_pp.a_roblox_link_can_be":
     "Um vínculo Roblox pode ser consultado com o comando whois por membros de qualquer servidor que use o Bot e em que você esteja — saber qual conta Roblox é de quem é justamente o propósito da verificação. Ninguém mais o vê.",
+  "sol_pp.levels_and_sol_balances_are":
+    "Níveis e saldos de SOL$ ficam visíveis para outros membros pelos comandos rank, leaderboard, balance e profile. Os rankings globais mostram o seu nome no Discord com o seu nível ou saldo para membros de todo servidor que usa esses recursos — mas nunca em quais servidores você está.",
   "sol_pp.data_is_not_sold_rented":
     "Os dados não são vendidos, alugados nem compartilhados com terceiros. Não há serviço de análise nem publicidade.",
 
   "sol_pp.7_where_it_is_stored": "7. Onde fica guardado",
-  "sol_pp.on_a_single_self_hosted":
-    "Numa única máquina auto-hospedada, operada pelos administradores do Bot. Os dados guardados não são enviados a nenhum serviço externo. Além da própria API do Discord, o Bot só conversa com a API pública do Roblox, para ler as informações listadas na seção 3, e com o programa de verificação descrito na seção 12, para buscar uma verificação concluída.",
+  "sol_pp.on_a_single_self_hosted_machine":
+    "Numa única máquina hospedada pelos próprios administradores do Bot. Os dados guardados não são enviados a nenhum serviço externo. Além da API do próprio Discord, o Bot fala com a API pública do Roblox e com o programa de verificação descrito na seção 12, e — para os comandos de música e de roleplay descritos na seção 3 — com o YouTube, o SoundCloud, as páginas públicas de embed do Spotify e o nekos.best. Nenhum desses pedidos leva o que a seção 1 guarda.",
 
   "sol_pp.8_your_rights": "8. Os seus direitos",
   "sol_pp.you_may_ask_what_the":
     "Você pode perguntar o que o Bot registrou sobre você, e pedir que seja apagado, falando com os administradores do Bot pelos canais oficiais do servidor do Discord. Apagar uma advertência não apaga a mensagem já publicada no canal de log do servidor — essa mensagem pertence ao seu servidor, e um administrador dele pode removê-la.",
   "sol_pp.you_can_delete_your_own":
     "Você pode apagar o seu próprio vínculo Roblox a qualquer momento com o comando unverify, sem precisar pedir a ninguém.",
+  "sol_pp.you_can_turn_level_up":
+    "Você pode desligar as DMs de level up quando quiser, pelo botão No da própria DM ou pelo comando level-dms. Para apagar o seu XP ou a sua carteira, fale com os administradores do Bot como descrito acima.",
 
   "sol_pp.9_children": "9. Crianças",
   "sol_pp.the_bot_is_not_directed":
