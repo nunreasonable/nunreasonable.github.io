@@ -4,7 +4,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Sollarety Privacy Policy</title>
-		<link rel="canonical" href="https://ccore.daeese.me/fun/privacypolicy/" />
+		<link rel="canonical" href="https://apps.daeese.me/sollarety/privacypolicy/" />
 		<!--
 		  Cartao de compartilhamento. Estas paginas sao justamente as registradas no
 		  Discord Developer Portal e as coladas em canal do Discord, onde o embed e a
@@ -14,7 +14,7 @@
 		<meta property="og:site_name" content="daeese.me" />
 		<meta property="og:title" content="Sollarety Privacy Policy" />
 		<meta property="og:description" content="What Sollarety collects, why, how long it is kept and how to request its deletion." />
-		<meta property="og:url" content="https://ccore.daeese.me/fun/privacypolicy/" />
+		<meta property="og:url" content="https://apps.daeese.me/sollarety/privacypolicy/" />
 		<meta property="og:image" content="https://daeese.me/filearchive/sollarety-og.png" />
 		<meta property="og:image:alt" content="The Sollarety emblem: a silver sun ringed by orbits" />
 		<meta property="og:locale" content="en_US" />
@@ -23,7 +23,9 @@
 		<meta name="twitter:description" content="What Sollarety collects, why, how long it is kept and how to request its deletion." />
 		<meta name="twitter:image" content="https://daeese.me/filearchive/sollarety-og.png" />
 		<meta name="description" content="Privacy Policy for the Sollarety Discord application." />
-		<link rel="icon" type="image/png" href="../../../filearchive/sollarety.png" />
+		<!-- Favicon de 32px (1 KB) no lugar do PNG de 512px (13 KB): a aba nunca
+		     mostra mais que isso. O de 512 continua no filearchive. -->
+		<link rel="icon" type="image/png" sizes="32x32" href="../../../filearchive/icons/sollarety-32.png" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
@@ -63,18 +65,25 @@
 				color: var(--text);
 				line-height: 1.65;
 				background-color: var(--bg);
-				background-repeat: repeat;
-				background-size: 620px 620px;
-				background-attachment: fixed;
-				background-image:
-					radial-gradient(1.4px 1.4px at 68px 92px, rgba(255, 255, 255, 0.6), transparent),
-					radial-gradient(1.1px 1.1px at 402px 66px, rgba(255, 255, 255, 0.42), transparent),
-					radial-gradient(1.6px 1.6px at 168px 348px, rgba(255, 255, 255, 0.5), transparent),
-					radial-gradient(1px 1px at 528px 262px, rgba(255, 255, 255, 0.36), transparent),
-					radial-gradient(1.3px 1.3px at 296px 552px, rgba(255, 255, 255, 0.46), transparent),
-					radial-gradient(1px 1px at 470px 486px, rgba(255, 255, 255, 0.32), transparent),
-					radial-gradient(1.5px 1.5px at 44px 470px, rgba(255, 255, 255, 0.4), transparent),
-					radial-gradient(1.1px 1.1px at 590px 128px, rgba(255, 255, 255, 0.34), transparent);
+			}
+
+			/*
+			 * Campo de estrelas. Antes eram oito radial-gradient ladrilhados no
+			 * fundo do body com background-attachment: fixed - o fixed obriga o
+			 * navegador a repintar o fundo inteiro a cada quadro de rolagem (sai
+			 * da rolagem acelerada), e cada ladrilho refazia os oito gradientes.
+			 * Agora e um SVG de 620x620 com as mesmas oito estrelas (mesma
+			 * posicao, raio e alfa), decodificado uma vez, numa camada
+			 * position: fixed propria que o compositor so desloca. z-index -2
+			 * para continuar por baixo da corona, como o fundo do body ficava.
+			 */
+			body::after {
+				content: "";
+				position: fixed;
+				inset: 0;
+				z-index: -2;
+				pointer-events: none;
+				background: url("../../../filearchive/sollarety-stars.svg") 0 0 / 620px 620px repeat;
 			}
 
 			/*
@@ -85,19 +94,70 @@
 			body::before {
 				content: "";
 				position: fixed;
-				inset: -25%;
+				/*
+				 * Camada encolhida de inset -25% (2.25x a area da tela) para -6%
+				 * (1.25x): a deriva desloca no maximo 3% da tela e a escala so
+				 * cresce, entao 6% de sobra cobre qualquer quadro. Os gradientes
+				 * foram reescritos para a caixa nova e caem nos mesmos pixels da
+				 * tela de antes (centro, raio e queda iguais); so sumiu a parte que
+				 * nunca chegava a aparecer. Textura ~44% menor na GPU.
+				 */
+				inset: -6%;
 				z-index: -1;
 				pointer-events: none;
 				background:
-					radial-gradient(42% 34% at 50% 30%, rgba(226, 232, 240, 0.11) 0%, transparent 68%),
-					radial-gradient(38% 30% at 76% 78%, rgba(148, 163, 184, 0.08) 0%, transparent 70%);
-				animation: corona-drift 34s ease-in-out infinite alternate;
+					radial-gradient(56.25% 45.536% at 50% 23.214%, rgba(226, 232, 240, 0.11) 0%, transparent 68%),
+					radial-gradient(50.893% 40.179% at 84.821% 87.5%, rgba(148, 163, 184, 0.08) 0%, transparent 70%);
+				/* steps(27) vale por trecho de keyframe: ver o comentario abaixo. */
+				animation: corona-drift 34s steps(27) infinite alternate;
 				will-change: transform;
 			}
 
+			/*
+			 * Mesma deriva de antes (34s, ida e volta, ease-in-out, 3% da tela de
+			 * deslocamento e 10% de escala), mas em degraus de ~8 por segundo: a
+			 * curva ease-in-out foi pre-calculada em 10 trechos e cada trecho anda
+			 * em steps(27). Numa mancha difusa com alfa abaixo de 0.12 um degrau
+			 * move menos de 1px e o olho nao separa os quadros - mas a camada que
+			 * cobre a tela inteira so e recomposta 8 vezes por segundo, em vez de a
+			 * cada vsync (200 vezes por segundo no monitor de 200 Hz). Entre dois
+			 * degraus o transform nao muda, nao ha dano e nenhum quadro e desenhado.
+			 *
+			 * Os translate sao os antigos (2% e 1.5% de uma camada de 150%)
+			 * convertidos para a camada nova de 112%.
+			 */
 			@keyframes corona-drift {
-				from { transform: translate3d(-2%, -1.5%, 0) scale(1); }
-				to { transform: translate3d(2%, 1.5%, 0) scale(1.1); }
+				0% { transform: translate3d(-2.679%, -2.009%, 0) scale(1); }
+				10% { transform: translate3d(-2.573%, -1.93%, 0) scale(1.002); }
+				20% { transform: translate3d(-2.241%, -1.681%, 0) scale(1.0082); }
+				30% { transform: translate3d(-1.675%, -1.256%, 0) scale(1.0187); }
+				40% { transform: translate3d(-0.901%, -0.675%, 0) scale(1.0332); }
+				50% { transform: translate3d(0%, 0%, 0) scale(1.05); }
+				60% { transform: translate3d(0.901%, 0.675%, 0) scale(1.0668); }
+				70% { transform: translate3d(1.675%, 1.256%, 0) scale(1.0813); }
+				80% { transform: translate3d(2.241%, 1.681%, 0) scale(1.0918); }
+				90% { transform: translate3d(2.573%, 1.93%, 0) scale(1.098); }
+				100% { transform: translate3d(2.679%, 2.009%, 0) scale(1.1); }
+			}
+
+			/*
+			 * Sem handler de visibilitychange de proposito: aba oculta (ou janela
+			 * minimizada) nao recebe quadros do navegador, entao as animacoes CSS
+			 * daqui ja nao custam nada nesse estado - um script so para pausar
+			 * seria codigo a mais sem ganho.
+			 */
+
+			/*
+			 * O seletor de idioma flutuante vem do i18n.css com backdrop-filter:
+			 * blur(6px). Aqui ele fica fixo por cima da corona, que muda a cada
+			 * degrau, e do texto que rola - cada mudanca refazia o blur. Sem o
+			 * filtro e com o fundo um pouco mais opaco (0.82 -> 0.92) o
+			 * resultado e a mesma pilula escura. Seletor com atributo para
+			 * ganhar do i18n.css, que e carregado depois deste bloco.
+			 */
+			[data-i18n-switcher].i18n-floating {
+				backdrop-filter: none;
+				background: rgba(13, 17, 23, 0.92);
 			}
 
 			.shell {
@@ -405,7 +465,7 @@
 
 				<h2 data-i18n="sol_pp.11_the_invite_page">11. The invite page</h2>
 				<p>
-					<span data-i18n="sol_pp.the_invite_page_at">The invite page at</span> <a data-i18n="sol_pp.ccore_daeese_me_fun_invite" href="../invite/">ccore.daeese.me/fun/invite/</a> <span data-i18n="sol_pp.can_sign_you_in_with">can
+					<span data-i18n="sol_pp.the_invite_page_at">The invite page at</span> <a data-i18n="sol_pp.ccore_daeese_me_fun_invite" href="../invite/">apps.daeese.me/sollarety/invite/</a> <span data-i18n="sol_pp.can_sign_you_in_with">can
 					sign you in with Discord so that it can show you which of your servers you
 					are allowed to add the Bot to. That sign-in asks Discord for two things and
 					nothing else: your username and avatar, and the list of servers you are in.
@@ -468,7 +528,7 @@
 				<div class="note">
 					<p style="margin: 0">
 						<span data-i18n="sol_pp.sollarety_is_a_separate_discord">Sollarety is a separate Discord application from</span>
-						<a data-i18n="sol_pp.ccore" href="../../">ccore</a><span data-i18n="sol_pp.they_do_not_share_storage">. They do not share storage, and ccore's
+						<a data-i18n="sol_pp.ccore" href="https://ccore.daeese.me/">ccore</a><span data-i18n="sol_pp.they_do_not_share_storage">. They do not share storage, and ccore's
 						privacy policy does not describe this Bot.</span>
 					</p>
 					<p class="i18n-authoritative" data-i18n="i18n.authoritative">This page is also available in Portuguese, as a courtesy translation. In case of any difference between the two, the English version is the one that applies.</p>

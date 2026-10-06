@@ -6,7 +6,7 @@ workers_dev = false
 [vars]
 # Application ID do Sollarety. E publico - aparece na URL de autorizacao que
 # o navegador monta - entao fica versionado aqui e nao como secret. O mesmo
-# valor esta no <script> de cornwallcore/fun/invite/index.html: trocar de
+# valor esta no <script> de apps/sollarety/invite/index.html: trocar de
 # aplicacao significa mexer nos dois.
 DISCORD_CLIENT_ID = "1403153848507301939"
 
@@ -15,8 +15,10 @@ DISCORD_CLIENT_ID = "1403153848507301939"
 # houver diferenca de barra final que seja.
 REDIRECT_URI = "https://daeese.me/oauth/fun/callback"
 
-# Para onde o visitante volta depois do login. E a propria pagina de convite.
-RETURN_URL = "https://ccore.daeese.me/fun/invite/"
+# Para onde o visitante volta depois do login. E a propria pagina de convite,
+# que mudou de ccore.daeese.me/fun/invite/ para apps.daeese.me/sollarety/invite/
+# (o endereco antigo continua respondendo, com 301, pelo site-router-worker).
+RETURN_URL = "https://apps.daeese.me/sollarety/invite/"
 
 # O client secret entra fora do repositorio:
 #   npx wrangler secret put DISCORD_CLIENT_SECRET

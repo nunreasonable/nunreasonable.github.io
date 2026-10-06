@@ -13,20 +13,26 @@
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content="daeese.me" />
 		<meta property="og:title" content="ccore" />
-		<meta property="og:description" content="The Discord bot of the 12° Regimento de Infantaria “Chaves”: enlistment, deployments and regimental administration." />
+		<meta property="og:description" content="The Discord bot of the 12° Regimento de Infantaria “Chaves”: enlistment, deployments and regimental administration. Paused, not disabled." />
 		<meta property="og:url" content="https://ccore.daeese.me/" />
 		<meta property="og:image" content="https://daeese.me/filearchive/cornwallCOREpfp.png" />
 		<meta property="og:image:alt" content="The cornwallCORE profile picture" />
 		<meta property="og:locale" content="en_US" />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content="ccore" />
-		<meta name="twitter:description" content="The Discord bot of the 12° Regimento de Infantaria “Chaves”: enlistment, deployments and regimental administration." />
+		<meta name="twitter:description" content="The Discord bot of the 12° Regimento de Infantaria “Chaves”: enlistment, deployments and regimental administration. Paused, not disabled." />
 		<meta name="twitter:image" content="https://daeese.me/filearchive/cornwallCOREpfp.png" />
 		<meta
 			name="description"
-			content="ccore is a Discord bot for the 12° Regt. de Infantaria community."
+			content="ccore is a Discord bot for the 12° Regt. de Infantaria community. It is currently paused, not disabled."
 		/>
+		<meta name="theme-color" content="#0b1f44" />
 		<link rel="icon" type="image/png" href="../filearchive/newpfp.png" />
+		<!--
+		  O emblema do hero e a primeira coisa pintada acima da dobra: pedir cedo
+		  evita que ele apareca depois do texto.
+		-->
+		<link rel="preload" as="image" href="../filearchive/icons/ccore-256.webp" type="image/webp" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
@@ -34,21 +40,39 @@
 			rel="stylesheet"
 		/>
 		<style>
+			/*
+			 * Vitrine do ccore, refeita como site: nada de card gigante no meio da
+			 * tela - o conteudo mora direto sobre o fundo, em secoes, no mesmo
+			 * espirito do portfolio da raiz. A identidade continua a do ccore: azul e
+			 * vermelho, Inter e o emblema do regimento.
+			 *
+			 * Regras de desempenho seguidas aqui (medidas no monitor de 200 Hz com GPU
+			 * integrada do dono):
+			 *  - o fundo e uma camada position: fixed ESTATICA (sem animacao, sem
+			 *    background-attachment: fixed, sem blur);
+			 *  - a barra de navegacao e quase opaca e nao usa backdrop-filter;
+			 *  - transicoes so mexem em color, opacity e transform - nunca em
+			 *    box-shadow ou filter;
+			 *  - prefers-reduced-motion desliga o que se mexe.
+			 */
 			:root {
 				color-scheme: dark;
 				--bg: #0b1f44;
 				--bg-2: #142f63;
-				--panel: rgba(12, 28, 61, 0.9);
-				--panel-strong: rgba(9, 22, 51, 0.98);
-				--line: rgba(255, 255, 255, 0.16);
-				--line-strong: rgba(255, 255, 255, 0.28);
+				--bg-deep: #08172f;
+				--line: rgba(255, 255, 255, 0.14);
+				--line-strong: rgba(255, 255, 255, 0.3);
 				--text: #f6f8fc;
-				--muted: #d5ddee;
+				--muted: #c9d3e8;
+				--faint: #95a4c4;
 				--accent: #cf142b;
-				--accent-2: #ffffff;
+				--accent-lit: #ff4d61;
 				--accent-3: #1f4aa8;
-				--shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
-				--radius: 22px;
+				--blue-lit: #7aa2ff;
+				--paused: #f5b942;
+				--nav-h: 64px;
+				--gutter: clamp(16px, 4vw, 40px);
+				--mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
 			}
 
 			* {
@@ -63,550 +87,1017 @@
 				margin: 0;
 				min-height: 100vh;
 				color: var(--text);
+				background: var(--bg);
 				font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+				line-height: 1.55;
+				-webkit-font-smoothing: antialiased;
+				overflow-x: hidden;
+			}
+
+			/*
+			 * Fundo numa camada fixa propria, e nao em background-attachment: fixed
+			 * (que obriga o navegador a repintar a tela inteira a cada rolagem). Os
+			 * gradientes sao estaticos: pintados uma vez, depois so compostos.
+			 */
+			.backdrop {
+				position: fixed;
+				inset: 0;
+				z-index: 0;
+				pointer-events: none;
 				background:
-					radial-gradient(circle at top left, rgba(207, 20, 43, 0.22), transparent 28%),
-					radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.12), transparent 34%),
+					radial-gradient(ellipse 60% 50% at 0% 0%, rgba(207, 20, 43, 0.2), transparent 70%),
+					radial-gradient(ellipse 50% 45% at 100% 100%, rgba(122, 162, 255, 0.12), transparent 70%),
 					linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
 			}
 
-			.shell {
-				width: min(1080px, calc(100% - 24px));
-				margin: 0 auto;
-				padding: 18px 0 28px;
+			a {
+				color: inherit;
 			}
 
-			.topbar {
+			code {
+				font-family: var(--mono);
+				font-size: 0.88em;
+				padding: 1px 6px;
+				border-radius: 6px;
+				background: rgba(255, 255, 255, 0.07);
+				border: 1px solid var(--line);
+			}
+
+			:focus-visible {
+				outline: 2px solid var(--blue-lit);
+				outline-offset: 3px;
+			}
+
+			.skip-link {
+				position: absolute;
+				left: 12px;
+				top: -60px;
+				z-index: 100;
+				padding: 8px 14px;
+				border-radius: 8px;
+				background: var(--text);
+				color: var(--bg);
+				font-weight: 600;
+				text-decoration: none;
+			}
+
+			.skip-link:focus {
+				top: 12px;
+			}
+
+			/* --- Barra de navegacao ------------------------------------------ */
+			.nav {
+				position: fixed;
+				inset: 0 0 auto 0;
+				z-index: 50;
+				height: var(--nav-h);
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 16px;
+				padding: 0 var(--gutter);
+				/* Quase opaca e sem backdrop-filter: blur aqui seria refeito a cada
+				   quadro de rolagem. */
+				background: rgba(8, 23, 47, 0.94);
+				border-bottom: 1px solid var(--line);
+			}
+
+			.nav-brand {
+				display: inline-flex;
+				align-items: center;
+				gap: 10px;
+				font-weight: 800;
+				font-size: 1.08rem;
+				letter-spacing: 0.01em;
+				text-decoration: none;
+			}
+
+			.nav-brand img {
+				width: 30px;
+				height: 30px;
+				border-radius: 50%;
+				display: block;
+			}
+
+			.nav-end {
+				display: flex;
+				align-items: center;
+				gap: clamp(14px, 3vw, 28px);
+			}
+
+			.nav-links {
+				display: flex;
+				gap: clamp(14px, 2.6vw, 26px);
+			}
+
+			.nav-links a {
+				position: relative;
+				color: var(--muted);
+				text-decoration: none;
+				font-size: 0.8rem;
+				font-weight: 500;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+				padding: 6px 0;
+				transition: color 160ms ease;
+			}
+
+			/* Sublinhado animado por transform de um pseudo-elemento, nao por
+			   largura nem sombra. */
+			.nav-links a::after {
+				content: "";
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				height: 2px;
+				background: var(--accent-lit);
+				transform: scaleX(0);
+				transform-origin: left;
+				transition: transform 220ms ease;
+			}
+
+			.nav-links a:hover,
+			.nav-links a:focus-visible {
+				color: var(--text);
+			}
+
+			.nav-links a:hover::after,
+			.nav-links a:focus-visible::after {
+				transform: scaleX(1);
+			}
+
+			.nav .i18n-switcher {
+				font-size: 0.74rem;
+				color: var(--text);
+			}
+
+			.nav .i18n-switcher__btn {
+				padding: 5px 10px;
+			}
+
+			/* --- Estrutura ----------------------------------------------------- */
+			.site {
+				position: relative;
+				z-index: 1;
+				width: min(1180px, 100%);
+				margin: 0 auto;
+				padding: 0 var(--gutter);
+			}
+
+			/* --- Hero ---------------------------------------------------------- */
+			.hero {
+				min-height: min(88svh, 820px);
+				padding: calc(var(--nav-h) + 56px) 0 72px;
+				display: grid;
+				grid-template-columns: minmax(0, 1.55fr) minmax(220px, 1fr);
+				align-items: center;
+				gap: 48px clamp(32px, 6vw, 88px);
+			}
+
+			.status-pill {
+				display: inline-flex;
+				align-items: center;
+				gap: 10px;
+				margin: 0 0 26px;
+				padding: 7px 14px 7px 12px;
+				border-radius: 999px;
+				border: 1px solid rgba(245, 185, 66, 0.45);
+				background: rgba(245, 185, 66, 0.1);
+				color: #ffe2a6;
+				font-size: 0.82rem;
+				font-weight: 600;
+				letter-spacing: 0.02em;
+				text-decoration: none;
+			}
+
+			/*
+			 * Bolinha de estado. O "respiro" e um pseudo-elemento que so muda
+			 * opacity/transform - nada de animar box-shadow - e tem 8px: barato
+			 * mesmo rodando para sempre.
+			 */
+			.status-dot {
+				position: relative;
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				background: var(--paused);
+				flex: 0 0 auto;
+			}
+
+			.status-dot::after {
+				content: "";
+				position: absolute;
+				inset: -4px;
+				border-radius: 50%;
+				border: 2px solid var(--paused);
+				opacity: 0;
+				animation: breathe 2.8s ease-out infinite;
+			}
+
+			@keyframes breathe {
+				0% { opacity: 0.6; transform: scale(0.6); }
+				80%, 100% { opacity: 0; transform: scale(1.4); }
+			}
+
+			.eyebrow {
+				margin: 0 0 10px;
+				text-transform: uppercase;
+				letter-spacing: 0.18em;
+				font-size: 0.76rem;
+				font-weight: 600;
+				color: var(--faint);
+			}
+
+			.title-row {
+				display: flex;
+				align-items: center;
+				flex-wrap: wrap;
+				gap: 6px 18px;
+			}
+
+			.hero h1 {
+				margin: 0;
+				font-size: clamp(4.2rem, 13vw, 8.6rem);
+				font-weight: 800;
+				line-height: 0.9;
+				letter-spacing: -0.055em;
+			}
+
+			.hero h1 .dot {
+				color: var(--accent);
+			}
+
+			.app-badge {
+				width: 51px;
+				height: 19px;
+				display: block;
+				flex: 0 0 auto;
+			}
+
+			.tagline {
+				margin: 18px 0 0;
+				color: var(--faint);
+				font-size: 0.95rem;
+				font-style: italic;
+			}
+
+			.managed-by {
+				margin: 14px 0 0;
+				font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+				line-height: 1.2;
+				letter-spacing: -0.02em;
+				font-weight: 700;
+				max-width: 30ch;
+			}
+
+			.managed-by a,
+			.subtitle a,
+			.prose a {
+				color: var(--text);
+				text-decoration-color: var(--accent-lit);
+				text-decoration-thickness: 2px;
+				text-underline-offset: 4px;
+			}
+
+			.subtitle {
+				margin: 16px 0 0;
+				color: var(--muted);
+				font-size: 1.04rem;
+				max-width: 58ch;
+			}
+
+			.pill-row {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				margin: 26px 0 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.pill {
+				padding: 6px 12px;
+				border-radius: 999px;
+				border: 1px solid var(--line);
+				background: rgba(255, 255, 255, 0.04);
+				color: #dce5f5;
+				font-size: 0.84rem;
+			}
+
+			.hero-actions {
 				display: flex;
 				flex-wrap: wrap;
 				gap: 12px;
-				justify-content: space-between;
-				align-items: center;
-				border: 1px solid var(--line);
-				border-radius: 18px;
-				padding: 14px 16px;
-				background: var(--panel);
-				border-color: rgba(255, 255, 255, 0.2);
-				box-shadow: var(--shadow);
-				margin-bottom: 16px;
-			}
-
-			.brand {
-				display: flex;
-				flex-direction: column;
-				gap: 3px;
-			}
-
-			.brand-title {
-				margin: 0;
-				font-size: 1rem;
-				letter-spacing: 0.02em;
-			}
-
-			.brand-meta {
-				margin: 0;
-				color: var(--muted);
-				font-size: 0.92rem;
-			}
-
-			.actions {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 10px;
+				margin-top: 32px;
 			}
 
 			.button {
 				display: inline-flex;
 				align-items: center;
 				justify-content: center;
-				padding: 10px 14px;
-				border: 1px solid var(--line);
+				gap: 8px;
+				padding: 11px 20px;
 				border-radius: 999px;
+				border: 1px solid var(--line-strong);
 				color: var(--text);
+				font-weight: 600;
+				font-size: 0.94rem;
 				text-decoration: none;
 				background: rgba(255, 255, 255, 0.04);
-				transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+				transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease;
 			}
 
 			.button:hover,
 			.button:focus-visible {
-				background: rgba(255, 255, 255, 0.12);
-				border-color: var(--line-strong);
-				outline: none;
+				background: rgba(255, 255, 255, 0.1);
+				border-color: rgba(255, 255, 255, 0.5);
 				transform: translateY(-1px);
 			}
 
 			.button.primary {
-				background: linear-gradient(135deg, rgba(207, 20, 43, 0.28), rgba(31, 74, 168, 0.28));
-				border-color: rgba(255, 255, 255, 0.28);
-				font-weight: 700;
+				background: var(--accent);
+				border-color: var(--accent);
 			}
 
-			.hero {
+			.button.primary:hover,
+			.button.primary:focus-visible {
+				background: #e01a33;
+				border-color: #e01a33;
+			}
+
+			.hero-emblem {
+				justify-self: center;
+				position: relative;
+				width: min(100%, 300px);
+				aspect-ratio: 1;
 				display: grid;
-				grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.95fr);
-				gap: 16px;
-				align-items: stretch;
+				place-items: center;
 			}
 
-			.card {
+			/* Anel estatico atras do emblema, em vez de sombra difusa grande. */
+			.hero-emblem::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				border-radius: 50%;
 				border: 1px solid var(--line);
-				border-radius: var(--radius);
-				background: var(--panel);
-				border-color: rgba(255, 255, 255, 0.2);
-				box-shadow: var(--shadow);
-				overflow: hidden;
+				background: radial-gradient(circle, rgba(31, 74, 168, 0.35) 0%, transparent 70%);
 			}
 
-			.intro {
-				padding: 28px;
+			.hero-emblem img {
+				position: relative;
+				width: 82%;
+				height: auto;
+				border-radius: 50%;
+				display: block;
 			}
 
-			.eyebrow {
-				margin: 0 0 12px;
-				text-transform: uppercase;
-				letter-spacing: 0.18em;
-				font-size: 0.74rem;
-				color: var(--accent-2);
+			/* --- Secoes -------------------------------------------------------- */
+			.section {
+				padding: 72px 0 32px;
+				scroll-margin-top: var(--nav-h);
 			}
 
-			.title {
+			.section-head {
+				display: grid;
+				grid-template-columns: auto minmax(0, 1fr) auto;
+				align-items: baseline;
+				gap: 18px;
+				padding-bottom: 18px;
+				margin-bottom: 36px;
+				border-bottom: 1px solid var(--line);
+			}
+
+			.section-num {
+				font-family: var(--mono);
+				font-size: 0.85rem;
+				color: var(--accent-lit);
+			}
+
+			.section-head h2 {
 				margin: 0;
-				font-size: clamp(2.4rem, 5vw, 4.2rem);
-				line-height: 0.95;
-				letter-spacing: -0.04em;
-			}
-
-			.subtitle {
-				margin: 14px 0 0;
-				color: #d3deec;
-				font-size: 1.03rem;
-				line-height: 1.6;
-				max-width: 62ch;
-			}
-
-			.managed-by {
-				margin: 8px 0 0;
-				font-size: clamp(1.8rem, 4vw, 3.2rem);
-				line-height: 1.02;
-				letter-spacing: -0.04em;
+				font-size: clamp(2rem, 4.6vw, 3.2rem);
 				font-weight: 800;
+				line-height: 1;
+				letter-spacing: -0.04em;
 			}
 
-			.pill-row {
+			.section-lede {
+				margin: 0;
+				color: var(--faint);
+				font-size: 0.9rem;
+				text-align: right;
+			}
+
+			.split {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 40px clamp(32px, 6vw, 80px);
+			}
+
+			.block h3 {
+				margin: 0 0 10px;
+				font-size: 1.2rem;
+				font-weight: 700;
+				letter-spacing: -0.01em;
+			}
+
+			.block p,
+			.prose p {
+				margin: 0;
+				color: var(--muted);
+			}
+
+			.block ul {
+				margin: 14px 0 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.block li {
+				position: relative;
+				padding: 10px 0 10px 22px;
+				border-top: 1px solid var(--line);
+				color: var(--text);
+			}
+
+			.block li::before {
+				content: "";
+				position: absolute;
+				left: 2px;
+				top: 1.15em;
+				width: 8px;
+				height: 2px;
+				background: var(--accent-lit);
+			}
+
+			/* --- Comandos ------------------------------------------------------ */
+			.cmd-groups {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 44px clamp(32px, 6vw, 80px);
+			}
+
+			.cmd-group h3 {
+				margin: 0 0 6px;
+				font-size: 0.78rem;
+				font-weight: 600;
+				letter-spacing: 0.16em;
+				text-transform: uppercase;
+				color: var(--blue-lit);
+			}
+
+			.cmd-list {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.cmd {
+				padding: 16px 0;
+				border-top: 1px solid var(--line);
+			}
+
+			.cmd-head {
 				display: flex;
 				flex-wrap: wrap;
-				gap: 10px;
-				margin-top: 20px;
+				align-items: baseline;
+				gap: 4px 14px;
 			}
 
-			.pill {
-				display: inline-flex;
-				align-items: center;
-				gap: 8px;
-				padding: 9px 12px;
-				border-radius: 999px;
-				border: 1px solid rgba(255, 255, 255, 0.12);
-				background: rgba(255, 255, 255, 0.04);
-				color: #dce7f3;
-				font-size: 0.88rem;
+			.cmd-name {
+				font-family: var(--mono);
+				font-size: 0.98rem;
+				font-weight: 600;
+				color: var(--text);
 			}
 
-			.panel {
-				padding: 22px;
-				background: linear-gradient(180deg, var(--panel-strong) 0%, rgba(15, 23, 42, 0.88) 100%);
-				border-color: rgba(255, 255, 255, 0.18);
+			.cmd-desc {
+				color: var(--muted);
 			}
 
-			.bot-pfp {
-				width: 72px;
-				height: 72px;
-				border-radius: 999px;
-				object-fit: cover;
-				border: 1px solid rgba(255, 255, 255, 0.16);
-				box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
-				margin: 0;
-				background: rgba(255, 255, 255, 0.05);
-			}
-
-			.bot-identity {
+			.cmd-meta {
+				margin: 8px 0 0;
+				padding: 0;
+				list-style: none;
 				display: flex;
-				align-items: center;
-				gap: 11px;
-				margin-bottom: 15px;
+				flex-direction: column;
+				gap: 2px;
 			}
 
-			.bot-name-row {
-				display: inline-flex;
-				align-items: center;
-				gap: 8px;
-				padding-top: 1px;
+			.cmd-meta li {
+				color: var(--faint);
+				font-size: 0.88rem;
+				padding-left: 14px;
+				position: relative;
 			}
 
-			.bot-name {
+			.cmd-meta li::before {
+				content: "\203A";
+				position: absolute;
+				left: 0;
+				color: var(--accent-lit);
+			}
+
+			.hood {
+				margin-top: 64px;
+			}
+
+			.prose p + p,
+			.prose p + ul {
+				margin-top: 12px;
+			}
+
+			.note {
+				margin-top: 18px;
+				padding: 14px 16px;
+				border-left: 2px solid var(--blue-lit);
+				background: rgba(122, 162, 255, 0.06);
+				border-radius: 0 10px 10px 0;
+			}
+
+			.note p {
 				margin: 0;
-				font-size: 1.03rem;
+			}
+
+			.note strong {
+				color: var(--text);
+			}
+
+			/* --- Estado e links ------------------------------------------------ */
+			.paused-title {
+				margin: 0 0 14px;
+				font-size: clamp(1.5rem, 3vw, 2.1rem);
 				font-weight: 800;
-				letter-spacing: 0.01em;
-				line-height: 1;
+				letter-spacing: -0.03em;
+				line-height: 1.1;
 			}
 
-			.verified-app-icon {
-				width: 52px;
-				height: 19px;
-				flex: 0 0 auto;
+			.paused-title .hl {
+				color: var(--paused);
+			}
+
+			.link-index {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+				border-bottom: 1px solid var(--line);
+			}
+
+			.link-row {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) auto;
+				align-items: center;
+				gap: 14px;
+				padding: 16px 4px;
+				border-top: 1px solid var(--line);
+				text-decoration: none;
+			}
+
+			.link-row strong {
 				display: block;
-				transform: translateY(1px);
-			}
-
-			.panel h2,
-			.section h2 {
-				margin: 0 0 10px;
+				font-weight: 600;
 				font-size: 1.02rem;
 			}
 
-			.panel p,
-			.section p {
-				margin: 0;
-				color: var(--muted);
-				line-height: 1.55;
+			.link-row small {
+				display: block;
+				color: var(--faint);
+				font-size: 0.86rem;
 			}
 
-			.invite-box {
-				margin-top: 18px;
-				padding: 16px;
-				border-radius: 18px;
-				border: 1px solid rgba(192, 132, 252, 0.22);
-				background: linear-gradient(135deg, rgba(207, 20, 43, 0.14), rgba(31, 74, 168, 0.14));
+			.link-row .arrow {
+				color: var(--faint);
+				transition: transform 180ms ease, color 180ms ease;
 			}
 
-			.invite-label {
-				margin: 0 0 6px;
-				color: #f0e9ff;
-				font-size: 0.85rem;
-				text-transform: uppercase;
-				letter-spacing: 0.12em;
+			.link-row:hover .arrow,
+			.link-row:focus-visible .arrow {
+				color: var(--accent-lit);
+				transform: translateX(4px);
 			}
 
-			.invite-link {
-				word-break: break-word;
-				color: #d7f0ff;
-				font-size: 0.92rem;
+			.link-row:hover strong,
+			.link-row:focus-visible strong {
+				color: #fff;
 			}
 
-			.section-grid {
-				display: grid;
-				grid-template-columns: repeat(2, minmax(0, 1fr));
-				gap: 16px;
-				margin-top: 16px;
-			}
-
-			.section.full-width {
-				grid-column: 1 / -1;
-			}
-
-			.section.full-width h2 {
-				font-size: 1.35rem;
-				margin-bottom: 14px;
-			}
-
-			.section.full-width h3 {
-				margin: 16px 0 8px 0;
-				font-size: 1.06rem;
-				color: var(--text);
-				font-weight: 600;
-			}
-
-			.section.full-width ul {
-				margin: 10px 0 0;
-				padding-left: 22px;
-			}
-
-			.section.full-width > ul > li {
-				margin-bottom: 12px;
-			}
-
-			.section.full-width strong {
-				color: var(--text);
-			}
-
-			.section {
-				padding: 18px;
-			}
-
-			.section ul {
-				margin: 12px 0 0;
-				padding-left: 18px;
-				color: #d3deec;
-				line-height: 1.6;
-			}
-
-			.section li + li {
-				margin-top: 8px;
-			}
-
+			/* --- Rodape -------------------------------------------------------- */
 			.footer {
-				margin-top: 16px;
-				color: var(--muted);
-				font-size: 0.84rem;
-				text-align: center;
+				margin-top: 72px;
+				padding: 28px 0 40px;
+				border-top: 1px solid var(--line);
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+				gap: 12px 24px;
+				color: var(--faint);
+				font-size: 0.86rem;
 			}
 
-			@media (max-width: 860px) {
-				.hero,
-				.section-grid {
+			.footer p {
+				margin: 0;
+			}
+
+			.footer-links {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px 20px;
+			}
+
+			.footer a {
+				color: var(--muted);
+				text-decoration: none;
+			}
+
+			.footer a:hover,
+			.footer a:focus-visible {
+				color: var(--text);
+				text-decoration: underline;
+			}
+
+			/* --- Responsivo ---------------------------------------------------- */
+			@media (max-width: 900px) {
+				.hero {
+					grid-template-columns: 1fr;
+					min-height: 0;
+					padding-top: calc(var(--nav-h) + 36px);
+				}
+
+				.hero-emblem {
+					order: -1;
+					justify-self: start;
+					width: 132px;
+				}
+
+				.hero-emblem::before {
+					display: none;
+				}
+
+				.hero-emblem img {
+					width: 100%;
+				}
+
+				.split,
+				.cmd-groups {
 					grid-template-columns: 1fr;
 				}
 			}
 
 			@media (max-width: 640px) {
-				.shell {
-					width: min(100% - 14px, 1080px);
-					padding-top: 8px;
+				.nav-links {
+					display: none;
 				}
 
-				.topbar,
-				.intro,
-				.panel,
 				.section {
-					padding-left: 16px;
-					padding-right: 16px;
+					padding-top: 56px;
 				}
 
-				.topbar {
-					padding-top: 12px;
-					padding-bottom: 12px;
+				.section-head {
+					grid-template-columns: auto minmax(0, 1fr);
 				}
 
-				.actions {
-					width: 100%;
+				.section-lede {
+					grid-column: 1 / -1;
+					text-align: left;
 				}
 
-				.button {
-					flex: 1 1 0;
+				.hero-actions .button {
+					flex: 1 1 auto;
+				}
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				html {
+					scroll-behavior: auto;
 				}
 
-				.bot-identity {
-					gap: 9px;
-				}
-
-				.bot-name {
-					font-size: 0.98rem;
-				}
-
-				.verified-app-icon {
-					width: 50px;
-					height: 18px;
+				*,
+				*::before,
+				*::after {
+					animation: none !important;
+					transition: none !important;
 				}
 			}
 		</style>
-			<link rel="stylesheet" href="../filearchive/i18n/i18n.css" />
+		<link rel="stylesheet" href="../filearchive/i18n/i18n.css" />
 	</head>
 	<body>
-		<main class="shell">
-			<header class="topbar">
-				<div class="brand">
-					<h1 data-i18n="ccore.ccore" class="brand-title">ccore</h1>
-					<p data-i18n="ccore.the_lovely_clanker_of_12" class="brand-meta">The lovely CLANKER of 12° Regimento de Infantaria "Chaves" in NW Rulecy's British Army!
-					</p>
-				</div>
-				<div class="actions">
-					<a data-i18n="ccore.status" class="button" href="./status/">Status</a>
+		<a class="skip-link" href="#main" data-i18n="ccore.skip_to_content">Skip to content</a>
+		<div class="backdrop" aria-hidden="true"></div>
+
+		<header class="nav">
+			<a class="nav-brand" href="#top">
+				<img src="../filearchive/icons/ccore-96.webp" width="30" height="30" alt="" />
+				<span>ccore</span>
+			</a>
+			<div class="nav-end">
+				<nav class="nav-links" aria-label="Sections" data-i18n-attr="aria-label:ccore.sections">
+					<a href="#about" data-i18n="ccore.nav_about">About</a>
+					<a href="#commands" data-i18n="ccore.nav_commands">Commands</a>
+					<a href="#status" data-i18n="ccore.status">Status</a>
+				</nav>
+				<div data-i18n-switcher></div>
+			</div>
+		</header>
+
+		<main class="site" id="main">
+			<section class="hero" id="top" aria-label="Bot overview" data-i18n-attr="aria-label:ccore.bot_overview">
+				<div class="hero-main">
 					<!--
-						O Spreadsheet Viewer saiu daqui de proposito. Ele nao tem
-						autenticacao nenhuma e mostra o efetivo do regimento; com o
-						botao nesta pagina publica e indexavel, "so quem tem a URL"
-						passava a ser qualquer visitante. O noindex do proprio viewer
-						impede que ele seja indexado, mas nao impede alguem seguir o
-						link. Continua alcancavel por quem sabe o endereco -- fechar
-						de vez depende do item 6 do INFRA.md (restringir o
-						compartilhamento no Drive e servir por rota autenticada).
+					  ccore esta PAUSADO, nao desativado: o codigo, os dados e a
+					  aplicacao no Discord continuam existindo, so nao ha convite nem
+					  manutencao ativa por enquanto. O selo leva para a secao que
+					  explica isso.
 					-->
-					<a data-i18n="ccore.dashboard" class="button" href="https://dashboard.daeese.me/">Dashboard</a>
-					<a data-i18n="ccore.terms" class="button" href="./termsofservice/">Terms</a>
-					<a data-i18n="ccore.privacy" class="button" href="./privacypolicy/">Privacy</a>
-					<div data-i18n-switcher></div>
+					<a class="status-pill" href="#status">
+						<span class="status-dot" aria-hidden="true"></span>
+						<span data-i18n="ccore.paused_pill">Paused — not disabled</span>
+					</a>
+					<p class="eyebrow" data-i18n="ccore.this_shit_is">This shit is:</p>
+					<div class="title-row">
+						<h1>ccore<span class="dot">.</span></h1>
+						<svg class="app-badge" viewBox="0 0 51 19" role="img" aria-label="Discord app" data-i18n-attr="aria-label:ccore.discord_app">
+							<rect x="0" y="0" width="51" height="19" rx="5" fill="#5865F2"/>
+							<path fill="#ffffff" d="M10.8 13.9 5.9 9l1.5-1.5 3.4 3.4 4.9-4.9 1.5 1.5z"/>
+							<text x="21.9" y="13.4" fill="#ffffff" font-size="10" font-family="Inter, Segoe UI, Arial, sans-serif" font-weight="800" letter-spacing="0.03em">APP</text>
+						</svg>
+					</div>
+					<p class="tagline" data-i18n="ccore.the_lovely_clanker_of_12">The lovely CLANKER of 12° Regimento de Infantaria "Chaves" in NW Rulecy's British Army!</p>
+					<p class="managed-by"><span data-i18n="ccore.the_12_version_of_ba">The 12° version of BA CORE Family bots, managed by</span> <a href="https://daeese.me" target="_blank" rel="noreferrer noopener">@daeese</a>.</p>
+					<p class="subtitle"><span data-i18n="ccore.ccore_is_server_locked">ccore is server-locked and only meant to work for the</span> <a href="https://discord.gg/constantes" target="_blank" rel="noreferrer noopener">CONSTANTES</a> <span data-i18n="ccore.server_it_s_not_a">server. It's not a public multi-server bot.</span></p>
+
+					<ul class="pill-row" aria-label="Highlights" data-i18n-attr="aria-label:ccore.highlights">
+						<li class="pill" data-i18n="ccore.single_server">Single-Server</li>
+						<li class="pill">NW</li>
+						<li class="pill" data-i18n="ccore.regimental_administration_utility">Regimental Administration Utility</li>
+						<li class="pill" data-i18n="ccore.slash_commands">Slash commands</li>
+						<li class="pill">C#</li>
+						<li class="pill">.NET 10</li>
+					</ul>
+
+					<div class="hero-actions">
+						<a class="button primary" href="./status/" data-i18n="ccore.check_status">Check the status page</a>
+						<a class="button" href="#commands" data-i18n="ccore.read_the_docs">Read the commands</a>
+					</div>
 				</div>
-			</header>
 
-			<section data-i18n-attr="aria-label:ccore.bot_overview" class="hero" aria-label="Bot overview">
-				<article class="card intro">
-					<p data-i18n="ccore.this_shit_is" class="eyebrow">This shit is:</p>
-					<h2 class="managed-by"><span data-i18n="ccore.the_12_version_of_ba">The 12° version of BA CORE Family bots, managed by</span> <a data-i18n="ccore.daeese" href="https://daeese.me" target="_blank" rel="noreferrer noopener">@daeese</a>.</h2>
-					<p class="subtitle"><span data-i18n="ccore.ccore_is_server_locked">ccore is server-locked and only meant to work for the</span> <a data-i18n="ccore.constantes" href="https://discord.gg/constantes" target="_blank" rel="noreferrer noopener">CONSTANTES</a> <span data-i18n="ccore.server_it_s_not_a">server. It's not a public multi-server bot.</span></p>
+				<div class="hero-emblem">
+					<img
+						src="../filearchive/icons/ccore-256.webp"
+						width="256"
+						height="256"
+						fetchpriority="high"
+						decoding="async"
+						alt="cornwallCORE profile picture"
+						data-i18n-attr="alt:ccore.cornwallcore_profile_picture"
+					/>
+				</div>
+			</section>
 
-					<div data-i18n-attr="aria-label:ccore.highlights" class="pill-row" aria-label="Highlights">
-						<span data-i18n="ccore.single_server" class="pill">Single-Server</span>
-						<span data-i18n="ccore.nw" class="pill">NW</span>
-						<span data-i18n="ccore.regimental_administration_utility" class="pill">Regimental Administration Utility</span>
-						<span data-i18n="ccore.slash_commands" class="pill">Slash commands</span>
-						<span data-i18n="ccore.c" class="pill">C#</span>
-						<span data-i18n="ccore.net" class="pill">.NET 10</span>
+			<section class="section" id="about" aria-labelledby="aboutTitle">
+				<header class="section-head">
+					<span class="section-num">01</span>
+					<h2 id="aboutTitle" data-i18n="ccore.what_it_does">What it does</h2>
+					<p class="section-lede" data-i18n="ccore.about_lede">The short version.</p>
+				</header>
+				<div class="split">
+					<article class="block">
+						<h3 data-i18n="ccore.its_job">Its job</h3>
+						<p data-i18n="ccore.it_works_for_the_great">It... Works for the GREAT DECAFODEBRECHT, CO of 12° Regt. Infantaria!!!</p>
+						<ul>
+							<li data-i18n="ccore.makes_regimental_administration_easier">Makes Regimental Administration easier</li>
+							<li data-i18n="ccore.disses_chebob_p">Disses chebob :p</li>
+							<li data-i18n="ccore.makes_me_go_crazy">Makes me go crazy 😭</li>
+						</ul>
+					</article>
+					<article class="block">
+						<h3 data-i18n="ccore.server_note">Server note</h3>
+						<p data-i18n="ccore.the_clanker_will_not_work">The clanker will not work outside of it's default server, and there's no invite anyway... Make a fork on github if you'd like to use it on your server!!!</p>
+						<ul>
+							<li>chebob</li>
+							<li data-i18n="ccore.is_the_biggest">is the biggest</li>
+							<li data-i18n="ccore.goon_to_ever_live">goon to ever live</li>
+						</ul>
+					</article>
+				</div>
+			</section>
+
+			<section class="section" id="commands" aria-labelledby="commandsTitle">
+				<header class="section-head">
+					<span class="section-num">02</span>
+					<h2 id="commandsTitle" data-i18n="ccore.nav_commands">Commands</h2>
+					<p class="section-lede" data-i18n="ccore.useful_info_yezz">Useful info? Yezz.</p>
+				</header>
+
+				<!--
+				  Nomes conferidos com os [SlashCommand] do repositorio do bot
+				  (cornwall-discord-application). Os nomes de comando nao levam
+				  data-i18n: sao identificadores, iguais em qualquer idioma.
+				-->
+				<div class="cmd-groups">
+					<div class="cmd-group">
+						<h3 data-i18n="ccore.enlistment_verification">Enlistment & Verification</h3>
+						<ul class="cmd-list">
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/enlistuser</span> <span class="cmd-desc" data-i18n="ccore.enlists_a_user_with_automatic">Enlists a user with automatic ROBLOX verification</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_permission_role_configured">Requires: Permission role configured</li>
+									<li data-i18n="ccore.parameters_user_roblox_username">Parameters: user, ROBLOX username</li>
+									<li data-i18n="ccore.function_anti_alt_verification_role">Function: Anti-ALT verification + role assignment + nickname + log</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/alistar-se</span> <span class="cmd-desc" data-i18n="ccore.self_enlistment_with_interactive_form">Self-enlistment with interactive form</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.specific_channel_required">Specific channel required</li>
+									<li data-i18n="ccore.function_complete_form_automatic_roblox">Function: Complete form + automatic ROBLOX verification</li>
+								</ul>
+							</li>
+						</ul>
 					</div>
-				</article>
 
-				<aside class="card panel">
-					<div data-i18n-attr="aria-label:ccore.bot_profile" class="bot-identity" aria-label="Bot profile">
-								<img data-i18n-attr="alt:ccore.cornwallcore_profile_picture" class="bot-pfp" src="../filearchive/newpfp.png" alt="cornwallCORE profile picture" />
-						<div class="bot-name-row">
-							<p data-i18n="ccore.bot_name" class="bot-name">ccore</p>
-							<svg class="verified-app-icon" viewBox="0 0 51 19" aria-hidden="true" focusable="false">
-								<rect x="0" y="0" width="51" height="19" rx="5" fill="#5865F2"/>
-								<path fill="#ffffff" fill-opacity="0" d="M0 5h16v9H0z"/>
-								<path fill="#ffffff" d="M10.8 13.9 5.9 9l1.5-1.5 3.4 3.4 4.9-4.9 1.5 1.5z"/>
-								<text x="21.9" y="13.4" fill="#ffffff" font-size="10" font-family="Inter, Segoe UI, Arial, sans-serif" font-weight="800" letter-spacing="0.03em">APP</text>
-							</svg>
+					<div class="cmd-group">
+						<h3 data-i18n="ccore.messages_communications">Messages & Communications</h3>
+						<ul class="cmd-list">
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/deployment</span> <span class="cmd-desc" data-i18n="ccore.sends_deployment_message">Sends deployment message</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_permission_role_configured">Requires: Permission role configured</li>
+									<li data-i18n="ccore.parameter_game_code">Parameter: game code</li>
+									<li data-i18n="ccore.function_embed_with_roles_ping">Function: Embed with roles ping + access buttons</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/dmdeployment</span> <span class="cmd-desc" data-i18n="ccore.sends_dm_to_role_user">Sends DM to role/user (with code)</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_permission_role_configured">Requires: Permission role configured</li>
+									<li data-i18n="ccore.parameters_role_user_code_message">Parameters: role/user, code, message</li>
+									<li data-i18n="ccore.limit_500_members_per_execution">Limit: 500 members per execution</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/dmreminder</span> <span class="cmd-desc" data-i18n="ccore.sends_dm_to_role_user_2">Sends DM to role/user (without code)</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_permission_role_configured">Requires: Permission role configured</li>
+									<li data-i18n="ccore.parameters_role_user_message">Parameters: role/user, message</li>
+									<li data-i18n="ccore.limit_500_members_per_execution">Limit: 500 members per execution</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+
+					<div class="cmd-group">
+						<h3 data-i18n="ccore.spreadsheet_information">Spreadsheet & Information</h3>
+						<ul class="cmd-list">
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/checkspreadsheetinfo</span> <span class="cmd-desc" data-i18n="ccore.queries_regimental_spreadsheet_information">Queries regimental spreadsheet information</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.parameter_username_in_spreadsheet">Parameter: username in spreadsheet</li>
+									<li data-i18n="ccore.function_searches_data_in_spreadsheet">Function: Searches data in spreadsheet Roster tab</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+
+					<div class="cmd-group">
+						<h3 data-i18n="ccore.repost_system">Repost System</h3>
+						<ul class="cmd-list">
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/messages</span> <span class="cmd-desc" data-i18n="ccore.checks_message_storage_status">Checks message storage status</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.function_system_statistics_and_progress">Function: System statistics and progress</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/repost</span> <span class="cmd-desc" data-i18n="ccore.reposts_random_stored_message">Reposts random stored message</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_minimum_of_stored_messages">Requires: Minimum of stored messages</li>
+									<li data-i18n="ccore.cooldown_2_hours_after_manual">Cooldown: 2 hours after manual use</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+
+					<div class="cmd-group">
+						<h3 data-i18n="ccore.utilities">Utilities</h3>
+						<ul class="cmd-list">
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/ping</span> <span class="cmd-desc" data-i18n="ccore.tests_bot_latency">Tests bot latency</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.function_returns_response_time_in">Function: Returns response time in ms</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/logs</span> <span class="cmd-desc" data-i18n="ccore.shows_latest_log_lines">Shows the bot's latest log lines</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_staff_role">Requires: Staff role</li>
+									<li data-i18n="ccore.optional_logs_parameters">Optional parameters: amount, level, text filter, private</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+
+					<div class="cmd-group">
+						<h3 data-i18n="ccore.administration_commands">Administration Commands</h3>
+						<ul class="cmd-list">
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">vsfdliliane</span> <span class="cmd-desc" data-i18n="ccore.special_restricted_command">Special restricted command</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_specific_user_id">Requires: Specific user ID</li>
+									<li data-i18n="ccore.function_custom_responses">Function: Custom responses</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="split hood">
+					<article class="block prose">
+						<h3 data-i18n="ccore.configuration">Configuration</h3>
+						<p><span data-i18n="ccore.the_bot_uses_the">The bot uses the</span> <code>config.jsonc</code> <span data-i18n="ccore.file_for_configurations_of">file for configurations of:</span></p>
+						<ul>
+							<li data-i18n="ccore.channel_and_role_ids">Channel and role IDs</li>
+							<li data-i18n="ccore.spreadsheet_urls_and_links">Spreadsheet URLs and links</li>
+							<li data-i18n="ccore.command_permissions">Command permissions</li>
+							<li data-i18n="ccore.custom_messages">Custom messages</li>
+							<li data-i18n="ccore.blocked_terms_list_and_automatic">Blocked terms list and automatic blacklist response</li>
+						</ul>
+						<div class="note">
+							<p><strong data-i18n="ccore.note">Note:</strong> <span data-i18n="ccore.the_bot_now_uses_the">the bot now uses the</span> <code>MessageContent</code> <span data-i18n="ccore.intent_to_read_message_text">intent to read message text and detect blocked terms. This intent also needs to be enabled in the Discord application panel.</span></p>
 						</div>
-					</div>
-					<h2 data-i18n="ccore.quick_action">Quick action</h2>
-					<p data-i18n="ccore.the_button_below_will_invite">
-						The button below will invite the bot to your server, however i must tell you that IT WILL NOT WORK outside of it's main server. I will not look to patch that, this website was made as a showcase not for you to add it to yourself. This invite should be used by Rulecy's BA General Staff only.
-					</p>
-					<div class="actions" style="margin-top: 16px;">
-						<a data-i18n="ccore.add_to_discord" class="button primary" href="https://discord.com/oauth2/authorize?client_id=1482173872848507062&scope=bot%20applications.commands" target="_blank" rel="noreferrer noopener">Add to Discord</a>
-					</div>
-				</aside>
+					</article>
+					<article class="block prose">
+						<h3 data-i18n="ccore.requirements">Requirements</h3>
+						<ul>
+							<li>.NET 10 (LTS)</li>
+							<li>DisCatSharp</li>
+							<li><span data-i18n="ccore.proper_configuration_in">Proper configuration in</span> <code>config.jsonc</code></li>
+							<li data-i18n="ccore.bot_permissions_in_the_discord">Bot permissions in the Discord server</li>
+						</ul>
+					</article>
+				</div>
 			</section>
 
-			<section data-i18n-attr="aria-label:ccore.more_information" class="section-grid" aria-label="More information">
-				<article class="card section">
-					<h2 data-i18n="ccore.what_it_does">What it does</h2>
-					<p data-i18n="ccore.it_works_for_the_great">It... Works for the GREAT DECAFODEBRECHT, CO of 12° Regt. Infantaria!!!</p>
-					<ul>
-						<li data-i18n="ccore.makes_regimental_administration_easier">Makes Regimental Administration easier</li>
-						<li data-i18n="ccore.disses_chebob_p">Disses chebob :p</li>
-						<li data-i18n="ccore.makes_me_go_crazy">Makes me go crazy 😭</li>
-					</ul>
-				</article>
-
-				<article class="card section">
-					<h2 data-i18n="ccore.server_note">Server note</h2>
-					<p data-i18n="ccore.the_clanker_will_not_work">
-						The clanker will not work outside of it's default server, good luck adding it... Make a fork on github if you'd like to use it on your server!!!
-					</p>
-					<ul>
-						<li data-i18n="ccore.chebob">chebob</li>
-						<li data-i18n="ccore.is_the_biggest">is the biggest</li>
-						<li data-i18n="ccore.goon_to_ever_live">goon to ever live</li>
-					</ul>
-				</article>
-
-				<article class="card section full-width">
-					<h2 data-i18n="ccore.ccore_discord_app_documentation">ccore Discord App - Documentation</h2>
-					<p data-i18n="ccore.useful_info_yezz">Useful info? Yezz.</p>
-
-					<h3 data-i18n="ccore.bot_commands">Bot Commands</h3>
-
-					<h3 data-i18n="ccore.enlistment_verification">Enlistment & Verification</h3>
-					<ul>
-						<li><strong>/enlistuser</strong> <span data-i18n="ccore.enlists_a_user_with_automatic">- Enlists a user with automatic ROBLOX verification</span>
-							<ul>
-								<li data-i18n="ccore.requires_permission_role_configured">Requires: Permission role configured</li>
-								<li data-i18n="ccore.parameters_user_roblox_username">Parameters: user, ROBLOX username</li>
-								<li data-i18n="ccore.function_anti_alt_verification_role">Function: Anti-ALT verification + role assignment + nickname + log</li>
-							</ul>
+			<section class="section" id="status" aria-labelledby="statusTitle">
+				<header class="section-head">
+					<span class="section-num">03</span>
+					<h2 id="statusTitle" data-i18n="ccore.status_links">Status & links</h2>
+					<p class="section-lede" data-i18n="ccore.status_lede">Where it stands right now.</p>
+				</header>
+				<div class="split">
+					<article class="prose">
+						<p class="paused-title"><span class="hl" data-i18n="ccore.paused_title_a">Paused.</span> <span data-i18n="ccore.paused_title_b">Not disabled.</span></p>
+						<p data-i18n="ccore.paused_body">ccore is on hold for now. Nothing was deleted: the code, the data and the Discord application are all still there - the clanker is just taking a nap, and it can come back whenever the regiment needs it again.</p>
+						<p data-i18n="ccore.paused_invite">That's also why there's no invite button anymore. It never worked outside CONSTANTES anyway, so nobody's missing much.</p>
+						<p data-i18n="ccore.paused_status_hint">Want to know if it's breathing? The public status page shows uptime and latency, no login needed.</p>
+					</article>
+					<ul class="link-index">
+						<li>
+							<a class="link-row" href="./status/">
+								<span><strong data-i18n="ccore.status_page">Status page</strong><small data-i18n="ccore.status_page_desc">Uptime, latency, servers and members. Public.</small></span>
+								<span class="arrow" aria-hidden="true">&rarr;</span>
+							</a>
 						</li>
-						<li><strong>/alistar-se</strong> <span data-i18n="ccore.self_enlistment_with_interactive_form">- Self-enlistment with interactive form</span>
-							<ul>
-								<li data-i18n="ccore.specific_channel_required">Specific channel required</li>
-								<li data-i18n="ccore.function_complete_form_automatic_roblox">Function: Complete form + automatic ROBLOX verification</li>
-							</ul>
+						<li>
+							<a class="link-row" href="https://dashboard.daeese.me/">
+								<span><strong data-i18n="ccore.dashboard">Dashboard</strong><small data-i18n="ccore.dashboard_desc">Regiment staff only.</small></span>
+								<span class="arrow" aria-hidden="true">&rarr;</span>
+							</a>
 						</li>
-					</ul>
-
-					<h3 data-i18n="ccore.spreadsheet_information">Spreadsheet & Information</h3>
-					<ul>
-						<li><strong>/checkspreadsheetinfo</strong> <span data-i18n="ccore.queries_regimental_spreadsheet_information">- Queries regimental spreadsheet information</span>
-							<ul>
-								<li data-i18n="ccore.parameter_username_in_spreadsheet">Parameter: username in spreadsheet</li>
-								<li data-i18n="ccore.function_searches_data_in_spreadsheet">Function: Searches data in spreadsheet Roster tab</li>
-							</ul>
+						<li>
+							<a class="link-row" href="./termsofservice/">
+								<span><strong data-i18n="ccore.terms_of_service">Terms of Service</strong><small data-i18n="ccore.terms_desc">The rules of the clanker.</small></span>
+								<span class="arrow" aria-hidden="true">&rarr;</span>
+							</a>
+						</li>
+						<li>
+							<a class="link-row" href="./privacypolicy/">
+								<span><strong data-i18n="ccore.privacy_policy">Privacy Policy</strong><small data-i18n="ccore.privacy_desc">What it stores, and why.</small></span>
+								<span class="arrow" aria-hidden="true">&rarr;</span>
+							</a>
+						</li>
+						<li>
+							<!-- O Sollarety saiu de cornwallcore/fun/ e agora mora em apps.daeese.me. -->
+							<a class="link-row" href="https://apps.daeese.me/sollarety/">
+								<span><strong>Sollarety</strong><small data-i18n="ccore.sollarety_desc">The other bot, now living at apps.daeese.me.</small></span>
+								<span class="arrow" aria-hidden="true">&rarr;</span>
+							</a>
 						</li>
 					</ul>
-
-					<h3 data-i18n="ccore.messages_communications">Messages & Communications</h3>
-					<ul>
-						<li><strong>/deployment</strong> <span data-i18n="ccore.sends_deployment_message">- Sends deployment message</span>
-							<ul>
-								<li data-i18n="ccore.requires_permission_role_configured">Requires: Permission role configured</li>
-								<li data-i18n="ccore.parameter_game_code">Parameter: game code</li>
-								<li data-i18n="ccore.function_embed_with_roles_ping">Function: Embed with roles ping + access buttons</li>
-							</ul>
-						</li>
-						<li><strong>/dmrole</strong> <span data-i18n="ccore.sends_dm_to_role_user">- Sends DM to role/user (with code)</span>
-							<ul>
-								<li data-i18n="ccore.requires_permission_role_configured">Requires: Permission role configured</li>
-								<li data-i18n="ccore.parameters_role_user_code_message">Parameters: role/user, code, message</li>
-								<li data-i18n="ccore.limit_500_members_per_execution">Limit: 500 members per execution</li>
-							</ul>
-						</li>
-						<li><strong>/dmrolemsg</strong> <span data-i18n="ccore.sends_dm_to_role_user_2">- Sends DM to role/user (without code)</span>
-							<ul>
-								<li data-i18n="ccore.requires_permission_role_configured">Requires: Permission role configured</li>
-								<li data-i18n="ccore.parameters_role_user_message">Parameters: role/user, message</li>
-								<li data-i18n="ccore.limit_500_members_per_execution">Limit: 500 members per execution</li>
-							</ul>
-						</li>
-					</ul>
-
-					<h3 data-i18n="ccore.repost_system">Repost System</h3>
-					<ul>
-						<li><strong>/messages</strong> <span data-i18n="ccore.checks_message_storage_status">- Checks message storage status</span>
-							<ul>
-								<li data-i18n="ccore.function_system_statistics_and_progress">Function: System statistics and progress</li>
-							</ul>
-						</li>
-						<li><strong>/repost</strong> <span data-i18n="ccore.reposts_random_stored_message">- Reposts random stored message</span>
-							<ul>
-								<li data-i18n="ccore.requires_minimum_of_stored_messages">Requires: Minimum of stored messages</li>
-								<li data-i18n="ccore.cooldown_2_hours_after_manual">Cooldown: 2 hours after manual use</li>
-							</ul>
-						</li>
-					</ul>
-
-					<h3 data-i18n="ccore.utilities">Utilities</h3>
-					<ul>
-						<li><strong>/ping</strong> <span data-i18n="ccore.tests_bot_latency">- Tests bot latency</span>
-							<ul>
-								<li data-i18n="ccore.function_returns_response_time_in">Function: Returns response time in ms</li>
-							</ul>
-						</li>
-					</ul>
-
-					<h3 data-i18n="ccore.administration_commands">Administration Commands</h3>
-					<ul>
-						<li><strong data-i18n="ccore.vsfdliliane">vsfdliliane</strong> <span data-i18n="ccore.special_restricted_command">- Special restricted command</span>
-							<ul>
-								<li data-i18n="ccore.requires_specific_user_id">Requires: Specific user ID</li>
-								<li data-i18n="ccore.function_custom_responses">Function: Custom responses</li>
-							</ul>
-						</li>
-					</ul>
-
-					<h3 data-i18n="ccore.configuration">Configuration</h3>
-					<p><span data-i18n="ccore.the_bot_uses_the">The bot uses the</span> <code>config.jsonc</code> <span data-i18n="ccore.file_for_configurations_of">file for configurations of:</span></p>
-					<ul>
-						<li data-i18n="ccore.channel_and_role_ids">Channel and role IDs</li>
-						<li data-i18n="ccore.spreadsheet_urls_and_links">Spreadsheet URLs and links</li>
-						<li data-i18n="ccore.command_permissions">Command permissions</li>
-						<li data-i18n="ccore.custom_messages">Custom messages</li>
-						<li data-i18n="ccore.blocked_terms_list_and_automatic">Blocked terms list and automatic blacklist response</li>
-					</ul>
-					<p><strong data-i18n="ccore.note">Note:</strong> <span data-i18n="ccore.the_bot_now_uses_the">the bot now uses the</span> <code>MessageContent</code> <span data-i18n="ccore.intent_to_read_message_text">intent to read message text and detect blocked terms. This intent also needs to be enabled in the Discord application panel.</span></p>
-
-					<h3 data-i18n="ccore.requirements">Requirements</h3>
-					<ul>
-						<li data-i18n="ccore.net_10">.NET 10 (LTS)</li>
-						<li data-i18n="ccore.discatsharp">DisCatSharp</li>
-						<li><span data-i18n="ccore.proper_configuration_in">Proper configuration in</span> <code>config.jsonc</code></li>
-						<li data-i18n="ccore.bot_permissions_in_the_discord">Bot permissions in the Discord server</li>
-					</ul>
-				</article>
+				</div>
 			</section>
 
-			<p data-i18n="ccore.ccore_shit_ass_showcase_p" class="footer">ccore shit ass showcase :p</p>
+			<footer class="footer">
+				<p data-i18n="ccore.ccore_shit_ass_showcase_p">ccore shit ass showcase :p</p>
+				<div class="footer-links">
+					<a href="https://daeese.me/">daeese.me</a>
+					<a href="#top" data-i18n="ccore.back_to_top">Back to top ↑</a>
+				</div>
+			</footer>
 		</main>
-			<!--
+		<!--
 		  Seletor de idioma. O ingles fica no proprio HTML; o modulo carrega so o
 		  dicionario de portugues, entao a pagina continua completa e indexavel
 		  sem JavaScript.

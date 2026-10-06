@@ -1065,6 +1065,13 @@ O `off` devolve o `security_level` que estava antes.
    Sollarety (`1403153848507301939`) → OAuth2 → Redirects precisam estar, caractere a caractere:
    `https://daeese.me/oauth/fun/callback`, `https://ccore.daeese.me/fun/invite/` e, para a
    verificação Roblox, `https://daeese.me/oauth/roblox/discord`.
+   **Desde 06/10/2026 o Sollarety mora em `apps.daeese.me/sollarety/`.** A página de convite
+   continua mandando `https://ccore.daeese.me/fun/invite/` como `redirect_uri` (é o que está
+   cadastrado) e o `site-router-worker` faz o 301 para o endereço novo mantendo a query. Para
+   aposentar o antigo: cadastrar `https://apps.daeese.me/sollarety/invite/` em OAuth2 → Redirects,
+   trocar `INVITE_RETURN` em `apps/sollarety/invite/index.html` e, em General Information, as URLs
+   de Terms of Service e Privacy Policy para `https://apps.daeese.me/sollarety/termsofservice/` e
+   `.../privacypolicy/` (as antigas seguem funcionando pelo 301).
 9. **Ligar a verificação Roblox** (seção 15): registrar o app OAuth no Creator Hub do Roblox
    (exige conta com ID verificado; redirect `https://daeese.me/oauth/roblox/callback`), pôr o
    Client ID em `ROBLOX_CLIENT_ID` no `wrangler.toml`, pôr os quatro secrets do Worker

@@ -17,7 +17,15 @@ custom_domain = true
 pattern = "dashboard.daeese.me"
 custom_domain = true
 
+[[routes]]
+pattern = "apps.daeese.me"
+custom_domain = true
+
 # Caminhos antigos: o Worker responde 301 para o subdominio equivalente.
 [[routes]]
 pattern = "daeese.me/cornwallcore/*"
+zone_name = "daeese.me"
+
+[[routes]]
+pattern = "daeese.me/apps/*"
 zone_name = "daeese.me"

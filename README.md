@@ -13,7 +13,7 @@ frente (proxy + rota `/api/*`).
 | `cornwallcore/termsofservice/`, `cornwallcore/privacypolicy/` | Termos de Serviço e Política de Privacidade vigentes do app no Discord. |
 | `cornwallcore/administration/dashboard/` | Painel administrativo do bot, em abas (Moderação, Auditoria, Comunicações, Alistamento, Logs). Fala com a API do bot em `/api/*`. **Acesso restrito** — `noindex`. |
 | `cornwallcore/administration/spreadsheetviewer/` | Leitor da planilha regimental (Google Sheets via `gviz`). **`noindex`** — veja o aviso abaixo. |
-| `cornwallcore/fun/` | Sollarety: página do bot, convite por OAuth2 e as políticas dele. A verificação Roblox do bot passa pelo `cloudflare/roblox-verify-worker`. |
+| `apps/` | Showcase de projetos em `apps.daeese.me`: `apps/illogicalwindows/` (ii-windows) e `apps/sollarety/` (Sollarety: página do bot, convite por OAuth2 e as políticas dele — mudou de `cornwallcore/fun/`, que só continua existindo como redirect 301. A verificação Roblox do bot passa pelo `cloudflare/roblox-verify-worker`). |
 | `gabfirmino/` | "Meias UwU" — página de estudo em HTML/CSS. |
 | `cloudflare/` | Os quatro Workers (proxy da API, roteador de subdomínios, OAuth do convite do Sollarety e verificação Roblox do Sollarety), o script de deploy e o guia de setup do tunnel. |
 | `cloudflare/zone-security/` | Regras de borda da zona (rate limit do WAF, regras custom, cache do site estático) aplicadas pela API da Cloudflare. Ver [INFRA.md, seção 16](INFRA.md#16-proteção-contra-ddos-rate-limit-e-tetos-de-requisição-29092026). |

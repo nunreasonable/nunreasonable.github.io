@@ -2,14 +2,18 @@
 //
 // O GitHub Pages serve um unico dominio custom por repositorio (o CNAME contem
 // daeese.me), entao os subdominios nao podem sair do Pages diretamente. Este
-// Worker fica na frente e faz duas coisas:
+// Worker fica na frente e faz tres coisas:
 //
 //   1. Nos subdominios, mapeia o caminho para o prefixo correspondente dentro
 //      do site e devolve o conteudo de forma transparente (a URL na barra
 //      continua sendo o subdominio).
-//   2. Em daeese.me/cornwallcore/*, devolve 301 para o subdominio equivalente,
-//      para nenhum link antigo quebrar - inclusive os de ToS e Privacidade
-//      registrados no Discord Developer Portal.
+//   2. Em daeese.me/cornwallcore/* e daeese.me/apps/*, devolve 301 para o
+//      subdominio equivalente, para nenhum link antigo quebrar - inclusive os
+//      de ToS e Privacidade registrados no Discord Developer Portal.
+//   3. Pastas que mudaram de subdominio (ex.: o Sollarety, que saiu de
+//      ccore.daeese.me/fun para apps.daeese.me/sollarety) continuam
+//      respondendo no endereco antigo, com 301 definitivo para o novo -
+//      MOVED_PREFIXES, mais abaixo.
 
 const ORIGIN = "https://daeese.me";
 const ORIGIN_HOST = "daeese.me";
@@ -17,8 +21,44 @@ const ORIGIN_HOST = "daeese.me";
 const SITES = {
   "ccore.daeese.me": "/cornwallcore",
   "spreadsheet.daeese.me": "/cornwallcore/administration/spreadsheetviewer",
-  "dashboard.daeese.me": "/cornwallcore/administration/dashboard"
+  "dashboard.daeese.me": "/cornwallcore/administration/dashboard",
+  "apps.daeese.me": "/apps"
 };
+
+// Raiz exata ("/") de um subdominio que nao tem pagina propria - em vez de
+// tentar servir /apps/index.html (que nao existe), redireciona para a secao
+// do portfolio que fala dos projetos. 302 porque o destino pode mudar (hoje e
+// a aba #work da home; nao tem motivo para um buscador fixar isto para
+// sempre).
+const SUBDOMAIN_ROOT_REDIRECTS = {
+  "apps.daeese.me": "https://daeese.me/#work"
+};
+
+// Pastas que mudaram de subdominio. Cada entrada e [host antigo, prefixo
+// antigo NESSE host, base nova completa]. Diferente de REDIRECTS (que so vale
+// na origem daeese.me), isto roda DENTRO do bloco de um subdominio e por isso
+// precisa ser checado antes de resolveOriginPath - senao "ccore.daeese.me/fun"
+// resolveria para "/cornwallcore/fun", que nao existe mais, e devolveria 404
+// em vez do 301 que o link antigo (inclusive o do Discord Developer Portal)
+// precisa.
+const MOVED_PREFIXES = [
+  ["ccore.daeese.me", "/fun", "https://apps.daeese.me/sollarety"]
+];
+
+function findMovedRedirect(hostname, pathname) {
+  for (const [host, prefix, target] of MOVED_PREFIXES) {
+    if (host !== hostname) {
+      continue;
+    }
+
+    if (pathname === prefix || pathname.startsWith(`${prefix}/`)) {
+      const rest = pathname.slice(prefix.length);
+      return `${target}${rest || "/"}`;
+    }
+  }
+
+  return null;
+}
 
 // Assets compartilhados vivem na raiz do site e nao podem receber o prefixo do
 // subdominio. As paginas os referenciam por caminho relativo ("../filearchive/..."),
@@ -31,7 +71,8 @@ const SHARED_PREFIXES = ["/filearchive/"];
 const REDIRECTS = [
   ["/cornwallcore/administration/spreadsheetviewer", "https://spreadsheet.daeese.me"],
   ["/cornwallcore/administration/dashboard", "https://dashboard.daeese.me"],
-  ["/cornwallcore", "https://ccore.daeese.me"]
+  ["/cornwallcore", "https://ccore.daeese.me"],
+  ["/apps", "https://apps.daeese.me"]
 ];
 
 // Marca as subrequisicoes deste Worker. Se ele buscasse o conteudo em
@@ -127,29 +168,41 @@ function buildRobotsTxt(hostname) {
     return "User-agent: *\nAllow: /\n";
   }
 
-  return "User-agent: *\nAllow: /\n\nSitemap: https://ccore.daeese.me/sitemap.xml\n";
+  // O sitemap e sempre o do PROPRIO host (ccore ou apps) - cada um serve so o
+  // seu, ver buildCcoreSitemap/buildAppsSitemap mais abaixo.
+  return `User-agent: *\nAllow: /\n\nSitemap: https://${hostname}/sitemap.xml\n`;
 }
 
-function buildCcoreSitemap() {
-  const urls = [
-    "https://ccore.daeese.me/",
-    "https://ccore.daeese.me/status/",
-    "https://ccore.daeese.me/termsofservice/",
-    "https://ccore.daeese.me/privacypolicy/",
-    // Sollarety, o bot de moderacao/diversao: aplicacao separada do ccore,
-    // hospedada no mesmo site.
-    "https://ccore.daeese.me/fun/",
-    "https://ccore.daeese.me/fun/termsofservice/",
-    "https://ccore.daeese.me/fun/privacypolicy/",
-    "https://ccore.daeese.me/fun/invite/"
-  ];
-
+function buildSitemap(urls) {
   return (
     '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
     urls.map((loc) => `  <url>\n    <loc>${loc}</loc>\n  </url>\n`).join("") +
     "</urlset>\n"
   );
+}
+
+function buildCcoreSitemap() {
+  // O Sollarety saiu daqui para apps.daeese.me/sollarety (ver MOVED_PREFIXES);
+  // as paginas dele agora entram no sitemap de apps.daeese.me, nao neste.
+  return buildSitemap([
+    "https://ccore.daeese.me/",
+    "https://ccore.daeese.me/status/",
+    "https://ccore.daeese.me/termsofservice/",
+    "https://ccore.daeese.me/privacypolicy/"
+  ]);
+}
+
+function buildAppsSitemap() {
+  return buildSitemap([
+    "https://apps.daeese.me/illogicalwindows/",
+    // Sollarety, o bot de moderacao/diversao: mudou de ccore.daeese.me/fun
+    // para aqui, mas continua sendo uma aplicacao separada do ccore.
+    "https://apps.daeese.me/sollarety/",
+    "https://apps.daeese.me/sollarety/termsofservice/",
+    "https://apps.daeese.me/sollarety/privacypolicy/",
+    "https://apps.daeese.me/sollarety/invite/"
+  ]);
 }
 
 function findRedirect(pathname) {
@@ -270,17 +323,41 @@ export default {
       return fetch(request);
     }
 
-    // 2. Subdominio: respostas sinteticas por host antes de ir a origem.
+    // 2. Subdominio: pastas que mudaram de endereco ganham 301 definitivo
+    // ANTES de qualquer outra coisa - tem que vencer o mapeamento de prefixo
+    // (ccore.daeese.me/fun nao pode cair em /cornwallcore/fun, que nao existe
+    // mais) e nao faz sentido sintetizar robots/sitemap para um caminho que
+    // so existe para redirecionar.
+    const moved = findMovedRedirect(hostname, url.pathname);
+    if (moved) {
+      return Response.redirect(`${moved}${url.search}`, 301);
+    }
+
+    // 2b. Raiz de um subdominio sem pagina propria (hoje so apps.daeese.me) ->
+    // 302 para onde a pagina equivalente mora.
+    if (url.pathname === "/" && hostname in SUBDOMAIN_ROOT_REDIRECTS) {
+      return Response.redirect(SUBDOMAIN_ROOT_REDIRECTS[hostname], 302);
+    }
+
+    // 2c. Respostas sinteticas por host antes de ir a origem.
     if (url.pathname === "/robots.txt") {
       return new Response(buildRobotsTxt(hostname), {
         headers: { "Content-Type": "text/plain; charset=utf-8" }
       });
     }
 
-    if (url.pathname === "/sitemap.xml" && hostname === "ccore.daeese.me") {
-      return new Response(buildCcoreSitemap(), {
-        headers: { "Content-Type": "application/xml; charset=utf-8" }
-      });
+    if (url.pathname === "/sitemap.xml") {
+      if (hostname === "ccore.daeese.me") {
+        return new Response(buildCcoreSitemap(), {
+          headers: { "Content-Type": "application/xml; charset=utf-8" }
+        });
+      }
+
+      if (hostname === "apps.daeese.me") {
+        return new Response(buildAppsSitemap(), {
+          headers: { "Content-Type": "application/xml; charset=utf-8" }
+        });
+      }
     }
 
     // 3. Busca o conteudo real no Pages.
@@ -298,6 +375,36 @@ export default {
     outgoing.headers.set(LOOP_GUARD_HEADER, guard);
 
     const upstream = await fetch(outgoing, { redirect: "manual" });
+
+    // Barra final: pedir apps.daeese.me/illogicalwindows (sem "/") faz o GitHub
+    // Pages responder 301 para https://daeese.me/apps/illogicalwindows/ - a URL
+    // da ORIGEM. Funcionava, mas em dois saltos (origem -> 301 deste Worker de
+    // volta ao subdominio) e mostrando o endereco interno no meio. Aqui o
+    // Location que aponta para dentro do prefixo deste host e reescrito direto
+    // para o subdominio.
+    const prefix = SITES[hostname];
+    const location = upstream.headers.get("location");
+    if (prefix && location && upstream.status >= 300 && upstream.status < 400) {
+      let target = null;
+      try {
+        target = new URL(location, originUrl);
+      } catch {
+        target = null;
+      }
+
+      if (
+        target &&
+        target.hostname === ORIGIN_HOST &&
+        (target.pathname === prefix || target.pathname.startsWith(`${prefix}/`))
+      ) {
+        const rewritten = new Response(upstream.body, upstream);
+        rewritten.headers.set(
+          "location",
+          `https://${hostname}${target.pathname.slice(prefix.length) || "/"}${target.search}`
+        );
+        return applyHostHeaders(rewritten, hostname, url.pathname);
+      }
+    }
 
     // A origem e um detalhe de implementacao e nao vaza para o cliente; e o
     // noindex vale para qualquer resposta do host, inclusive as que nao sao

@@ -1,0 +1,1960 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>II for Windows</title>
+		<meta
+			name="description"
+			content="II for Windows (codename Illogical Windows): an unofficial port of end-4's illogical-impulse Quickshell desktop to Windows 11 and Windows 10. Free, open source, experimental."
+		/>
+		<link rel="canonical" href="https://apps.daeese.me/illogicalwindows/" />
+		<meta name="color-scheme" content="light dark" />
+		<meta name="theme-color" content="#f7f8fa" media="(prefers-color-scheme: light)" />
+		<meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)" />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="daeese.me" />
+		<meta property="og:title" content="II for Windows" />
+		<meta property="og:description" content="end-4's illogical-impulse desktop, running natively on Windows 11 and Windows 10. Unofficial, free and open source." />
+		<meta property="og:url" content="https://apps.daeese.me/illogicalwindows/" />
+		<meta property="og:image" content="https://daeese.me/filearchive/projects/ii-windows/cover.webp" />
+		<meta property="og:image:width" content="760" />
+		<meta property="og:image:height" content="428" />
+		<meta property="og:image:alt" content="A Windows desktop running the illogical-impulse bar and sidebars" />
+		<meta property="og:locale" content="en_US" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="II for Windows" />
+		<meta name="twitter:description" content="end-4's illogical-impulse desktop, running natively on Windows 11 and Windows 10. Unofficial, free and open source." />
+		<meta name="twitter:image" content="https://daeese.me/filearchive/projects/ii-windows/cover.webp" />
+
+		<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png" />
+		<link rel="icon" type="image/png" sizes="180x180" href="assets/icon-180.png" />
+		<link rel="apple-touch-icon" href="assets/icon-180.png" />
+
+		<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
+
+		<script>
+			/*
+			 * Roda antes do primeiro paint: troca no-js por js e decide qual dos
+			 * dois publicos (iniciante/avancado) aparece. Feito aqui, e nao no
+			 * fim do body, para a outra aba nunca piscar na tela antes de sumir.
+			 * Ordem: #ancora na URL > escolha salva > iniciante.
+			 */
+			(function () {
+				var d = document.documentElement;
+				d.classList.remove("no-js");
+				d.classList.add("js");
+				var aud = null;
+				var h = location.hash.slice(1);
+				if (h === "beginner" || h === "advanced") aud = h;
+				if (!aud) {
+					try {
+						var s = localStorage.getItem("iw:audience");
+						if (s === "beginner" || s === "advanced") aud = s;
+					} catch (e) {
+						// localStorage lanca em modo privado com cookies bloqueados.
+					}
+				}
+				d.setAttribute("data-aud", aud || "beginner");
+			})();
+		</script>
+
+		<style>
+			/*
+			 * Vitrine do II for Windows. Mistura de proposito: superficies e cantos
+			 * do Fluent (cartoes claros, tinta leve tipo acrilico) com o ritmo das
+			 * paginas de produto da Apple (titulo grande, muito respiro, uma imagem
+			 * forte). Nada imita marca de ninguem.
+			 *
+			 * Regras de desempenho do site (monitor de 200 Hz + GPU integrada):
+			 * nada de backdrop-filter, filter ou box-shadow animado, nem camada
+			 * gigante animando. As unicas transicoes sao de transform, opacity e
+			 * cor, e somem com prefers-reduced-motion.
+			 */
+			:root {
+				color-scheme: light dark;
+				--bg: #f7f8fa;
+				--bg-alt: #eef1f4;
+				--surface: #ffffff;
+				--surface-tint: #f1f9f6;
+				--line: rgba(16, 24, 32, 0.1);
+				--line-strong: rgba(16, 24, 32, 0.18);
+				--text: #14171c;
+				--muted: #5a626e;
+				--accent: #3ddbb0;
+				--accent-ink: #0b7d64;
+				--accent-soft: rgba(61, 219, 176, 0.14);
+				--on-accent: #032a20;
+				--header-bg: rgba(247, 248, 250, 0.94);
+				--shadow: 0 1px 2px rgba(16, 24, 32, 0.05), 0 10px 30px rgba(16, 24, 32, 0.07);
+				--shadow-lg: 0 2px 6px rgba(16, 24, 32, 0.06), 0 30px 70px rgba(16, 24, 32, 0.14);
+				--radius: 14px;
+				--radius-sm: 8px;
+				--wrap: 1120px;
+				--gutter: clamp(16px, 4vw, 32px);
+				--ease: cubic-bezier(0.22, 1, 0.36, 1);
+				--font: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont,
+					"Helvetica Neue", Arial, sans-serif;
+				--font-display: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system,
+					BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+				--font-mono: "Cascadia Code", "Cascadia Mono", Consolas, ui-monospace, "SF Mono", Menlo, monospace;
+			}
+
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--bg: #0e1013;
+					--bg-alt: #13161a;
+					--surface: #171a1f;
+					--surface-tint: #142420;
+					--line: rgba(255, 255, 255, 0.08);
+					--line-strong: rgba(255, 255, 255, 0.16);
+					--text: #eceff3;
+					--muted: #9ba4af;
+					--accent: #4fd8b5;
+					--accent-ink: #5fe0bf;
+					--accent-soft: rgba(79, 216, 181, 0.12);
+					--on-accent: #04261d;
+					--header-bg: rgba(14, 16, 19, 0.94);
+					--shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.3);
+					--shadow-lg: 0 2px 6px rgba(0, 0, 0, 0.35), 0 30px 70px rgba(0, 0, 0, 0.5);
+				}
+			}
+
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+			}
+
+			html {
+				-webkit-text-size-adjust: 100%;
+				text-size-adjust: 100%;
+			}
+
+			@media (prefers-reduced-motion: no-preference) {
+				html {
+					scroll-behavior: smooth;
+				}
+			}
+
+			body {
+				margin: 0;
+				background: var(--bg);
+				color: var(--text);
+				font-family: var(--font);
+				font-size: 1.0625rem;
+				line-height: 1.6;
+				-webkit-font-smoothing: antialiased;
+				overflow-x: hidden;
+			}
+
+			/* Caminhos do Windows (%LOCALAPPDATA%\...) e nomes de API longos nao
+			   podem empurrar a pagina para os lados no celular. */
+			p,
+			li,
+			td,
+			th,
+			figcaption,
+			dd {
+				overflow-wrap: anywhere;
+			}
+
+			img {
+				max-width: 100%;
+				height: auto;
+				display: block;
+			}
+
+			a {
+				color: var(--accent-ink);
+				text-underline-offset: 3px;
+				text-decoration-thickness: 1px;
+			}
+
+			a:hover {
+				text-decoration-thickness: 2px;
+			}
+
+			:focus-visible {
+				outline: 2px solid var(--accent-ink);
+				outline-offset: 3px;
+				border-radius: 4px;
+			}
+
+			h1,
+			h2,
+			h3,
+			h4 {
+				font-family: var(--font-display);
+				line-height: 1.15;
+				letter-spacing: -0.015em;
+				margin: 0;
+			}
+
+			code,
+			kbd,
+			.api {
+				font-family: var(--font-mono);
+				font-size: 0.86em;
+			}
+
+			code {
+				padding: 0.08em 0.36em;
+				border-radius: 5px;
+				background: var(--accent-soft);
+			}
+
+			.wrap {
+				width: 100%;
+				max-width: var(--wrap);
+				margin-inline: auto;
+				padding-inline: var(--gutter);
+			}
+
+			.skip {
+				position: absolute;
+				left: 12px;
+				top: -60px;
+				z-index: 100;
+				padding: 8px 14px;
+				border-radius: var(--radius-sm);
+				background: var(--surface);
+				color: var(--text);
+			}
+
+			.skip:focus {
+				top: 12px;
+			}
+
+			/* ---------- Cabecalho ---------- */
+
+			/* Fundo quase opaco SEM backdrop-filter: o conteudo rola por baixo, e
+			   blur sobre algo em movimento e exatamente o que derrubava o fps. */
+			.site-header {
+				position: sticky;
+				top: 0;
+				z-index: 40;
+				background: var(--header-bg);
+				border-bottom: 1px solid var(--line);
+			}
+
+			.header-inner {
+				display: flex;
+				align-items: center;
+				gap: 20px;
+				min-height: 56px;
+			}
+
+			.brand {
+				display: inline-flex;
+				align-items: center;
+				gap: 10px;
+				color: var(--text);
+				text-decoration: none;
+				font-weight: 600;
+				font-size: 0.98rem;
+				white-space: nowrap;
+			}
+
+			.brand img {
+				width: 28px;
+				height: 28px;
+			}
+
+			.nav {
+				display: flex;
+				gap: 4px;
+				margin-left: auto;
+			}
+
+			.nav a {
+				padding: 6px 10px;
+				border-radius: 6px;
+				color: var(--muted);
+				text-decoration: none;
+				font-size: 0.9rem;
+				transition: color 120ms ease, background-color 120ms ease;
+			}
+
+			.nav a:hover {
+				color: var(--text);
+				background: var(--accent-soft);
+			}
+
+			.site-header [data-i18n-switcher] {
+				color: var(--text);
+				flex: none;
+			}
+
+			@media (max-width: 820px) {
+				.nav {
+					display: none;
+				}
+
+				.site-header [data-i18n-switcher] {
+					margin-left: auto;
+				}
+			}
+
+			/* ---------- Hero ---------- */
+
+			/* Gradiente estatico, so dentro do hero: nada anima e nada repete em
+			   ladrilho, entao nao custa nada depois do primeiro paint. */
+			.hero {
+				padding-top: clamp(48px, 9vw, 104px);
+				background: radial-gradient(70% 55% at 50% 0%, var(--accent-soft), transparent 70%);
+				text-align: center;
+			}
+
+			.hero-icon {
+				width: 84px;
+				height: 84px;
+				margin: 0 auto 22px;
+			}
+
+			.eyebrow {
+				display: inline-block;
+				margin: 0 0 18px;
+				padding: 5px 12px;
+				border: 1px solid var(--line-strong);
+				border-radius: 999px;
+				background: var(--surface);
+				color: var(--muted);
+				font-size: 0.82rem;
+				font-weight: 600;
+				letter-spacing: 0.02em;
+			}
+
+			.hero h1 {
+				font-size: clamp(2.6rem, 8vw, 5rem);
+				font-weight: 650;
+				letter-spacing: -0.03em;
+			}
+
+			.codename {
+				margin: 10px 0 0;
+				color: var(--muted);
+				font-size: clamp(1rem, 2.2vw, 1.2rem);
+			}
+
+			.pitch {
+				max-width: 34ch;
+				margin: 22px auto 0;
+				font-family: var(--font-display);
+				font-size: clamp(1.3rem, 3.2vw, 1.85rem);
+				line-height: 1.3;
+				font-weight: 500;
+				letter-spacing: -0.01em;
+			}
+
+			.cta {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				gap: 12px;
+				margin-top: 32px;
+			}
+
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				min-height: 46px;
+				padding: 10px 24px;
+				border-radius: 999px;
+				font-weight: 600;
+				font-size: 1rem;
+				text-decoration: none;
+				transition: transform 140ms var(--ease), background-color 140ms ease, border-color 140ms ease;
+			}
+
+			.btn:hover {
+				text-decoration: none;
+				transform: translateY(-1px);
+			}
+
+			.btn:active {
+				transform: translateY(0);
+			}
+
+			.btn-primary {
+				background: var(--accent);
+				color: var(--on-accent);
+				border: 1px solid transparent;
+			}
+
+			.btn-primary:hover {
+				background: color-mix(in srgb, var(--accent) 88%, var(--text));
+			}
+
+			.btn-secondary {
+				background: var(--surface);
+				color: var(--text);
+				border: 1px solid var(--line-strong);
+			}
+
+			.btn-secondary:hover {
+				border-color: var(--accent-ink);
+			}
+
+			.facts {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				gap: 8px 22px;
+				margin: 26px auto 0;
+				padding: 0;
+				list-style: none;
+				color: var(--muted);
+				font-size: 0.92rem;
+			}
+
+			.facts strong {
+				color: var(--text);
+				font-weight: 600;
+			}
+
+			.hero-note {
+				max-width: 62ch;
+				margin: 12px auto 0;
+				color: var(--muted);
+				font-size: 0.86rem;
+			}
+
+			.hero-shot {
+				margin-top: clamp(40px, 7vw, 72px);
+				margin-bottom: 0;
+			}
+
+			.hero-shot a {
+				display: block;
+				border-radius: var(--radius);
+				overflow: hidden;
+				border: 1px solid var(--line);
+				box-shadow: var(--shadow-lg);
+			}
+
+			.hero-shot figcaption {
+				margin-top: 14px;
+				color: var(--muted);
+				font-size: 0.88rem;
+			}
+
+			/* ---------- Secoes ---------- */
+
+			.section {
+				padding-block: clamp(64px, 10vw, 112px);
+				scroll-margin-top: 56px;
+			}
+
+			.section.alt {
+				background: var(--bg-alt);
+			}
+
+			.section-head {
+				max-width: 720px;
+				margin: 0 auto clamp(32px, 5vw, 52px);
+				text-align: center;
+			}
+
+			.section-head h2 {
+				font-size: clamp(1.9rem, 4.6vw, 3rem);
+				font-weight: 650;
+				letter-spacing: -0.025em;
+			}
+
+			.section-head p {
+				margin: 14px 0 0;
+				color: var(--muted);
+				font-size: clamp(1.02rem, 2vw, 1.18rem);
+			}
+
+			.card {
+				padding: clamp(20px, 3vw, 28px);
+				border: 1px solid var(--line);
+				border-radius: var(--radius);
+				background: linear-gradient(180deg, var(--surface-tint), var(--surface) 140px);
+				box-shadow: var(--shadow);
+			}
+
+			.card h3,
+			.card h4 {
+				font-size: 1.15rem;
+				font-weight: 600;
+			}
+
+			.card p {
+				margin: 10px 0 0;
+				color: var(--muted);
+			}
+
+			.card ul {
+				margin: 12px 0 0;
+				padding-left: 1.15em;
+				color: var(--muted);
+			}
+
+			.card li + li {
+				margin-top: 8px;
+			}
+
+			.card li::marker {
+				color: var(--accent-ink);
+			}
+
+			/* ---------- Aviso de projeto nao oficial ---------- */
+
+			.notice-band {
+				margin-top: clamp(56px, 8vw, 96px);
+				padding-block: 28px;
+				border-block: 1px solid var(--line);
+				background: var(--surface);
+			}
+
+			.notice {
+				display: grid;
+				grid-template-columns: auto 1fr;
+				gap: 6px 16px;
+				align-items: start;
+			}
+
+			.notice-mark {
+				grid-row: span 3;
+				width: 28px;
+				height: 28px;
+				border-radius: 50%;
+				display: grid;
+				place-items: center;
+				background: var(--accent-soft);
+				color: var(--accent-ink);
+				font-weight: 700;
+				font-size: 0.95rem;
+				font-family: var(--font-display);
+			}
+
+			.notice h2 {
+				font-size: 1.05rem;
+				font-weight: 600;
+				letter-spacing: 0;
+			}
+
+			.notice p {
+				margin: 0;
+				color: var(--muted);
+				font-size: 0.95rem;
+			}
+
+			@media (max-width: 520px) {
+				.notice {
+					grid-template-columns: 1fr;
+				}
+
+				.notice-mark {
+					grid-row: auto;
+				}
+			}
+
+			/* ---------- Abas por publico ---------- */
+
+			.tabs {
+				display: flex;
+				width: max-content;
+				max-width: 100%;
+				margin: 0 auto clamp(32px, 5vw, 48px);
+				padding: 4px;
+				border: 1px solid var(--line);
+				border-radius: 999px;
+				background: var(--surface);
+			}
+
+			.tabs [role="tab"] {
+				appearance: none;
+				flex: 1 1 0;
+				min-height: 42px;
+				padding: 8px 22px;
+				border: 0;
+				border-radius: 999px;
+				background: transparent;
+				color: var(--muted);
+				font: inherit;
+				font-size: 0.97rem;
+				font-weight: 600;
+				white-space: nowrap;
+				cursor: pointer;
+				transition: background-color 140ms ease, color 140ms ease;
+			}
+
+			.tabs [role="tab"]:hover {
+				color: var(--text);
+			}
+
+			.tabs [role="tab"][aria-selected="true"] {
+				background: var(--accent);
+				color: var(--on-accent);
+			}
+
+			/* Sem JS as abas nao fariam nada: somem, e os dois paineis aparecem
+			   um embaixo do outro. Com JS, o atributo data-aud (definido no head,
+			   antes do paint) esconde o painel que nao foi escolhido. */
+			.no-js .tabs {
+				display: none;
+			}
+
+			.js[data-aud="beginner"] #advanced,
+			.js[data-aud="advanced"] #beginner {
+				display: none;
+			}
+
+			.no-js .panel + .panel {
+				margin-top: 72px;
+			}
+
+			.panel {
+				scroll-margin-top: 72px;
+			}
+
+			.panel:focus-visible {
+				outline-offset: 8px;
+			}
+
+			.panel-head {
+				max-width: 720px;
+				margin: 0 auto 28px;
+				text-align: center;
+			}
+
+			.panel-head h3 {
+				font-size: clamp(1.4rem, 3vw, 1.9rem);
+				font-weight: 650;
+			}
+
+			.panel-head p {
+				margin: 10px 0 0;
+				color: var(--muted);
+			}
+
+			.grid-2 {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 16px;
+			}
+
+			.grid-2 .wide {
+				grid-column: 1 / -1;
+			}
+
+			@media (max-width: 760px) {
+				.grid-2 {
+					grid-template-columns: minmax(0, 1fr);
+				}
+			}
+
+			/* Painel iniciante: texto maior e mais solto, leitura de conversa. */
+			#beginner .card p,
+			#beginner .card li {
+				font-size: 1.04rem;
+			}
+
+			/* Painel avancado: lista tipo ficha tecnica, termo em mono em cima. */
+			.spec {
+				list-style: none;
+				margin: 14px 0 0;
+				padding: 0;
+			}
+
+			.card .spec {
+				padding: 0;
+			}
+
+			.spec li {
+				padding: 12px 0;
+				border-top: 1px solid var(--line);
+				font-size: 0.95rem;
+				color: var(--muted);
+			}
+
+			.card .spec li + li {
+				margin-top: 0;
+			}
+
+			.spec li:first-child {
+				border-top: 0;
+				padding-top: 4px;
+			}
+
+			.spec .api {
+				display: block;
+				margin-bottom: 3px;
+				color: var(--text);
+				font-weight: 600;
+				font-size: 0.84rem;
+				overflow-wrap: anywhere;
+			}
+
+			.table-wrap {
+				margin-top: 14px;
+				overflow-x: auto;
+				border: 1px solid var(--line);
+				border-radius: var(--radius-sm);
+			}
+
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				font-size: 0.9rem;
+			}
+
+			th,
+			td {
+				padding: 10px 14px;
+				text-align: left;
+				vertical-align: top;
+				border-top: 1px solid var(--line);
+			}
+
+			thead th {
+				border-top: 0;
+				background: var(--accent-soft);
+				font-size: 0.8rem;
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+				color: var(--text);
+			}
+
+			td:first-child {
+				font-family: var(--font-mono);
+				font-size: 0.84rem;
+				color: var(--text);
+				white-space: nowrap;
+			}
+
+			td:last-child {
+				color: var(--muted);
+			}
+
+			@media (max-width: 560px) {
+				td:first-child {
+					white-space: normal;
+				}
+			}
+
+			/* ---------- Recursos ---------- */
+
+			.features {
+				display: grid;
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+				gap: 16px;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.features li {
+				position: relative;
+				padding: 24px;
+				border: 1px solid var(--line);
+				border-radius: var(--radius);
+				background: var(--surface);
+			}
+
+			.features li::before {
+				content: "";
+				display: block;
+				width: 28px;
+				height: 4px;
+				margin-bottom: 16px;
+				border-radius: 2px;
+				background: var(--accent);
+			}
+
+			.features h3 {
+				font-size: 1.08rem;
+				font-weight: 600;
+			}
+
+			.features p {
+				margin: 8px 0 0;
+				color: var(--muted);
+				font-size: 0.95rem;
+			}
+
+			@media (max-width: 900px) {
+				.features {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+				}
+			}
+
+			@media (max-width: 560px) {
+				.features {
+					grid-template-columns: minmax(0, 1fr);
+				}
+			}
+
+			/* ---------- Galeria ---------- */
+
+			.gallery {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: clamp(16px, 2.5vw, 28px);
+			}
+
+			.gallery figure {
+				margin: 0;
+			}
+
+			.gallery a {
+				display: block;
+				overflow: hidden;
+				border: 1px solid var(--line);
+				border-radius: var(--radius);
+				background: var(--surface);
+				box-shadow: var(--shadow);
+			}
+
+			/* Zoom leve so na imagem (transform), nunca na sombra. */
+			.gallery img {
+				width: 100%;
+				aspect-ratio: 16 / 10;
+				object-fit: cover;
+				object-position: top center;
+				transition: transform 300ms var(--ease);
+			}
+
+			.gallery a:hover img {
+				transform: scale(1.015);
+			}
+
+			.gallery figcaption {
+				margin-top: 10px;
+				color: var(--muted);
+				font-size: 0.9rem;
+			}
+
+			@media (max-width: 640px) {
+				.gallery {
+					grid-template-columns: minmax(0, 1fr);
+				}
+			}
+
+			/* ---------- Instalar ---------- */
+
+			.install {
+				display: grid;
+				grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+				gap: 16px;
+			}
+
+			@media (max-width: 860px) {
+				.install {
+					grid-template-columns: minmax(0, 1fr);
+				}
+			}
+
+			.steps {
+				counter-reset: step;
+				list-style: none;
+				margin: 16px 0 0;
+				padding: 0;
+			}
+
+			.steps li {
+				counter-increment: step;
+				position: relative;
+				padding: 0 0 18px 46px;
+				color: var(--muted);
+			}
+
+			.steps li::before {
+				content: counter(step);
+				position: absolute;
+				left: 0;
+				top: -2px;
+				width: 30px;
+				height: 30px;
+				border-radius: 50%;
+				display: grid;
+				place-items: center;
+				background: var(--accent-soft);
+				color: var(--accent-ink);
+				font-weight: 700;
+				font-size: 0.9rem;
+			}
+
+			.keys-list {
+				list-style: none;
+				margin: 14px 0 0;
+				padding: 0;
+				display: grid;
+				gap: 10px;
+			}
+
+			.keys-list li {
+				display: grid;
+				grid-template-columns: 8.5em minmax(0, 1fr);
+				align-items: center;
+				gap: 12px;
+				color: var(--muted);
+			}
+
+			.keys {
+				display: inline-flex;
+				align-items: center;
+				gap: 4px;
+				color: var(--muted);
+			}
+
+			kbd {
+				display: inline-block;
+				min-width: 2em;
+				padding: 2px 8px;
+				border: 1px solid var(--line-strong);
+				border-bottom-width: 2px;
+				border-radius: 6px;
+				background: var(--surface);
+				color: var(--text);
+				text-align: center;
+			}
+
+			.card .cta {
+				justify-content: flex-start;
+				margin-top: 22px;
+			}
+
+			.fine {
+				margin-top: 14px;
+				font-size: 0.9rem;
+			}
+
+			/* ---------- O que muda no PC ---------- */
+
+			.changes {
+				display: grid;
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+				gap: 16px;
+			}
+
+			@media (max-width: 980px) {
+				.changes {
+					grid-template-columns: minmax(0, 1fr);
+				}
+			}
+
+			.card .muted-note {
+				margin-top: 14px;
+				padding-top: 14px;
+				border-top: 1px solid var(--line);
+				font-size: 0.92rem;
+			}
+
+			/* ---------- Releases ---------- */
+
+			.releases {
+				list-style: none;
+				max-width: 820px;
+				margin: 0 auto;
+				padding: 0;
+			}
+
+			.releases li {
+				display: grid;
+				grid-template-columns: 130px minmax(0, 1fr);
+				gap: 4px 24px;
+				padding: 22px 0;
+				border-top: 1px solid var(--line);
+			}
+
+			.releases li:first-child {
+				border-top: 0;
+			}
+
+			.rel-head {
+				display: flex;
+				flex-direction: column;
+			}
+
+			.rel-ver {
+				font-family: var(--font-display);
+				font-size: 1.35rem;
+				font-weight: 650;
+			}
+
+			.rel-latest {
+				align-self: flex-start;
+				margin-top: 4px;
+				padding: 1px 8px;
+				border-radius: 999px;
+				background: var(--accent-soft);
+				color: var(--accent-ink);
+				font-size: 0.74rem;
+				font-weight: 700;
+			}
+
+			.releases time {
+				color: var(--muted);
+				font-size: 0.86rem;
+			}
+
+			.releases p {
+				margin: 0;
+				color: var(--muted);
+			}
+
+			.center-link {
+				margin: 28px 0 0;
+				text-align: center;
+			}
+
+			@media (max-width: 560px) {
+				.releases li {
+					grid-template-columns: minmax(0, 1fr);
+				}
+
+				.rel-head {
+					flex-direction: row;
+					flex-wrap: wrap;
+					align-items: baseline;
+					gap: 4px 12px;
+				}
+			}
+
+			/* ---------- Creditos, licenca e codigo ---------- */
+
+			.credits li a {
+				font-weight: 600;
+			}
+
+			.repos {
+				display: grid;
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+				gap: 16px;
+			}
+
+			@media (max-width: 900px) {
+				.repos {
+					grid-template-columns: minmax(0, 1fr);
+				}
+			}
+
+			.repo {
+				display: block;
+				color: inherit;
+				text-decoration: none;
+				transition: transform 160ms var(--ease), border-color 160ms ease;
+			}
+
+			.repo:hover {
+				text-decoration: none;
+				transform: translateY(-2px);
+				border-color: var(--accent-ink);
+			}
+
+			.repo .api {
+				display: block;
+				color: var(--accent-ink);
+				font-size: 0.84rem;
+				font-weight: 600;
+				overflow-wrap: anywhere;
+			}
+
+			.repo h3 {
+				margin-top: 8px;
+			}
+
+			/* ---------- Rodape ---------- */
+
+			.site-footer {
+				padding-block: 40px 56px;
+				border-top: 1px solid var(--line);
+				color: var(--muted);
+				font-size: 0.88rem;
+			}
+
+			.footer-inner {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+				gap: 16px 32px;
+			}
+
+			.site-footer p {
+				margin: 0;
+				max-width: 70ch;
+			}
+
+			.site-footer p + p {
+				margin-top: 6px;
+			}
+
+			.back {
+				font-weight: 600;
+				white-space: nowrap;
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				*,
+				*::before,
+				*::after {
+					transition: none !important;
+				}
+
+				.btn:hover,
+				.repo:hover,
+				.gallery a:hover img {
+					transform: none;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<a class="skip" href="#main" data-i18n="iw.skip">Skip to content</a>
+
+		<header class="site-header">
+			<div class="wrap header-inner">
+				<a class="brand" href="#top">
+					<img src="assets/icon.webp" width="28" height="28" alt="" />
+					<span data-i18n="iw.brand">II for Windows</span>
+				</a>
+				<nav class="nav" aria-label="Sections" data-i18n-attr="aria-label:iw.nav.label">
+					<a href="#learn" data-i18n="iw.nav.learn">Learn</a>
+					<a href="#features" data-i18n="iw.nav.features">Features</a>
+					<a href="#gallery" data-i18n="iw.nav.gallery">Gallery</a>
+					<a href="#install" data-i18n="iw.nav.install">Install</a>
+					<a href="#source" data-i18n="iw.nav.source">Source</a>
+				</nav>
+				<div data-i18n-switcher></div>
+			</div>
+		</header>
+
+		<main id="main">
+			<!-- ================= Hero ================= -->
+			<section class="hero" id="top">
+				<div class="wrap">
+					<img class="hero-icon" src="assets/icon.webp" width="84" height="84" alt="" />
+					<p class="eyebrow" data-i18n="iw.hero.eyebrow">Unofficial port · Experimental</p>
+					<h1 data-i18n="iw.hero.title">II for Windows</h1>
+					<p class="codename" data-i18n="iw.hero.codename">Codename Illogical Windows</p>
+					<p class="pitch" data-i18n="iw.hero.pitch">end-4's illogical-impulse desktop, running natively on Windows 11 and Windows 10.</p>
+
+					<div class="cta">
+						<a
+							class="btn btn-primary"
+							href="https://github.com/nunreasonable/ii-windows/releases/latest/download/ii-windows-setup.exe"
+							aria-describedby="hero-note"
+							data-i18n="iw.hero.download"
+							>Download for Windows</a
+						>
+						<a class="btn btn-secondary" href="https://github.com/nunreasonable/ii-windows" data-i18n="iw.hero.github">View on GitHub</a>
+					</div>
+
+					<!-- Versao atual: atualizar junto com cada release (VERSION do ii-windows). -->
+					<ul class="facts">
+						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>0.4.0</strong></li>
+						<li data-i18n="iw.hero.requirements">Windows 11, or Windows 10 version 2004+ (22H2 recommended)</li>
+						<li data-i18n="iw.hero.free">Free and open source, GPL-3.0</li>
+					</ul>
+					<p class="hero-note" id="hero-note" data-i18n="iw.hero.note">
+						Experimental: expect rough edges. The setup (about 7.6 MB) isn't signed yet, so SmartScreen may warn about it: choose More info, then Run anyway.
+					</p>
+				</div>
+
+				<figure class="wrap hero-shot">
+					<a href="../../filearchive/projects/ii-windows/themed.webp" target="_blank" rel="noopener">
+						<img
+							src="../../filearchive/projects/ii-windows/themed.mid.webp"
+							width="1000"
+							height="563"
+							fetchpriority="high"
+							decoding="async"
+							alt="Windows 11 desktop with the ii bar and clock, colored from an anime wallpaper"
+							data-i18n-attr="alt:iw.hero.shotAlt"
+						/>
+					</a>
+					<figcaption data-i18n="iw.hero.shotCaption">ii's colors taken from the Windows wallpaper; the Windows taskbar only shows up at the bottom edge.</figcaption>
+				</figure>
+			</section>
+
+			<!-- ================= Aviso: nao oficial ================= -->
+			<div class="notice-band">
+				<aside class="wrap notice" aria-labelledby="notice-title">
+					<span class="notice-mark" aria-hidden="true">i</span>
+					<h2 id="notice-title" data-i18n="iw.notice.title">Unofficial and not affiliated with Microsoft</h2>
+					<p data-i18n="iw.notice.body">
+						II for Windows is an independent community port. It isn't made, endorsed or supported by Microsoft, by end-4 or by the Quickshell developers. Windows is a trademark of the Microsoft group of companies.
+					</p>
+					<p>
+						<span data-i18n="iw.notice.issuesBefore">Found a problem on Windows? Please report it</span>
+						<a href="https://github.com/nunreasonable/ii-windows/issues" data-i18n="iw.notice.issuesLink">on this project's issue tracker</a><span data-i18n="iw.notice.issuesAfter">, not upstream.</span>
+					</p>
+				</aside>
+			</div>
+
+			<!-- ================= Dois publicos ================= -->
+			<section class="section" id="learn">
+				<div class="wrap">
+					<header class="section-head">
+						<h2 data-i18n="iw.learn.title">Explained two ways</h2>
+						<p data-i18n="iw.learn.lead">Pick the one that fits you. You can switch any time.</p>
+					</header>
+
+					<div class="tabs" role="tablist" aria-label="Choose an explanation" data-i18n-attr="aria-label:iw.learn.tablistLabel">
+						<button type="button" role="tab" id="tab-beginner" aria-controls="beginner" aria-selected="true" tabindex="0" data-aud="beginner" data-i18n="iw.learn.tabBeginner">New to this</button>
+						<button type="button" role="tab" id="tab-advanced" aria-controls="advanced" aria-selected="false" tabindex="-1" data-aud="advanced" data-i18n="iw.learn.tabAdvanced">Under the hood</button>
+					</div>
+
+					<!-- ---------- Iniciante ---------- -->
+					<div class="panel" id="beginner" role="tabpanel" aria-labelledby="tab-beginner" tabindex="0">
+						<div class="panel-head">
+							<h3 data-i18n="iw.b.title">The friendly version</h3>
+							<p data-i18n="iw.b.lead">No tech background needed. Here's what this is, in everyday words.</p>
+						</div>
+
+						<div class="grid-2">
+							<article class="card">
+								<h4 data-i18n="iw.b.what.title">So, what is it?</h4>
+								<p data-i18n="iw.b.what.p1">
+									Think about the things you see on your computer all day without really noticing them: the bar with the clock, the place where you search for apps, the little pop-ups that tell you a message arrived. All together, those pieces are called a “desktop shell”. It's the part of the computer you look at and click on, around your apps.
+								</p>
+								<p data-i18n="iw.b.what.p2">
+									Windows comes with its own. II for Windows gives you a different one, with a different look and a few extra tricks, while your apps and files stay exactly the same.
+								</p>
+							</article>
+
+							<article class="card">
+								<h4 data-i18n="iw.b.origin.title">Where does it come from?</h4>
+								<p data-i18n="iw.b.origin.p1">
+									It's based on illogical-impulse, or “ii” for short: a popular desktop that a developer called end-4 made for Linux, which is a different operating system from Windows.
+								</p>
+								<p data-i18n="iw.b.origin.p2">
+									This project takes that same desktop and makes it run on Windows, keeping it as close to the original as it can. Almost everything you see was designed by end-4; this port is the part that makes it work on Windows.
+								</p>
+							</article>
+
+							<article class="card wide">
+								<h4 data-i18n="iw.b.get.title">What you get</h4>
+								<ul>
+									<li data-i18n="iw.b.get.bar">A bar at the top of the screen that shows the song you're playing, the clock, your battery and the small icons of apps running in the background.</li>
+									<li data-i18n="iw.b.get.panel">A side panel with quick switches like Wi-Fi, Bluetooth and night light, plus your notifications and a calendar.</li>
+									<li data-i18n="iw.b.get.search">A search box: tap the Windows key on its own, type a few letters and open any app.</li>
+									<li data-i18n="iw.b.get.colors">Colors that match your wallpaper. Pick a new picture and the whole desktop changes its colors to go with it.</li>
+									<li data-i18n="iw.b.get.desktops">Separate desktops for separate things, like one for work and one for games, with an overview that shows them all at once.</li>
+									<li data-i18n="iw.b.get.extras">Handy extras: grab a piece of the screen, copy the text out of a picture, record your screen, or translate the words you're looking at.</li>
+								</ul>
+							</article>
+
+							<article class="card">
+								<h4 data-i18n="iw.b.install.title">What happens when I install it?</h4>
+								<p data-i18n="iw.b.install.p1">
+									You download one small program, the setup. Before it changes anything, it shows you a page that lists every single thing it will do, and you have to scroll through it first. No surprises.
+								</p>
+								<p data-i18n="iw.b.install.p2">
+									It installs everything into your own Windows account, so it doesn't ask for an administrator password, and your personal files aren't touched. The usual Windows taskbar is still there: it just hides until you move the mouse to the bottom of the screen.
+								</p>
+							</article>
+
+							<article class="card">
+								<h4 data-i18n="iw.b.free.title">Is it free?</h4>
+								<p data-i18n="iw.b.free.p1">Yes, completely. It's free and open source, which means anyone can read the “recipe” it's made from and check what it does.</p>
+								<h4 data-i18n="iw.b.remove.title" style="margin-top: 22px">What if I don't like it?</h4>
+								<p data-i18n="iw.b.remove.p1">
+									You remove it like any other app: Settings, then Apps, then Installed apps, then “illogical-impulse (ii-windows)”, then Uninstall. It puts your wallpaper, light or dark mode, accent color and taskbar back the way they were before.
+								</p>
+							</article>
+
+							<article class="card wide">
+								<h4 data-i18n="iw.b.know.title">A few things to know first</h4>
+								<ul>
+									<li data-i18n="iw.b.know.experimental">It's experimental. Most things work, some are still rough, and a few haven't been tried on every kind of computer yet, like laptop batteries and screen brightness.</li>
+									<li data-i18n="iw.b.know.keys">Some keyboard shortcuts change while it runs. Pressing the Windows key on its own opens ii's search instead of the Start menu. Press the Windows key and / together to see the full list.</li>
+									<li data-i18n="iw.b.know.smartscreen">The first time you open the setup, Windows may show a blue box saying “Windows protected your PC”. That's because the setup isn't signed yet. Click More info, then Run anyway, but only if you downloaded it from this page or from the project's GitHub.</li>
+									<li data-i18n="iw.b.know.help">Something broke? Tell the project on GitHub. Please don't ask end-4 or Microsoft about it: they don't make this port.</li>
+								</ul>
+							</article>
+						</div>
+					</div>
+
+					<!-- ---------- Avancado ---------- -->
+					<div class="panel" id="advanced" role="tabpanel" aria-labelledby="tab-advanced" tabindex="0">
+						<div class="panel-head">
+							<h3 data-i18n="iw.a.title">The technical version</h3>
+							<p data-i18n="iw.a.lead">Two forks, a native Windows backend behind the APIs ii already uses, and a per-user setup. Everything here comes from the project's own docs.</p>
+						</div>
+
+						<div class="grid-2">
+							<article class="card wide">
+								<h4 data-i18n="iw.a.arch.title">Architecture</h4>
+								<ul class="spec">
+									<li>
+										<span class="api">nunreasonable/quickshell · windows</span>
+										<span data-i18n="iw.a.arch.qs">Quickshell (based on upstream 0.3.1) with its core made portable and a native backend in src/windows/. Linux-only modules are compiled out; pure-QML shims keep the same import URIs until a native C++ module with that URI replaces them.</span>
+									</li>
+									<li>
+										<span class="api">nunreasonable/dots-hyprland · ii-windows</span>
+										<span data-i18n="iw.a.arch.ii">ii's history split out of the dots repository with git-filter-repo, so upstream changes still merge. Services keep their public properties and swap only the implementation, so most modules are untouched; every Linux command is mapped to a native API or switched off cleanly. A Platform.isWindows singleton guards Linux-only startup code, and Windows-only singletons are reached lazily through WindowsNative.qml, so the same files still load on Linux.</span>
+									</li>
+									<li>
+										<span class="api">nunreasonable/ii-windows</span>
+										<span data-i18n="iw.a.arch.pkg">Packaging and the setup: deploy, package and release scripts, the Tauri installer, and the Windows builds of the helpers (SongRec's recognizer and MicroTeX).</span>
+									</li>
+								</ul>
+							</article>
+
+							<article class="card">
+								<h4 data-i18n="iw.a.win.title">Windows and layers</h4>
+								<ul class="spec">
+									<li>
+										<span class="api">WinPanelWindow</span>
+										<span data-i18n="iw.a.win.panel">Replaces PanelWindow + WlrLayershell. Panels are AppBars: screen space is reserved through the shell and released on hide or exit. Z-bands, DWM attributes, and input masks applied through a low-level mouse hook.</span>
+									</li>
+									<li>
+										<span class="api">Direct3D 11</span>
+										<span data-i18n="iw.a.win.d3d">Qt Quick picks the D3D11 backend (GraphicsInfo.api == 4); translucent frameless windows work as-is.</span>
+									</li>
+									<li>
+										<span class="api">Window tracker</span>
+										<span data-i18n="iw.a.win.tracker">SetWinEventHook-based tracker shaped like hyprctl JSON, backing HyprlandData and ToplevelManager. The WinEvent hooks run on their own thread, drop cursor and caret events and deliver window events in batches.</span>
+									</li>
+									<li>
+										<span class="api">Quickshell.Hyprland</span>
+										<span data-i18n="iw.a.win.hypr">Workspaces are Windows virtual desktops (registry, IVirtualDesktopManager and VirtualDesktopAccessor), with Hyprland.dispatch mapped to native actions. HyprlandFocusGrab becomes outside-click and foreground-change dismissal.</span>
+									</li>
+									<li>
+										<span class="api">DesktopLayer</span>
+										<span data-i18n="iw.a.win.desktop">ii's background is reparented under WorkerW (on 24H2 and later, inside Progman, below SHELLDLL_DefView), behind the desktop icons. Desktop widgets get their own window above the DefView, with the input mask as the window region.</span>
+									</li>
+								</ul>
+							</article>
+
+							<article class="card">
+								<h4 data-i18n="iw.a.tile.title">Tiling and blur</h4>
+								<ul class="spec">
+									<li>
+										<span class="api">Tiling (dwindle)</span>
+										<span data-i18n="iw.a.tile.tiling">Optional native dwindle layout, one per (virtual desktop, monitor), with no external window manager. Driven by the dispatchers ii's keybinds already use: togglefloating, togglesplit, movewindow, splitratio. Dialogs, fixed-size windows, elevated windows and listed apps stay floating; turning it off puts every window back where it was.</span>
+									</li>
+									<li>
+										<span class="api">Blur · Windows 11</span>
+										<span data-i18n="iw.a.tile.blur11">A Windows.UI.Composition host-backdrop window, unfocusable and click-through, under each panel, with rounded shapes taken from the item tree and rules from layerrules.json (Hyprland's layer rules, converted).</span>
+									</li>
+									<li>
+										<span class="api">Blur · Windows 10</span>
+										<span data-i18n="iw.a.tile.blur10">SetWindowCompositionAttribute blur-behind, one window per shape, because that blur ignores SetWindowRgn.</span>
+									</li>
+									<li>
+										<span class="api">QS_WINDOWS_BLUR=0</span>
+										<span data-i18n="iw.a.tile.bluroff">Blur only exists while ii's transparency is on, and turns off with Windows' transparency effects off, high contrast, energy saver or this variable.</span>
+									</li>
+								</ul>
+							</article>
+
+							<article class="card">
+								<h4 data-i18n="iw.a.input.title">Input and session</h4>
+								<ul class="spec">
+									<li>
+										<span class="api">RegisterHotKey + WH_KEYBOARD_LL</span>
+										<span data-i18n="iw.a.input.hotkeys">Global shortcuts, with a low-level keyboard hook for the lone Super key. Binds load only in the shell.qml process (settings and welcome don't register them); users edit keybinds.json in %LOCALAPPDATA%\illogical-impulse.</span>
+									</li>
+									<li>
+										<span class="api">Low-level mouse hook</span>
+										<span data-i18n="iw.a.input.mouse">Runs at high priority for input masks and the hover-only taskbar; qs log reports input that reached the hooks late.</span>
+									</li>
+									<li>
+										<span class="api">Taskbar</span>
+										<span data-i18n="iw.a.input.taskbar">Auto-hide is turned on while ii runs and restored on exit. An EVENT_OBJECT_SHOW WinEvent in Explorer's process re-hides it as soon as an app opens (at most 10 times per second).</span>
+									</li>
+									<li>
+										<span class="api">-n / --no-duplicate</span>
+										<span data-i18n="iw.a.input.single">Shortcuts, the Run entry and setup launches start a single instance.</span>
+									</li>
+									<li>
+										<span class="api">Session</span>
+										<span data-i18n="iw.a.input.session">LockWorkStation, ExitWindowsEx, InitiateShutdownW and SetSuspendState; idle inhibit through PowerCreateRequest / PowerSetRequest; SendInput in place of ydotool.</span>
+									</li>
+								</ul>
+							</article>
+
+							<article class="card">
+								<h4 data-i18n="iw.a.crash.title">Crash handling</h4>
+								<ul class="spec">
+									<li>
+										<span class="api">One funnel</span>
+										<span data-i18n="iw.a.crash.funnel">SetUnhandledExceptionFilter, _set_invalid_parameter_handler, std::set_terminate and signal(SIGABRT) all lead to the same handler.</span>
+									</li>
+									<li>
+										<span class="api">MiniDumpWriteDump</span>
+										<span data-i18n="iw.a.crash.dump">MiniDumpWithDataSegs | MiniDumpWithThreadInfo into the instance's crash directory, then the live log and a report.txt next to it (skipped on stack overflow).</span>
+									</li>
+									<li>
+										<span class="api">CreateProcessW</span>
+										<span data-i18n="iw.a.crash.relaunch">Relaunches the shell unless it crashed within 10 seconds of its own launch, the same crash-loop guard as the Linux handler.</span>
+									</li>
+									<li>
+										<span class="api">SetThreadStackGuarantee(64 KiB)</span>
+										<span data-i18n="iw.a.crash.alloc">Every path is resolved at startup into fixed-size buffers, so the filter doesn't allocate; the stack guarantee leaves room to run after an overflow.</span>
+									</li>
+								</ul>
+							</article>
+
+							<article class="card wide">
+								<h4 data-i18n="iw.a.map.title">Module mapping</h4>
+								<p data-i18n="iw.a.map.lead">What each Linux dependency of Quickshell and ii became on Windows.</p>
+								<div class="table-wrap">
+									<table>
+										<thead>
+											<tr>
+												<th scope="col" data-i18n="iw.a.map.colLinux">Linux</th>
+												<th scope="col" data-i18n="iw.a.map.colWindows">Windows</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr><td>Services.Pipewire</td><td data-i18n="iw.a.map.audio">Core Audio: endpoints, sessions, IPolicyConfig</td></tr>
+											<tr><td>Services.Mpris</td><td data-i18n="iw.a.map.media">GlobalSystemMediaTransportControls (C++/WinRT)</td></tr>
+											<tr><td>Services.UPower</td><td data-i18n="iw.a.map.power">GetSystemPowerStatus, power notifications, overlay power schemes</td></tr>
+											<tr><td>Services.Notifications</td><td data-i18n="iw.a.map.notif">Own server (notifySend parses notify-send arguments) + a UserNotificationListener mirror of Windows toasts</td></tr>
+											<tr><td>Services.SystemTray</td><td data-i18n="iw.a.map.tray">Hidden Shell_TrayWnd in front of Explorer's, forwarding everything to it; existing icons from ITrayNotify</td></tr>
+											<tr><td>Quickshell.Bluetooth</td><td data-i18n="iw.a.map.bt">WinRT DeviceWatcher and pairing</td></tr>
+											<tr><td>nmcli</td><td data-i18n="iw.a.map.net">WlanAPI + INetworkListManager</td></tr>
+											<tr><td>ScreencopyView</td><td data-i18n="iw.a.map.capture">Windows.Graphics.Capture → D3D11 texture → QSGTexture</td></tr>
+											<tr><td>wf-recorder</td><td data-i18n="iw.a.map.record">Windows.Graphics.Capture + Media Foundation H.264 to MP4, system sound through WASAPI loopback</td></tr>
+											<tr><td>grim / slurp / tesseract</td><td data-i18n="iw.a.map.snip">Native capture and crop, OCR on Windows.Media.Ocr</td></tr>
+											<tr><td>cliphist / wl-copy</td><td data-i18n="iw.a.map.clip">Own history through AddClipboardFormatListener</td></tr>
+											<tr><td>ddcutil / brightnessctl</td><td data-i18n="iw.a.map.bright">WMI; DDC/CI (dxva2) only when the user changes it; gamma-ramp dimming as fallback</td></tr>
+											<tr><td>hyprsunset</td><td data-i18n="iw.a.map.night">Gamma ramp</td></tr>
+											<tr><td>secret-tool</td><td data-i18n="iw.a.map.secret">CredRead / CredWrite (Credential Manager)</td></tr>
+											<tr><td>matugen + switchwall.sh</td><td data-i18n="iw.a.map.theme">matugen.exe + IDesktopWallpaper (per monitor) + system dark mode</td></tr>
+											<tr><td>/proc</td><td data-i18n="iw.a.map.proc">GetSystemTimes, GlobalMemoryStatusEx, PDH</td></tr>
+											<tr><td>DesktopEntries</td><td data-i18n="iw.a.map.apps">FOLDERID_AppsFolder + IShellItemImageFactory icons</td></tr>
+										</tbody>
+									</table>
+								</div>
+							</article>
+
+							<article class="card">
+								<h4 data-i18n="iw.a.svc.title">Services, in detail</h4>
+								<ul class="spec">
+									<li>
+										<span class="api">WinRT on MTA threads</span>
+										<span data-i18n="iw.a.svc.mta">Qt initializes COM as STA on the GUI thread, so init_apartment(multi_threaded) fails there with RPC_E_CHANGED_MODE and blocking .get() is forbidden. Every WinRT-backed service (GSMTC, Bluetooth, notifications, OCR) owns a worker thread in a multi-threaded apartment and posts results back to Qt.</span>
+									</li>
+									<li>
+										<span class="api">UserNotificationListener</span>
+										<span data-i18n="iw.a.svc.notif">Works unpackaged. NotificationChanged throws 0x80070490, so the mirror polls GetNotificationsAsync every 2 s; only text elements are exposed. One process per session owns the server (a named mutex); the others forward notifySend over WM_COPYDATA.</span>
+									</li>
+									<li>
+										<span class="api">Shell_TrayWnd</span>
+										<span data-i18n="iw.a.svc.tray">The hidden tray window passes every message on to Explorer, whose own tray keeps working, and mirrors Explorer's window properties (TaskbandHWND and others) every second so ITaskbarList3 keeps working for apps that show taskbar progress.</span>
+									</li>
+								</ul>
+							</article>
+
+							<article class="card">
+								<h4 data-i18n="iw.a.color.title">Colors and helpers</h4>
+								<ul class="spec">
+									<li>
+										<span class="api">matugen.exe</span>
+										<span data-i18n="iw.a.color.matugen">Run with ii's own template, so a wallpaper gives the same palette as on Linux. Windows' wallpaper and light/dark mode follow ii, and the accent color follows the palette.</span>
+									</li>
+									<li>
+										<span class="api">TerminalColors</span>
+										<span data-i18n="iw.a.color.terminal">A C++ port of ii's terminal color generator that matches the Python one bit for bit, written as a Windows Terminal fragment plus an Oh My Posh theme.</span>
+									</li>
+									<li>
+										<span class="api">songrec.exe · LaTeX.exe</span>
+										<span data-i18n="iw.a.color.helpers">SongRec 0.7.5's recognizer with a Windows front end (WASAPI loopback through cpal), and MicroTeX with its own Qt/SVG command line for LaTeX in the AI chat.</span>
+									</li>
+									<li>
+										<span class="api">XMLHttpRequest</span>
+										<span data-i18n="iw.a.color.xhr">Translation runs from QML instead of trans or curl.exe, which Google answered with an “unusual traffic” page.</span>
+									</li>
+								</ul>
+							</article>
+
+							<article class="card">
+								<h4 data-i18n="iw.a.tool.title">Toolchain</h4>
+								<ul class="spec">
+									<li>
+										<span class="api">clang-cl + lld-link</span>
+										<span data-i18n="iw.a.tool.clang">Cross-compiled from Linux, with the MSVC CRT and SDK from xwin splat (C++/WinRT headers included) and CMake + Ninja. CMake links with lld-link directly, so no rc.exe or mt.exe is needed.</span>
+									</li>
+									<li>
+										<span class="api">Qt 6.11.2 · msvc2022_64</span>
+										<span data-i18n="iw.a.tool.qt">Installed with aqtinstall, alongside a host gcc_64 build for the tools.</span>
+									</li>
+									<li>
+										<span class="api">cargo-xwin</span>
+										<span data-i18n="iw.a.tool.cargo">Builds matugen 4.1.0 and the setup. The Visual C++ runtime DLLs ship inside the install folder, never in Windows' own folders.</span>
+									</li>
+									<li>
+										<span class="api">Test targets</span>
+										<span data-i18n="iw.a.tool.test">Windows 11 25H2 VMs (with and without a passed-through GPU), a Windows 10 22H2 VM, and bare metal on an Intel i3-13100 with only its integrated GPU.</span>
+									</li>
+								</ul>
+							</article>
+
+							<article class="card">
+								<h4 data-i18n="iw.a.setup.title">The setup</h4>
+								<ul class="spec">
+									<li>
+										<span class="api">Tauri v2</span>
+										<span data-i18n="iw.a.setup.tauri">Rust plus static HTML/CSS/JS, with no Node, bundler or CDN. The core crate, iiw-setup-core, is unit-tested on Linux: profile-block edits, versions, release JSON, SHA-256, zip, swap and rollback, manifest.</span>
+									</li>
+									<li>
+										<span class="api">Per user</span>
+										<span data-i18n="iw.a.setup.user">Everything under %LOCALAPPDATA%, with no administrator rights except for the optional PowerShell 7. The package comes from the latest GitHub release and is checked against its published SHA-256 before anything is installed.</span>
+									</li>
+									<li>
+										<span class="api">Self-update</span>
+										<span data-i18n="iw.a.setup.self">On every start the setup checks the latest release; if it's newer, it downloads the new setup, checks it against GitHub's SHA-256 digest and relaunches with it.</span>
+									</li>
+									<li>
+										<span class="api">install-manifest.json</span>
+										<span data-i18n="iw.a.setup.manifest">Records every change so uninstall can undo it, including the wallpaper, light/dark mode, accent color and taskbar auto-hide captured before the first install. Repair moves settings to a dated backup and reinstalls stock.</span>
+									</li>
+									<li>
+										<span class="api">--package &lt;zip&gt;</span>
+										<span data-i18n="iw.a.setup.offline">Offline installs, or an ii-windows-&lt;version&gt;.zip next to the exe (verified too when its .sha256 is there).</span>
+									</li>
+								</ul>
+							</article>
+
+							<article class="card wide">
+								<h4 data-i18n="iw.a.limits.title">Known limitations</h4>
+								<ul>
+									<li data-i18n="iw.a.limits.untested">Built on Windows' own APIs but barely tested: audio, media controls, battery, laptop brightness and music recognition (the VMs have no battery or laptop screen).</li>
+									<li data-i18n="iw.a.limits.missing">Not on Windows: ii's lock screen (Win+L uses Windows' own), the EasyEffects and WARP toggles, and content-region detection in the region selector (no OpenCV).</li>
+									<li data-i18n="iw.a.limits.win10">Windows 10: ii can't remove virtual desktops and creates them by sending Ctrl+Win+D, the older blur has slightly jagged rounded corners, and Windows draws a yellow border around a screen recording.</li>
+									<li data-i18n="iw.a.limits.notif">Mirrored notifications carry text only: no images, launch arguments or buttons. Windows keeps showing its own banners too.</li>
+									<li data-i18n="iw.a.limits.tray">While ii runs, taskbar tweaking tools that look for the taskbar by its window class may not find it.</li>
+								</ul>
+							</article>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ================= Recursos ================= -->
+			<section class="section alt" id="features">
+				<div class="wrap">
+					<header class="section-head">
+						<h2 data-i18n="iw.features.title">Everything you'd expect from ii</h2>
+						<p data-i18n="iw.features.lead">The same QML as on Linux wherever it could stay the same, with Windows doing the work underneath.</p>
+					</header>
+
+					<ul class="features">
+						<li>
+							<h3 data-i18n="iw.features.bar.title">Bar and system tray</h3>
+							<p data-i18n="iw.features.bar.text">Media, clock, battery and the tray icons, shared with Explorer's own tray.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.sidebars.title">Sidebars</h3>
+							<p data-i18n="iw.features.sidebars.text">Quick toggles, notifications and a calendar on the right; AI chat and a translator on the left.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.search.title">Launcher and search</h3>
+							<p data-i18n="iw.features.search.text">Tap the Windows key on its own to find and open apps.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.colors.title">Colors from your wallpaper</h3>
+							<p data-i18n="iw.features.colors.text">Material You palettes from matugen. Windows' accent color and light/dark mode follow along.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.workspaces.title">Workspaces and overview</h3>
+							<p data-i18n="iw.features.workspaces.text">ii's workspaces are Windows' own virtual desktops, with live previews in the overview.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.tiling.title">Optional tiling</h3>
+							<p data-i18n="iw.features.tiling.text">Hyprland's dwindle layout with ii's keybinds. Off by default, new in 0.4.0.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.screen.title">Screen tools</h3>
+							<p data-i18n="iw.features.screen.text">Snip, copy text with on-device OCR, record to MP4 and translate what's on screen.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.notif.title">Notifications</h3>
+							<p data-i18n="iw.features.notif.text">Toasts from other apps show up in ii's panel too, with a history.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.terminal.title">Terminal look</h3>
+							<p data-i18n="iw.features.terminal.text">Windows Terminal and the classic console in ii's colors, with a Nerd Font prompt.</p>
+						</li>
+					</ul>
+				</div>
+			</section>
+
+			<!-- ================= Galeria ================= -->
+			<section class="section" id="gallery">
+				<div class="wrap">
+					<header class="section-head">
+						<h2 data-i18n="iw.gallery.title">See it running</h2>
+						<p data-i18n="iw.gallery.lead">Screenshots from Windows 11 and Windows 10. Open any of them for the full size.</p>
+					</header>
+
+					<div class="gallery">
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/tiling.webp" target="_blank" rel="noopener">
+								<img src="../../filearchive/projects/ii-windows/tiling.mid.webp" width="833" height="625" loading="lazy" decoding="async" alt="Four Notepad windows arranged by ii's tiling in Hyprland's dwindle layout, under ii's bar" data-i18n-attr="alt:iw.gallery.tiling.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.tiling.caption">Optional tiling: Hyprland's dwindle layout on Windows' virtual desktops, new in 0.4.0.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/sidebar.webp" target="_blank" rel="noopener">
+								<img src="../../filearchive/projects/ii-windows/sidebar.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="ii right sidebar open with quick toggles, notifications and a calendar" data-i18n-attr="alt:iw.gallery.sidebar.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.sidebar.caption">Right sidebar: quick toggles, notifications and calendar.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/overview.webp" target="_blank" rel="noopener">
+								<img src="../../filearchive/projects/ii-windows/overview.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="ii workspace overview with a search field" data-i18n-attr="alt:iw.gallery.overview.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.overview.caption">Workspace overview, opened with the Windows key.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/cheatsheet.webp" target="_blank" rel="noopener">
+								<img src="../../filearchive/projects/ii-windows/cheatsheet.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="ii keybind cheatsheet listing shell, media, window and app shortcuts" data-i18n-attr="alt:iw.gallery.cheatsheet.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.cheatsheet.caption">Keybind cheatsheet on Win+/, following the keyboard layout.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/translator.webp" target="_blank" rel="noopener">
+								<img src="../../filearchive/projects/ii-windows/translator.mid.webp" width="1000" height="625" loading="lazy" decoding="async" alt="ii's left sidebar translator turning a Portuguese sentence into English" data-i18n-attr="alt:iw.gallery.translator.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.translator.caption">The translator in the left sidebar, new in 0.3.0.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/terminal.webp" target="_blank" rel="noopener">
+								<img src="../../filearchive/projects/ii-windows/terminal.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Windows Terminal windows in ii's pink palette with an Oh My Posh prompt" data-i18n-attr="alt:iw.gallery.terminal.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.terminal.caption">Windows Terminal themed with ii's colors and an Oh My Posh prompt.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/desktop-icons.webp" target="_blank" rel="noopener">
+								<img src="../../filearchive/projects/ii-windows/desktop-icons.mid.webp" width="833" height="625" loading="lazy" decoding="async" alt="Windows 10 desktop where ii's wallpaper and clock sit behind the desktop icons" data-i18n-attr="alt:iw.gallery.desktop.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.desktop.caption">Windows 10, with ii's wallpaper and clock behind the desktop icons.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/installer.webp" target="_blank" rel="noopener">
+								<img src="../../filearchive/projects/ii-windows/installer.mid.webp" width="928" height="625" loading="lazy" decoding="async" alt="The ii-windows setup on its options page, with toggles for starting with Windows and the terminal setup" data-i18n-attr="alt:iw.gallery.installer.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.installer.caption">The setup: install, update, repair and uninstall, all per user.</figcaption>
+						</figure>
+					</div>
+				</div>
+			</section>
+
+			<!-- ================= Instalar ================= -->
+			<section class="section alt" id="install">
+				<div class="wrap">
+					<header class="section-head">
+						<h2 data-i18n="iw.install.title">Get II for Windows</h2>
+						<p data-i18n="iw.install.lead">One setup installs, updates, repairs and uninstalls it.</p>
+					</header>
+
+					<div class="install">
+						<article class="card">
+							<h3 data-i18n="iw.install.stepsTitle">Three steps</h3>
+							<ol class="steps">
+								<li data-i18n="iw.install.step1">Download ii-windows-setup.exe and run it.</li>
+								<li data-i18n="iw.install.step2">Read the page it shows: it lists everything it changes on your PC. Then pick your options.</li>
+								<li data-i18n="iw.install.step3">Install. Everything goes into your Windows user, with no administrator rights needed.</li>
+							</ol>
+							<div class="cta">
+								<a class="btn btn-primary" href="https://github.com/nunreasonable/ii-windows/releases/latest/download/ii-windows-setup.exe" data-i18n="iw.install.download">Download for Windows</a>
+								<a class="btn btn-secondary" href="https://github.com/nunreasonable/ii-windows/releases/latest" data-i18n="iw.install.release">Latest release</a>
+							</div>
+							<p class="fine" data-i18n="iw.install.update">
+								To update, repair or uninstall later: Settings → Apps → Installed apps → illogical-impulse (ii-windows) → Modify. The setup also checks GitHub for a newer version every time it opens and updates itself first.
+							</p>
+						</article>
+
+						<article class="card">
+							<h3 data-i18n="iw.install.keysTitle">First shortcuts</h3>
+							<ul class="keys-list">
+								<li><span class="keys"><kbd>Win</kbd></span><span data-i18n="iw.install.keySearch">Search (pressed on its own)</span></li>
+								<li><span class="keys"><kbd>Win</kbd>+<kbd>/</kbd></span><span data-i18n="iw.install.keyList">Every keybind</span></li>
+								<li><span class="keys"><kbd>Win</kbd>+<kbd>Enter</kbd></span><span data-i18n="iw.install.keyTerminal">Terminal</span></li>
+							</ul>
+							<h3 data-i18n="iw.install.reqTitle" style="margin-top: 26px">Requirements</h3>
+							<ul>
+								<li data-i18n="iw.install.req11">Windows 11, build 22000 or newer.</li>
+								<li data-i18n="iw.install.req10">Windows 10 version 2004 or newer (build 19041); 22H2 recommended. The setup needs the WebView2 Runtime there.</li>
+								<li data-i18n="iw.install.reqWinget">winget for the optional terminal tools and FFmpeg. On Windows 10 without it, the setup can install it.</li>
+							</ul>
+						</article>
+					</div>
+				</div>
+			</section>
+
+			<!-- ================= O que muda no PC ================= -->
+			<section class="section" id="changes">
+				<div class="wrap">
+					<header class="section-head">
+						<h2 data-i18n="iw.changes.title">What changes on my PC</h2>
+						<p data-i18n="iw.changes.lead">The setup shows the full list before it installs anything. Here's the short version.</p>
+					</header>
+
+					<div class="changes">
+						<article class="card">
+							<h3 data-i18n="iw.changes.installTitle">What gets installed</h3>
+							<ul>
+								<li data-i18n="iw.changes.program">The program, about 250 MB, in %LOCALAPPDATA%\ii-windows. Nothing goes into Windows' own folders.</li>
+								<li data-i18n="iw.changes.files">ii's own files in %LOCALAPPDATA%\quickshell\ii, replaced on every update. Your settings live apart, in %LOCALAPPDATA%\illogical-impulse, and updates never touch them.</li>
+								<li data-i18n="iw.changes.entries">Start menu shortcuts and an Apps entry called “illogical-impulse (ii-windows)”.</li>
+								<li data-i18n="iw.changes.options">Options: start with Windows (on), the terminal setup with the JetBrainsMono Nerd Font, Oh My Posh, Starship and eza (on), PowerShell 7 (off), FFmpeg (off), and letting Windows PowerShell 5.1 run profile scripts, a security setting (off).</li>
+							</ul>
+						</article>
+
+						<article class="card">
+							<h3 data-i18n="iw.changes.runTitle">While ii runs</h3>
+							<ul>
+								<li data-i18n="iw.changes.keys">It takes over many Windows shortcuts: the Windows key alone opens ii's search, and Win+/ lists the rest. All of it stops when ii closes.</li>
+								<li data-i18n="iw.changes.taskbar">The Windows taskbar auto-hides and shows up when the pointer touches its edge.</li>
+								<li data-i18n="iw.changes.desktop">ii's wallpaper and widgets sit inside the desktop, behind your icons. Your desktop folder isn't changed.</li>
+								<li data-i18n="iw.changes.colors">Picking a wallpaper or light/dark mode in ii sets the same in Windows, and Windows' accent color follows ii's palette.</li>
+								<li data-i18n="iw.changes.online">The translators send text to Google's translation service, and music recognition sends an audio fingerprint to Shazam, only when you use them.</li>
+							</ul>
+						</article>
+
+						<article class="card">
+							<h3 data-i18n="iw.changes.uninstallTitle">Uninstall</h3>
+							<ul>
+								<li data-i18n="iw.changes.un1">Removes the program, ii's folders, the shortcuts, the Run entry and the Apps entry.</li>
+								<li data-i18n="iw.changes.un2">Takes ii's block out of your PowerShell profiles (with a backup) and puts the execution policy back if the setup changed it.</li>
+								<li data-i18n="iw.changes.un3">Uninstalls only the tools and fonts the setup installed itself.</li>
+								<li data-i18n="iw.changes.un4">Restores your wallpaper, light/dark mode, accent color and taskbar auto-hide.</li>
+								<li data-i18n="iw.changes.un5">Deletes your ii settings and saved API keys, unless you tick Keep my settings.</li>
+							</ul>
+							<p class="muted-note" data-i18n="iw.changes.cant">
+								It can't undo virtual desktops, files you made (screenshots, recordings) or ordinary Windows settings you changed through ii, like volume, Wi-Fi or Bluetooth pairings.
+							</p>
+						</article>
+					</div>
+				</div>
+			</section>
+
+			<!-- ================= Releases ================= -->
+			<section class="section alt" id="releases">
+				<div class="wrap">
+					<header class="section-head">
+						<h2 data-i18n="iw.releases.title">Release notes</h2>
+						<p data-i18n="iw.releases.lead">From Windows 11 only to Windows 10, native recording and tiling, in four days.</p>
+					</header>
+
+					<ol class="releases">
+						<li>
+							<div class="rel-head">
+								<span class="rel-ver">0.4.0</span>
+								<time datetime="2026-10-05">2026-10-05</time>
+								<span class="rel-latest" data-i18n="iw.releases.latest">Latest</span>
+							</div>
+							<p data-i18n="iw.releases.v040">Optional tiling with Hyprland's dwindle layout on Windows' virtual desktops. The screen translator lays each translated paragraph over the original, desktop widgets sit next to the icons and can be dragged, tray icons of apps started before ii respond to clicks (Windows 10 included), and the classic console gets ii's colors and font. Fixes a crash in the Windows 10 virtual desktop helper, a second copy of ii starting on top of the first, and the bar losing its reserved space.</p>
+						</li>
+						<li>
+							<div class="rel-head">
+								<span class="rel-ver">0.3.1</span>
+								<time datetime="2026-10-05">2026-10-05</time>
+							</div>
+							<p data-i18n="iw.releases.v031">Windows 10's blur no longer shows as a band around the floating bar's rounded ends, and the setup's window opens in the free part of the screen.</p>
+						</li>
+						<li>
+							<div class="rel-head">
+								<span class="rel-ver">0.3.0</span>
+								<time datetime="2026-10-05">2026-10-05</time>
+							</div>
+							<p data-i18n="iw.releases.v030">Screen recording with Windows' own capture and encoder, no FFmpeg needed. ii's own system tray, shared with Explorer's. Wallpaper and widgets behind the desktop icons. Translation, music recognition and LaTeX in the AI chat. The setup updates itself from GitHub. Built on Quickshell 0.3.1 and the latest ii from end-4.</p>
+						</li>
+						<li>
+							<div class="rel-head">
+								<span class="rel-ver">0.2.0</span>
+								<time datetime="2026-10-02">2026-10-02</time>
+							</div>
+							<p data-i18n="iw.releases.v020">Windows 10 support (version 2004 or newer): virtual desktops, blur and the hover-only taskbar on any edge. The Visual C++ runtime is included, brightness works on laptop screens and dims in software elsewhere, and the setup checks for WebView2 and can install Windows Terminal and winget.</p>
+						</li>
+						<li>
+							<div class="rel-head">
+								<span class="rel-ver">0.1.1</span>
+								<time datetime="2026-10-02">2026-10-02</time>
+							</div>
+							<p data-i18n="iw.releases.v011">Fixes mouse and keyboard lag on real hardware: window events moved off ii's main thread and the mouse hook runs at high priority.</p>
+						</li>
+						<li>
+							<div class="rel-head">
+								<span class="rel-ver">0.1.0</span>
+								<time datetime="2026-10-02">2026-10-02</time>
+							</div>
+							<p data-i18n="iw.releases.v010">First release, Windows 11 only, with a setup that downloads the package, checks its SHA-256 and installs it for the current user.</p>
+						</li>
+					</ol>
+					<p class="center-link"><a href="https://github.com/nunreasonable/ii-windows/releases" data-i18n="iw.releases.all">All releases on GitHub</a></p>
+				</div>
+			</section>
+
+			<!-- ================= Creditos e licenca ================= -->
+			<section class="section" id="credits">
+				<div class="wrap">
+					<header class="section-head">
+						<h2 data-i18n="iw.credits.title">Credits</h2>
+						<p data-i18n="iw.credits.lead">All of the design and nearly all of the shell are other people's work. This project only makes it run on Windows.</p>
+					</header>
+
+					<div class="grid-2">
+						<article class="card credits">
+							<h3 data-i18n="iw.credits.peopleTitle">Thanks to</h3>
+							<ul>
+								<li>
+									<a href="https://github.com/end-4">end-4</a>
+									<span data-i18n="iw.credits.end4">for illogical-impulse and dots-hyprland: every widget here is theirs. If you like it,</span>
+									<a href="https://github.com/sponsors/end-4" data-i18n="iw.credits.end4Support">support them</a><span data-i18n="iw.credits.end4After"> and star the original.</span>
+								</li>
+								<li>
+									<span data-i18n="iw.credits.dotsBefore">Everyone thanked in</span>
+									<a href="https://github.com/end-4/dots-hyprland#readme" data-i18n="iw.credits.dotsReadme">dots-hyprland's README</a><span data-i18n="iw.credits.dotsAfter">, and all of its contributors.</span>
+								</li>
+								<li>
+									<a href="https://quickshell.outfoxxed.me">Quickshell</a>
+									<span data-i18n="iw.credits.quickshell">by outfoxxed and its contributors, the toolkit underneath it all.</span>
+								</li>
+								<li>
+									<a href="https://github.com/minimal-05/quickshell-macos">quickshell-macos</a>
+									<span data-i18n="iw.credits.macos">by minimal-05, whose macOS port of Quickshell and ii showed this could be done.</span>
+								</li>
+								<li>
+									<span data-i18n="iw.credits.libsBefore">The projects it builds on:</span>
+									<a href="https://github.com/InioX/matugen">matugen</a>,
+									<a href="https://github.com/Ciantic/VirtualDesktopAccessor">VirtualDesktopAccessor</a>,
+									<a href="https://github.com/material-foundation/material-color-utilities">material-color-utilities</a>,
+									<a href="https://github.com/marin-m/SongRec">SongRec</a>
+									<span data-i18n="iw.credits.and">and</span>
+									<a href="https://github.com/NanoMichael/MicroTeX">MicroTeX</a>.
+								</li>
+								<li>
+									<a href="https://github.com/dremin/RetroBar">RetroBar</a>
+									<span data-i18n="iw.credits.and2">and</span>
+									<a href="https://github.com/cairoshell/ManagedShell">ManagedShell</a><span data-i18n="iw.credits.tray">, whose way of sharing the tray with Explorer the Windows tray follows.</span>
+								</li>
+								<li data-i18n="iw.credits.qt">The Qt Project, and the fonts and icons ii ships with: JetBrains Mono and Nerd Fonts, Rubik, Readex Pro, Space Grotesk, Google Sans Flex, Material Symbols and GNOME's Adwaita icons.</li>
+							</ul>
+						</article>
+
+						<article class="card">
+							<h3 data-i18n="iw.license.title">License</h3>
+							<ul>
+								<li data-i18n="iw.license.repo">This project (the setup and the packaging scripts) is GPL-3.0, like ii.</li>
+								<li data-i18n="iw.license.forks">The forks keep their upstream licenses: Quickshell for Windows is LGPL-3.0 and ii for Windows is GPL-3.0.</li>
+								<li data-i18n="iw.license.bundle">The package also includes Qt (LGPL-3.0), matugen (GPL-2.0), VirtualDesktopAccessor (MIT), SongRec's recognizer (GPL-3.0-or-later), MicroTeX (MIT), the Visual C++ runtime, and fonts under the SIL Open Font License and Apache-2.0. The setup lists them all.</li>
+							</ul>
+							<p>
+								<a href="https://github.com/nunreasonable/ii-windows/blob/main/LICENSE" data-i18n="iw.license.read">Read the license</a>
+							</p>
+						</article>
+					</div>
+				</div>
+			</section>
+
+			<!-- ================= Codigo-fonte ================= -->
+			<section class="section alt" id="source">
+				<div class="wrap">
+					<header class="section-head">
+						<h2 data-i18n="iw.source.title">Source code</h2>
+						<p data-i18n="iw.source.lead">Three repositories, all public.</p>
+					</header>
+
+					<div class="repos">
+						<a class="card repo" href="https://github.com/nunreasonable/ii-windows">
+							<span class="api">nunreasonable/ii-windows</span>
+							<h3 data-i18n="iw.source.pkgTitle">ii-windows</h3>
+							<p data-i18n="iw.source.pkgText">The setup, packaging and releases. Start here.</p>
+						</a>
+						<a class="card repo" href="https://github.com/nunreasonable/quickshell/tree/windows">
+							<span class="api">nunreasonable/quickshell · windows</span>
+							<h3 data-i18n="iw.source.qsTitle">Quickshell for Windows</h3>
+							<p data-i18n="iw.source.qsText">The widget system, with a native Windows backend.</p>
+						</a>
+						<a class="card repo" href="https://github.com/nunreasonable/dots-hyprland/tree/ii-windows">
+							<span class="api">nunreasonable/dots-hyprland · ii-windows</span>
+							<h3 data-i18n="iw.source.iiTitle">ii for Windows</h3>
+							<p data-i18n="iw.source.iiText">The shell itself: bar, sidebars, settings and the rest.</p>
+						</a>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer class="site-footer">
+			<div class="wrap footer-inner">
+				<div>
+					<p data-i18n="iw.footer.disclaimer">II for Windows is an unofficial project, not affiliated with or endorsed by Microsoft, end-4 or the Quickshell developers.</p>
+					<p data-i18n="iw.footer.trademark">Windows is a trademark of the Microsoft group of companies.</p>
+				</div>
+				<a class="back" href="https://daeese.me" data-i18n="iw.footer.back">← Back to daeese.me</a>
+			</div>
+		</footer>
+
+		<script>
+			/*
+			 * Abas de publico (iniciante / avancado). O painel visivel ja foi
+			 * decidido no head pelo atributo data-aud; aqui so ligamos clique,
+			 * teclado (setas, Home, End - padrao WAI-ARIA de abas com ativacao
+			 * automatica), aria-selected e a memoria no localStorage.
+			 */
+			(function () {
+				var root = document.documentElement;
+				var tabs = Array.prototype.slice.call(document.querySelectorAll('.tabs [role="tab"]'));
+				if (!tabs.length) return;
+				var KEY = "iw:audience";
+
+				function save(aud) {
+					try {
+						localStorage.setItem(KEY, aud);
+					} catch (e) {
+						// Sem storage a escolha vale so ate fechar a aba.
+					}
+				}
+
+				function select(aud, focus) {
+					root.setAttribute("data-aud", aud);
+					tabs.forEach(function (tab) {
+						var on = tab.getAttribute("data-aud") === aud;
+						tab.setAttribute("aria-selected", on ? "true" : "false");
+						tab.tabIndex = on ? 0 : -1;
+						if (on && focus) tab.focus();
+					});
+				}
+
+				tabs.forEach(function (tab, i) {
+					tab.addEventListener("click", function () {
+						var aud = tab.getAttribute("data-aud");
+						select(aud, false);
+						save(aud);
+					});
+
+					tab.addEventListener("keydown", function (ev) {
+						var next = null;
+						if (ev.key === "ArrowRight" || ev.key === "ArrowDown") next = tabs[(i + 1) % tabs.length];
+						else if (ev.key === "ArrowLeft" || ev.key === "ArrowUp") next = tabs[(i - 1 + tabs.length) % tabs.length];
+						else if (ev.key === "Home") next = tabs[0];
+						else if (ev.key === "End") next = tabs[tabs.length - 1];
+						if (!next) return;
+						ev.preventDefault();
+						var aud = next.getAttribute("data-aud");
+						select(aud, true);
+						save(aud);
+					});
+				});
+
+				// Links para #beginner / #advanced abrem a aba certa e rolam ate ela.
+				window.addEventListener("hashchange", function () {
+					var h = location.hash.slice(1);
+					if (h !== "beginner" && h !== "advanced") return;
+					select(h, false);
+					var panel = document.getElementById(h);
+					if (panel) panel.scrollIntoView();
+				});
+
+				select(root.getAttribute("data-aud") === "advanced" ? "advanced" : "beginner", false);
+			})();
+		</script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js"></script>
+	</body>
+</html>

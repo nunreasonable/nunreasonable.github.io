@@ -4,12 +4,14 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Add Sollarety to your server</title>
-		<link rel="canonical" href="https://ccore.daeese.me/fun/invite/" />
+		<link rel="canonical" href="https://apps.daeese.me/sollarety/invite/" />
 		<meta
 			name="description"
 			content="Sign in with Discord and add Sollarety to one of your servers. Moderation, warnings, fun and utility slash commands."
 		/>
-		<link rel="icon" type="image/png" href="../../../filearchive/sollarety.png" />
+		<!-- Favicon de 32px (1 KB) no lugar do PNG de 512px (13 KB): a aba nunca
+		     mostra mais que isso. O de 512 continua no filearchive. -->
+		<link rel="icon" type="image/png" sizes="32x32" href="../../../filearchive/icons/sollarety-32.png" />
 
 		<!--
 		 * Esta e a pagina feita para ser colada num chat do Discord, entao ela
@@ -25,7 +27,7 @@
 			property="og:description"
 			content="Pick one of your servers and invite Sollarety. Moderation, warnings, fun and utility slash commands - and it never reads your messages."
 		/>
-		<meta property="og:url" content="https://ccore.daeese.me/fun/invite/" />
+		<meta property="og:url" content="https://apps.daeese.me/sollarety/invite/" />
 		<meta property="og:image" content="https://daeese.me/filearchive/sollarety-og.png" />
 		<meta property="og:image:type" content="image/png" />
 		<meta property="og:image:width" content="1200" />
@@ -94,27 +96,22 @@
 			}
 
 			/*
-			 * Campo de estrelas: uma camada fixa so, pintada uma vez por
-			 * gradientes minusculos. Sem canvas e sem elemento por estrela -
-			 * o navegador rasteriza isto no primeiro quadro e nunca mais toca.
+			 * Campo de estrelas: uma camada fixa so. Antes eram oito
+			 * radial-gradient ladrilhados, que o navegador refazia em cada
+			 * ladrilho de 620px ao rasterizar a tela inteira; agora e um SVG de
+			 * 620x620 com as mesmas oito estrelas (posicao e raio iguais),
+			 * decodificado uma vez e so repetido. O SVG e compartilhado com as
+			 * outras paginas do Sollarety, que usavam alfas um pouco mais altos;
+			 * a opacidade 0.82 aqui devolve o brilho que esta pagina tinha
+			 * (alfa daqui x 0.75 de antes = alfa do SVG x 0.82, com erro < 0.01).
 			 */
 			.stars {
 				position: fixed;
 				inset: 0;
 				z-index: 0;
 				pointer-events: none;
-				opacity: 0.75;
-				background-repeat: repeat;
-				background-size: 620px 620px;
-				background-image:
-					radial-gradient(1.4px 1.4px at 68px 92px, rgba(255, 255, 255, 0.65), transparent),
-					radial-gradient(1.1px 1.1px at 402px 66px, rgba(255, 255, 255, 0.45), transparent),
-					radial-gradient(1.6px 1.6px at 168px 348px, rgba(255, 255, 255, 0.55), transparent),
-					radial-gradient(1px 1px at 528px 262px, rgba(255, 255, 255, 0.4), transparent),
-					radial-gradient(1.3px 1.3px at 296px 552px, rgba(255, 255, 255, 0.5), transparent),
-					radial-gradient(1px 1px at 470px 486px, rgba(255, 255, 255, 0.35), transparent),
-					radial-gradient(1.5px 1.5px at 44px 470px, rgba(255, 255, 255, 0.42), transparent),
-					radial-gradient(1.1px 1.1px at 590px 128px, rgba(255, 255, 255, 0.38), transparent);
+				opacity: 0.82;
+				background: url("../../../filearchive/sollarety-stars.svg") 0 0 / 620px 620px repeat;
 			}
 
 			/*
@@ -124,20 +121,58 @@
 			 */
 			.corona {
 				position: fixed;
-				inset: -25%;
+				/*
+				 * Camada encolhida de inset -25% (2.25x a area da tela) para -6%
+				 * (1.25x): a deriva desloca no maximo 3% da tela e a escala so
+				 * cresce, entao 6% de sobra cobre qualquer quadro. Os gradientes
+				 * foram reescritos para a caixa nova e caem nos mesmos pixels da
+				 * tela de antes (centro, raio e queda iguais); so sumiu a parte que
+				 * nunca chegava a aparecer. Textura ~44% menor na GPU.
+				 */
+				inset: -6%;
 				z-index: 0;
 				pointer-events: none;
 				background:
-					radial-gradient(42% 34% at 50% 32%, rgba(226, 232, 240, 0.12) 0%, transparent 68%),
-					radial-gradient(38% 30% at 76% 78%, rgba(148, 163, 184, 0.09) 0%, transparent 70%);
-				animation: corona-drift 34s ease-in-out infinite alternate;
+					radial-gradient(56.25% 45.536% at 50% 25.893%, rgba(226, 232, 240, 0.12) 0%, transparent 68%),
+					radial-gradient(50.893% 40.179% at 84.821% 87.5%, rgba(148, 163, 184, 0.09) 0%, transparent 70%);
+				/* steps(27) vale por trecho de keyframe: ver o comentario abaixo. */
+				animation: corona-drift 34s steps(27) infinite alternate;
 				will-change: transform;
 			}
 
+			/*
+			 * Mesma deriva de antes (34s, ida e volta, ease-in-out, 3% da tela de
+			 * deslocamento e 10% de escala), mas em degraus de ~8 por segundo: a
+			 * curva ease-in-out foi pre-calculada em 10 trechos e cada trecho anda
+			 * em steps(27). Numa mancha difusa com alfa abaixo de 0.12 um degrau
+			 * move menos de 1px e o olho nao separa os quadros - mas a camada que
+			 * cobre a tela inteira so e recomposta 8 vezes por segundo, em vez de a
+			 * cada vsync (200 vezes por segundo no monitor de 200 Hz). Entre dois
+			 * degraus o transform nao muda, nao ha dano e nenhum quadro e desenhado.
+			 *
+			 * Os translate sao os antigos (2% e 1.5% de uma camada de 150%)
+			 * convertidos para a camada nova de 112%.
+			 */
 			@keyframes corona-drift {
-				from { transform: translate3d(-2%, -1.5%, 0) scale(1); }
-				to { transform: translate3d(2%, 1.5%, 0) scale(1.1); }
+				0% { transform: translate3d(-2.679%, -2.009%, 0) scale(1); }
+				10% { transform: translate3d(-2.573%, -1.93%, 0) scale(1.002); }
+				20% { transform: translate3d(-2.241%, -1.681%, 0) scale(1.0082); }
+				30% { transform: translate3d(-1.675%, -1.256%, 0) scale(1.0187); }
+				40% { transform: translate3d(-0.901%, -0.675%, 0) scale(1.0332); }
+				50% { transform: translate3d(0%, 0%, 0) scale(1.05); }
+				60% { transform: translate3d(0.901%, 0.675%, 0) scale(1.0668); }
+				70% { transform: translate3d(1.675%, 1.256%, 0) scale(1.0813); }
+				80% { transform: translate3d(2.241%, 1.681%, 0) scale(1.0918); }
+				90% { transform: translate3d(2.573%, 1.93%, 0) scale(1.098); }
+				100% { transform: translate3d(2.679%, 2.009%, 0) scale(1.1); }
 			}
+
+			/*
+			 * Sem handler de visibilitychange de proposito: aba oculta (ou janela
+			 * minimizada) nao recebe quadros do navegador, entao as animacoes CSS
+			 * daqui ja nao custam nada nesse estado - um script so para pausar
+			 * seria codigo a mais sem ganho.
+			 */
 
 			.shell {
 				position: relative;
@@ -153,11 +188,29 @@
 				margin-bottom: 34px;
 			}
 
+			/*
+			 * O emblema virou uma pilha de quatro SVGs dentro de um div (ver o
+			 * comentario no HTML). aspect-ratio no lugar da altura que o viewBox
+			 * dava ao <svg> sozinho; as camadas cobrem a caixa inteira, e o centro
+			 * dela e o (200, 200) do viewBox, entao a rotacao dos wrappers usa o
+			 * transform-origin padrao.
+			 */
 			.emblem {
+				position: relative;
 				display: block;
 				width: clamp(140px, 30vw, 208px);
-				height: auto;
+				aspect-ratio: 1;
 				margin: 0 auto 18px;
+			}
+
+			.emblem svg,
+			.emblem .orbit,
+			.emblem .rays {
+				position: absolute;
+				inset: 0;
+				display: block;
+				width: 100%;
+				height: 100%;
 			}
 
 			.wordmark {
@@ -180,10 +233,18 @@
 				letter-spacing: 0.04em;
 			}
 
-			/* Rotacoes do emblema. Duas so, ambas lentas o bastante para voce
-			   nao flagrar o movimento se olhar de proposito. */
-			.orbit { animation: spin 52s linear infinite; transform-origin: 200px 200px; }
-			.rays { animation: spin 190s linear infinite reverse; transform-origin: 200px 200px; }
+			/*
+			 * Rotacoes do emblema. Duas so, ambas lentas o bastante para voce
+			 * nao flagrar o movimento se olhar de proposito.
+			 * Antes giravam os <g> de dentro do <svg>: transform em elemento SVG nao
+			 * vai para o compositor, entao o emblema inteiro era rasterizado de novo
+			 * na thread principal a cada quadro, 200 vezes por segundo. Agora giram
+			 * divs que embrulham um <svg> cada: rasterizados uma vez, viram
+			 * texturas proprias (will-change) e a rotacao e so o compositor
+			 * mexendo numa matriz, sem repintar nada.
+			 */
+			.orbit { animation: spin 52s linear infinite; will-change: transform; }
+			.rays { animation: spin 190s linear infinite reverse; will-change: transform; }
 
 			@keyframes spin {
 				to { transform: rotate(360deg); }
@@ -516,57 +577,73 @@
 				 * menos de 2 KB depois do gzip e deixa as orbitas girarem sem
 				 * carregar imagem nenhuma. O PNG continua servindo de favicon e
 				 * de imagem do embed, onde SVG nao serve.
+				 *
+				 * Sao quatro camadas, na mesma ordem de pintura do SVG unico de
+				 * antes: aneis de fundo, orbita (gira), raios (gira ao contrario)
+				 * e a esfera por cima. So as duas do meio animam, cada uma num div
+				 * proprio - e o div que gira, nao o <svg>, para a rotacao ficar no
+				 * compositor. Todas usam o mesmo viewBox 400x400 e cobrem a caixa
+				 * inteira, entao se sobrepoem pixel a pixel.
 				-->
-				<svg class="emblem" viewBox="0 0 400 400" role="img" aria-label="Sollarety emblem">
-					<defs>
-						<linearGradient id="sphere" x1="0.18" y1="0.08" x2="0.82" y2="0.95">
-							<stop offset="0" stop-color="#ffffff" />
-							<stop offset="0.55" stop-color="#c9ced6" />
-							<stop offset="1" stop-color="#6c7078" />
-						</linearGradient>
-						<linearGradient id="ray" x1="0.5" y1="0" x2="0.5" y2="1">
-							<stop offset="0" stop-color="#e9ecf1" />
-							<stop offset="1" stop-color="#9ba0a9" />
-						</linearGradient>
-					</defs>
+				<div class="emblem" role="img" aria-label="Sollarety emblem">
+					<svg viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+						<g fill="none" stroke="#ffffff" stroke-opacity="0.1">
+							<circle cx="200" cy="200" r="192" />
+							<circle cx="200" cy="200" r="168" />
+							<circle cx="200" cy="200" r="146" />
+						</g>
+					</svg>
 
-					<g fill="none" stroke="#ffffff" stroke-opacity="0.1">
-						<circle cx="200" cy="200" r="192" />
-						<circle cx="200" cy="200" r="168" />
-						<circle cx="200" cy="200" r="146" />
-					</g>
+					<div class="orbit">
+						<svg viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+							<ellipse
+								cx="200" cy="200" rx="190" ry="80"
+								transform="rotate(-16 200 200)"
+								fill="none" stroke="#ffffff" stroke-opacity="0.28"
+							/>
+							<circle cx="18" cy="147" r="6.5" fill="#ffffff" fill-opacity="0.9" />
+							<circle cx="382" cy="253" r="9" fill="#ffffff" />
+						</svg>
+					</div>
 
-					<g class="orbit">
-						<ellipse
-							cx="200" cy="200" rx="190" ry="80"
-							transform="rotate(-16 200 200)"
-							fill="none" stroke="#ffffff" stroke-opacity="0.28"
-						/>
-						<circle cx="18" cy="147" r="6.5" fill="#ffffff" fill-opacity="0.9" />
-						<circle cx="382" cy="253" r="9" fill="#ffffff" />
-					</g>
+					<div class="rays">
+						<svg viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+							<defs>
+								<linearGradient id="ray" x1="0.5" y1="0" x2="0.5" y2="1">
+									<stop offset="0" stop-color="#e9ecf1" />
+									<stop offset="1" stop-color="#9ba0a9" />
+								</linearGradient>
+							</defs>
+							<g fill="url(#ray)">
+								<polygon points="200.0,34.0 221.2,104.3 178.8,104.3" />
+								<polygon points="317.4,82.6 282.7,147.3 252.7,117.3" />
+								<polygon points="366.0,200.0 295.7,221.2 295.7,178.8" />
+								<polygon points="317.4,317.4 252.7,282.7 282.7,252.7" />
+								<polygon points="200.0,366.0 178.8,295.7 221.2,295.7" />
+								<polygon points="82.6,317.4 117.3,252.7 147.3,282.7" />
+								<polygon points="34.0,200.0 104.3,178.8 104.3,221.2" />
+								<polygon points="82.6,82.6 147.3,117.3 117.3,147.3" />
+							</g>
+						</svg>
+					</div>
 
-					<g class="rays" fill="url(#ray)">
-						<polygon points="200.0,34.0 221.2,104.3 178.8,104.3" />
-						<polygon points="317.4,82.6 282.7,147.3 252.7,117.3" />
-						<polygon points="366.0,200.0 295.7,221.2 295.7,178.8" />
-						<polygon points="317.4,317.4 252.7,282.7 282.7,252.7" />
-						<polygon points="200.0,366.0 178.8,295.7 221.2,295.7" />
-						<polygon points="82.6,317.4 117.3,252.7 147.3,282.7" />
-						<polygon points="34.0,200.0 104.3,178.8 104.3,221.2" />
-						<polygon points="82.6,82.6 147.3,117.3 117.3,147.3" />
-					</g>
-
-					<circle cx="200" cy="200" r="110" fill="url(#sphere)" />
-					<circle cx="200" cy="200" r="78" fill="#050506" />
-
-					<g fill="none" stroke="#ffffff" stroke-opacity="0.22">
-						<circle cx="200" cy="200" r="46" />
-						<circle cx="200" cy="200" r="28" />
-					</g>
-
-					<circle cx="200" cy="200" r="8" fill="#ffffff" />
-				</svg>
+					<svg viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+						<defs>
+							<linearGradient id="sphere" x1="0.18" y1="0.08" x2="0.82" y2="0.95">
+								<stop offset="0" stop-color="#ffffff" />
+								<stop offset="0.55" stop-color="#c9ced6" />
+								<stop offset="1" stop-color="#6c7078" />
+							</linearGradient>
+						</defs>
+						<circle cx="200" cy="200" r="110" fill="url(#sphere)" />
+						<circle cx="200" cy="200" r="78" fill="#050506" />
+						<g fill="none" stroke="#ffffff" stroke-opacity="0.22">
+							<circle cx="200" cy="200" r="46" />
+							<circle cx="200" cy="200" r="28" />
+						</g>
+						<circle cx="200" cy="200" r="8" fill="#ffffff" />
+					</svg>
+				</div>
 
 				<h1 class="wordmark">SOLLARETY</h1>
 				<p class="tagline">Moderation, warnings, fun and utility - in one Discord bot.</p>
@@ -694,7 +771,7 @@
 				</div>
 			</article>
 
-			<footer>Sollarety &middot; C# / .NET 10 &middot; hosted alongside <a href="../../">ccore</a> at daeese.me</footer>
+			<footer>Sollarety &middot; C# / .NET 10 &middot; hosted alongside <a href="https://ccore.daeese.me/">ccore</a> at daeese.me</footer>
 		</main>
 
 		<script>
@@ -715,6 +792,13 @@
 			// Redirects. Sao duas entradas cadastradas: esta, do login, e a propria
 			// pagina, para onde o Discord volta depois de adicionar o bot.
 			const LOGIN_REDIRECT = "https://daeese.me/oauth/fun/callback";
+			// Ainda o endereco ANTIGO de proposito: e o que esta cadastrado no
+			// Developer Portal hoje. O Discord volta para ele com ?code=&state=, o
+			// site-router-worker responde 301 para apps.daeese.me/sollarety/invite/
+			// mantendo a query, e o state confere porque foi salvo nesta mesma
+			// origem (apps.daeese.me). Trocar para o endereco novo SO depois de
+			// cadastrar https://apps.daeese.me/sollarety/invite/ em OAuth2 >
+			// Redirects - antes disso o Discord recusa com "Invalid redirect_uri".
 			const INVITE_RETURN = "https://ccore.daeese.me/fun/invite/";
 
 			// Somas dos bits que os [ApplicationCommandRequireBotPermissions] do bot

@@ -110,7 +110,7 @@
 
       /*
        * Tema do Sollarety: o preto e a prata da pagina do bot
-       * (cornwallcore/fun/index.html). Fica ligado so enquanto o card do
+       * (apps/sollarety/index.html). Fica ligado so enquanto o card do
        * Sollarety esta aberto; o JS poe e tira o atributo.
        */
       :root[data-theme="sollarety"] {
@@ -2251,7 +2251,7 @@
     <canvas id="particles" aria-hidden="true"></canvas>
     <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
 
-    <!-- Sol do Sollarety (mesmo desenho de cornwallcore/fun/). Invisivel ate o
+    <!-- Sol do Sollarety (mesmo desenho de apps/sollarety/). Invisivel ate o
          card do Sollarety ser aberto. -->
     <div class="sol-emblem" aria-hidden="true">
       <div class="sol-spin">
@@ -2544,7 +2544,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261005-2")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261006-1")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -2758,7 +2758,8 @@
               { src: "./filearchive/projects/ii-windows/overview.webp", w: 1600, h: 900, alt: "ii workspace overview with a search field", caption: "Workspace overview, opened with the Super key" }
             ],
             links: [
-              { label: "Download the setup", href: "https://github.com/nunreasonable/ii-windows/releases/latest", primary: true },
+              { label: "Website", href: "https://apps.daeese.me/illogicalwindows/", primary: true },
+              { label: "Download the setup", href: "https://github.com/nunreasonable/ii-windows/releases/latest" },
               { label: "ii-windows on GitHub", href: "https://github.com/nunreasonable/ii-windows" },
               { label: "Quickshell fork", href: "https://github.com/nunreasonable/quickshell/tree/windows" },
               { label: "ii fork", href: "https://github.com/nunreasonable/dots-hyprland/tree/ii-windows" }
@@ -2783,20 +2784,22 @@
               { src: "./filearchive/projects/sollarety/page.webp", w: 1428, h: 1000, alt: "The Sollarety website with the silver sun emblem", caption: "The Sollarety page on daeese.me" }
             ],
             links: [
-              { label: "Add to Discord", href: "https://ccore.daeese.me/fun/invite/", primary: true },
-              { label: "Website", href: "https://ccore.daeese.me/fun/" }
+              { label: "Add to Discord", href: "https://apps.daeese.me/sollarety/invite/", primary: true },
+              { label: "Website", href: "https://apps.daeese.me/sollarety/" }
             ]
           },
           {
             slug: "ccore",
             title: "ccore Discord Application",
             tagline: "Utility and automation bot for the 12° Regimento de Infantaria in CONSTANTES.",
+            status: "Paused — not disabled",
             tags: ["C#", ".NET 10", "Slash commands"],
             image: "./filearchive/icons/ccore-96.webp",
             cover: { src: "./filearchive/projects/ccore/cover.webp", w: 760, h: 475 },
             details: [
               "ccore is the administration bot of the 12° Regimento de Infantaria \"Chaves\", a regiment of the CONSTANTES community. It takes care of enlistment with automatic Roblox verification, deployments, the regiment's spreadsheet and its announcements.",
-              "It's server-locked on purpose: built for one community, not as a public multi-server bot. It's also where Sollarety's infrastructure came from. The two share hosting, not data."
+              "It's server-locked on purpose: built for one community, not as a public multi-server bot. It's also where Sollarety's infrastructure came from. The two share hosting, not data.",
+              "ccore is paused right now, not disabled: it's on hold, nothing was deleted, and it can come back."
             ],
             images: [
               { src: "./filearchive/projects/ccore/page.webp", w: 1120, h: 800, alt: "The ccore website", caption: "The ccore page on daeese.me" },
@@ -4292,6 +4295,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261005-2"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261006-1"></script>
   </body>
 </html>

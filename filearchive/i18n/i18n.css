@@ -74,9 +74,10 @@
   right: 12px;
   z-index: 50;
   /* O fundo destas paginas e escuro; sem um plano de fundo proprio o seletor
-     some sobre o conteudo que passa por baixo dele ao rolar. */
-  background: rgba(13, 17, 23, 0.82);
-  backdrop-filter: blur(6px);
+     some sobre o conteudo que passa por baixo dele ao rolar. Quase opaco e
+     sem backdrop-filter: um blur fixo por cima de pagina com animacao (as
+     estrelas do Sollarety) era refeito a cada quadro. */
+  background: rgba(13, 17, 23, 0.94);
 }
 
 @media (max-width: 640px) {

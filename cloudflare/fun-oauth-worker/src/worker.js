@@ -1,4 +1,4 @@
-// Backend do convite do Sollarety em ccore.daeese.me/fun/invite/.
+// Backend do convite do Sollarety em apps.daeese.me/sollarety/invite/.
 //
 // Existe por um motivo so: trocar o `code` do OAuth2 pelo access token exige o
 // client secret, e segredo nao pode morar numa pagina estatica do GitHub Pages.
@@ -149,7 +149,7 @@ function packGuilds(guilds) {
 export default {
 	async fetch(request, env) {
 		const url = new URL(request.url);
-		const returnUrl = env.RETURN_URL || "https://ccore.daeese.me/fun/invite/";
+		const returnUrl = env.RETURN_URL || "https://apps.daeese.me/sollarety/invite/";
 
 		// Igualdade exata, nao startsWith: um endpoint que troca segredo nao deve
 		// aceitar "/oauth/fun/callbackXYZ" nem "/oauth/fun/callback/..".
