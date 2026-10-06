@@ -1150,7 +1150,7 @@
 
 					<!-- Versao atual: atualizar junto com cada release (VERSION do ii-windows). -->
 					<ul class="facts">
-						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>0.4.0</strong></li>
+						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>0.5.0</strong></li>
 						<li data-i18n="iw.hero.requirements">Windows 11, or Windows 10 version 2004+ (22H2 recommended)</li>
 						<li data-i18n="iw.hero.free">Free and open source, GPL-3.0</li>
 					</ul>
@@ -1238,6 +1238,7 @@
 									<li data-i18n="iw.b.get.panel">A side panel with quick switches like Wi-Fi, Bluetooth and night light, plus your notifications and a calendar.</li>
 									<li data-i18n="iw.b.get.search">A search box: tap the Windows key on its own, type a few letters and open any app.</li>
 									<li data-i18n="iw.b.get.colors">Colors that match your wallpaper. Pick a new picture and the whole desktop changes its colors to go with it.</li>
+									<li data-i18n="iw.b.get.windows">Move a window by holding the Windows key and dragging it from anywhere, and resize it the same way with the right mouse button.</li>
 									<li data-i18n="iw.b.get.desktops">Separate desktops for separate things, like one for work and one for games, with an overview that shows them all at once.</li>
 									<li data-i18n="iw.b.get.extras">Handy extras: grab a piece of the screen, copy the text out of a picture, record your screen, or translate the words you're looking at.</li>
 								</ul>
@@ -1320,8 +1321,12 @@
 										<span data-i18n="iw.a.win.hypr">Workspaces are Windows virtual desktops (registry, IVirtualDesktopManager and VirtualDesktopAccessor), with Hyprland.dispatch mapped to native actions. HyprlandFocusGrab becomes outside-click and foreground-change dismissal.</span>
 									</li>
 									<li>
+										<span class="api">Win + drag</span>
+										<span data-i18n="iw.a.win.superdrag">Win + drag moves a window and Win + right drag resizes it (super_drag.cpp): with tiling it swaps tiles and drags the split live, and it keeps the grabbed point proportional across monitors with different scaling. Fullscreen and elevated windows are left alone; UIPI-blocked WM_CLOSE falls back to WM_SYSCOMMAND/SC_CLOSE.</span>
+									</li>
+									<li>
 										<span class="api">DesktopLayer</span>
-										<span data-i18n="iw.a.win.desktop">ii's background is reparented under WorkerW (on 24H2 and later, inside Progman, below SHELLDLL_DefView), behind the desktop icons. Desktop widgets get their own window above the DefView, with the input mask as the window region.</span>
+										<span data-i18n="iw.a.win.desktop">By default Windows draws the wallpaper and ii keeps it in sync both ways (it watches HKCU\Control Panel\Desktop, since IDesktopWallpaper sends no WM_SETTINGCHANGE); only the desktop widgets live in the desktop, in their own window above SHELLDLL_DefView with the input mask as the window region. windowsPort.ownWallpaper brings back ii's own wallpaper with parallax, reparented under WorkerW (on 24H2 and later, inside Progman, below SHELLDLL_DefView). Windows inside the desktop don't get WM_DPICHANGED, so they're recreated when the display scale changes.</span>
 									</li>
 								</ul>
 							</article>
@@ -1521,10 +1526,11 @@
 							<article class="card wide">
 								<h4 data-i18n="iw.a.limits.title">Known limitations</h4>
 								<ul>
-									<li data-i18n="iw.a.limits.untested">Built on Windows' own APIs but barely tested: audio, media controls, battery, laptop brightness and music recognition (the VMs have no battery or laptop screen).</li>
-									<li data-i18n="iw.a.limits.missing">Not on Windows: ii's lock screen (Win+L uses Windows' own), the EasyEffects and WARP toggles, and content-region detection in the region selector (no OpenCV).</li>
+									<li data-i18n="iw.a.limits.untested">Built on Windows' own APIs but barely tested: audio, media controls, battery, laptop brightness and music recognition (the VMs have no battery or laptop screen). New in 0.5.0 and so far tried only in VMs: Win + drag, the bar shrinking its applets at high scaling, game mode, the WARP toggle and the shutdown warnings.</li>
+									<li data-i18n="iw.a.limits.missing">Not on Windows: ii's lock screen (Win+L uses Windows' own), the EasyEffects toggle, and content-region detection in the region selector (no OpenCV).</li>
 									<li data-i18n="iw.a.limits.win10">Windows 10: ii can't remove virtual desktops and creates them by sending Ctrl+Win+D, the older blur has slightly jagged rounded corners, and Windows draws a yellow border around a screen recording.</li>
 									<li data-i18n="iw.a.limits.notif">Mirrored notifications carry text only: no images, launch arguments or buttons. Windows keeps showing its own banners too.</li>
+									<li data-i18n="iw.a.limits.admin">While a window of an app running as administrator has the focus, Windows doesn't deliver the keyboard to ii's hook: ii's shortcuts don't work there and Win+Q opens Windows' search. Close those windows with Alt+F4.</li>
 									<li data-i18n="iw.a.limits.tray">While ii runs, taskbar tweaking tools that look for the taskbar by its window class may not find it.</li>
 								</ul>
 							</article>
@@ -1563,8 +1569,8 @@
 							<p data-i18n="iw.features.workspaces.text">ii's workspaces are Windows' own virtual desktops, with live previews in the overview.</p>
 						</li>
 						<li>
-							<h3 data-i18n="iw.features.tiling.title">Optional tiling</h3>
-							<p data-i18n="iw.features.tiling.text">Hyprland's dwindle layout with ii's keybinds. Off by default, new in 0.4.0.</p>
+							<h3 data-i18n="iw.features.tiling.title">Tiling and Win + drag</h3>
+							<p data-i18n="iw.features.tiling.text">Hyprland's dwindle layout with ii's keybinds (off by default), and since 0.5.0 Win + drag moves windows and Win + right drag resizes them.</p>
 						</li>
 						<li>
 							<h3 data-i18n="iw.features.screen.title">Screen tools</h3>
@@ -1631,7 +1637,7 @@
 							<a href="../../filearchive/projects/ii-windows/desktop-icons.webp" target="_blank" rel="noopener">
 								<img src="../../filearchive/projects/ii-windows/desktop-icons.mid.webp" width="833" height="625" loading="lazy" decoding="async" alt="Windows 10 desktop where ii's wallpaper and clock sit behind the desktop icons" data-i18n-attr="alt:iw.gallery.desktop.alt" />
 							</a>
-							<figcaption data-i18n="iw.gallery.desktop.caption">Windows 10, with ii's wallpaper and clock behind the desktop icons.</figcaption>
+							<figcaption data-i18n="iw.gallery.desktop.caption">Windows 10 with 0.3–0.4's layout: ii's wallpaper and clock behind the desktop icons. Since 0.5.0 Windows draws the wallpaper and ii adds only its widgets.</figcaption>
 						</figure>
 						<figure>
 							<a href="../../filearchive/projects/ii-windows/installer.webp" target="_blank" rel="noopener">
@@ -1710,8 +1716,8 @@
 							<ul>
 								<li data-i18n="iw.changes.keys">It takes over many Windows shortcuts: the Windows key alone opens ii's search, and Win+/ lists the rest. All of it stops when ii closes.</li>
 								<li data-i18n="iw.changes.taskbar">The Windows taskbar auto-hides and shows up when the pointer touches its edge.</li>
-								<li data-i18n="iw.changes.desktop">ii's wallpaper and widgets sit inside the desktop, behind your icons. Your desktop folder isn't changed.</li>
-								<li data-i18n="iw.changes.colors">Picking a wallpaper or light/dark mode in ii sets the same in Windows, and Windows' accent color follows ii's palette.</li>
+								<li data-i18n="iw.changes.desktop">Windows keeps drawing your wallpaper; ii only adds its widgets to the desktop, above your icons. Your desktop folder isn't changed.</li>
+								<li data-i18n="iw.changes.colors">Picking a wallpaper or light/dark mode in ii sets the same in Windows, changing the wallpaper in Windows recolors ii, and Windows' accent color follows ii's palette.</li>
 								<li data-i18n="iw.changes.online">The translators send text to Google's translation service, and music recognition sends an audio fingerprint to Shazam, only when you use them.</li>
 							</ul>
 						</article>
@@ -1738,15 +1744,22 @@
 				<div class="wrap">
 					<header class="section-head">
 						<h2 data-i18n="iw.releases.title">Release notes</h2>
-						<p data-i18n="iw.releases.lead">From Windows 11 only to Windows 10, native recording and tiling, in four days.</p>
+						<p data-i18n="iw.releases.lead">From Windows 11 only to Windows 10, native recording, tiling and Win + drag, in five days.</p>
 					</header>
 
 					<ol class="releases">
 						<li>
 							<div class="rel-head">
+								<span class="rel-ver">0.5.0</span>
+								<time datetime="2026-10-06">2026-10-06</time>
+								<span class="rel-latest" data-i18n="iw.releases.latest">Latest</span>
+							</div>
+							<p data-i18n="iw.releases.v050">Hold Win and drag to move a window, Win + right drag to resize it, with tiling and across monitors with different scaling. Windows draws the wallpaper again and ii only puts its widgets on the desktop; changing the wallpaper in Windows recolors ii. The bar shrinks its applets when they don't fit. Media visualizer, native color picker (Win+Shift+C), weather, game mode, the WARP toggle and a warning before shutting down while winget is installing. Fixes the bar sitting below the top or not reserving its space after a display scale change, and closing windows of apps running as administrator.</p>
+						</li>
+						<li>
+							<div class="rel-head">
 								<span class="rel-ver">0.4.0</span>
 								<time datetime="2026-10-05">2026-10-05</time>
-								<span class="rel-latest" data-i18n="iw.releases.latest">Latest</span>
 							</div>
 							<p data-i18n="iw.releases.v040">Optional tiling with Hyprland's dwindle layout on Windows' virtual desktops. The screen translator lays each translated paragraph over the original, desktop widgets sit next to the icons and can be dragged, tray icons of apps started before ii respond to clicks (Windows 10 included), and the classic console gets ii's colors and font. Fixes a crash in the Windows 10 virtual desktop helper, a second copy of ii starting on top of the first, and the bar losing its reserved space.</p>
 						</li>
@@ -1955,6 +1968,6 @@
 				select(root.getAttribute("data-aud") === "advanced" ? "advanced" : "beginner", false);
 			})();
 		</script>
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261006-1"></script>
 	</body>
 </html>

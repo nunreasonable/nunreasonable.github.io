@@ -107,7 +107,7 @@ export const pt = {
   "p.ii-windows.title": "ii no Windows",
   "p.ii-windows.tagline":
     "O desktop illogical-impulse do end-4, feito em Quickshell, portado do Hyprland para o Windows 11 e 10.",
-  "p.ii-windows.status": "Versão experimental · v0.4.0",
+  "p.ii-windows.status": "Versão experimental · v0.5.0",
   "p.ii-windows.d0":
     "O illogical-impulse (ii) é o shell de desktop em Quickshell que o end-4 fez para o Hyprland: a barra, as barras laterais, o overview e os widgets. Este port faz ele rodar num desktop de verdade do Windows, 11 ou 10, e chegar lá exige dois forks.",
   "p.ii-windows.d1":
@@ -123,7 +123,9 @@ export const pt = {
   "p.ii-windows.d6":
     "A 0.3.0, de 5 de outubro, grava a tela com a captura e o codificador H.264 do próprio Windows, então o FFmpeg deixou de ser necessário, põe uma bandeja do sistema na barra do ii que divide os ícones com a do Explorer e leva o wallpaper e os widgets para dentro da área de trabalho do Windows, atrás dos ícones. O tradutor e o tradutor de tela, o reconhecimento de música (SongRec) e o LaTeX no chat de IA (um MicroTeX compilado para Windows) agora funcionam no Windows também. Ela está mesclada com o Quickshell 0.3.1 e o ii mais recente do end-4, e o instalador agora procura um release mais novo no GitHub toda vez que abre e se atualiza antes. A 0.3.1 veio no mesmo dia com duas correções: o blur do Windows 10 não aparece mais como uma faixa nas pontas arredondadas da barra flutuante, e a janela do instalador abre na parte livre da tela em vez de embaixo da barra do ii.",
   "p.ii-windows.d7":
-    "A 0.4.0, lançada na mesma noite, traz tiling opcional: o layout dwindle do Hyprland em cima das áreas de trabalho virtuais do próprio Windows, comandado pelos atalhos do ii, sem nenhum gerenciador de janelas a mais para instalar (vem desligado). O tradutor de tela agora põe cada parágrafo traduzido por cima do texto original, os widgets da área de trabalho ficam junto dos ícones e voltam a poder ser arrastados, os ícones da bandeja de apps abertos antes do ii respondem ao clique e o console clássico do PowerShell ganha as cores e a fonte do ii. Ela também corrige um crash no ajudante de áreas de trabalho virtuais do Windows 10, uma segunda cópia do ii abrindo por cima da primeira e a barra às vezes perdendo o espaço reservado. Continua experimental, e o instalador ainda não é assinado, então o SmartScreen pode avisar.",
+    "A 0.4.0, lançada na mesma noite, traz tiling opcional: o layout dwindle do Hyprland em cima das áreas de trabalho virtuais do próprio Windows, comandado pelos atalhos do ii, sem nenhum gerenciador de janelas a mais para instalar (vem desligado). O tradutor de tela agora põe cada parágrafo traduzido por cima do texto original, os widgets da área de trabalho ficam junto dos ícones e voltam a poder ser arrastados, os ícones da bandeja de apps abertos antes do ii respondem ao clique e o console clássico do PowerShell ganha as cores e a fonte do ii. Ela também corrige um crash no ajudante de áreas de trabalho virtuais do Windows 10, uma segunda cópia do ii abrindo por cima da primeira e a barra às vezes perdendo o espaço reservado.",
+  "p.ii-windows.d8":
+    "A 0.5.0, um dia depois, deixa segurar Win e arrastar para mover uma janela, ou Win + arrastar com o botão direito para redimensionar, com tiling e entre monitores com escalas diferentes. O Windows volta a desenhar o papel de parede e o ii só põe os widgets dele na área de trabalho, então trocar o papel de parede no Windows recolore o ii. A barra encolhe os applets quando eles não cabem, e chegam um visualizador de mídia, um seletor de cor nativo, clima, game mode e o botão do WARP. Continua experimental, e o instalador ainda não é assinado, então o SmartScreen pode avisar.",
   "p.ii-windows.link0": "Site",
   "p.ii-windows.link1": "Baixar o instalador",
   "p.ii-windows.link2": "ii-windows no GitHub",

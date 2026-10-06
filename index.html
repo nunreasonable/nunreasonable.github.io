@@ -2544,7 +2544,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261006-1")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261006-2")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -2730,7 +2730,7 @@
             slug: "ii-windows",
             title: "ii on Windows",
             tagline: "end-4's illogical-impulse Quickshell desktop, ported from Hyprland to Windows 11 and 10.",
-            status: "Early release · v0.4.0",
+            status: "Early release · v0.5.0",
             tags: ["C++", "C++/WinRT", "Qt 6 / QML", "Quickshell"],
             image: "./filearchive/projects/ii-windows/thumb.webp",
             cover: { src: "./filearchive/projects/ii-windows/cover.webp", w: 760, h: 475 },
@@ -2744,7 +2744,8 @@
               "Version 0.1.0 came out on October 2 with a small GUI setup, written in Rust with Tauri, that downloads the package from the GitHub release, checks its SHA-256 and installs everything for the current user, with no administrator rights needed. The same setup updates, repairs and uninstalls, and uninstalling puts back the wallpaper, light or dark mode, accent color and taskbar setting it found. 0.1.1 went after mouse and keyboard lag on real hardware by moving window events off ii's main thread.",
               "0.2.0 brings Windows 10 (version 2004 or newer): virtual desktops, blur behind panels and the hover-only taskbar, on any screen edge, work there too, and the setup checks for WebView2 and installs Windows Terminal or winget when they're missing. It also ships the Visual C++ runtime, which 0.1.x needed already installed, and brightness now works on laptop screens, dimming in software on monitors without DDC/CI.",
               "0.3.0, out on October 5, records the screen with Windows' own capture and H.264 encoder, so FFmpeg isn't needed anymore, adds a system tray to ii's bar that shares Explorer's icons, and moves the wallpaper and widgets inside the Windows desktop, behind the icons. The translator and screen translator, music recognition (SongRec) and LaTeX in the AI chat (a cross-compiled MicroTeX) now work on Windows too. It's merged with Quickshell 0.3.1 and the latest ii from end-4, and the setup now checks GitHub for a newer release every time it opens and updates itself first. 0.3.1 followed the same day with two fixes: the Windows 10 blur no longer shows as a band around the floating bar's rounded ends, and the setup window opens in the free part of the screen instead of under ii's bar.",
-              "0.4.0, released the same evening, adds optional tiling: Hyprland's dwindle layout on top of Windows' own virtual desktops, driven by ii's keybinds, with no extra window manager to install (it's off by default). The screen translator now lays each translated paragraph over the original text, desktop widgets sit next to the icons and can be dragged again, tray icons of apps started before ii respond to clicks, and the classic PowerShell console gets ii's colors and font. It also fixes a crash in the Windows 10 virtual desktop helper, a second copy of ii starting on top of the first, and the bar sometimes losing its reserved space. It's still experimental, and the setup isn't signed yet, so SmartScreen may warn about it."
+              "0.4.0, released the same evening, adds optional tiling: Hyprland's dwindle layout on top of Windows' own virtual desktops, driven by ii's keybinds, with no extra window manager to install (it's off by default). The screen translator now lays each translated paragraph over the original text, desktop widgets sit next to the icons and can be dragged again, tray icons of apps started before ii respond to clicks, and the classic PowerShell console gets ii's colors and font. It also fixes a crash in the Windows 10 virtual desktop helper, a second copy of ii starting on top of the first, and the bar sometimes losing its reserved space.",
+              "0.5.0, a day later, lets you hold Win and drag to move a window or Win + right drag to resize it, with tiling and across monitors with different scaling. Windows draws the wallpaper again and ii only puts its widgets on the desktop, so changing the wallpaper in Windows recolors ii. The bar shrinks its applets when they don't fit, and there's a media visualizer, a native color picker, weather, game mode and a WARP toggle. It's still experimental, and the setup isn't signed yet, so SmartScreen may warn about it."
             ],
             images: [
               { src: "./filearchive/projects/ii-windows/themed.webp", w: 1600, h: 900, alt: "Windows 11 desktop with the ii bar and clock, colored from an anime wallpaper", caption: "ii's colors taken from the Windows wallpaper; the taskbar only shows up at the bottom edge" },
@@ -4295,6 +4296,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261006-1"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261006-2"></script>
   </body>
 </html>
