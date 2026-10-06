@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>presence - large image source - idle</title>
+    <!--
+      Fonte de filearchive/presence/large/idle.png (512x512, estetica
+      Sollarety). Emblema centrado, parado - usado quando o Rich Presence nao
+      tem nada de especifico para mostrar (sem VM, sem editor aberto).
+
+      Mesma geometria do emblema de apps/sollarety/index.html (viewBox
+      0 0 400 400: aneis de fundo, orbita com duas lascas, raios e a esfera
+      prateada por cima), sem a animacao - aqui e um quadro estatico.
+    -->
+    <style>
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: #050506;
+        display: grid;
+        place-items: start;
+      }
+
+      .frame {
+        width: 512px;
+        height: 512px;
+        position: relative;
+        display: grid;
+        place-items: center;
+        background: #050506;
+      }
+
+      .emblem {
+        position: relative;
+        width: 340px;
+        height: 340px;
+      }
+
+      .emblem svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <div class="emblem">
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <g fill="none" stroke="#ffffff" stroke-opacity="0.1">
+            <circle cx="200" cy="200" r="192" />
+            <circle cx="200" cy="200" r="168" />
+            <circle cx="200" cy="200" r="146" />
+          </g>
+        </svg>
+
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <ellipse
+            cx="200" cy="200" rx="190" ry="80"
+            transform="rotate(-16 200 200)"
+            fill="none" stroke="#ffffff" stroke-opacity="0.28"
+          />
+          <circle cx="18" cy="147" r="6.5" fill="#ffffff" fill-opacity="0.9" />
+          <circle cx="382" cy="253" r="9" fill="#ffffff" />
+        </svg>
+
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <defs>
+            <linearGradient id="ray" x1="0.5" y1="0" x2="0.5" y2="1">
+              <stop offset="0" stop-color="#e9ecf1" />
+              <stop offset="1" stop-color="#9ba0a9" />
+            </linearGradient>
+          </defs>
+          <g fill="url(#ray)">
+            <polygon points="200.0,34.0 221.2,104.3 178.8,104.3" />
+            <polygon points="317.4,82.6 282.7,147.3 252.7,117.3" />
+            <polygon points="366.0,200.0 295.7,221.2 295.7,178.8" />
+            <polygon points="317.4,317.4 252.7,282.7 282.7,252.7" />
+            <polygon points="200.0,366.0 178.8,295.7 221.2,295.7" />
+            <polygon points="82.6,317.4 117.3,252.7 147.3,282.7" />
+            <polygon points="34.0,200.0 104.3,178.8 104.3,221.2" />
+            <polygon points="82.6,82.6 147.3,117.3 117.3,147.3" />
+          </g>
+        </svg>
+
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <defs>
+            <linearGradient id="sphere" x1="0.18" y1="0.08" x2="0.82" y2="0.95">
+              <stop offset="0" stop-color="#ffffff" />
+              <stop offset="0.55" stop-color="#c9ced6" />
+              <stop offset="1" stop-color="#6c7078" />
+            </linearGradient>
+          </defs>
+          <circle cx="200" cy="200" r="110" fill="url(#sphere)" />
+          <circle cx="200" cy="200" r="78" fill="#050506" />
+          <g fill="none" stroke="#ffffff" stroke-opacity="0.22">
+            <circle cx="200" cy="200" r="46" />
+            <circle cx="200" cy="200" r="28" />
+          </g>
+          <circle cx="200" cy="200" r="8" fill="#ffffff" />
+        </svg>
+      </div>
+    </div>
+  </body>
+</html>

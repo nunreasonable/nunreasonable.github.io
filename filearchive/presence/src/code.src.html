@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>presence - large image source - code</title>
+    <!--
+      Fonte de filearchive/presence/large/code.png (512x512). Mesmo emblema do
+      idle.src.html, reduzido, com uma constelacao fina de linhas e pontos de
+      estrela em volta - usada quando a presenca detecta uma linguagem de
+      codigo sendo editada.
+
+      As linhas da constelacao sao estaticas (coordenadas fixas), ligando
+      pontos espalhados pelo quadro todo, por fora do raio do emblema, para
+      nao competir com a esfera prateada.
+    -->
+    <style>
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: #050506;
+        display: grid;
+        place-items: start;
+      }
+
+      .frame {
+        width: 512px;
+        height: 512px;
+        position: relative;
+        display: grid;
+        place-items: center;
+        background: #050506;
+      }
+
+      .constellation {
+        position: absolute;
+        inset: 0;
+      }
+
+      .emblem {
+        position: relative;
+        width: 230px;
+        height: 230px;
+      }
+
+      .emblem svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <svg class="constellation" viewBox="0 0 512 512" aria-hidden="true">
+        <g fill="none" stroke="#c9ced6" stroke-width="1" stroke-opacity="0.4">
+          <path d="M 54 92 L 112 148 L 92 224" />
+          <path d="M 112 148 L 168 118" />
+          <path d="M 420 70 L 452 132 L 398 162" />
+          <path d="M 452 132 L 486 186" />
+          <path d="M 62 372 L 108 338 L 104 408" />
+          <path d="M 108 338 L 160 360" />
+          <path d="M 418 356 L 462 398 L 436 452" />
+          <path d="M 462 398 L 408 420" />
+          <path d="M 256 46 L 300 70" />
+          <path d="M 256 466 L 212 440" />
+        </g>
+        <g fill="#ffffff">
+          <circle cx="54" cy="92" r="2.6" fill-opacity="0.95" />
+          <circle cx="112" cy="148" r="1.8" fill-opacity="0.8" />
+          <circle cx="92" cy="224" r="2.2" fill-opacity="0.85" />
+          <circle cx="168" cy="118" r="1.6" fill-opacity="0.7" />
+          <circle cx="420" cy="70" r="2.4" fill-opacity="0.9" />
+          <circle cx="452" cy="132" r="1.8" fill-opacity="0.8" />
+          <circle cx="398" cy="162" r="1.6" fill-opacity="0.7" />
+          <circle cx="486" cy="186" r="2" fill-opacity="0.8" />
+          <circle cx="62" cy="372" r="2.2" fill-opacity="0.85" />
+          <circle cx="108" cy="338" r="1.8" fill-opacity="0.75" />
+          <circle cx="104" cy="408" r="1.6" fill-opacity="0.7" />
+          <circle cx="160" cy="360" r="1.4" fill-opacity="0.6" />
+          <circle cx="418" cy="356" r="2.4" fill-opacity="0.9" />
+          <circle cx="462" cy="398" r="1.8" fill-opacity="0.8" />
+          <circle cx="436" cy="452" r="2" fill-opacity="0.8" />
+          <circle cx="408" cy="420" r="1.5" fill-opacity="0.65" />
+          <circle cx="256" cy="46" r="1.8" fill-opacity="0.75" />
+          <circle cx="300" cy="70" r="1.4" fill-opacity="0.6" />
+          <circle cx="256" cy="466" r="1.8" fill-opacity="0.75" />
+          <circle cx="212" cy="440" r="1.4" fill-opacity="0.6" />
+          <circle cx="30" cy="256" r="1.3" fill-opacity="0.55" />
+          <circle cx="482" cy="256" r="1.3" fill-opacity="0.55" />
+        </g>
+      </svg>
+
+      <div class="emblem">
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <g fill="none" stroke="#ffffff" stroke-opacity="0.1">
+            <circle cx="200" cy="200" r="192" />
+            <circle cx="200" cy="200" r="168" />
+            <circle cx="200" cy="200" r="146" />
+          </g>
+        </svg>
+
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <ellipse
+            cx="200" cy="200" rx="190" ry="80"
+            transform="rotate(-16 200 200)"
+            fill="none" stroke="#ffffff" stroke-opacity="0.28"
+          />
+          <circle cx="18" cy="147" r="6.5" fill="#ffffff" fill-opacity="0.9" />
+          <circle cx="382" cy="253" r="9" fill="#ffffff" />
+        </svg>
+
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <defs>
+            <linearGradient id="ray" x1="0.5" y1="0" x2="0.5" y2="1">
+              <stop offset="0" stop-color="#e9ecf1" />
+              <stop offset="1" stop-color="#9ba0a9" />
+            </linearGradient>
+          </defs>
+          <g fill="url(#ray)">
+            <polygon points="200.0,34.0 221.2,104.3 178.8,104.3" />
+            <polygon points="317.4,82.6 282.7,147.3 252.7,117.3" />
+            <polygon points="366.0,200.0 295.7,221.2 295.7,178.8" />
+            <polygon points="317.4,317.4 252.7,282.7 282.7,252.7" />
+            <polygon points="200.0,366.0 178.8,295.7 221.2,295.7" />
+            <polygon points="82.6,317.4 117.3,252.7 147.3,282.7" />
+            <polygon points="34.0,200.0 104.3,178.8 104.3,221.2" />
+            <polygon points="82.6,82.6 147.3,117.3 117.3,147.3" />
+          </g>
+        </svg>
+
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <defs>
+            <linearGradient id="sphere" x1="0.18" y1="0.08" x2="0.82" y2="0.95">
+              <stop offset="0" stop-color="#ffffff" />
+              <stop offset="0.55" stop-color="#c9ced6" />
+              <stop offset="1" stop-color="#6c7078" />
+            </linearGradient>
+          </defs>
+          <circle cx="200" cy="200" r="110" fill="url(#sphere)" />
+          <circle cx="200" cy="200" r="78" fill="#050506" />
+          <g fill="none" stroke="#ffffff" stroke-opacity="0.22">
+            <circle cx="200" cy="200" r="46" />
+            <circle cx="200" cy="200" r="28" />
+          </g>
+          <circle cx="200" cy="200" r="8" fill="#ffffff" />
+        </svg>
+      </div>
+    </div>
+  </body>
+</html>

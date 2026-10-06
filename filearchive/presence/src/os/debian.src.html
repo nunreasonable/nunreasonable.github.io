@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>presence - badge source - os/debian</title>
+    <!--
+      Template para os badges de linguagem/SO do Rich Presence (128x128).
+      Gerado por gen_badges.py a partir deste arquivo - nao editar os
+      .src.html em lang/ e os/ diretamente, eles sao sobrescritos a cada
+      render.sh. Design proprio (nao logo de terceiro): disco #050506, anel
+      prateado, rotulo curto em Space Grotesk.
+    -->
+    <style>
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: #050506;
+        display: grid;
+        place-items: start;
+      }
+
+      .frame {
+        width: 128px;
+        height: 128px;
+        position: relative;
+        display: grid;
+        place-items: center;
+        background: #050506;
+      }
+
+      text {
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <svg viewBox="0 0 128 128" width="128" height="128" aria-hidden="true">
+        <defs>
+          <linearGradient id="ring" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffffff" />
+            <stop offset="1" stop-color="#6c7078" />
+          </linearGradient>
+          <linearGradient id="label" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffffff" />
+            <stop offset="1" stop-color="#c9ced6" />
+          </linearGradient>
+        </defs>
+        <circle cx="64" cy="64" r="62" fill="#050506" />
+        <circle cx="64" cy="64" r="58" fill="none" stroke="url(#ring)" stroke-width="3" stroke-opacity="0.85" />
+        <circle cx="64" cy="64" r="49" fill="none" stroke="#ffffff" stroke-opacity="0.08" />
+        <text
+          x="64" y="67" text-anchor="middle" dominant-baseline="middle"
+          font-size="36" letter-spacing="0"
+          fill="url(#label)"
+        >DEB</text>
+      </svg>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>presence - large image source - orbit</title>
+    <!--
+      Fonte de filearchive/presence/large/orbit.png (512x512). Mesmo emblema
+      do idle.src.html, reduzido, com uma segunda orbita tilted por fora
+      (elipse mais larga que a do proprio emblema) e um pequeno planeta
+      percorrendo-a - usada quando a presenca detecta uma VM rodando.
+      Estrelas fracas no fundo, reaproveitando o mesmo ponto radial de
+      filearchive/sollarety-stars.svg.
+    -->
+    <style>
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: #050506;
+        display: grid;
+        place-items: start;
+      }
+
+      .frame {
+        width: 512px;
+        height: 512px;
+        position: relative;
+        display: grid;
+        place-items: center;
+        background: #050506;
+      }
+
+      .stars {
+        position: absolute;
+        inset: 0;
+      }
+
+      .emblem {
+        position: relative;
+        width: 230px;
+        height: 230px;
+      }
+
+      .emblem svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .orbit-ring {
+        position: absolute;
+        width: 420px;
+        height: 420px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <svg class="stars" viewBox="0 0 512 512" aria-hidden="true">
+        <defs>
+          <radialGradient id="s">
+            <stop offset="0" stop-color="#fff" />
+            <stop offset="1" stop-color="#fff" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <g fill="url(#s)">
+          <circle cx="56" cy="76" r="1.4" fill-opacity="0.55" />
+          <circle cx="332" cy="54" r="1.1" fill-opacity="0.4" />
+          <circle cx="138" cy="288" r="1.6" fill-opacity="0.5" />
+          <circle cx="436" cy="216" r="1" fill-opacity="0.34" />
+          <circle cx="244" cy="456" r="1.3" fill-opacity="0.44" />
+          <circle cx="388" cy="402" r="1" fill-opacity="0.3" />
+          <circle cx="36" cy="388" r="1.5" fill-opacity="0.38" />
+          <circle cx="488" cy="106" r="1.1" fill-opacity="0.32" />
+          <circle cx="212" cy="40" r="1" fill-opacity="0.3" />
+          <circle cx="470" cy="330" r="1.2" fill-opacity="0.36" />
+        </g>
+      </svg>
+
+      <!--
+        Orbita externa: elipse propria (nao a do emblema) para caber o
+        planeta sem invadir os raios da esfera. tilt leve, igual ao -16deg
+        da orbita interna, para ler como o mesmo sistema.
+      -->
+      <svg class="orbit-ring" viewBox="0 0 420 420" aria-hidden="true">
+        <ellipse
+          cx="210" cy="210" rx="204" ry="96"
+          transform="rotate(-18 210 210)"
+          fill="none" stroke="#c9ced6" stroke-opacity="0.5" stroke-width="2"
+        />
+        <!-- planeta: esfera pequena com a mesma gradiente prateada do sol -->
+        <defs>
+          <radialGradient id="planet" cx="0.35" cy="0.3" r="0.75">
+            <stop offset="0" stop-color="#ffffff" />
+            <stop offset="0.6" stop-color="#b7bcc5" />
+            <stop offset="1" stop-color="#5a5e67" />
+          </radialGradient>
+        </defs>
+        <circle cx="398.5" cy="268" r="15" fill="url(#planet)" />
+      </svg>
+
+      <div class="emblem">
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <g fill="none" stroke="#ffffff" stroke-opacity="0.1">
+            <circle cx="200" cy="200" r="192" />
+            <circle cx="200" cy="200" r="168" />
+            <circle cx="200" cy="200" r="146" />
+          </g>
+        </svg>
+
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <ellipse
+            cx="200" cy="200" rx="190" ry="80"
+            transform="rotate(-16 200 200)"
+            fill="none" stroke="#ffffff" stroke-opacity="0.28"
+          />
+          <circle cx="18" cy="147" r="6.5" fill="#ffffff" fill-opacity="0.9" />
+          <circle cx="382" cy="253" r="9" fill="#ffffff" />
+        </svg>
+
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <defs>
+            <linearGradient id="ray" x1="0.5" y1="0" x2="0.5" y2="1">
+              <stop offset="0" stop-color="#e9ecf1" />
+              <stop offset="1" stop-color="#9ba0a9" />
+            </linearGradient>
+          </defs>
+          <g fill="url(#ray)">
+            <polygon points="200.0,34.0 221.2,104.3 178.8,104.3" />
+            <polygon points="317.4,82.6 282.7,147.3 252.7,117.3" />
+            <polygon points="366.0,200.0 295.7,221.2 295.7,178.8" />
+            <polygon points="317.4,317.4 252.7,282.7 282.7,252.7" />
+            <polygon points="200.0,366.0 178.8,295.7 221.2,295.7" />
+            <polygon points="82.6,317.4 117.3,252.7 147.3,282.7" />
+            <polygon points="34.0,200.0 104.3,178.8 104.3,221.2" />
+            <polygon points="82.6,82.6 147.3,117.3 117.3,147.3" />
+          </g>
+        </svg>
+
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <defs>
+            <linearGradient id="sphere" x1="0.18" y1="0.08" x2="0.82" y2="0.95">
+              <stop offset="0" stop-color="#ffffff" />
+              <stop offset="0.55" stop-color="#c9ced6" />
+              <stop offset="1" stop-color="#6c7078" />
+            </linearGradient>
+          </defs>
+          <circle cx="200" cy="200" r="110" fill="url(#sphere)" />
+          <circle cx="200" cy="200" r="78" fill="#050506" />
+          <g fill="none" stroke="#ffffff" stroke-opacity="0.22">
+            <circle cx="200" cy="200" r="46" />
+            <circle cx="200" cy="200" r="28" />
+          </g>
+          <circle cx="200" cy="200" r="8" fill="#ffffff" />
+        </svg>
+      </div>
+    </div>
+  </body>
+</html>
