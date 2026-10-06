@@ -1065,12 +1065,11 @@ O `off` devolve o `security_level` que estava antes.
    Sollarety (`1403153848507301939`) → OAuth2 → Redirects precisam estar, caractere a caractere:
    `https://daeese.me/oauth/fun/callback`, `https://ccore.daeese.me/fun/invite/` e, para a
    verificação Roblox, `https://daeese.me/oauth/roblox/discord`.
-   **Desde 06/10/2026 o Sollarety mora em `apps.daeese.me/sollarety/`.** O convite ao servidor
-   (depois do login) **não manda mais `redirect_uri`**: termina na tela "Authorized" do próprio
-   Discord. Mandar `https://ccore.daeese.me/fun/invite/` dava *Invalid OAuth2 redirect_uri*
-   porque essa URL nunca foi cadastrada. Para voltar a ter o passo "pronto" da página: cadastrar
-   `https://apps.daeese.me/sollarety/invite/` em OAuth2 → Redirects e pôr essa URL em
-   `INVITE_RETURN` (`apps/sollarety/invite/index.html`). Em General Information, trocar as URLs
+   **Desde 06/10/2026 o Sollarety mora em `apps.daeese.me/sollarety/`.** Mandar
+   `https://ccore.daeese.me/fun/invite/` dava *Invalid OAuth2 redirect_uri* porque essa URL nunca
+   foi cadastrada. Em 06/10/2026 o dono cadastrou `https://apps.daeese.me/sollarety/invite/` em
+   OAuth2 → Redirects (junto com o callback do login e o da verificação Roblox), e o
+   `INVITE_RETURN` de `apps/sollarety/invite/index.html` voltou a apontar para ela. Em General Information, trocar as URLs
    de Terms of Service e Privacy Policy para `https://apps.daeese.me/sollarety/termsofservice/` e
    `.../privacypolicy/` (as antigas seguem funcionando pelo 301).
 9. **Ligar a verificação Roblox** (seção 15): registrar o app OAuth no Creator Hub do Roblox

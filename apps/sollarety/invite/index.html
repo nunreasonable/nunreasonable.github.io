@@ -792,16 +792,14 @@
 			// Redirects. Sao duas entradas cadastradas: esta, do login, e a propria
 			// pagina, para onde o Discord volta depois de adicionar o bot.
 			const LOGIN_REDIRECT = "https://daeese.me/oauth/fun/callback";
-			// Para onde o Discord volta depois de adicionar o bot. null = nao pede
-			// volta nenhuma: o convite termina na tela "Authorized" do proprio
-			// Discord. E assim de proposito enquanto nenhuma URL desta pagina
-			// estiver cadastrada em Developer Portal > OAuth2 > Redirects - o
-			// Discord recusa o convite inteiro ("Invalid OAuth2 redirect_uri") se
-			// a URL mandada nao bater caractere a caractere com uma cadastrada, e
-			// nem a antiga (ccore.daeese.me/fun/invite/) nem a nova estavam la.
-			// Para ter de volta o passo "pronto" desta pagina: cadastrar
-			// https://apps.daeese.me/sollarety/invite/ no portal e por essa URL aqui.
-			const INVITE_RETURN = null;
+			// Para onde o Discord volta depois de adicionar o bot, com ?guild_id=
+			// (o passo "pronto" desta pagina). Tem que bater caractere a caractere
+			// com uma URL em Developer Portal > OAuth2 > Redirects, senao o Discord
+			// recusa o convite inteiro ("Invalid OAuth2 redirect_uri") - foi o que
+			// aconteceu com a antiga ccore.daeese.me/fun/invite/, nunca cadastrada.
+			// Esta foi cadastrada em 06/10/2026. null desliga a volta: o convite
+			// termina na tela "Authorized" do proprio Discord.
+			const INVITE_RETURN = "https://apps.daeese.me/sollarety/invite/";
 
 			// Somas dos bits que os [ApplicationCommandRequireBotPermissions] do bot
 			// exigem. "fun" e so a base de ler/escrever/reagir; "full" acrescenta
