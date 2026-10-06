@@ -792,14 +792,16 @@
 			// Redirects. Sao duas entradas cadastradas: esta, do login, e a propria
 			// pagina, para onde o Discord volta depois de adicionar o bot.
 			const LOGIN_REDIRECT = "https://daeese.me/oauth/fun/callback";
-			// Ainda o endereco ANTIGO de proposito: e o que esta cadastrado no
-			// Developer Portal hoje. O Discord volta para ele com ?code=&state=, o
-			// site-router-worker responde 301 para apps.daeese.me/sollarety/invite/
-			// mantendo a query, e o state confere porque foi salvo nesta mesma
-			// origem (apps.daeese.me). Trocar para o endereco novo SO depois de
-			// cadastrar https://apps.daeese.me/sollarety/invite/ em OAuth2 >
-			// Redirects - antes disso o Discord recusa com "Invalid redirect_uri".
-			const INVITE_RETURN = "https://ccore.daeese.me/fun/invite/";
+			// Para onde o Discord volta depois de adicionar o bot. null = nao pede
+			// volta nenhuma: o convite termina na tela "Authorized" do proprio
+			// Discord. E assim de proposito enquanto nenhuma URL desta pagina
+			// estiver cadastrada em Developer Portal > OAuth2 > Redirects - o
+			// Discord recusa o convite inteiro ("Invalid OAuth2 redirect_uri") se
+			// a URL mandada nao bater caractere a caractere com uma cadastrada, e
+			// nem a antiga (ccore.daeese.me/fun/invite/) nem a nova estavam la.
+			// Para ter de volta o passo "pronto" desta pagina: cadastrar
+			// https://apps.daeese.me/sollarety/invite/ no portal e por essa URL aqui.
+			const INVITE_RETURN = null;
 
 			// Somas dos bits que os [ApplicationCommandRequireBotPermissions] do bot
 			// exigem. "fun" e so a base de ler/escrever/reagir; "full" acrescenta
@@ -896,9 +898,11 @@
 				if (guildId) {
 					params.set("guild_id", guildId);
 					params.set("disable_guild_select", "true");
-					params.set("response_type", "code");
-					params.set("redirect_uri", INVITE_RETURN);
-					params.set("state", randomState());
+					if (INVITE_RETURN) {
+						params.set("response_type", "code");
+						params.set("redirect_uri", INVITE_RETURN);
+						params.set("state", randomState());
+					}
 				}
 
 				return "https://discord.com/oauth2/authorize?" + params.toString();
