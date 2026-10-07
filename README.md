@@ -18,6 +18,7 @@ frente (proxy + rota `/api/*`).
 | `cloudflare/` | Os quatro Workers (proxy da API, roteador de subdomínios, OAuth do convite do Sollarety e verificação Roblox do Sollarety), o script de deploy e o guia de setup do tunnel. |
 | `cloudflare/zone-security/` | Regras de borda da zona (rate limit do WAF, regras custom, cache do site estático) aplicadas pela API da Cloudflare. Ver [INFRA.md, seção 16](INFRA.md#16-proteção-contra-ddos-rate-limit-e-tetos-de-requisição-29092026). |
 | `filearchive/` | Imagens usadas pelas páginas. |
+| `filearchive/perf/lite.js` | Modo leve automático das páginas com efeitos (portfólio, Sollarety, ccore): liga `html[data-lite]` em máquina fraca (≤2 núcleos, ≤2 GB, economia de dados) ou quando o frame rate fica abaixo de ~40 fps nos primeiros segundos; a decisão vale 7 dias. `?lite=1` / `?lite=0` força ligado/desligado. Cada página diz no próprio CSS o que desliga (`:root[data-lite] ...`). |
 
 ## Infra
 

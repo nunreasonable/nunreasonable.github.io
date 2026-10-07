@@ -3,6 +3,9 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!-- Modo leve automatico (filearchive/perf/lite.js): classico e bloqueante
+		     de proposito, para marcar <html data-lite> antes do primeiro desenho. -->
+		<script src="../../../filearchive/perf/lite.js"></script>
 		<title>Add Sollarety to your server</title>
 		<link rel="canonical" href="https://apps.daeese.me/sollarety/invite/" />
 		<meta
@@ -563,6 +566,17 @@
 				}
 
 				* { transition-duration: 0.001ms !important; }
+			}
+
+			/*
+			 * Modo leve (html[data-lite], ligado por filearchive/perf/lite.js em
+			 * maquina fraca ou com frame rate abaixo de ~40 fps): o mesmo visual,
+			 * parado. As animacoes infinitas sao o que custa quadro aqui.
+			 */
+			:root[data-lite] .corona,
+			:root[data-lite] .orbit,
+			:root[data-lite] .rays {
+				animation: none !important;
 			}
 		</style>
 	</head>

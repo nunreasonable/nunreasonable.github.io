@@ -3,6 +3,9 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!-- Modo leve automatico (filearchive/perf/lite.js): classico e bloqueante
+		     de proposito, para marcar <html data-lite> antes do primeiro desenho. -->
+		<script src="../filearchive/perf/lite.js"></script>
 		<title>ccore Bot</title>
 		<link rel="canonical" href="https://ccore.daeese.me/" />
 		<!--
@@ -779,6 +782,15 @@
 					animation: none !important;
 					transition: none !important;
 				}
+			}
+
+			/*
+			 * Modo leve (html[data-lite], ligado por filearchive/perf/lite.js em
+			 * maquina fraca ou com frame rate abaixo de ~40 fps): o mesmo visual,
+			 * parado. As animacoes infinitas sao o que custa quadro aqui.
+			 */
+			:root[data-lite] .status-dot::after {
+				animation: none !important;
 			}
 		</style>
 		<link rel="stylesheet" href="../filearchive/i18n/i18n.css" />

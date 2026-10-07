@@ -1,8 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lite-watch="manual">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Modo leve automatico (filearchive/perf/lite.js): classico e bloqueante
+         de proposito, para marcar <html data-lite> antes do primeiro desenho.
+         data-lite-watch="manual" porque aqui so faz sentido medir o frame rate
+         depois do portao, com particulas e brilhos rodando. -->
+    <script src="./filearchive/perf/lite.js"></script>
     <title>Meet daeeseD</title>
     <meta
       name="description"
@@ -2205,6 +2210,52 @@
 
 
       /*
+       * Modo leve (html[data-lite], ligado por filearchive/perf/lite.js quando a
+       * maquina e fraca ou o frame rate cai abaixo de ~40 fps). Mesmo visual
+       * parado: sem particulas, brilho do cursor, pulsos e giros, sem o blur de
+       * tela cheia do portao, sem intro e sem animacoes de entrada, de layout
+       * ou de troca de tema. Fica perto do fim pelo mesmo motivo do bloco de
+       * movimento reduzido logo abaixo: precisa vencer pela ordem.
+       */
+      :root[data-lite] #particles,
+      :root[data-lite] .cursor-glow {
+        display: none !important;
+      }
+
+      :root[data-lite] .blur-overlay {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(10, 4, 7, 0.94);
+      }
+
+      :root[data-lite] .intro.is-running {
+        display: none;
+      }
+
+      :root[data-lite] .avatar-shell::after,
+      :root[data-lite] .scroll-cue::before,
+      :root[data-lite] .sol-spin,
+      :root[data-lite] .blur-message,
+      :root[data-lite] .blur-message::after,
+      :root[data-lite] .player-disc,
+      :root[data-lite] .project-details,
+      :root[data-lite] body.is-entering .site,
+      :root[data-lite] body.is-entering .reveal {
+        animation: none !important;
+      }
+
+      :root[data-lite] body::before,
+      :root[data-lite] body::after,
+      :root[data-lite] .sol-emblem,
+      :root[data-lite] .project-card,
+      :root[data-lite] .project-card::before,
+      :root[data-lite] .project-cover img,
+      :root[data-lite] .project-plus,
+      :root[data-lite] .nav {
+        transition: none !important;
+      }
+
+      /*
        * Movimento reduzido: fica no FIM da folha de proposito.
        *
        * Estas regras tem a mesma especificidade das que anulam (.project-card,
@@ -2574,6 +2625,9 @@
         });
         document.body.classList.add("is-entering", "has-entered");
         document.dispatchEvent(new Event("site:entered"));
+        if (window.daeeseLite) {
+          window.daeeseLite.watch();
+        }
 
         /*
          * A classe sai assim que a entrada termina, e isso NAO e limpeza
@@ -3624,8 +3678,13 @@
        */
       const LAYOUT_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 
+      // Modo leve (filearchive/perf/lite.js): maquina fraca nao anima layout.
+      function isLite() {
+        return Boolean(window.daeeseLite && window.daeeseLite.on);
+      }
+
       function withLayoutAnimation(update) {
-        if (reduceMotionQuery.matches || typeof Element.prototype.animate !== "function") {
+        if (reduceMotionQuery.matches || isLite() || typeof Element.prototype.animate !== "function") {
           update();
           return Promise.resolve();
         }
@@ -4187,8 +4246,22 @@
         let entered = false;
         document.addEventListener("site:entered", () => {
           entered = true;
-          start();
+          if (!isLite()) {
+            start();
+          }
         }, { once: true });
+
+        // Modo leve ligado no meio da visita (o frame rate caiu): as particulas
+        // sao o primeiro efeito a sair - o canvas de tela cheia e redesenhado
+        // a cada quadro.
+        document.addEventListener("lite:change", (event) => {
+          if (event.detail && event.detail.on) {
+            stop();
+            ctx.clearRect(0, 0, width, height);
+          } else if (entered && !document.hidden) {
+            start();
+          }
+        });
 
         // Redimensionar refaz as particulas; com debounce, porque arrastar a
         // janela dispara dezenas de resize por segundo.
@@ -4203,7 +4276,7 @@
         document.addEventListener("visibilitychange", () => {
           if (document.hidden) {
             stop();
-          } else if (entered) {
+          } else if (entered && !isLite()) {
             start();
           }
         });
@@ -4213,7 +4286,7 @@
           if (e.matches) {
             stop();
             ctx.clearRect(0, 0, width, height);
-          } else if (entered) {
+          } else if (entered && !isLite()) {
             start();
           }
         });
@@ -4241,7 +4314,7 @@
         window.addEventListener("mousemove", (event) => {
           // Atras do portao (que borra a tela inteira) o brilho mexendo obrigaria
           // a refazer o blur a cada movimento do mouse.
-          if (!document.body.classList.contains("has-entered")) {
+          if (!document.body.classList.contains("has-entered") || isLite()) {
             return;
           }
           x = event.clientX;
