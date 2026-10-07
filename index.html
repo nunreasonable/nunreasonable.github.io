@@ -2544,7 +2544,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261006-2")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261006-3")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -2793,14 +2793,14 @@
             slug: "ccore",
             title: "ccore Discord Application",
             tagline: "Utility and automation bot for the 12° Regimento de Infantaria in CONSTANTES.",
-            status: "Paused — not disabled",
+            status: "Fewer updates — not disabled",
             tags: ["C#", ".NET 10", "Slash commands"],
             image: "./filearchive/icons/ccore-96.webp",
             cover: { src: "./filearchive/projects/ccore/cover.webp", w: 760, h: 475 },
             details: [
               "ccore is the administration bot of the 12° Regimento de Infantaria \"Chaves\", a regiment of the CONSTANTES community. It takes care of enlistment with automatic Roblox verification, deployments, the regiment's spreadsheet and its announcements.",
               "It's server-locked on purpose: built for one community, not as a public multi-server bot. It's also where Sollarety's infrastructure came from. The two share hosting, not data.",
-              "ccore is paused right now, not disabled: it's on hold, nothing was deleted, and it can come back."
+              "ccore for the 12° won't get as many updates from here on, but it isn't disabled. It was the kickstart that let Sollarety shine, and it will probably be rebranded into an engine: daeese's own Discord bot/app template, the base for new apps in the near future."
             ],
             images: [
               { src: "./filearchive/projects/ccore/page.webp", w: 1120, h: 800, alt: "The ccore website", caption: "The ccore page on daeese.me" },
@@ -2808,7 +2808,8 @@
             ],
             links: [
               { label: "Website", href: "https://ccore.daeese.me", primary: true },
-              { label: "CONSTANTES Discord", href: "https://discord.gg/constantes" }
+              { label: "CONSTANTES Discord", href: "https://discord.gg/constantes" },
+              { label: "Sollarety", href: "https://apps.daeese.me/sollarety/" }
             ]
           },
           {
@@ -4296,6 +4297,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261006-2"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261006-3"></script>
   </body>
 </html>

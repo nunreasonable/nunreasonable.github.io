@@ -170,14 +170,15 @@ export const pt = {
   // --- ccore -------------------------------------------------------------------
   "p.ccore.title": "Aplicação de Discord ccore",
   "p.ccore.tagline": "Bot de utilidade e automação do 12° Regimento de Infantaria no CONSTANTES.",
-  "p.ccore.status": "Pausado — não desativado",
+  "p.ccore.status": "Menos atualizações — não desativado",
   "p.ccore.d0":
     "O ccore é o bot de administração do 12° Regimento de Infantaria \"Chaves\", um regimento da comunidade CONSTANTES. Ele cuida do alistamento com verificação Roblox automática, dos deployments, da planilha do regimento e dos avisos.",
   "p.ccore.d1":
     "Ele é travado num servidor de propósito: foi feito para uma comunidade, não como bot público para vários servidores. Também foi dele que saiu a infraestrutura do Sollarety. Os dois dividem a hospedagem, não os dados.",
-  "p.ccore.d2": "O ccore está pausado, não desativado: está em espera, nada foi apagado e ele pode voltar.",
+  "p.ccore.d2": "O ccore do 12° não vai receber tantas atualizações daqui em diante, mas não está desativado. Ele foi o pontapé inicial que deixou o Sollarety brilhar, e deve virar um engine: o template de bot/app para Discord do daeese, a base para novos apps num futuro próximo.",
   "p.ccore.link0": "Site",
   "p.ccore.link1": "Discord do CONSTANTES",
+  "p.ccore.link2": "Sollarety",
   "p.ccore.cap0": "A página do ccore no daeese.me",
   "p.ccore.cap1": "O emblema do ccore",
   "p.ccore.alt0": "O site do ccore",
