@@ -1150,7 +1150,7 @@
 
 					<!-- Versao atual: atualizar junto com cada release (VERSION do ii-windows). -->
 					<ul class="facts">
-						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>0.6.0</strong></li>
+						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>0.6.1</strong></li>
 						<li data-i18n="iw.hero.requirements">Windows 11, or Windows 10 version 2004+ (22H2 recommended)</li>
 						<li data-i18n="iw.hero.free">Free and open source, GPL-3.0</li>
 					</ul>
@@ -1236,7 +1236,7 @@
 								<ul>
 									<li data-i18n="iw.b.get.bar">A bar at the top of the screen that shows the song you're playing, the clock, your battery and the small icons of apps running in the background.</li>
 									<li data-i18n="iw.b.get.panel">A side panel with quick switches like Wi-Fi, Bluetooth and night light, plus your notifications and a calendar.</li>
-									<li data-i18n="iw.b.get.search">A search box: tap the Windows key on its own and type. It finds apps, files, emoji and things you copied, and can lock or restart the PC.</li>
+									<li data-i18n="iw.b.get.search">A search box: tap the Windows key on its own and type. It finds apps, files, emoji and things you copied, searches the web, and can lock or restart the PC.</li>
 									<li data-i18n="iw.b.get.colors">Colors that match your wallpaper. Pick a new picture and the whole desktop changes its colors to go with it.</li>
 									<li data-i18n="iw.b.get.windows">Move a window by holding the Windows key and dragging it from anywhere, and resize it the same way with the right mouse button.</li>
 									<li data-i18n="iw.b.get.desktops">Separate desktops for separate things, like one for work and one for games, with an overview that shows them all at once.</li>
@@ -1358,11 +1358,11 @@
 								<ul class="spec">
 									<li>
 										<span class="api">Spotlight</span>
-										<span data-i18n="iw.a.input.spotlight">A lone Super press opens a search-only Spotlight (apps with their own entry icons, files, system actions, emoji, clipboard history); Super+Tab opens the workspaces overview. The split can be switched back in Settings.</span>
+										<span data-i18n="iw.a.input.spotlight">A lone Super press opens a search-only Spotlight (apps with their own entry icons, files, clipboard history, emoji, system actions and web search); Super+Tab opens the workspaces with their windows. Settings > Services > Search switches back to the previous overview.</span>
 									</li>
 									<li>
 										<span class="api">Cold start</span>
-										<span data-i18n="iw.a.input.coldstart">ii ships a precompiled QML bytecode bundle that Quickshell serves for qs: files, creates the bar first and the other panels one per event-loop turn, loads the sidebars lazily, moves slow jobs (desktop entries, thumbnails, WMI brightness probes) to a small dedicated thread pool, defers native services past construction and no longer spawns PowerShell or cmd while starting. The QML file watcher is off unless IIW_WATCH_FILES=1.</span>
+										<span data-i18n="iw.a.input.coldstart">On a VM held to two slow cores and a slow disk the bar shows in about 4 s instead of about 43 s: ii ships a precompiled QML bytecode bundle that Quickshell serves for qs: files, creates the bar first and the other panels right after it, loads the sidebars lazily, moves slow jobs (desktop entries, thumbnails, WMI brightness probes) to a small dedicated thread pool, defers native services past construction and no longer spawns PowerShell or cmd while starting. The input hooks opt out of Windows 11's background-process throttling, which caused mouse and keyboard lag on weaker machines.</span>
 									</li>
 									<li>
 										<span class="api">RegisterHotKey + WH_KEYBOARD_LL</span>
@@ -1542,6 +1542,8 @@
 									<li data-i18n="iw.a.limits.missing">Not on Windows: ii's lock screen (Win+L uses Windows' own), the EasyEffects toggle, and content-region detection in the region selector (no OpenCV).</li>
 									<li data-i18n="iw.a.limits.win10">Windows 10: ii can't remove virtual desktops and creates them by sending Ctrl+Win+D, the older blur has slightly jagged rounded corners, and Windows draws a yellow border around a screen recording.</li>
 									<li data-i18n="iw.a.limits.notif">Mirrored notifications carry text only: no images, launch arguments or buttons. Windows keeps showing its own banners too.</li>
+									<li data-i18n="iw.a.limits.accent10">On Windows 10 the accent color from ii's palette doesn't stick; Windows keeps its own.</li>
+									<li data-i18n="iw.a.limits.firstsecond">A panel shortcut pressed in the first second after the bar appears is ignored.</li>
 									<li data-i18n="iw.a.limits.admin">While a window of an app running as administrator has the focus, Windows doesn't deliver the keyboard to ii's hook: ii's shortcuts don't work there and Win+Q opens Windows' search. Close those windows with Alt+F4.</li>
 									<li data-i18n="iw.a.limits.tray">While ii runs, taskbar tweaking tools that look for the taskbar by its window class may not find it.</li>
 								</ul>
@@ -1570,7 +1572,7 @@
 						</li>
 						<li>
 							<h3 data-i18n="iw.features.search.title">Spotlight search</h3>
-							<p data-i18n="iw.features.search.text">Tap the Windows key for apps, files, system actions, emoji and the clipboard in one box. Win+Tab opens the overview.</p>
+							<p data-i18n="iw.features.search.text">Tap the Windows key for apps, files, clipboard history, emoji, system actions and the web in one box. Win+Tab opens the overview.</p>
 						</li>
 						<li>
 							<h3 data-i18n="iw.features.colors.title">Colors from your wallpaper</h3>
@@ -1774,11 +1776,18 @@
 					<ol class="releases">
 						<li>
 							<div class="rel-head">
-								<span class="rel-ver">0.6.0</span>
+								<span class="rel-ver">0.6.1</span>
 								<time datetime="2026-10-07">2026-10-07</time>
 								<span class="rel-latest" data-i18n="iw.releases.latest">Latest</span>
 							</div>
-							<p data-i18n="iw.releases.v060">A System tab in the cheatsheet (host, CPU, GPU, memory and drives, with gauges and usage graphs) and a Resources widget on the desktop. The Windows key now opens a Spotlight search for apps, files, system actions, emoji and the clipboard, and Win+Tab the workspaces overview. Much faster startup: precompiled QML, the bar first and the other panels after it, slow jobs on background threads and no PowerShell or cmd spawned while starting.</p>
+							<p data-i18n="iw.releases.v061">The Settings app now has almost every option that used to live only in config.json (bar auto-hide, transparency and accent color, date formats, dock, on-screen keyboard, night light schedule, translator languages, search and more); options that only do something on Linux stay hidden. It's also translated to Brazilian Portuguese.</p>
+						</li>
+						<li>
+							<div class="rel-head">
+								<span class="rel-ver">0.6.0</span>
+								<time datetime="2026-10-07">2026-10-07</time>
+							</div>
+							<p data-i18n="iw.releases.v060">Starts much faster on weaker machines: on a VM held to two slow cores and a slow disk the bar shows in about 4 seconds instead of about 43. Spotlight search on the Windows key (apps, files, clipboard history, emoji, system actions and the web), with Win+Tab for the workspaces. A System tab in the cheatsheet with CPU, GPU, memory and disks, and CPU, RAM and disk cards for the desktop. Fixes mouse and keyboard lag on weaker machines, empty emoji search and crashes when ii reloaded mid-task.</p>
 						</li>
 						<li>
 							<div class="rel-head">
@@ -1999,6 +2008,6 @@
 				select(root.getAttribute("data-aud") === "advanced" ? "advanced" : "beginner", false);
 			})();
 		</script>
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261007-1"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261007-2"></script>
 	</body>
 </html>
