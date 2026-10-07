@@ -19,7 +19,7 @@ export const pt = {
 
   // --- Hero --------------------------------------------------------------
   "ccore.bot_overview": "Visão geral do bot",
-  "ccore.paused_pill": "Pausado — não desativado",
+  "ccore.paused_pill": "Menos atualizações — não desativado",
   "ccore.this_shit_is": "Essa budega é:",
   "ccore.discord_app": "App do Discord",
   "ccore.the_lovely_clanker_of_12":
@@ -113,10 +113,15 @@ export const pt = {
   // --- 03 Estado e links -------------------------------------------------
   "ccore.status_links": "Status e links",
   "ccore.status_lede": "Como ele está agora.",
-  "ccore.paused_title_a": "Pausado.",
+  "ccore.paused_title_a": "Desacelerando.",
   "ccore.paused_title_b": "Não desativado.",
-  "ccore.paused_body":
-    "O ccore está em pausa por enquanto. Nada foi apagado: o código, os dados e a aplicação no Discord continuam lá - o clanker só está tirando um cochilo, e pode voltar quando o regimento precisar dele de novo.",
+  "ccore.paused_body": "O ccore do 12° não vai receber tantas atualizações daqui em diante. Nada foi apagado: o código, os dados e a aplicação no Discord continuam lá, e o clanker ainda responde quando o regimento precisa dele.",
+  "ccore.kickstart_a": "O ccore foi o pontapé inicial do",
+  "ccore.kickstart_link": "Sollarety",
+  "ccore.kickstart_b": ": o Sollarety nasceu dele, roda na mesma infraestrutura e pôde brilhar porque o ccore veio antes. São apps separados e não compartilham dado nenhum - se você quer um bot para o seu servidor, o Sollarety é o certo.",
+  "ccore.engine_a": "O que vem aí: o ccore deve virar um",
+  "ccore.engine_word": "engine",
+  "ccore.engine_b": "- o template de bot/app para Discord do daeese, a base para criar novos apps num futuro próximo.",
   "ccore.paused_invite":
     "Por isso também não existe mais botão de convite. Ele nunca funcionou fora do CONSTANTES mesmo, então ninguém está perdendo muita coisa.",
   "ccore.paused_status_hint":
