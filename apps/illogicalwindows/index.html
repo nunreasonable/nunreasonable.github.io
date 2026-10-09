@@ -769,6 +769,10 @@
 				background: var(--accent);
 			}
 
+			.features li:last-child:nth-child(3n + 1) {
+				grid-column: 1 / -1;
+			}
+
 			.features h3 {
 				font-size: 1.08rem;
 				font-weight: 600;
@@ -783,6 +787,10 @@
 			@media (max-width: 900px) {
 				.features {
 					grid-template-columns: repeat(2, minmax(0, 1fr));
+				}
+
+				.features li:last-child:nth-child(3n + 1) {
+					grid-column: auto;
 				}
 			}
 
@@ -804,6 +812,10 @@
 				margin: 0;
 			}
 
+			.gallery figure.wide {
+				grid-column: 1 / -1;
+			}
+
 			.gallery a {
 				display: block;
 				overflow: hidden;
@@ -820,6 +832,10 @@
 				object-fit: cover;
 				object-position: top center;
 				transition: transform 300ms var(--ease);
+			}
+
+			.gallery .wide img {
+				aspect-ratio: 16 / 9;
 			}
 
 			.gallery a:hover img {
@@ -1150,7 +1166,7 @@
 
 					<!-- Versao atual: atualizar junto com cada release (VERSION do ii-windows). -->
 					<ul class="facts">
-						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>0.6.2</strong></li>
+						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>0.7.0</strong></li>
 						<li data-i18n="iw.hero.requirements">Windows 11, or Windows 10 version 2004+ (22H2 recommended)</li>
 						<li data-i18n="iw.hero.free">Free and open source, GPL-3.0</li>
 					</ul>
@@ -1362,7 +1378,7 @@
 									</li>
 									<li>
 										<span class="api">Cold start</span>
-										<span data-i18n="iw.a.input.coldstart">On a VM held to two slow cores and a slow disk the bar shows in about 2 s (0.6.1: about 5 s; 0.5.0: about 43 s). A scan cache (qmlscan.bin) skips the ~600 QML files whose size and date haven't changed, and deploy and setup keep file times so the cache survives updates. ii ships a precompiled QML bytecode bundle, creates the bar first and gates the rest behind its first frame: the virtual desktop DLL, the initial window list, the AppBar reservation, network, media, Bluetooth, extra audio devices, the tray and the Windows 11 blur compositor. Slow jobs (desktop entries, thumbnails, WMI brightness probes) run on a small dedicated thread pool, theme and translations arrive before the bar, and nothing spawns PowerShell or cmd while starting. The input hooks opt out of Windows 11's background-process throttling.</span>
+										<span data-i18n="iw.a.input.coldstart">On a VM held to two slow cores and a slow disk the bar shows in about 1.6 s (0.6.2: about 1.8 s; 0.6.1: about 5 s; 0.5.0: about 43 s). A scan cache (qmlscan.bin) skips the ~600 QML files whose size and date haven't changed and runs on a thread alongside the fonts, and deploy and setup keep file times so the cache survives updates. ii ships a precompiled QML bytecode bundle, creates the bar first and gates the rest behind its first frame: the virtual desktop DLL, the initial window list, the AppBar reservation, network, media, Bluetooth, extra audio devices, the tray and the Windows 11 blur compositor. Slow jobs (desktop entries, thumbnails, WMI brightness probes) run on a small dedicated thread pool, theme and translations arrive before the bar, and nothing spawns PowerShell or cmd while starting. The input hooks opt out of Windows 11's background-process throttling.</span>
 									</li>
 									<li>
 										<span class="api">RegisterHotKey + WH_KEYBOARD_LL</span>
@@ -1565,6 +1581,10 @@
 
 					<ul class="features">
 						<li>
+							<h3 data-i18n="iw.features.styles.title">Two looks</h3>
+							<p data-i18n="iw.features.styles.text">ii's original style or the one from pctrade's end4-pC fork, with the same features and options. Pick it in the setup or any time in Settings.</p>
+						</li>
+						<li>
 							<h3 data-i18n="iw.features.bar.title">Bar and system tray</h3>
 							<p data-i18n="iw.features.bar.text">Media, clock, battery and the tray icons, shared with Explorer's own tray.</p>
 						</li>
@@ -1613,6 +1633,12 @@
 					</header>
 
 					<div class="gallery">
+						<figure class="wide">
+							<a href="../../filearchive/projects/ii-windows/styles.webp" target="_blank" rel="noopener">
+								<img src="../../filearchive/projects/ii-windows/styles.mid.webp" srcset="../../filearchive/projects/ii-windows/styles.mid.webp 1000w, ../../filearchive/projects/ii-windows/styles.webp 1600w" sizes="(min-width: 1120px) 1056px, 100vw" width="1000" height="563" loading="lazy" decoding="async" alt="ii's bar with workspace numbers and the end4-pC settings card open over an anime wallpaper" data-i18n-attr="alt:iw.gallery.styles.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.styles.caption">The end4-pC style, new in 0.7.0: its settings card, workspace numbers and a color picker on the bar.</figcaption>
+						</figure>
 						<figure>
 							<a href="../../filearchive/projects/ii-windows/system.webp" target="_blank" rel="noopener">
 								<img src="../../filearchive/projects/ii-windows/system.mid.webp" width="1000" height="625" loading="lazy" decoding="async" alt="ii's cheatsheet on the System tab, with host details, CPU, GPU and memory gauges and the drives" data-i18n-attr="alt:iw.gallery.system.alt" />
@@ -1669,9 +1695,9 @@
 						</figure>
 						<figure>
 							<a href="../../filearchive/projects/ii-windows/installer.webp" target="_blank" rel="noopener">
-								<img src="../../filearchive/projects/ii-windows/installer.mid.webp" width="928" height="625" loading="lazy" decoding="async" alt="The ii-windows setup on its options page, with toggles for starting with Windows and the terminal setup" data-i18n-attr="alt:iw.gallery.installer.alt" />
+								<img src="../../filearchive/projects/ii-windows/installer.mid.webp" width="928" height="625" loading="lazy" decoding="async" alt="The ii-windows setup on its options page, choosing between the illogical-impulse and end4-pC looks, each with a picture" data-i18n-attr="alt:iw.gallery.installer.alt" />
 							</a>
-							<figcaption data-i18n="iw.gallery.installer.caption">The setup: install, update, repair and uninstall, all per user.</figcaption>
+							<figcaption data-i18n="iw.gallery.installer.caption">The setup: install, update, repair and uninstall, all per user, and since 0.7.0 the choice of look.</figcaption>
 						</figure>
 					</div>
 				</div>
@@ -1732,7 +1758,7 @@
 						<article class="card">
 							<h3 data-i18n="iw.changes.installTitle">What gets installed</h3>
 							<ul>
-								<li data-i18n="iw.changes.program">The program, about 210 MB, in %LOCALAPPDATA%\ii-windows. Nothing goes into Windows' own folders.</li>
+								<li data-i18n="iw.changes.program">The program, about 185 MB, in %LOCALAPPDATA%\ii-windows. Nothing goes into Windows' own folders.</li>
 								<li data-i18n="iw.changes.files">ii's own files in %LOCALAPPDATA%\quickshell\ii, replaced on every update. Your settings live apart, in %LOCALAPPDATA%\illogical-impulse, and updates never touch them.</li>
 								<li data-i18n="iw.changes.entries">Start menu shortcuts and an Apps entry called “illogical-impulse (ii-windows)”.</li>
 								<li data-i18n="iw.changes.options">Options: start with Windows (on), the terminal setup with the JetBrainsMono Nerd Font, Oh My Posh, Starship and eza (on), PowerShell 7 (off), FFmpeg (off), and letting Windows PowerShell 5.1 run profile scripts, a security setting (off).</li>
@@ -1772,15 +1798,22 @@
 				<div class="wrap">
 					<header class="section-head">
 						<h2 data-i18n="iw.releases.title">Release notes</h2>
-						<p data-i18n="iw.releases.lead">From Windows 11 only to Windows 10, native recording, tiling, Win + drag and a Spotlight search, in six days.</p>
+						<p data-i18n="iw.releases.lead">From Windows 11 only to Windows 10, native recording, tiling, Win + drag, a Spotlight search and a second look, in a week.</p>
 					</header>
 
 					<ol class="releases">
 						<li>
 							<div class="rel-head">
+								<span class="rel-ver">0.7.0</span>
+								<time datetime="2026-10-09">2026-10-09</time>
+								<span class="rel-latest" data-i18n="iw.releases.latest">Latest</span>
+							</div>
+							<p data-i18n="iw.releases.v070">Pick your look: ii's original style or the one from pctrade's end4-pC fork, in the setup (with a picture of each) or any time in Settings &gt; Quick &gt; Style. Both have the same features and options; the end4-pC style brings its floating settings card, which Spotlight and the overview can search. It also starts a little faster on the same slow VM (the bar in about 1.6 s), uses about 26 MB less memory after start and takes about 185 MB installed instead of 210. Fixes the bar showing up lower and jumping a couple of seconds later after a crash or an update.</p>
+						</li>
+						<li>
+							<div class="rel-head">
 								<span class="rel-ver">0.6.2</span>
 								<time datetime="2026-10-08">2026-10-08</time>
-								<span class="rel-latest" data-i18n="iw.releases.latest">Latest</span>
 							</div>
 							<p data-i18n="iw.releases.v062">Faster everywhere, especially on weaker machines: the bar shows in about 2 seconds instead of 5 on the same slow VM, Settings opens inside ii already themed and translated in under a second, panels keep their window after the first open and the mouse hook only wakes ii when something under the pointer changes. About 45 MB lighter. Fixes external monitors being set back to full brightness on every start and translations not loading with the language on "auto".</p>
 						</li>
@@ -2017,6 +2050,6 @@
 				select(root.getAttribute("data-aud") === "advanced" ? "advanced" : "beginner", false);
 			})();
 		</script>
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261009-2"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261009-5"></script>
 	</body>
 </html>
