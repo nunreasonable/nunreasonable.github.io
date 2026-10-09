@@ -18,15 +18,15 @@
 		<meta property="og:title" content="II for Windows" />
 		<meta property="og:description" content="end-4's illogical-impulse desktop, running natively on Windows 11 and Windows 10. Unofficial, free and open source." />
 		<meta property="og:url" content="https://apps.daeese.me/illogicalwindows/" />
-		<meta property="og:image" content="https://daeese.me/filearchive/projects/ii-windows/cover.webp" />
-		<meta property="og:image:width" content="760" />
-		<meta property="og:image:height" content="428" />
-		<meta property="og:image:alt" content="A Windows desktop running the illogical-impulse bar and sidebars" />
+		<meta property="og:image" content="https://daeese.me/filearchive/projects/ii-windows/banner.webp" />
+		<meta property="og:image:width" content="1600" />
+		<meta property="og:image:height" content="900" />
+		<meta property="og:image:alt" content="The illogical-impulse for Windows logo on a black and green gradient" />
 		<meta property="og:locale" content="en_US" />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content="II for Windows" />
 		<meta name="twitter:description" content="end-4's illogical-impulse desktop, running natively on Windows 11 and Windows 10. Unofficial, free and open source." />
-		<meta name="twitter:image" content="https://daeese.me/filearchive/projects/ii-windows/cover.webp" />
+		<meta name="twitter:image" content="https://daeese.me/filearchive/projects/ii-windows/banner.webp" />
 
 		<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png" />
 		<link rel="icon" type="image/png" sizes="180x180" href="assets/icon-180.png" />
@@ -428,7 +428,7 @@
 				margin-bottom: 0;
 			}
 
-			.hero-shot a {
+			.hero-shot .banner {
 				display: block;
 				border-radius: var(--radius);
 				overflow: hidden;
@@ -436,10 +436,10 @@
 				box-shadow: var(--shadow-lg);
 			}
 
-			.hero-shot figcaption {
-				margin-top: 14px;
-				color: var(--muted);
-				font-size: 0.88rem;
+			.hero-shot .banner img {
+				display: block;
+				width: 100%;
+				height: auto;
 			}
 
 			/* ---------- Secoes ---------- */
@@ -804,6 +804,10 @@
 				margin: 0;
 			}
 
+			.gallery figure.wide {
+				grid-column: 1 / -1;
+			}
+
 			.gallery a {
 				display: block;
 				overflow: hidden;
@@ -820,6 +824,10 @@
 				object-fit: cover;
 				object-position: top center;
 				transition: transform 300ms var(--ease);
+			}
+
+			.gallery .wide img {
+				aspect-ratio: 16 / 9;
 			}
 
 			.gallery a:hover img {
@@ -1160,18 +1168,19 @@
 				</div>
 
 				<figure class="wrap hero-shot">
-					<a href="../../filearchive/projects/ii-windows/themed.webp" target="_blank" rel="noopener">
+					<div class="banner">
 						<img
-							src="../../filearchive/projects/ii-windows/themed.mid.webp"
+							src="../../filearchive/projects/ii-windows/banner.mid.webp"
+							srcset="../../filearchive/projects/ii-windows/banner.mid.webp 1000w, ../../filearchive/projects/ii-windows/banner.webp 1600w"
+							sizes="(min-width: 1120px) 1056px, 100vw"
 							width="1000"
 							height="563"
 							fetchpriority="high"
 							decoding="async"
-							alt="Windows 11 desktop with the ii bar and clock, colored from an anime wallpaper"
+							alt="The illogical-impulse for Windows logo on a black and green gradient"
 							data-i18n-attr="alt:iw.hero.shotAlt"
 						/>
-					</a>
-					<figcaption data-i18n="iw.hero.shotCaption">ii's colors taken from the Windows wallpaper; the Windows taskbar only shows up at the bottom edge.</figcaption>
+					</div>
 				</figure>
 			</section>
 
@@ -1613,6 +1622,12 @@
 					</header>
 
 					<div class="gallery">
+						<figure class="wide">
+							<a href="../../filearchive/projects/ii-windows/themed.webp" target="_blank" rel="noopener">
+								<img src="../../filearchive/projects/ii-windows/themed.mid.webp" srcset="../../filearchive/projects/ii-windows/themed.mid.webp 1000w, ../../filearchive/projects/ii-windows/themed.webp 1600w" sizes="(min-width: 1120px) 1056px, 100vw" width="1000" height="563" loading="lazy" decoding="async" alt="Windows 11 desktop with the ii bar and clock, colored from an anime wallpaper" data-i18n-attr="alt:iw.gallery.themed.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.themed.caption">ii's colors taken from the Windows wallpaper; the Windows taskbar only shows up at the bottom edge.</figcaption>
+						</figure>
 						<figure>
 							<a href="../../filearchive/projects/ii-windows/system.webp" target="_blank" rel="noopener">
 								<img src="../../filearchive/projects/ii-windows/system.mid.webp" width="1000" height="625" loading="lazy" decoding="async" alt="ii's cheatsheet on the System tab, with host details, CPU, GPU and memory gauges and the drives" data-i18n-attr="alt:iw.gallery.system.alt" />
@@ -2017,6 +2032,6 @@
 				select(root.getAttribute("data-aud") === "advanced" ? "advanced" : "beginner", false);
 			})();
 		</script>
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261008-1"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261009-1"></script>
 	</body>
 </html>
