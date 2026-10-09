@@ -1150,7 +1150,7 @@
 
 					<!-- Versao atual: atualizar junto com cada release (VERSION do ii-windows). -->
 					<ul class="facts">
-						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>0.6.1</strong></li>
+						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>0.6.2</strong></li>
 						<li data-i18n="iw.hero.requirements">Windows 11, or Windows 10 version 2004+ (22H2 recommended)</li>
 						<li data-i18n="iw.hero.free">Free and open source, GPL-3.0</li>
 					</ul>
@@ -1362,7 +1362,7 @@
 									</li>
 									<li>
 										<span class="api">Cold start</span>
-										<span data-i18n="iw.a.input.coldstart">On a VM held to two slow cores and a slow disk the bar shows in about 4 s instead of about 43 s: ii ships a precompiled QML bytecode bundle that Quickshell serves for qs: files, creates the bar first and the other panels right after it, loads the sidebars lazily, moves slow jobs (desktop entries, thumbnails, WMI brightness probes) to a small dedicated thread pool, defers native services past construction and no longer spawns PowerShell or cmd while starting. The input hooks opt out of Windows 11's background-process throttling, which caused mouse and keyboard lag on weaker machines.</span>
+										<span data-i18n="iw.a.input.coldstart">On a VM held to two slow cores and a slow disk the bar shows in about 2 s (0.6.1: about 5 s; 0.5.0: about 43 s). A scan cache (qmlscan.bin) skips the ~600 QML files whose size and date haven't changed, and deploy and setup keep file times so the cache survives updates. ii ships a precompiled QML bytecode bundle, creates the bar first and gates the rest behind its first frame: the virtual desktop DLL, the initial window list, the AppBar reservation, network, media, Bluetooth, extra audio devices, the tray and the Windows 11 blur compositor. Slow jobs (desktop entries, thumbnails, WMI brightness probes) run on a small dedicated thread pool, theme and translations arrive before the bar, and nothing spawns PowerShell or cmd while starting. The input hooks opt out of Windows 11's background-process throttling.</span>
 									</li>
 									<li>
 										<span class="api">RegisterHotKey + WH_KEYBOARD_LL</span>
@@ -1370,7 +1370,7 @@
 									</li>
 									<li>
 										<span class="api">Low-level mouse hook</span>
-										<span data-i18n="iw.a.input.mouse">Runs at high priority for input masks and the hover-only taskbar; qs log reports input that reached the hooks late.</span>
+										<span data-i18n="iw.a.input.mouse">Runs at high priority for input masks and the hover-only taskbar. It decides on its own when a mask has to change and only wakes the UI thread then; events from irrelevant windows are dropped before they reach it. qs log reports input that reached the hooks late.</span>
 									</li>
 									<li>
 										<span class="api">Taskbar</span>
@@ -1544,6 +1544,8 @@
 									<li data-i18n="iw.a.limits.notif">Mirrored notifications carry text only: no images, launch arguments or buttons. Windows keeps showing its own banners too.</li>
 									<li data-i18n="iw.a.limits.accent10">On Windows 10 the accent color from ii's palette doesn't stick; Windows keeps its own.</li>
 									<li data-i18n="iw.a.limits.firstsecond">A panel shortcut pressed in the first second after the bar appears is ignored.</li>
+									<li data-i18n="iw.a.limits.masks">A few panels drop their rounded-corner masks on Windows for speed, so some content edges are clipped square and the overview thumbnails have no rounded corners.</li>
+									<li data-i18n="iw.a.limits.firstrun">The first start after an update is still slow: Defender and a cold disk go through every rewritten DLL, once per update.</li>
 									<li data-i18n="iw.a.limits.admin">While a window of an app running as administrator has the focus, Windows doesn't deliver the keyboard to ii's hook: ii's shortcuts don't work there and Win+Q opens Windows' search. Close those windows with Alt+F4.</li>
 									<li data-i18n="iw.a.limits.tray">While ii runs, taskbar tweaking tools that look for the taskbar by its window class may not find it.</li>
 								</ul>
@@ -1730,7 +1732,7 @@
 						<article class="card">
 							<h3 data-i18n="iw.changes.installTitle">What gets installed</h3>
 							<ul>
-								<li data-i18n="iw.changes.program">The program, about 250 MB, in %LOCALAPPDATA%\ii-windows. Nothing goes into Windows' own folders.</li>
+								<li data-i18n="iw.changes.program">The program, about 210 MB, in %LOCALAPPDATA%\ii-windows. Nothing goes into Windows' own folders.</li>
 								<li data-i18n="iw.changes.files">ii's own files in %LOCALAPPDATA%\quickshell\ii, replaced on every update. Your settings live apart, in %LOCALAPPDATA%\illogical-impulse, and updates never touch them.</li>
 								<li data-i18n="iw.changes.entries">Start menu shortcuts and an Apps entry called “illogical-impulse (ii-windows)”.</li>
 								<li data-i18n="iw.changes.options">Options: start with Windows (on), the terminal setup with the JetBrainsMono Nerd Font, Oh My Posh, Starship and eza (on), PowerShell 7 (off), FFmpeg (off), and letting Windows PowerShell 5.1 run profile scripts, a security setting (off).</li>
@@ -1741,7 +1743,7 @@
 							<h3 data-i18n="iw.changes.runTitle">While ii runs</h3>
 							<ul>
 								<li data-i18n="iw.changes.keys">It takes over many Windows shortcuts: the Windows key alone opens ii's search, and Win+/ lists the rest. All of it stops when ii closes.</li>
-								<li data-i18n="iw.changes.taskbar">The Windows taskbar auto-hides and shows up when the pointer touches its edge.</li>
+								<li data-i18n="iw.changes.taskbar">The Windows taskbar auto-hides and shows up when the pointer touches its edge. Auto-hide stays on between sessions, so the screen doesn't jump every time ii starts or closes; turning the hover-only taskbar off in ii's settings switches it back off.</li>
 								<li data-i18n="iw.changes.desktop">Windows keeps drawing your wallpaper; ii only adds its widgets to the desktop, above your icons. Your desktop folder isn't changed.</li>
 								<li data-i18n="iw.changes.colors">Picking a wallpaper or light/dark mode in ii sets the same in Windows, changing the wallpaper in Windows recolors ii, and Windows' accent color follows ii's palette.</li>
 								<li data-i18n="iw.changes.online">The translators send text to Google's translation service, and music recognition sends an audio fingerprint to Shazam, only when you use them.</li>
@@ -1776,9 +1778,16 @@
 					<ol class="releases">
 						<li>
 							<div class="rel-head">
+								<span class="rel-ver">0.6.2</span>
+								<time datetime="2026-10-08">2026-10-08</time>
+								<span class="rel-latest" data-i18n="iw.releases.latest">Latest</span>
+							</div>
+							<p data-i18n="iw.releases.v062">Faster everywhere, especially on weaker machines: the bar shows in about 2 seconds instead of 5 on the same slow VM, Settings opens inside ii already themed and translated in under a second, panels keep their window after the first open and the mouse hook only wakes ii when something under the pointer changes. About 45 MB lighter. Fixes external monitors being set back to full brightness on every start and translations not loading with the language on "auto".</p>
+						</li>
+						<li>
+							<div class="rel-head">
 								<span class="rel-ver">0.6.1</span>
 								<time datetime="2026-10-07">2026-10-07</time>
-								<span class="rel-latest" data-i18n="iw.releases.latest">Latest</span>
 							</div>
 							<p data-i18n="iw.releases.v061">The Settings app now has almost every option that used to live only in config.json (bar auto-hide, transparency and accent color, date formats, dock, on-screen keyboard, night light schedule, translator languages, search and more); options that only do something on Linux stay hidden. It's also translated to Brazilian Portuguese.</p>
 						</li>
@@ -2008,6 +2017,6 @@
 				select(root.getAttribute("data-aud") === "advanced" ? "advanced" : "beginner", false);
 			})();
 		</script>
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261007-2"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261008-1"></script>
 	</body>
 </html>

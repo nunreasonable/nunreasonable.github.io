@@ -107,7 +107,7 @@ export const pt = {
   "p.ii-windows.title": "ii no Windows",
   "p.ii-windows.tagline":
     "O desktop illogical-impulse do end-4, feito em Quickshell, portado do Hyprland para o Windows 11 e 10.",
-  "p.ii-windows.status": "Versão experimental · v0.6.1",
+  "p.ii-windows.status": "Versão experimental · v0.6.2",
   "p.ii-windows.d0":
     "O illogical-impulse (ii) é o shell de desktop em Quickshell que o end-4 fez para o Hyprland: a barra, as barras laterais, o overview e os widgets. Este port faz ele rodar num desktop de verdade do Windows, 11 ou 10, e chegar lá exige dois forks.",
   "p.ii-windows.d1":
@@ -127,7 +127,7 @@ export const pt = {
   "p.ii-windows.d8":
     "A 0.5.0, um dia depois, deixa segurar Win e arrastar para mover uma janela, ou Win + arrastar com o botão direito para redimensionar, com tiling e entre monitores com escalas diferentes. O Windows volta a desenhar o papel de parede e o ii só põe os widgets dele na área de trabalho, então trocar o papel de parede no Windows recolore o ii. A barra encolhe os applets quando eles não cabem, e chegam um visualizador de mídia, um seletor de cor nativo, clima, game mode e o botão do WARP.",
   "p.ii-windows.d9":
-    "A 0.6.0 inicia bem mais rápido em máquinas mais fracas: numa VM limitada a dois núcleos lentos e um disco lento, a barra aparece em uns 4 segundos em vez de uns 43. A tecla do Windows abre uma busca Spotlight para apps, arquivos, histórico da área de transferência, emoji, ações do sistema e a web, o Win+Tab abre os workspaces, e o cheatsheet ganha uma aba System com CPU, GPU, memória e discos. A 0.6.1 traz quase todas as opções para o app de Configurações, agora também em português do Brasil. Continua experimental, e o instalador ainda não é assinado, então o SmartScreen pode avisar.",
+    "A 0.6.0 inicia bem mais rápido em máquinas mais fracas: numa VM limitada a dois núcleos lentos e um disco lento, a barra aparece em uns 4 segundos em vez de uns 43. A tecla do Windows abre uma busca Spotlight para apps, arquivos, histórico da área de transferência, emoji, ações do sistema e a web, o Win+Tab abre os workspaces, e o cheatsheet ganha uma aba System com CPU, GPU, memória e discos. A 0.6.1 traz quase todas as opções para o app de Configurações, agora também em português do Brasil, e a 0.6.2 deixa tudo mais rápido de novo: a barra aparece em uns 2 segundos naquela mesma VM, as Configurações abrem dentro do ii em menos de um segundo e o download ficou uns 45 MB mais leve. Continua experimental, e o instalador ainda não é assinado, então o SmartScreen pode avisar.",
   "p.ii-windows.link0": "Site",
   "p.ii-windows.link1": "Baixar o instalador",
   "p.ii-windows.link2": "ii-windows no GitHub",
