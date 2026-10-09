@@ -2595,7 +2595,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261009-3")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261009-4")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -2784,7 +2784,7 @@
             slug: "ii-windows",
             title: "ii on Windows",
             tagline: "end-4's illogical-impulse Quickshell desktop, ported from Hyprland to Windows 11 and 10.",
-            status: "Early release · v0.7.0",
+            status: "Early release · v0.9.0 — Exploding Baby",
             tags: ["C++", "C++/WinRT", "Qt 6 / QML", "Quickshell"],
             image: "./filearchive/projects/ii-windows/thumb.webp",
             cover: { src: "./filearchive/projects/ii-windows/cover.webp", w: 760, h: 475 },
@@ -2801,14 +2801,15 @@
               "0.4.0, released the same evening, adds optional tiling: Hyprland's dwindle layout on top of Windows' own virtual desktops, driven by ii's keybinds, with no extra window manager to install (it's off by default). The screen translator now lays each translated paragraph over the original text, desktop widgets sit next to the icons and can be dragged again, tray icons of apps started before ii respond to clicks, and the classic PowerShell console gets ii's colors and font. It also fixes a crash in the Windows 10 virtual desktop helper, a second copy of ii starting on top of the first, and the bar sometimes losing its reserved space.",
               "0.5.0, a day later, lets you hold Win and drag to move a window or Win + right drag to resize it, with tiling and across monitors with different scaling. Windows draws the wallpaper again and ii only puts its widgets on the desktop, so changing the wallpaper in Windows recolors ii. The bar shrinks its applets when they don't fit, and there's a media visualizer, a native color picker, weather, game mode and a WARP toggle.",
               "0.6.0 starts much faster on weaker machines: on a VM held to two slow cores and a slow disk the bar shows in about 4 seconds instead of about 43. The Windows key opens a Spotlight search for apps, files, clipboard history, emoji, system actions and the web, Win+Tab the workspaces, and the cheatsheet gets a System tab with CPU, GPU, memory and disks. 0.6.1 brings almost every option into the Settings app, now also in Brazilian Portuguese, and 0.6.2 makes everything faster again: the bar shows in about 2 seconds on that same VM, Settings opens inside ii in under a second and the download is about 45 MB lighter.",
-              "0.7.0 lets you choose between ii's original look and the look of pctrade's end4-pC fork, in the setup or any time in Settings, with the same features and options in both. It also starts a little faster, uses about 26 MB less memory after start and is about 25 MB smaller installed. It's still experimental, and the setup isn't signed yet, so SmartScreen may warn about it."
+              "0.7.0 lets you choose between ii's original look and the look of pctrade's end4-pC fork, in the setup or any time in Settings, with the same features and options in both. It also starts a little faster, uses about 26 MB less memory after start and is about 25 MB smaller installed.",
+              "0.9.0, planned as two releases (0.8.0 and 0.9.0) that ended up shipping as one, is also the first release with a name: “Exploding Baby”. It brings over most of pctrade's end4-pC fork into both looks — a bar you can rearrange with a dynamic island and an optional screen frame, a dock on any screen edge, a dozen desktop widgets, Wallhaven search in the wallpaper picker, a sidebar banner with a media card, dashboard-style settings with presets, and Ctrl+Super+P to swap ii's bar for the Windows taskbar and back — plus Spicy Stuff sources (Konachan, the booru sidebar, Wallhaven) locked until Windows confirms a Microsoft account is 18 or older. Startup is unchanged on the same slow VM, and it's about 195 MB installed (80 MB zip) instead of 185. It's still experimental, and the setup isn't signed yet, so SmartScreen may warn about it."
             ],
             images: [
               { src: "./filearchive/projects/ii-windows/themed.webp", w: 1600, h: 900, alt: "Windows 11 desktop with the ii bar and clock, colored from an anime wallpaper", caption: "ii's colors taken from the Windows wallpaper; the taskbar only shows up at the bottom edge" },
               { src: "./filearchive/projects/ii-windows/system.webp", w: 1280, h: 800, alt: "ii's cheatsheet on the System tab, with host details, CPU, GPU and memory gauges and the drives", caption: "The cheatsheet's System tab: CPU, GPU, memory and drives, new in 0.6.0" },
               { src: "./filearchive/projects/ii-windows/spotlight.webp", w: 900, h: 600, alt: "ii's Spotlight search showing the installed apps with their icons", caption: "Spotlight on the Windows key: apps, files, system actions, emoji and the clipboard, new in 0.6.0" },
               { src: "./filearchive/projects/ii-windows/tiling.webp", w: 1024, h: 768, alt: "Four Notepad windows arranged by ii's tiling in Hyprland's dwindle layout, under ii's bar", caption: "Optional tiling: Hyprland's dwindle layout on Windows' virtual desktops, new in 0.4.0" },
-              { src: "./filearchive/projects/ii-windows/installer.webp", w: 980, h: 660, alt: "The ii-windows setup on its options page, choosing between the illogical-impulse and end4-pC looks, each with a picture", caption: "The setup: install, update, repair and uninstall, all per user, and since 0.7.0 the choice of look" },
+              { src: "./filearchive/projects/ii-windows/installer.webp", w: 980, h: 660, alt: "The ii-windows setup's Welcome page, already installed at 0.9.0, with the version and release name in the title bar", caption: "The setup: install, update, repair and uninstall, all per user, and since 0.9.0 the title bar shows the release name too" },
               { src: "./filearchive/projects/ii-windows/desktop-icons.webp", w: 1024, h: 768, alt: "Windows 10 desktop where ii's wallpaper and clock sit behind the desktop icons", caption: "Windows 10 (0.2.0), with the wallpaper and clock behind the desktop icons (0.3.0)" },
               { src: "./filearchive/projects/ii-windows/translator.webp", w: 1280, h: 800, alt: "ii's left sidebar translator turning a Portuguese sentence into English", caption: "The translator in the left sidebar, new in 0.3.0" },
               { src: "./filearchive/projects/ii-windows/terminal.webp", w: 1600, h: 900, alt: "Windows Terminal windows in ii's pink palette with an Oh My Posh prompt", caption: "Windows Terminal themed with ii's colors and an Oh My Posh prompt" },
@@ -4375,6 +4376,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261009-3"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261009-4"></script>
   </body>
 </html>

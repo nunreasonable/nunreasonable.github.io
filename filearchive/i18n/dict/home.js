@@ -107,7 +107,7 @@ export const pt = {
   "p.ii-windows.title": "ii no Windows",
   "p.ii-windows.tagline":
     "O desktop illogical-impulse do end-4, feito em Quickshell, portado do Hyprland para o Windows 11 e 10.",
-  "p.ii-windows.status": "Versão experimental · v0.7.0",
+  "p.ii-windows.status": "Versão experimental · v0.9.0 — Exploding Baby",
   "p.ii-windows.d0":
     "O illogical-impulse (ii) é o shell de desktop em Quickshell que o end-4 fez para o Hyprland: a barra, as barras laterais, o overview e os widgets. Este port faz ele rodar num desktop de verdade do Windows, 11 ou 10, e chegar lá exige dois forks.",
   "p.ii-windows.d1":
@@ -129,7 +129,9 @@ export const pt = {
   "p.ii-windows.d9":
     "A 0.6.0 inicia bem mais rápido em máquinas mais fracas: numa VM limitada a dois núcleos lentos e um disco lento, a barra aparece em uns 4 segundos em vez de uns 43. A tecla do Windows abre uma busca Spotlight para apps, arquivos, histórico da área de transferência, emoji, ações do sistema e a web, o Win+Tab abre os workspaces, e o cheatsheet ganha uma aba System com CPU, GPU, memória e discos. A 0.6.1 traz quase todas as opções para o app de Configurações, agora também em português do Brasil, e a 0.6.2 deixa tudo mais rápido de novo: a barra aparece em uns 2 segundos naquela mesma VM, as Configurações abrem dentro do ii em menos de um segundo e o download ficou uns 45 MB mais leve.",
   "p.ii-windows.d10":
-    "A 0.7.0 deixa escolher entre o visual original do ii e o visual do fork end4-pC do pctrade, no instalador ou quando quiser nas Configurações, com as mesmas funções e opções nos dois. Também inicia um pouco mais rápido, usa uns 26 MB a menos de memória depois de abrir e ocupa uns 25 MB a menos instalado. Continua experimental, e o instalador ainda não é assinado, então o SmartScreen pode avisar.",
+    "A 0.7.0 deixa escolher entre o visual original do ii e o visual do fork end4-pC do pctrade, no instalador ou quando quiser nas Configurações, com as mesmas funções e opções nos dois. Também inicia um pouco mais rápido, usa uns 26 MB a menos de memória depois de abrir e ocupa uns 25 MB a menos instalado.",
+  "p.ii-windows.d11":
+    "A 0.9.0, planejada como dois releases (0.8.0 e 0.9.0) que acabaram saindo como um só, também é o primeiro release com nome: \"Exploding Baby\". Ela traz a maior parte do fork end4-pC do pctrade para os dois visuais — uma barra que dá pra reorganizar com uma dynamic island e uma moldura de tela opcional, um dock em qualquer borda da tela, uma dezena de widgets de área de trabalho, busca no Wallhaven no seletor de papel de parede, um banner com cartão de mídia na barra lateral, configurações no estilo dashboard com presets, e Ctrl+Super+P pra trocar a barra do ii pela barra de tarefas do Windows e voltar — além de fontes de Spicy Stuff (Konachan, a barra lateral de booru, Wallhaven) travadas até o Windows confirmar que a conta Microsoft tem 18 anos ou mais. O início continua igual na mesma VM lenta, e ocupa uns 195 MB instalado (80 MB em zip) em vez de 185. Continua experimental, e o instalador ainda não é assinado, então o SmartScreen pode avisar.",
   "p.ii-windows.link0": "Site",
   "p.ii-windows.link1": "Baixar o instalador",
   "p.ii-windows.link2": "ii-windows no GitHub",
@@ -139,7 +141,7 @@ export const pt = {
   "p.ii-windows.cap1": "A aba System do cheatsheet: CPU, GPU, memória e discos, novidade da 0.6.0",
   "p.ii-windows.cap2": "Spotlight na tecla do Windows: apps, arquivos, ações do sistema, emoji e a área de transferência, novidade da 0.6.0",
   "p.ii-windows.cap3": "Tiling opcional: o layout dwindle do Hyprland nas áreas de trabalho virtuais do Windows, novidade da 0.4.0",
-  "p.ii-windows.cap4": "O instalador: instala, atualiza, repara e desinstala, tudo por usuário, e desde a 0.7.0 escolhe o visual",
+  "p.ii-windows.cap4": "O instalador: instala, atualiza, repara e desinstala, tudo por usuário, e desde a 0.9.0 a barra de título também mostra o nome do release",
   "p.ii-windows.cap5": "Windows 10 (0.2.0), com o wallpaper e o relógio atrás dos ícones da área de trabalho (0.3.0)",
   "p.ii-windows.cap6": "O tradutor na barra lateral esquerda, novidade da 0.3.0",
   "p.ii-windows.cap7": "Windows Terminal com as cores do ii e um prompt do Oh My Posh",
@@ -150,7 +152,7 @@ export const pt = {
   "p.ii-windows.alt1": "O cheatsheet do ii na aba System, com os dados do host, medidores de CPU, GPU e memória e os discos",
   "p.ii-windows.alt2": "A busca Spotlight do ii mostrando os apps instalados com os ícones deles",
   "p.ii-windows.alt3": "Quatro janelas do Bloco de Notas organizadas pelo tiling do ii no layout dwindle do Hyprland, embaixo da barra do ii",
-  "p.ii-windows.alt4": "O instalador do ii-windows na página de opções, escolhendo entre os visuais illogical-impulse e end4-pC, cada um com uma imagem",
+  "p.ii-windows.alt4": "A página de boas-vindas do instalador do ii-windows, já instalado na 0.9.0, com a versão e o nome do release na barra de título",
   "p.ii-windows.alt5": "Área de trabalho do Windows 10 em que o wallpaper e o relógio do ii ficam atrás dos ícones",
   "p.ii-windows.alt6": "O tradutor da barra lateral esquerda do ii passando uma frase em português para o inglês",
   "p.ii-windows.alt7": "Janelas do Windows Terminal na paleta rosa do ii com um prompt do Oh My Posh",

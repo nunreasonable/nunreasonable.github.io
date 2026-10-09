@@ -1007,6 +1007,17 @@
 				font-weight: 700;
 			}
 
+			.rel-name {
+				color: var(--muted);
+				font-size: 0.86rem;
+				font-weight: 600;
+			}
+
+			.rel-name.rel-unnamed {
+				font-weight: 400;
+				font-style: italic;
+			}
+
 			.releases time {
 				color: var(--muted);
 				font-size: 0.86rem;
@@ -1166,7 +1177,7 @@
 
 					<!-- Versao atual: atualizar junto com cada release (VERSION do ii-windows). -->
 					<ul class="facts">
-						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>0.7.0</strong></li>
+						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>0.9.0</strong> <span class="rel-name">— Exploding Baby</span></li>
 						<li data-i18n="iw.hero.requirements">Windows 11, or Windows 10 version 2004+ (22H2 recommended)</li>
 						<li data-i18n="iw.hero.free">Free and open source, GPL-3.0</li>
 					</ul>
@@ -1582,15 +1593,15 @@
 					<ul class="features">
 						<li>
 							<h3 data-i18n="iw.features.styles.title">Two looks</h3>
-							<p data-i18n="iw.features.styles.text">ii's original style or the one from pctrade's end4-pC fork, with the same features and options. Pick it in the setup or any time in Settings.</p>
+							<p data-i18n="iw.features.styles.text">ii's original style or the one from pctrade's end4-pC fork, with nearly the same features in both now: dashboard-style Settings, presets you can save and apply, and the fork's own floating settings card.</p>
 						</li>
 						<li>
 							<h3 data-i18n="iw.features.bar.title">Bar and system tray</h3>
-							<p data-i18n="iw.features.bar.text">Media, clock, battery and the tray icons, shared with Explorer's own tray.</p>
+							<p data-i18n="iw.features.bar.text">Rearrange widgets between left, middle and right, with a dynamic island for media and notifications, an optional screen frame, and tray icons shared with Explorer's own tray.</p>
 						</li>
 						<li>
 							<h3 data-i18n="iw.features.sidebars.title">Sidebars</h3>
-							<p data-i18n="iw.features.sidebars.text">Quick toggles, notifications and a calendar on the right; AI chat and a translator on the left.</p>
+							<p data-i18n="iw.features.sidebars.text">A banner with your picture and uptime, a media card and reorderable sections on the right; AI chat and a translator on the left.</p>
 						</li>
 						<li>
 							<h3 data-i18n="iw.features.search.title">Spotlight search</h3>
@@ -1598,7 +1609,7 @@
 						</li>
 						<li>
 							<h3 data-i18n="iw.features.colors.title">Colors from your wallpaper</h3>
-							<p data-i18n="iw.features.colors.text">Material You palettes from matugen. Windows' accent color and light/dark mode follow along.</p>
+							<p data-i18n="iw.features.colors.text">Material You palettes from matugen, with Wallhaven search built into the wallpaper picker. Windows' accent color and light/dark mode follow along.</p>
 						</li>
 						<li>
 							<h3 data-i18n="iw.features.workspaces.title">Workspaces and overview</h3>
@@ -1619,6 +1630,18 @@
 						<li>
 							<h3 data-i18n="iw.features.terminal.title">Terminal look</h3>
 							<p data-i18n="iw.features.terminal.text">Windows Terminal and the classic console in ii's colors, with a Nerd Font prompt.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.dock.title">Dock</h3>
+							<p data-i18n="iw.features.dock.text">A dock on any screen edge, floating or flush, with its own colors, border, radius and icon size, plus a media card and window previews.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.widgets.title">Desktop widgets</h3>
+							<p data-i18n="iw.features.widgets.text">A dozen widgets for the desktop — calendar, notes, to-do, timers, world clock, media and more — that snap to a grid and lock with a right-click.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.taskbarmode.title">Windows taskbar mode</h3>
+							<p data-i18n="iw.features.taskbarmode.text">Ctrl+Super+P swaps ii's bar for the Windows taskbar while keeping widgets, sidebars and search. Press it again to bring ii's bar back.</p>
 						</li>
 					</ul>
 				</div>
@@ -1695,9 +1718,9 @@
 						</figure>
 						<figure>
 							<a href="../../filearchive/projects/ii-windows/installer.webp" target="_blank" rel="noopener">
-								<img src="../../filearchive/projects/ii-windows/installer.mid.webp" width="928" height="625" loading="lazy" decoding="async" alt="The ii-windows setup on its options page, choosing between the illogical-impulse and end4-pC looks, each with a picture" data-i18n-attr="alt:iw.gallery.installer.alt" />
+								<img src="../../filearchive/projects/ii-windows/installer.mid.webp" width="928" height="625" loading="lazy" decoding="async" alt="The ii-windows setup's Welcome page, already installed at 0.9.0, with buttons to reinstall, update, repair or uninstall, and the version and release name in the title bar" data-i18n-attr="alt:iw.gallery.installer.alt" />
 							</a>
-							<figcaption data-i18n="iw.gallery.installer.caption">The setup: install, update, repair and uninstall, all per user, and since 0.7.0 the choice of look.</figcaption>
+							<figcaption data-i18n="iw.gallery.installer.caption">The setup: install, update, repair and uninstall, all per user — the title bar now shows the release name too, since 0.9.0.</figcaption>
 						</figure>
 					</div>
 				</div>
@@ -1758,7 +1781,7 @@
 						<article class="card">
 							<h3 data-i18n="iw.changes.installTitle">What gets installed</h3>
 							<ul>
-								<li data-i18n="iw.changes.program">The program, about 185 MB, in %LOCALAPPDATA%\ii-windows. Nothing goes into Windows' own folders.</li>
+								<li data-i18n="iw.changes.program">The program, about 195 MB, in %LOCALAPPDATA%\ii-windows. Nothing goes into Windows' own folders.</li>
 								<li data-i18n="iw.changes.files">ii's own files in %LOCALAPPDATA%\quickshell\ii, replaced on every update. Your settings live apart, in %LOCALAPPDATA%\illogical-impulse, and updates never touch them.</li>
 								<li data-i18n="iw.changes.entries">Start menu shortcuts and an Apps entry called “illogical-impulse (ii-windows)”.</li>
 								<li data-i18n="iw.changes.options">Options: start with Windows (on), the terminal setup with the JetBrainsMono Nerd Font, Oh My Posh, Starship and eza (on), PowerShell 7 (off), FFmpeg (off), and letting Windows PowerShell 5.1 run profile scripts, a security setting (off).</li>
@@ -1798,21 +1821,32 @@
 				<div class="wrap">
 					<header class="section-head">
 						<h2 data-i18n="iw.releases.title">Release notes</h2>
-						<p data-i18n="iw.releases.lead">From Windows 11 only to Windows 10, native recording, tiling, Win + drag, a Spotlight search and a second look, in a week.</p>
+						<p data-i18n="iw.releases.lead">From Windows 11 only to Windows 10, native recording, tiling, Win + drag, a Spotlight search, a second look and most of end4-pC, in a week.</p>
+						<p class="hero-note" data-i18n="iw.releases.namingNote">From now on every release gets a name. Earlier ones are Unnamed.</p>
 					</header>
 
 					<ol class="releases">
 						<li>
 							<div class="rel-head">
-								<span class="rel-ver">0.7.0</span>
+								<span class="rel-ver">0.9.0</span>
+								<span class="rel-name">Exploding Baby</span>
 								<time datetime="2026-10-09">2026-10-09</time>
 								<span class="rel-latest" data-i18n="iw.releases.latest">Latest</span>
+							</div>
+							<p data-i18n="iw.releases.v090">Exploding Baby, the project's first named release, planned as 0.8.0 and 0.9.0 but shipped as one. Most of end4-pC comes over, in both looks: a bar you can rearrange between left, middle and right with a dynamic island for media, notifications and the OSD plus an optional screen frame, a dock on any screen edge, a dozen desktop widgets, Wallhaven search in the wallpaper picker, a sidebar banner with a media card, dashboard-style Settings with presets, and Ctrl+Super+P to swap ii's bar for the Windows taskbar and back. Spicy Stuff sources (Konachan, the booru sidebar, Wallhaven) unlock once Windows confirms a Microsoft account is 18 or older. Startup is unchanged on a VM limited like a weak PC (about 2.9 s), and it's about 195 MB installed (80 MB zip). Fixes rounded clipping drawing nothing on Windows, which hid the image card and part of Settings.</p>
+						</li>
+						<li>
+							<div class="rel-head">
+								<span class="rel-ver">0.7.0</span>
+								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
+								<time datetime="2026-10-09">2026-10-09</time>
 							</div>
 							<p data-i18n="iw.releases.v070">Pick your look: ii's original style or the one from pctrade's end4-pC fork, in the setup (with a picture of each) or any time in Settings &gt; Quick &gt; Style. Both have the same features and options; the end4-pC style brings its floating settings card, which Spotlight and the overview can search. It also starts a little faster on the same slow VM (the bar in about 1.6 s), uses about 26 MB less memory after start and takes about 185 MB installed instead of 210. Fixes the bar showing up lower and jumping a couple of seconds later after a crash or an update.</p>
 						</li>
 						<li>
 							<div class="rel-head">
 								<span class="rel-ver">0.6.2</span>
+								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
 								<time datetime="2026-10-08">2026-10-08</time>
 							</div>
 							<p data-i18n="iw.releases.v062">Faster everywhere, especially on weaker machines: the bar shows in about 2 seconds instead of 5 on the same slow VM, Settings opens inside ii already themed and translated in under a second, panels keep their window after the first open and the mouse hook only wakes ii when something under the pointer changes. About 45 MB lighter. Fixes external monitors being set back to full brightness on every start and translations not loading with the language on "auto".</p>
@@ -1820,6 +1854,7 @@
 						<li>
 							<div class="rel-head">
 								<span class="rel-ver">0.6.1</span>
+								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
 								<time datetime="2026-10-07">2026-10-07</time>
 							</div>
 							<p data-i18n="iw.releases.v061">The Settings app now has almost every option that used to live only in config.json (bar auto-hide, transparency and accent color, date formats, dock, on-screen keyboard, night light schedule, translator languages, search and more); options that only do something on Linux stay hidden. It's also translated to Brazilian Portuguese.</p>
@@ -1827,6 +1862,7 @@
 						<li>
 							<div class="rel-head">
 								<span class="rel-ver">0.6.0</span>
+								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
 								<time datetime="2026-10-07">2026-10-07</time>
 							</div>
 							<p data-i18n="iw.releases.v060">Starts much faster on weaker machines: on a VM held to two slow cores and a slow disk the bar shows in about 4 seconds instead of about 43. Spotlight search on the Windows key (apps, files, clipboard history, emoji, system actions and the web), with Win+Tab for the workspaces. A System tab in the cheatsheet with CPU, GPU, memory and disks, and CPU, RAM and disk cards for the desktop. Fixes mouse and keyboard lag on weaker machines, empty emoji search and crashes when ii reloaded mid-task.</p>
@@ -1834,6 +1870,7 @@
 						<li>
 							<div class="rel-head">
 								<span class="rel-ver">0.5.0</span>
+								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
 								<time datetime="2026-10-06">2026-10-06</time>
 							</div>
 							<p data-i18n="iw.releases.v050">Hold Win and drag to move a window, Win + right drag to resize it, with tiling and across monitors with different scaling. Windows draws the wallpaper again and ii only puts its widgets on the desktop; changing the wallpaper in Windows recolors ii. The bar shrinks its applets when they don't fit. Media visualizer, native color picker (Win+Shift+C), weather, game mode, the WARP toggle and a warning before shutting down while winget is installing. Fixes the bar sitting below the top or not reserving its space after a display scale change, and closing windows of apps running as administrator.</p>
@@ -1841,6 +1878,7 @@
 						<li>
 							<div class="rel-head">
 								<span class="rel-ver">0.4.0</span>
+								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
 								<time datetime="2026-10-05">2026-10-05</time>
 							</div>
 							<p data-i18n="iw.releases.v040">Optional tiling with Hyprland's dwindle layout on Windows' virtual desktops. The screen translator lays each translated paragraph over the original, desktop widgets sit next to the icons and can be dragged, tray icons of apps started before ii respond to clicks (Windows 10 included), and the classic console gets ii's colors and font. Fixes a crash in the Windows 10 virtual desktop helper, a second copy of ii starting on top of the first, and the bar losing its reserved space.</p>
@@ -1848,6 +1886,7 @@
 						<li>
 							<div class="rel-head">
 								<span class="rel-ver">0.3.1</span>
+								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
 								<time datetime="2026-10-05">2026-10-05</time>
 							</div>
 							<p data-i18n="iw.releases.v031">Windows 10's blur no longer shows as a band around the floating bar's rounded ends, and the setup's window opens in the free part of the screen.</p>
@@ -1855,6 +1894,7 @@
 						<li>
 							<div class="rel-head">
 								<span class="rel-ver">0.3.0</span>
+								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
 								<time datetime="2026-10-05">2026-10-05</time>
 							</div>
 							<p data-i18n="iw.releases.v030">Screen recording with Windows' own capture and encoder, no FFmpeg needed. ii's own system tray, shared with Explorer's. Wallpaper and widgets behind the desktop icons. Translation, music recognition and LaTeX in the AI chat. The setup updates itself from GitHub. Built on Quickshell 0.3.1 and the latest ii from end-4.</p>
@@ -1862,6 +1902,7 @@
 						<li>
 							<div class="rel-head">
 								<span class="rel-ver">0.2.0</span>
+								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
 								<time datetime="2026-10-02">2026-10-02</time>
 							</div>
 							<p data-i18n="iw.releases.v020">Windows 10 support (version 2004 or newer): virtual desktops, blur and the hover-only taskbar on any edge. The Visual C++ runtime is included, brightness works on laptop screens and dims in software elsewhere, and the setup checks for WebView2 and can install Windows Terminal and winget.</p>
@@ -1869,6 +1910,7 @@
 						<li>
 							<div class="rel-head">
 								<span class="rel-ver">0.1.1</span>
+								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
 								<time datetime="2026-10-02">2026-10-02</time>
 							</div>
 							<p data-i18n="iw.releases.v011">Fixes mouse and keyboard lag on real hardware: window events moved off ii's main thread and the mouse hook runs at high priority.</p>
@@ -1876,6 +1918,7 @@
 						<li>
 							<div class="rel-head">
 								<span class="rel-ver">0.1.0</span>
+								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
 								<time datetime="2026-10-02">2026-10-02</time>
 							</div>
 							<p data-i18n="iw.releases.v010">First release, Windows 11 only, with a setup that downloads the package, checks its SHA-256 and installs it for the current user.</p>
@@ -2050,6 +2093,6 @@
 				select(root.getAttribute("data-aud") === "advanced" ? "advanced" : "beginner", false);
 			})();
 		</script>
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261009-5"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261009-6"></script>
 	</body>
 </html>
