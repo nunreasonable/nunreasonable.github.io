@@ -107,7 +107,7 @@ export const pt = {
   "p.ii-windows.title": "ii no Windows",
   "p.ii-windows.tagline":
     "O desktop illogical-impulse do end-4, feito em Quickshell, portado do Hyprland para o Windows 11 e 10.",
-  "p.ii-windows.status": "Versão experimental · v0.9.1 — Haunted Spatula",
+  "p.ii-windows.status": "Versão experimental · v0.9.2 — Caffeinated Pigeon",
   "p.ii-windows.d0":
     "O illogical-impulse (ii) é o shell de desktop em Quickshell que o end-4 fez para o Hyprland: a barra, as barras laterais, o overview e os widgets. Este port faz ele rodar num desktop de verdade do Windows, 11 ou 10, e chegar lá exige dois forks.",
   "p.ii-windows.d1":
