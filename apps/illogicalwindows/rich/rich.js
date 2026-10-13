@@ -11,7 +11,7 @@
  *  - a historia "Do Windows ao ii", presa na tela enquanto a pagina rola;
  *  - a corrida de inicializacao (mesma VM lenta, versoes diferentes);
  *  - o explorador de recursos (imagens de um recurso so);
- *  - "Testar no demo", linha do tempo das versoes e
+ *  - pergunta de publico, "Testar no demo", linha do tempo das versoes e
  *    entradas suaves das secoes.
  * Tudo que fica em loop para fora da tela ou com a aba escondida.
  */
@@ -428,7 +428,7 @@ function setupReleases() {
 function setupReveals() {
 	if (reduce.matches) return;
 	const els = document.querySelectorAll(
-		"main .section-head, main .card, main .features li, main .gallery figure, main .repo, .notice, .race, .explore-grid"
+		"main .section-head, main .card, main .features li, main .gallery figure, main .repo, .notice, .chooser, .race, .explore-grid"
 	);
 	const io = new IntersectionObserver(
 		(entries) => {
@@ -453,7 +453,42 @@ function setupReveals() {
 	});
 }
 
-// --- "Testar no demo" ----------------------------------------------------
+// --- Pergunta de publico e "Testar no demo" ------------------------------
+
+// No modo completo a pergunta substitui as abas (que somem): os dois botoes
+// grandes escolhem o publico, mostram qual esta valendo e trocam o painel
+// com uma transicao.
+function setupChooser() {
+	const buttons = [...document.querySelectorAll(".chooser [data-choose]")];
+	if (!buttons.length) return;
+	const sync = () => {
+		const aud = html.getAttribute("data-aud");
+		buttons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.choose === aud)));
+	};
+	buttons.forEach((b) =>
+		on(b, "click", () => {
+			const aud = b.dataset.choose;
+			const tab = document.getElementById(`tab-${aud}`);
+			if (!tab) return;
+			const changed = html.getAttribute("data-aud") !== aud;
+			tab.click();
+			const panel = document.getElementById(aud);
+			if (!panel) return;
+			if (changed && !reduce.matches && panel.animate) {
+				panel.animate([{ opacity: 0, transform: "translateY(14px)" }, { opacity: 1, transform: "none" }], {
+					duration: 420,
+					easing: "cubic-bezier(0.22, 1, 0.36, 1)"
+				});
+			}
+			const top = panel.getBoundingClientRect().top;
+			if (top > innerHeight * 0.75) panel.scrollIntoView({ behavior: reduce.matches ? "auto" : "smooth", block: "start" });
+		})
+	);
+	const mo = new MutationObserver(sync);
+	mo.observe(html, { attributes: true, attributeFilter: ["data-aud"] });
+	cleanups.push(() => mo.disconnect());
+	sync();
+}
 
 function setupTry(palette) {
 	const demo = document.getElementById("demo-area");
@@ -493,6 +528,7 @@ export function start() {
 	setupExplorer();
 	setupReleases();
 	setupReveals();
+	setupChooser();
 	setupTry(palette);
 	on(window, "resize", () => desktop && desktop.relayout());
 	html.classList.add("rich-ready");
