@@ -1911,10 +1911,12 @@
 }
 
 .chooser-q {
-	margin: 0 0 14px;
-	font-family: var(--font-display);
-	font-size: clamp(1.15rem, 2.4vw, 1.4rem);
-	font-weight: 600;
+	max-width: 22ch;
+	margin: 0 auto 28px;
+	font-size: clamp(1.9rem, 4.6vw, 3rem);
+	font-weight: 650;
+	letter-spacing: -0.025em;
+	line-height: 1.12;
 }
 
 .chooser-a {
@@ -1966,6 +1968,68 @@
 	border-radius: 50%;
 	background: var(--accent);
 	vertical-align: 2px;
+}
+
+/* A resposta ao que o visitante escolheu, no lugar do titulo do painel:
+   um balao que "digita" (tres pontos) e depois fala. */
+.reply {
+	display: none;
+	align-items: center;
+	gap: 10px;
+	min-height: 52px;
+	margin: 0 0 14px;
+	padding: 12px 20px;
+	border-radius: 22px 22px 22px 6px;
+	border: 1.5px solid var(--accent);
+	background: var(--accent-soft);
+	color: var(--text);
+	font-family: var(--font-display);
+	font-size: clamp(1.25rem, 2.8vw, 1.7rem);
+	font-weight: 650;
+	letter-spacing: -0.015em;
+	transform-origin: 0 100%;
+}
+
+.rich .reply {
+	display: inline-flex !important;
+}
+
+.reply-dots {
+	display: none;
+	gap: 5px;
+}
+
+.reply-dots i {
+	display: block;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--accent);
+	opacity: 0.4;
+	animation: reply-dot 0.9s ease-in-out infinite;
+}
+
+.reply-dots i:nth-child(2) {
+	animation-delay: 0.15s;
+}
+
+.reply-dots i:nth-child(3) {
+	animation-delay: 0.3s;
+}
+
+@keyframes reply-dot {
+	40% {
+		opacity: 1;
+		transform: translateY(-3px);
+	}
+}
+
+.reply.is-typing .reply-dots {
+	display: inline-flex;
+}
+
+.reply.is-typing .reply-text {
+	display: none;
 }
 
 /* Com a pergunta valendo, as abas viram redundantes. */

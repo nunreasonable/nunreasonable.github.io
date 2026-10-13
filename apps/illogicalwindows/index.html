@@ -33,7 +33,7 @@
 		<link rel="apple-touch-icon" href="assets/icon-180.png" />
 
 		<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
-		<link rel="stylesheet" href="rich/rich.css?v=20261013-3" />
+		<link rel="stylesheet" href="rich/rich.css?v=20261013-4" />
 		<script src="../../filearchive/perf/lite.js"></script>
 
 		<script>
@@ -1529,14 +1529,14 @@
 			<!-- ================= Dois publicos ================= -->
 			<section class="section" id="learn">
 				<div class="wrap">
-					<header class="section-head">
+					<header class="section-head lite-only">
 						<h2 data-i18n="iw.learn.title">Explained two ways</h2>
 						<p data-i18n="iw.learn.lead">Pick the one that fits you. You can switch any time.</p>
 					</header>
 
 
 					<div class="chooser rich-only">
-						<p class="chooser-q" data-i18n="iw.chooser.q">First time customizing Windows like this?</p>
+						<h2 class="chooser-q" data-i18n="iw.chooser.q">First time customizing Windows like this?</h2>
 						<div class="chooser-a">
 							<button type="button" data-choose="beginner"><strong data-i18n="iw.chooser.yes">Yes, keep it simple</strong> <span data-i18n="iw.chooser.yesSub">Everyday words, no jargon</span></button>
 							<button type="button" data-choose="advanced"><strong data-i18n="iw.chooser.no">No, show me the internals</strong> <span data-i18n="iw.chooser.noSub">APIs, threads and the limits</span></button>
@@ -1551,7 +1551,8 @@
 					<!-- ---------- Iniciante ---------- -->
 					<div class="panel" id="beginner" role="tabpanel" aria-labelledby="tab-beginner" tabindex="0">
 						<div class="panel-head">
-							<h3 data-i18n="iw.b.title">The friendly version</h3>
+							<p class="reply rich-only" aria-live="polite"><span class="reply-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="reply-text" data-i18n="iw.b.reply">Okay, here you go. No jargon, promise.</span></p>
+							<h3 class="lite-only" data-i18n="iw.b.title">The friendly version</h3>
 							<p data-i18n="iw.b.lead">No tech background needed. Here's what this is, in everyday words.</p>
 						</div>
 
@@ -1623,7 +1624,8 @@
 					<!-- ---------- Avancado ---------- -->
 					<div class="panel" id="advanced" role="tabpanel" aria-labelledby="tab-advanced" tabindex="0">
 						<div class="panel-head">
-							<h3 data-i18n="iw.a.title">The technical version</h3>
+							<p class="reply rich-only" aria-live="polite"><span class="reply-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="reply-text" data-i18n="iw.a.reply">Alright, let's open it up.</span></p>
+							<h3 class="lite-only" data-i18n="iw.a.title">The technical version</h3>
 							<p data-i18n="iw.a.lead">Two forks, a native Windows backend behind the APIs ii already uses, and a per-user setup. Everything here comes from the project's own docs.</p>
 						</div>
 
@@ -2801,7 +2803,7 @@
 				if (rich) {
 					root.classList.add("rich");
 					try {
-						mod = mod || (await import("./rich/rich.js?v=20261013-3"));
+						mod = mod || (await import("./rich/rich.js?v=20261013-4"));
 						mod.start();
 						// Mede o fps com os efeitos rodando (lite.js, data-lite-watch).
 						if (lite) setTimeout(() => lite.watch(), 1500);
@@ -2820,6 +2822,6 @@
 			sync();
 		</script>
 
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261013-3"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261013-4"></script>
 	</body>
 </html>

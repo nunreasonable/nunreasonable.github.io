@@ -474,6 +474,7 @@ function setupChooser() {
 			tab.click();
 			const panel = document.getElementById(aud);
 			if (!panel) return;
+			reply(panel);
 			if (changed && !reduce.matches && panel.animate) {
 				panel.animate([{ opacity: 0, transform: "translateY(14px)" }, { opacity: 1, transform: "none" }], {
 					duration: 420,
@@ -484,6 +485,26 @@ function setupChooser() {
 			if (top > innerHeight * 0.75) panel.scrollIntoView({ behavior: reduce.matches ? "auto" : "smooth", block: "start" });
 		})
 	);
+	// O balao de resposta "digita" um instante antes de falar.
+	let typing = 0;
+	function reply(panel) {
+		const bubble = panel.querySelector(".reply");
+		if (!bubble || reduce.matches) return;
+		clearTimeout(typing);
+		bubble.classList.add("is-typing");
+		if (bubble.animate) {
+			bubble.animate([{ transform: "scale(0.85)", opacity: 0 }, { transform: "none", opacity: 1 }], {
+				duration: 320,
+				easing: "cubic-bezier(0.34, 1.56, 0.64, 1)"
+			});
+		}
+		typing = setTimeout(() => bubble.classList.remove("is-typing"), 700);
+	}
+	cleanups.push(() => {
+		clearTimeout(typing);
+		document.querySelectorAll(".reply.is-typing").forEach((b) => b.classList.remove("is-typing"));
+	});
+
 	const mo = new MutationObserver(sync);
 	mo.observe(html, { attributes: true, attributeFilter: ["data-aud"] });
 	cleanups.push(() => mo.disconnect());

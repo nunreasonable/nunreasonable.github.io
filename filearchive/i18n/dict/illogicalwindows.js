@@ -474,4 +474,6 @@ export const pt = {
   "iw.gallery.n.lumine_live_wallpaper.caption": "Um papel de parede animado: um vídeo tocando atrás dos ícones, com a barra embaixo.",
   "iw.gallery.n.samurai_live_wallpaper.alt": "Outro papel de parede animado, com a barra na borda esquerda.",
   "iw.gallery.n.samurai_live_wallpaper.caption": "Outro papel de parede animado, com a barra na borda esquerda.",
+  "iw.b.reply": "Beleza, aqui vai. Sem jargão, prometo.",
+  "iw.a.reply": "Certo, vamos abrir isso aqui.",
 };
