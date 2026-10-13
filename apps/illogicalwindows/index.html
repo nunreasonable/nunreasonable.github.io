@@ -33,7 +33,7 @@
 		<link rel="apple-touch-icon" href="assets/icon-180.png" />
 
 		<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
-		<link rel="stylesheet" href="rich/rich.css?v=20261013-1" />
+		<link rel="stylesheet" href="rich/rich.css?v=20261013-2" />
 		<script src="../../filearchive/perf/lite.js"></script>
 
 		<script>
@@ -1535,13 +1535,6 @@
 					</header>
 
 
-					<div class="chooser rich-only">
-						<p class="chooser-q" data-i18n="iw.chooser.q">First time customizing Windows like this?</p>
-						<div class="chooser-a">
-							<button type="button" data-choose="beginner"><strong data-i18n="iw.chooser.yes">Yes, keep it simple</strong> <span data-i18n="iw.chooser.yesSub">Everyday words, no jargon</span></button>
-							<button type="button" data-choose="advanced"><strong data-i18n="iw.chooser.no">No, show me the internals</strong> <span data-i18n="iw.chooser.noSub">APIs, threads and the limits</span></button>
-						</div>
-					</div>
 
 					<div class="tabs" role="tablist" aria-label="Choose an explanation" data-i18n-attr="aria-label:iw.learn.tablistLabel">
 						<button type="button" role="tab" id="tab-beginner" aria-controls="beginner" aria-selected="true" tabindex="0" data-aud="beginner" data-i18n="iw.learn.tabBeginner">New to this</button>
@@ -2801,7 +2794,7 @@
 				if (rich) {
 					root.classList.add("rich");
 					try {
-						mod = mod || (await import("./rich/rich.js?v=20261013-1"));
+						mod = mod || (await import("./rich/rich.js?v=20261013-2"));
 						mod.start();
 						// Mede o fps com os efeitos rodando (lite.js, data-lite-watch).
 						if (lite) setTimeout(() => lite.watch(), 1500);
@@ -2820,6 +2813,6 @@
 			sync();
 		</script>
 
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261013-1"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261013-2"></script>
 	</body>
 </html>

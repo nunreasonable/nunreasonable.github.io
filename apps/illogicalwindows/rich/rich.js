@@ -11,7 +11,7 @@
  *  - a historia "Do Windows ao ii", presa na tela enquanto a pagina rola;
  *  - a corrida de inicializacao (mesma VM lenta, versoes diferentes);
  *  - o explorador de recursos (imagens de um recurso so);
- *  - pergunta de publico, "Testar no demo", linha do tempo das versoes e
+ *  - "Testar no demo", linha do tempo das versoes e
  *    entradas suaves das secoes.
  * Tudo que fica em loop para fora da tela ou com a aba escondida.
  */
@@ -428,7 +428,7 @@ function setupReleases() {
 function setupReveals() {
 	if (reduce.matches) return;
 	const els = document.querySelectorAll(
-		"main .section-head, main .card, main .features li, main .gallery figure, main .repo, .notice, .chooser, .race, .explore-grid"
+		"main .section-head, main .card, main .features li, main .gallery figure, main .repo, .notice, .race, .explore-grid"
 	);
 	const io = new IntersectionObserver(
 		(entries) => {
@@ -453,18 +453,7 @@ function setupReveals() {
 	});
 }
 
-// --- Pergunta de publico e "Testar no demo" ------------------------------
-
-function setupChooser() {
-	document.querySelectorAll(".chooser [data-choose]").forEach((b) =>
-		on(b, "click", () => {
-			const tab = document.getElementById(`tab-${b.dataset.choose}`);
-			if (!tab) return;
-			tab.click();
-			document.getElementById(b.dataset.choose)?.scrollIntoView({ behavior: reduce.matches ? "auto" : "smooth", block: "start" });
-		})
-	);
-}
+// --- "Testar no demo" ----------------------------------------------------
 
 function setupTry(palette) {
 	const demo = document.getElementById("demo-area");
@@ -504,7 +493,6 @@ export function start() {
 	setupExplorer();
 	setupReleases();
 	setupReveals();
-	setupChooser();
 	setupTry(palette);
 	on(window, "resize", () => desktop && desktop.relayout());
 	html.classList.add("rich-ready");
