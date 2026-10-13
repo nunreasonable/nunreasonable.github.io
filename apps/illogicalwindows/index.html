@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js">
+<html lang="en" class="no-js" data-lite-watch="manual">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -33,6 +33,8 @@
 		<link rel="apple-touch-icon" href="assets/icon-180.png" />
 
 		<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
+		<link rel="stylesheet" href="rich/rich.css?v=20261013-1" />
+		<script src="../../filearchive/perf/lite.js"></script>
 
 		<script>
 			/*
@@ -57,6 +59,16 @@
 					}
 				}
 				d.setAttribute("data-aud", aud || "beginner");
+
+				// Modo completo (demo interativo e animacoes), a menos que o
+				// lite.js tenha escolhido o modo leve. Se o modulo nao carregar
+				// em 5 s, a pagina volta a ser a de sempre.
+				if (!(window.daeeseLite && window.daeeseLite.on)) {
+					d.classList.add("rich");
+					setTimeout(function () {
+						if (!d.classList.contains("rich-ready")) d.classList.remove("rich");
+					}, 5000);
+				}
 			})();
 		</script>
 
@@ -1305,6 +1317,9 @@
 					<a href="#install" data-i18n="iw.nav.install">Install</a>
 					<a href="#source" data-i18n="iw.nav.source">Source</a>
 				</nav>
+				<button type="button" class="fx-toggle" aria-pressed="true" title="Turn the animations and the interactive demo on or off" data-i18n-attr="title:iw.nav.fxTitle">
+					<span class="fx-switch" aria-hidden="true"></span><span data-i18n="iw.nav.fx">Effects</span>
+				</button>
 				<div data-i18n-switcher></div>
 			</div>
 		</header>
@@ -1341,20 +1356,128 @@
 					</p>
 				</div>
 
-				<figure class="wrap hero-shot">
-					<a href="../../filearchive/projects/ii-windows/themed.webp">
+				<figure class="wrap hero-shot lite-only">
+					<a href="../../filearchive/projects/ii-windows/shots/frieren-desktop.webp">
 						<img
-							src="../../filearchive/projects/ii-windows/themed.mid.webp"
+							src="../../filearchive/projects/ii-windows/shots/frieren-desktop.mid.webp"
 							width="1000"
 							height="563"
 							fetchpriority="high"
 							decoding="async"
-							alt="Windows 11 desktop with the ii bar and clock, colored from an anime wallpaper"
+							alt="Windows desktop running ii over a soft green wallpaper, with clock, notes, weather, resource and world clock widgets"
 							data-i18n-attr="alt:iw.hero.shotAlt"
 						/>
 					</a>
-					<figcaption data-i18n="iw.hero.shotCaption">ii's colors taken from the Windows wallpaper; the Windows taskbar only shows up at the bottom edge.</figcaption>
+					<figcaption data-i18n="iw.hero.shotCaption">Widgets on the desktop and the bar on top, all colored from the wallpaper; the Windows taskbar only shows up at the bottom edge.</figcaption>
 				</figure>
+
+				<!-- Modo completo: o ii jogavel. No modo leve fica escondido e o print acima aparece. -->
+				<div class="wrap demo-area rich-only" id="demo-area">
+					<div
+						class="demo"
+						tabindex="0"
+						role="application"
+						aria-roledescription="demo"
+						aria-label="Playable ii demo. Space works as the Windows key."
+						data-i18n-attr="aria-label:iw.demo.label"
+						aria-describedby="demo-coach"
+					>
+						<div class="demo-wall" aria-hidden="true"></div>
+						<div class="demo-desk" aria-hidden="true">
+							<div class="demo-clockw"><span class="demo-time">12:00</span><span class="demo-date"></span></div>
+							<div class="demo-icons"><i></i><i></i><i></i></div>
+						</div>
+						<div class="demo-bar">
+							<button type="button" class="demo-bar-btn demo-bar-search" data-act="win" aria-label="Search" data-i18n-attr="aria-label:iw.demo.searchBtn"><img src="assets/icon.webp" width="16" height="16" alt="" /></button>
+							<div class="demo-ws" role="group" aria-label="Workspaces" data-i18n-attr="aria-label:iw.demo.wsLabel">
+								<button type="button" data-ws="0" class="on" aria-pressed="true">1</button><button type="button" data-ws="1" aria-pressed="false">2</button><button type="button" data-ws="2" aria-pressed="false">3</button>
+							</div>
+							<div class="demo-media" aria-hidden="true"><span class="demo-eq"><i></i><i></i><i></i></span><span>Lo-fi beats</span></div>
+							<div class="demo-clock" aria-hidden="true"><span class="demo-time">12:00</span><span class="demo-sep">•</span><span class="demo-date"></span></div>
+							<div class="demo-res" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/><path d="M9.5 3v3.5M14.5 3v3.5M9.5 17.5V21M14.5 17.5V21M3 9.5h3.5M3 14.5h3.5M17.5 9.5H21M17.5 14.5H21"/></svg><span>12%</span></div>
+							<button type="button" class="demo-bar-btn demo-bar-side" data-act="side" aria-label="Quick settings" data-i18n-attr="aria-label:iw.demo.sideBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.6 16a5 5 0 0 1 6.8 0"/><circle cx="12" cy="19.3" r="1.2" class="fill"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" class="fill"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7.5" width="16" height="9" rx="2"/><path d="M21 10.5v3"/><rect x="5" y="9.5" width="9" height="5" rx="1" class="fill"/></svg></button>
+						</div>
+						<div class="demo-windows"></div>
+						<div class="demo-edge" aria-hidden="true"></div>
+						<div class="demo-taskbar" aria-hidden="true">
+							<span class="tb-start"><i></i><i></i><i></i><i></i></span>
+							<span class="tb-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><span data-i18n="iw.demo.taskSearch">Search</span></span>
+							<span class="tb-app"></span><span class="tb-app"></span><span class="tb-app"></span>
+							<span class="tb-tray"><span class="demo-time">12:00</span></span>
+						</div>
+						<div class="demo-scrim"></div>
+						<div class="demo-spot" role="dialog" aria-label="Spotlight">
+							<div class="demo-spot-box">
+								<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
+								<input
+									type="text"
+									autocomplete="off"
+									spellcheck="false"
+									placeholder="Search apps, emoji, math, the web"
+									aria-label="Search apps, emoji, math, the web"
+									data-i18n-attr="placeholder:iw.demo.spotPlaceholder,aria-label:iw.demo.spotPlaceholder"
+								/>
+							</div>
+							<ul class="demo-spot-list" role="listbox" aria-label="Spotlight"></ul>
+						</div>
+						<div class="demo-overview"><div class="demo-ov-grid"></div></div>
+						<div class="demo-cheat">
+							<h4 data-i18n="iw.demo.cheat.title">Keybinds</h4>
+							<dl>
+							<div><dt><kbd>Win</kbd></dt><dd><span data-i18n="iw.demo.cheat.spot">Spotlight search</span></dd></div>
+							<div><dt><kbd>Win</kbd> + <kbd>Enter</kbd></dt><dd><span data-i18n="iw.demo.cheat.open">Open a window</span></dd></div>
+							<div><dt><kbd>Win</kbd> + <kbd>Q</kbd></dt><dd><span data-i18n="iw.demo.cheat.close">Close the window</span></dd></div>
+							<div><dt><kbd>Win</kbd> + <kbd>Tab</kbd></dt><dd><span data-i18n="iw.demo.cheat.overview">Overview</span></dd></div>
+							<div><dt><kbd>Win</kbd> + <kbd>/</kbd></dt><dd><span data-i18n="iw.demo.cheat.sheet">This sheet</span></dd></div>
+							<div><dt><kbd>Win</kbd> + <kbd>1</kbd>–<kbd>3</kbd></dt><dd><span data-i18n="iw.demo.cheat.ws">Go to a workspace</span></dd></div>
+							<div><dt><kbd>Win</kbd> + drag</dt><dd><span data-i18n="iw.demo.cheat.drag">Move a window</span></dd></div>
+							</dl>
+						</div>
+						<aside class="demo-side">
+							<div class="demo-side-toggles">
+								<button type="button" data-toggle="dark" aria-pressed="true"><span data-i18n="iw.demo.s.side.dark">Dark mode</span></button>
+								<button type="button" data-toggle="night" aria-pressed="false"><span data-i18n="iw.demo.s.side.night">Night light</span></button>
+								<button type="button" data-toggle="dnd" aria-pressed="false"><span data-i18n="iw.demo.side.dnd">Do not disturb</span></button>
+							</div>
+							<label><span data-i18n="iw.demo.side.volume">Volume</span><input type="range" min="0" max="100" value="64" data-slider="vol" /></label>
+							<label><span data-i18n="iw.demo.side.bright">Brightness</span><input type="range" min="20" max="100" value="100" data-slider="bright" /></label>
+						</aside>
+						<div class="demo-night" aria-hidden="true"></div>
+						<div class="demo-dim" aria-hidden="true"></div>
+						<div class="demo-toast" role="status"></div>
+						<div class="demo-coach" id="demo-coach" aria-live="polite"><span class="demo-coach-dot" aria-hidden="true"></span><span class="demo-coach-text"></span></div>
+						<div class="demo-drop" aria-hidden="true"><span data-i18n="iw.demo.drop">Drop it to use it as the wallpaper</span></div>
+					</div>
+
+					<div class="demo-rail">
+						<div class="demo-keys" role="group" aria-label="Shortcuts" data-i18n-attr="aria-label:iw.demo.keysLabel">
+						<button type="button" data-act="win"><kbd>Win</kbd></button>
+						<button type="button" data-act="enter"><kbd>Win</kbd><span>+</span><kbd>Enter</kbd></button>
+						<button type="button" data-act="q"><kbd>Win</kbd><span>+</span><kbd>Q</kbd></button>
+						<button type="button" data-act="tab"><kbd>Win</kbd><span>+</span><kbd>Tab</kbd></button>
+						<button type="button" data-act="cheat"><kbd>Win</kbd><span>+</span><kbd>/</kbd></button>
+						</div>
+						<span class="demo-progress"><span class="demo-progress-track"><span class="demo-progress-bar"></span></span><span class="demo-progress-text"></span></span>
+					</div>
+					<p class="demo-hint" data-i18n="iw.demo.hint">Here, Space is Win. The rest works without it: Enter, Q, Tab, / and 1–3. Esc leaves the demo.</p>
+
+					<div class="demo-walls">
+						<span class="demo-walls-label" id="demo-walls-label" data-i18n="iw.demo.walls">Wallpaper</span>
+						<div class="demo-swatches" role="radiogroup" aria-labelledby="demo-walls-label">
+						<button type="button" role="radio" aria-checked="true" data-wall="rose" aria-label="Rose" data-i18n-attr="aria-label:iw.demo.wall.rose" title="Rose"><canvas aria-hidden="true"></canvas></button>
+						<button type="button" role="radio" aria-checked="false" data-wall="lagoon" aria-label="Lagoon" data-i18n-attr="aria-label:iw.demo.wall.lagoon" title="Lagoon"><canvas aria-hidden="true"></canvas></button>
+						<button type="button" role="radio" aria-checked="false" data-wall="moss" aria-label="Moss" data-i18n-attr="aria-label:iw.demo.wall.moss" title="Moss"><canvas aria-hidden="true"></canvas></button>
+						<button type="button" role="radio" aria-checked="false" data-wall="ember" aria-label="Ember" data-i18n-attr="aria-label:iw.demo.wall.ember" title="Ember"><canvas aria-hidden="true"></canvas></button>
+						<button type="button" role="radio" aria-checked="false" data-wall="dusk" aria-label="Dusk" data-i18n-attr="aria-label:iw.demo.wall.dusk" title="Dusk"><canvas aria-hidden="true"></canvas></button>
+						</div>
+						<label class="demo-upload">
+							<input type="file" accept="image/*" />
+							<span data-i18n="iw.demo.upload">Use your own image</span>
+						</label>
+						<span class="demo-private" data-i18n="iw.demo.private">It stays in your browser. Nothing is uploaded.</span>
+					</div>
+				</div>
+
 			</section>
 
 			<!-- ================= Aviso: nao oficial ================= -->
@@ -1372,6 +1495,37 @@
 				</aside>
 			</div>
 
+
+			<!-- ================= Modo completo: historia presa na tela ================= -->
+			<section class="story rich-only" id="story" aria-labelledby="story-title" data-step="0">
+				<div class="story-pin">
+					<div class="wrap story-inner">
+						<div class="story-copy">
+							<p class="story-eyebrow" data-i18n="iw.story.eyebrow">How it fits in</p>
+							<h2 id="story-title" data-i18n="iw.story.title">From Windows to ii, one scroll at a time</h2>
+							<ol class="story-steps">
+							<li><strong data-i18n="iw.story.s0.title">Windows, as you know it</strong> <span data-i18n="iw.story.s0.text">Your desktop, your icons, the taskbar at the bottom.</span></li>
+							<li><strong data-i18n="iw.story.s1.title">The taskbar steps aside</strong> <span data-i18n="iw.story.s1.text">It hides until the pointer touches the bottom edge. Nothing is removed.</span></li>
+							<li><strong data-i18n="iw.story.s2.title">ii's bar takes the top</strong> <span data-i18n="iw.story.s2.text">Workspaces, media, the clock and quick settings, with its space reserved like any Windows app bar.</span></li>
+							<li><strong data-i18n="iw.story.s3.title">Colors from your wallpaper</strong> <span data-i18n="iw.story.s3.text">Pick a picture and ii builds a Material You palette from it, for itself, Windows and the terminal.</span></li>
+							<li><strong data-i18n="iw.story.s4.title">Widgets on the desktop</strong> <span data-i18n="iw.story.s4.text">Clock, weather and resources sit next to your icons, over the Windows wallpaper.</span></li>
+							</ol>
+						</div>
+						<div class="story-stage" aria-hidden="true">
+							<div class="ss-wall ss-wall-win"></div>
+							<div class="ss-wall ss-wall-ii"></div>
+							<div class="ss-icons"><i></i><i></i><i></i><i></i></div>
+							<div class="ss-widgets">
+								<div class="ss-clock"><span class="demo-time">12:00</span><span class="demo-date"></span></div>
+								<div class="ss-res"><i style="--v: 0.38"></i><i style="--v: 0.62"></i><i style="--v: 0.24"></i></div>
+							</div>
+							<div class="ss-bar"><i class="ss-dot on"></i><i class="ss-dot"></i><i class="ss-dot"></i><span class="ss-pill"></span><span class="demo-time">12:00</span><span class="ss-pill short"></span></div>
+							<div class="ss-taskbar"><span class="tb-start"><i></i><i></i><i></i><i></i></span><span class="tb-search"></span><span class="tb-app"></span><span class="tb-app"></span><span class="tb-app"></span></div>
+						</div>
+					</div>
+				</div>
+			</section>
+
 			<!-- ================= Dois publicos ================= -->
 			<section class="section" id="learn">
 				<div class="wrap">
@@ -1379,6 +1533,15 @@
 						<h2 data-i18n="iw.learn.title">Explained two ways</h2>
 						<p data-i18n="iw.learn.lead">Pick the one that fits you. You can switch any time.</p>
 					</header>
+
+
+					<div class="chooser rich-only">
+						<p class="chooser-q" data-i18n="iw.chooser.q">First time customizing Windows like this?</p>
+						<div class="chooser-a">
+							<button type="button" data-choose="beginner"><strong data-i18n="iw.chooser.yes">Yes, keep it simple</strong> <span data-i18n="iw.chooser.yesSub">Everyday words, no jargon</span></button>
+							<button type="button" data-choose="advanced"><strong data-i18n="iw.chooser.no">No, show me the internals</strong> <span data-i18n="iw.chooser.noSub">APIs, threads and the limits</span></button>
+						</div>
+					</div>
 
 					<div class="tabs" role="tablist" aria-label="Choose an explanation" data-i18n-attr="aria-label:iw.learn.tablistLabel">
 						<button type="button" role="tab" id="tab-beginner" aria-controls="beginner" aria-selected="true" tabindex="0" data-aud="beginner" data-i18n="iw.learn.tabBeginner">New to this</button>
@@ -1757,14 +1920,17 @@
 						<li>
 							<h3 data-i18n="iw.features.sidebars.title">Sidebars</h3>
 							<p data-i18n="iw.features.sidebars.text">A banner with your picture and uptime, a media card and reorderable sections on the right; AI chat and a translator on the left.</p>
+							<button type="button" class="try rich-only" data-try="side" data-i18n="iw.try">Try it in the demo</button>
 						</li>
 						<li>
 							<h3 data-i18n="iw.features.search.title">Spotlight search</h3>
 							<p data-i18n="iw.features.search.text">Tap the Windows key for apps, files, clipboard history, emoji, system actions and the web in one box. Win+Tab opens the overview.</p>
+							<button type="button" class="try rich-only" data-try="spot" data-i18n="iw.try">Try it in the demo</button>
 						</li>
 						<li>
 							<h3 data-i18n="iw.features.colors.title">Colors from your wallpaper</h3>
 							<p data-i18n="iw.features.colors.text">Material You palettes from matugen, with Wallhaven search built into the wallpaper picker. Windows' accent color and light/dark mode follow along.</p>
+							<button type="button" class="try rich-only" data-try="wall" data-i18n="iw.try">Try it in the demo</button>
 						</li>
 						<li>
 							<h3 data-i18n="iw.features.live.title">Live wallpapers</h3>
@@ -1773,10 +1939,12 @@
 						<li>
 							<h3 data-i18n="iw.features.workspaces.title">Workspaces and overview</h3>
 							<p data-i18n="iw.features.workspaces.text">ii's workspaces are Windows' own virtual desktops, with live previews in the overview.</p>
+							<button type="button" class="try rich-only" data-try="overview" data-i18n="iw.try">Try it in the demo</button>
 						</li>
 						<li>
 							<h3 data-i18n="iw.features.tiling.title">Tiling and Win + drag</h3>
 							<p data-i18n="iw.features.tiling.text">Hyprland's dwindle layout with ii's keybinds (off by default), and since 0.5.0 Win + drag moves windows and Win + right drag resizes them.</p>
+							<button type="button" class="try rich-only" data-try="tile" data-i18n="iw.try">Try it in the demo</button>
 						</li>
 						<li>
 							<h3 data-i18n="iw.features.screen.title">Screen tools</h3>
@@ -1801,12 +1969,69 @@
 						<li>
 							<h3 data-i18n="iw.features.taskbarmode.title">Windows taskbar mode</h3>
 							<p data-i18n="iw.features.taskbarmode.text">Ctrl+Super+P swaps ii's bar for the Windows taskbar while keeping widgets, sidebars and search. Press it again to bring ii's bar back.</p>
+							<button type="button" class="try rich-only" data-try="taskbar" data-i18n="iw.try">Try it in the demo</button>
 						</li>
 					</ul>
 				</div>
 			</section>
 
 			<!-- ================= Galeria ================= -->
+
+			<!-- ================= Modo completo: explorador de recursos ================= -->
+			<section class="section explore rich-only" id="explore">
+				<div class="wrap">
+					<header class="section-head">
+						<h2 data-i18n="iw.explore.title">Take a closer look</h2>
+						<p data-i18n="iw.explore.lead">One part of ii at a time. Pick one, or let it play.</p>
+					</header>
+					<div class="explore-grid">
+						<div class="explore-tabs" role="tablist" aria-orientation="vertical" aria-label="Parts of ii" data-i18n-attr="aria-label:iw.explore.tabsLabel">
+							<button type="button" role="tab" id="ex-tab-spot" aria-controls="ex-spot" aria-selected="true" tabindex="0"><span data-i18n="iw.explore.spot.label">Spotlight</span></button>
+							<button type="button" role="tab" id="ex-tab-apps" aria-controls="ex-apps" aria-selected="false" tabindex="-1"><span data-i18n="iw.explore.apps.label">App grid</span></button>
+							<button type="button" role="tab" id="ex-tab-side" aria-controls="ex-side" aria-selected="false" tabindex="-1"><span data-i18n="iw.explore.side.label">Quick settings</span></button>
+							<button type="button" role="tab" id="ex-tab-ai" aria-controls="ex-ai" aria-selected="false" tabindex="-1"><span data-i18n="iw.explore.ai.label">AI chat</span></button>
+							<button type="button" role="tab" id="ex-tab-media" aria-controls="ex-media" aria-selected="false" tabindex="-1"><span data-i18n="iw.explore.media.label">Media</span></button>
+							<button type="button" role="tab" id="ex-tab-player" aria-controls="ex-player" aria-selected="false" tabindex="-1"><span data-i18n="iw.explore.player.label">Media controls</span></button>
+							<button type="button" role="tab" id="ex-tab-walls" aria-controls="ex-walls" aria-selected="false" tabindex="-1"><span data-i18n="iw.explore.walls.label">Wallpaper picker</span></button>
+							<button type="button" role="tab" id="ex-tab-settings" aria-controls="ex-settings" aria-selected="false" tabindex="-1"><span data-i18n="iw.explore.settings.label">Settings</span></button>
+							<button type="button" role="tab" id="ex-tab-cheat" aria-controls="ex-cheat" aria-selected="false" tabindex="-1"><span data-i18n="iw.explore.cheat.label">Cheatsheet</span></button>
+							<button type="button" role="tab" id="ex-tab-keys" aria-controls="ex-keys" aria-selected="false" tabindex="-1"><span data-i18n="iw.explore.keys.label">Keybind editor</span></button>
+						</div>
+						<div class="explore-frame">
+							<figure role="tabpanel" id="ex-spot" aria-labelledby="ex-tab-spot" class="is-on"><span class="ex-bg" aria-hidden="true" style="background-image: url('../../filearchive/projects/ii-windows/shots/tokyo-spotlight.thumb.webp')"></span><img src="../../filearchive/projects/ii-windows/panels/spotlight-search.webp" width="896" height="574" decoding="async" alt="Spotlight: Win opens it: apps, files, emoji, math and the web, with the matches highlighted." data-i18n-attr="alt:iw.explore.spot.alt" /><figcaption data-i18n="iw.explore.spot.caption">Win opens it: apps, files, emoji, math and the web, with the matches highlighted.</figcaption></figure>
+							<figure role="tabpanel" id="ex-apps" aria-labelledby="ex-tab-apps" class=""><span class="ex-bg" aria-hidden="true" style="background-image: url('../../filearchive/projects/ii-windows/shots/glassy-spotlight-apps.thumb.webp')"></span><img src="data:," data-src="../../filearchive/projects/ii-windows/panels/spotlight-apps.webp" width="896" height="574" decoding="async" alt="App grid: With nothing typed, every app in a grid." data-i18n-attr="alt:iw.explore.apps.alt" /><figcaption data-i18n="iw.explore.apps.caption">With nothing typed, every app in a grid.</figcaption></figure>
+							<figure role="tabpanel" id="ex-side" aria-labelledby="ex-tab-side" class=" tall"><span class="ex-bg" aria-hidden="true" style="background-image: url('../../filearchive/projects/ii-windows/shots/frieren-sidebar-right.thumb.webp')"></span><img src="data:," data-src="../../filearchive/projects/ii-windows/panels/sidebar-right-frieren.webp" width="460" height="1040" decoding="async" alt="Quick settings: Network, Bluetooth, toggles, brightness, volume and notifications in one panel." data-i18n-attr="alt:iw.explore.side.alt" /><figcaption data-i18n="iw.explore.side.caption">Network, Bluetooth, toggles, brightness, volume and notifications in one panel.</figcaption></figure>
+							<figure role="tabpanel" id="ex-ai" aria-labelledby="ex-tab-ai" class=" tall"><span class="ex-bg" aria-hidden="true" style="background-image: url('../../filearchive/projects/ii-windows/shots/frieren-sidebar-ai.thumb.webp')"></span><img src="data:," data-src="../../filearchive/projects/ii-windows/panels/sidebar-left-ai-frieren.webp" width="460" height="1040" decoding="async" alt="AI chat: Chat with Gemini, Ollama and other models. Keys stay in Windows&#x27; Credential Manager." data-i18n-attr="alt:iw.explore.ai.alt" /><figcaption data-i18n="iw.explore.ai.caption">Chat with Gemini, Ollama and other models. Keys stay in Windows' Credential Manager.</figcaption></figure>
+							<figure role="tabpanel" id="ex-media" aria-labelledby="ex-tab-media" class=" tall"><span class="ex-bg" aria-hidden="true" style="background-image: url('../../filearchive/projects/ii-windows/shots/glassy-sidebar-media.thumb.webp')"></span><img src="data:," data-src="../../filearchive/projects/ii-windows/panels/sidebar-left-media.webp" width="460" height="1040" decoding="async" alt="Media: The cover&#x27;s colors, a wavy progress bar and synced lyrics when there are any." data-i18n-attr="alt:iw.explore.media.alt" /><figcaption data-i18n="iw.explore.media.caption">The cover's colors, a wavy progress bar and synced lyrics when there are any.</figcaption></figure>
+							<figure role="tabpanel" id="ex-player" aria-labelledby="ex-tab-player" class=""><span class="ex-bg" aria-hidden="true" style="background-image: url('../../filearchive/projects/ii-windows/shots/catppuccin-media-controls.thumb.webp')"></span><img src="data:," data-src="../../filearchive/projects/ii-windows/panels/media-controls.webp" width="440" height="310" decoding="async" alt="Media controls: A small player that floats over the desktop." data-i18n-attr="alt:iw.explore.player.alt" /><figcaption data-i18n="iw.explore.player.caption">A small player that floats over the desktop.</figcaption></figure>
+							<figure role="tabpanel" id="ex-walls" aria-labelledby="ex-tab-walls" class=""><span class="ex-bg" aria-hidden="true" style="background-image: url('../../filearchive/projects/ii-windows/shots/glassy-wallpaper-selector.thumb.webp')"></span><img src="data:," data-src="../../filearchive/projects/ii-windows/panels/wallpaper-selector.webp" width="1192" height="678" decoding="async" alt="Wallpaper picker: Local folders, Wallhaven, Unsplash, Pexels and more, videos included." data-i18n-attr="alt:iw.explore.walls.alt" /><figcaption data-i18n="iw.explore.walls.caption">Local folders, Wallhaven, Unsplash, Pexels and more, videos included.</figcaption></figure>
+							<figure role="tabpanel" id="ex-settings" aria-labelledby="ex-tab-settings" class=""><span class="ex-bg" aria-hidden="true" style="background-image: url('../../filearchive/projects/ii-windows/shots/glassy-desktop.thumb.webp')"></span><img src="data:," data-src="../../filearchive/projects/ii-windows/panels/settings.webp" width="996" height="673" decoding="async" alt="Settings: Almost every option in a themed app, with the wallpaper and colors up top." data-i18n-attr="alt:iw.explore.settings.alt" /><figcaption data-i18n="iw.explore.settings.caption">Almost every option in a themed app, with the wallpaper and colors up top.</figcaption></figure>
+							<figure role="tabpanel" id="ex-cheat" aria-labelledby="ex-tab-cheat" class=""><span class="ex-bg" aria-hidden="true" style="background-image: url('../../filearchive/projects/ii-windows/shots/tokyo-cheatsheet.thumb.webp')"></span><img src="data:," data-src="../../filearchive/projects/ii-windows/panels/cheatsheet-keybinds.webp" width="1416" height="880" decoding="async" alt="Cheatsheet: Every keybind on Win + /, following your keyboard layout." data-i18n-attr="alt:iw.explore.cheat.alt" /><figcaption data-i18n="iw.explore.cheat.caption">Every keybind on Win + /, following your keyboard layout.</figcaption></figure>
+							<figure role="tabpanel" id="ex-keys" aria-labelledby="ex-tab-keys" class=""><span class="ex-bg" aria-hidden="true" style="background-image: url('../../filearchive/projects/ii-windows/shots/tokyo-keybinds-editor.thumb.webp')"></span><img src="data:," data-src="../../filearchive/projects/ii-windows/panels/keybinds-editor.webp" width="832" height="772" decoding="async" alt="Keybind editor: Change a shortcut, or turn it off to give it back to Windows." data-i18n-attr="alt:iw.explore.keys.alt" /><figcaption data-i18n="iw.explore.keys.caption">Change a shortcut, or turn it off to give it back to Windows.</figcaption></figure>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ================= Modo completo: corrida de inicializacao ================= -->
+			<section class="section alt rich-only" id="race-section">
+				<div class="wrap">
+					<header class="section-head">
+						<h2 data-i18n="iw.race.title">Fast on a slow PC</h2>
+						<p data-i18n="iw.race.lead">The same VM, held to two slow cores and a slow disk, from start to ii's bar. Time runs six times faster here.</p>
+					</header>
+					<div class="race" id="race">
+						<div class="race-lane" data-seconds="43"><span class="race-ver">0.5.0</span><span class="race-screen"><span class="race-fill"></span><span class="race-bar"></span></span><span class="race-time">0.0 s</span></div>
+						<div class="race-lane" data-seconds="4"><span class="race-ver">0.6.0</span><span class="race-screen"><span class="race-fill"></span><span class="race-bar"></span></span><span class="race-time">0.0 s</span></div>
+						<div class="race-lane" data-seconds="1.6"><span class="race-ver">0.7.0+</span><span class="race-screen"><span class="race-fill"></span><span class="race-bar"></span></span><span class="race-time">0.0 s</span></div>
+						<div class="race-foot">
+							<p data-i18n="iw.race.note">Numbers from the release notes: about 43 s, 4 s and 1.6 s.</p>
+							<button type="button" class="race-replay"><span data-i18n="iw.race.replay">Run again</span></button>
+						</div>
+					</div>
+				</div>
+			</section>
+
 			<section class="section" id="gallery">
 				<div class="wrap">
 					<header class="section-head">
@@ -1816,10 +2041,106 @@
 
 					<div class="gallery">
 						<figure class="wide">
-							<a href="../../filearchive/projects/ii-windows/styles.webp">
-								<img src="../../filearchive/projects/ii-windows/styles.mid.webp" srcset="../../filearchive/projects/ii-windows/styles.mid.webp 1000w, ../../filearchive/projects/ii-windows/styles.webp 1600w" sizes="(min-width: 1120px) 1056px, 100vw" width="1000" height="563" loading="lazy" decoding="async" alt="ii's bar with workspace numbers and the end4-pC settings card open over an anime wallpaper" data-i18n-attr="alt:iw.gallery.styles.alt" />
+							<a href="../../filearchive/projects/ii-windows/shots/frieren-desktop.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/frieren-desktop.mid.webp" srcset="../../filearchive/projects/ii-windows/shots/frieren-desktop.mid.webp 1000w, ../../filearchive/projects/ii-windows/shots/frieren-desktop.webp 1600w" sizes="(min-width: 1120px) 1056px, 100vw" width="1000" height="563" loading="lazy" decoding="async" alt="Desktop widgets next to your icons, colored from the wallpaper: clock, notes, weather, resources and world clocks." data-i18n-attr="alt:iw.gallery.n.frieren_desktop.alt" />
 							</a>
-							<figcaption data-i18n="iw.gallery.styles.caption">The end4-pC style, new in 0.7.0: its settings card, workspace numbers and a color picker on the bar.</figcaption>
+							<figcaption data-i18n="iw.gallery.n.frieren_desktop.caption">Desktop widgets next to your icons, colored from the wallpaper: clock, notes, weather, resources and world clocks.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/frieren-sidebar-right.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/frieren-sidebar-right.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="The right sidebar: network, toggles, brightness, volume and notifications." data-i18n-attr="alt:iw.gallery.n.frieren_sidebar_right.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.frieren_sidebar_right.caption">The right sidebar: network, toggles, brightness, volume and notifications.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/frieren-sidebar-ai.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/frieren-sidebar-ai.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="The AI chat in the left sidebar, with Gemini, Ollama and more." data-i18n-attr="alt:iw.gallery.n.frieren_sidebar_ai.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.frieren_sidebar_ai.caption">The AI chat in the left sidebar, with Gemini, Ollama and more.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/frieren-now-playing.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/frieren-now-playing.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="The Now Playing pill flies out of the bar when the song changes (1.0 beta)." data-i18n-attr="alt:iw.gallery.n.frieren_now_playing.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.frieren_now_playing.caption">The Now Playing pill flies out of the bar when the song changes (1.0 beta).</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/frieren-settings.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/frieren-settings.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Settings, themed like everything else, with the wallpaper and colors up top." data-i18n-attr="alt:iw.gallery.n.frieren_settings.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.frieren_settings.caption">Settings, themed like everything else, with the wallpaper and colors up top.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/tokyo-desktop.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/tokyo-desktop.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Another bar style, with calendar and weather cards in a blue palette." data-i18n-attr="alt:iw.gallery.n.tokyo_desktop.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.tokyo_desktop.caption">Another bar style, with calendar and weather cards in a blue palette.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/tokyo-spotlight.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/tokyo-spotlight.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Spotlight on the Windows key, searching as you type." data-i18n-attr="alt:iw.gallery.n.tokyo_spotlight.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.tokyo_spotlight.caption">Spotlight on the Windows key, searching as you type.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/tokyo-cheatsheet.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/tokyo-cheatsheet.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="The cheatsheet on Win + /, with every keybind." data-i18n-attr="alt:iw.gallery.n.tokyo_cheatsheet.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.tokyo_cheatsheet.caption">The cheatsheet on Win + /, with every keybind.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/tokyo-keybinds-editor.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/tokyo-keybinds-editor.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="The keybind editor: change a shortcut or give it back to Windows." data-i18n-attr="alt:iw.gallery.n.tokyo_keybinds_editor.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.tokyo_keybinds_editor.caption">The keybind editor: change a shortcut or give it back to Windows.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/catppuccin-desktop.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/catppuccin-desktop.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="A big split clock, date and weather over a space wallpaper." data-i18n-attr="alt:iw.gallery.n.catppuccin_desktop.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.catppuccin_desktop.caption">A big split clock, date and weather over a space wallpaper.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/catppuccin-media-controls.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/catppuccin-media-controls.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Media controls tinted with the album cover." data-i18n-attr="alt:iw.gallery.n.catppuccin_media_controls.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.catppuccin_media_controls.caption">Media controls tinted with the album cover.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/glassy-desktop.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/glassy-desktop.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Focus timer, stopwatch, countdown and resource cards, with the bar floating at the top." data-i18n-attr="alt:iw.gallery.n.glassy_desktop.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.glassy_desktop.caption">Focus timer, stopwatch, countdown and resource cards, with the bar floating at the top.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/glassy-spotlight-apps.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/glassy-spotlight-apps.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Spotlight&#x27;s app grid, with nothing typed." data-i18n-attr="alt:iw.gallery.n.glassy_spotlight_apps.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.glassy_spotlight_apps.caption">Spotlight's app grid, with nothing typed.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/glassy-sidebar-media.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/glassy-sidebar-media.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Media in the left sidebar, colored from the cover." data-i18n-attr="alt:iw.gallery.n.glassy_sidebar_media.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.glassy_sidebar_media.caption">Media in the left sidebar, colored from the cover.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/glassy-wallpaper-selector.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/glassy-wallpaper-selector.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="The wallpaper picker: local folders, online sources and videos." data-i18n-attr="alt:iw.gallery.n.glassy_wallpaper_selector.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.glassy_wallpaper_selector.caption">The wallpaper picker: local folders, online sources and videos.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/lumine-live-wallpaper.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/lumine-live-wallpaper.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="A live wallpaper: a video playing behind the icons, with the bar at the bottom." data-i18n-attr="alt:iw.gallery.n.lumine_live_wallpaper.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.lumine_live_wallpaper.caption">A live wallpaper: a video playing behind the icons, with the bar at the bottom.</figcaption>
+						</figure>
+						<figure>
+							<a href="../../filearchive/projects/ii-windows/shots/samurai-live-wallpaper.webp">
+								<img src="../../filearchive/projects/ii-windows/shots/samurai-live-wallpaper.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Another live wallpaper, with the bar on the left edge." data-i18n-attr="alt:iw.gallery.n.samurai_live_wallpaper.alt" />
+							</a>
+							<figcaption data-i18n="iw.gallery.n.samurai_live_wallpaper.caption">Another live wallpaper, with the bar on the left edge.</figcaption>
 						</figure>
 						<figure>
 							<a href="../../filearchive/projects/ii-windows/system.webp">
@@ -1841,22 +2162,10 @@
 							<figcaption data-i18n="iw.gallery.pcDesktop.caption">On a real PC: Windows 11 26H2 (debloated) with an RTX 5060 Ti — ii's bar and desktop clock over the wallpaper.</figcaption>
 						</figure>
 						<figure>
-							<a href="../../filearchive/projects/ii-windows/spotlight.webp">
-								<img src="../../filearchive/projects/ii-windows/spotlight.mid.webp" width="900" height="600" loading="lazy" decoding="async" alt="ii's Spotlight search showing the installed apps with their icons" data-i18n-attr="alt:iw.gallery.spotlight.alt" />
-							</a>
-							<figcaption data-i18n="iw.gallery.spotlight.caption">Spotlight on the Windows key: apps, files, system actions, emoji and the clipboard, new in 0.6.0.</figcaption>
-						</figure>
-						<figure>
 							<a href="../../filearchive/projects/ii-windows/tiling.webp">
 								<img src="../../filearchive/projects/ii-windows/tiling.mid.webp" width="833" height="625" loading="lazy" decoding="async" alt="Four Notepad windows arranged by ii's tiling in Hyprland's dwindle layout, under ii's bar" data-i18n-attr="alt:iw.gallery.tiling.alt" />
 							</a>
 							<figcaption data-i18n="iw.gallery.tiling.caption">Optional tiling: Hyprland's dwindle layout on Windows' virtual desktops, new in 0.4.0.</figcaption>
-						</figure>
-						<figure>
-							<a href="../../filearchive/projects/ii-windows/sidebar.webp">
-								<img src="../../filearchive/projects/ii-windows/sidebar.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="ii right sidebar open with quick toggles, notifications and a calendar" data-i18n-attr="alt:iw.gallery.sidebar.alt" />
-							</a>
-							<figcaption data-i18n="iw.gallery.sidebar.caption">Right sidebar: quick toggles, notifications and calendar.</figcaption>
 						</figure>
 						<figure>
 							<a href="../../filearchive/projects/ii-windows/overview.webp">
@@ -1865,28 +2174,10 @@
 							<figcaption data-i18n="iw.gallery.overview.caption">Workspace overview, on Win+Tab since 0.6.0.</figcaption>
 						</figure>
 						<figure>
-							<a href="../../filearchive/projects/ii-windows/cheatsheet.webp">
-								<img src="../../filearchive/projects/ii-windows/cheatsheet.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="ii keybind cheatsheet listing shell, media, window and app shortcuts" data-i18n-attr="alt:iw.gallery.cheatsheet.alt" />
-							</a>
-							<figcaption data-i18n="iw.gallery.cheatsheet.caption">Keybind cheatsheet on Win+/, following the keyboard layout.</figcaption>
-						</figure>
-						<figure>
-							<a href="../../filearchive/projects/ii-windows/translator.webp">
-								<img src="../../filearchive/projects/ii-windows/translator.mid.webp" width="1000" height="625" loading="lazy" decoding="async" alt="ii's left sidebar translator turning a Portuguese sentence into English" data-i18n-attr="alt:iw.gallery.translator.alt" />
-							</a>
-							<figcaption data-i18n="iw.gallery.translator.caption">The translator in the left sidebar, new in 0.3.0.</figcaption>
-						</figure>
-						<figure>
 							<a href="../../filearchive/projects/ii-windows/terminal.webp">
 								<img src="../../filearchive/projects/ii-windows/terminal.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Windows Terminal windows in ii's pink palette with an Oh My Posh prompt" data-i18n-attr="alt:iw.gallery.terminal.alt" />
 							</a>
 							<figcaption data-i18n="iw.gallery.terminal.caption">Windows Terminal themed with ii's colors and an Oh My Posh prompt.</figcaption>
-						</figure>
-						<figure>
-							<a href="../../filearchive/projects/ii-windows/desktop-icons.webp">
-								<img src="../../filearchive/projects/ii-windows/desktop-icons.mid.webp" width="833" height="625" loading="lazy" decoding="async" alt="Windows 10 desktop where ii's wallpaper and clock sit behind the desktop icons" data-i18n-attr="alt:iw.gallery.desktop.alt" />
-							</a>
-							<figcaption data-i18n="iw.gallery.desktop.caption">Windows 10 with 0.3–0.4's layout: ii's wallpaper and clock behind the desktop icons. Since 0.5.0 Windows draws the wallpaper and ii adds only its widgets.</figcaption>
 						</figure>
 						<figure>
 							<a href="../../filearchive/projects/ii-windows/installer.webp">
@@ -2257,6 +2548,67 @@
 			</div>
 		</footer>
 
+
+		<!-- Frases do modo completo (demo, coach). O JS le daqui, entao trocam de idioma com a pagina. -->
+		<div id="iw-strings" hidden>
+			<span data-s="progress" data-i18n="iw.demo.s.progress">{n} of {total} found</span>
+			<span data-s="coach.idle" data-i18n="iw.demo.s.coach.idle">This desktop works. Click it and press Space.</span>
+			<span data-s="coach.ready" data-i18n="iw.demo.s.coach.ready">Space is the Windows key here. Press it.</span>
+			<span data-s="coach.touch" data-i18n="iw.demo.s.coach.touch">Tap the keys under the desktop to drive it.</span>
+			<span data-s="coach.spot" data-i18n="iw.demo.s.coach.spot">That's Spotlight. Type an app, an emoji, some math or anything for the web. Esc closes it.</span>
+			<span data-s="coach.spotAgain" data-i18n="iw.demo.s.coach.spotAgain">Spotlight again. Try 12*7, or fire.</span>
+			<span data-s="coach.launched" data-i18n="iw.demo.s.coach.launched">Opened. Press Enter a few more times: that's Win + Enter.</span>
+			<span data-s="coach.tiled" data-i18n="iw.demo.s.coach.tiled">New windows split the free space, the way Hyprland's dwindle does. Drag a title bar onto another window to swap them.</span>
+			<span data-s="coach.more" data-i18n="iw.demo.s.coach.more">Each new window takes half of the space that's left.</span>
+			<span data-s="coach.many" data-i18n="iw.demo.s.coach.many">Getting crowded. Q closes the focused window (Win + Q).</span>
+			<span data-s="coach.full" data-i18n="iw.demo.s.coach.full">Five is plenty for a screen this small. Close one with Q.</span>
+			<span data-s="coach.nothing" data-i18n="iw.demo.s.coach.nothing">Nothing to close. Enter opens a window.</span>
+			<span data-s="coach.closed" data-i18n="iw.demo.s.coach.closed">Closed, and the rest filled the gap.</span>
+			<span data-s="coach.swapped" data-i18n="iw.demo.s.coach.swapped">Swapped. In ii you hold Win and drag.</span>
+			<span data-s="coach.overview" data-i18n="iw.demo.s.coach.overview">Every workspace at a glance. Click one, or use the arrows and Enter.</span>
+			<span data-s="coach.cheat" data-i18n="iw.demo.s.coach.cheat">Every shortcut on one sheet. The real one follows your keyboard layout.</span>
+			<span data-s="coach.side" data-i18n="iw.demo.s.coach.side">Quick settings. Flip dark mode and watch the colors follow.</span>
+			<span data-s="coach.dark" data-i18n="iw.demo.s.coach.dark">Back to dark, ii's default.</span>
+			<span data-s="coach.light" data-i18n="iw.demo.s.coach.light">Light mode, same palette. ii does this to your whole desktop.</span>
+			<span data-s="coach.taskbar" data-i18n="iw.demo.s.coach.taskbar">That's the Windows taskbar. It stays hidden until the pointer touches the edge.</span>
+			<span data-s="coach.wall" data-i18n="iw.demo.s.coach.wall">New wallpaper, new colors. ii builds them with matugen, and this whole page just followed.</span>
+			<span data-s="coach.own" data-i18n="iw.demo.s.coach.own">Your picture, your palette. It never left your browser.</span>
+			<span data-s="coach.ownFail" data-i18n="iw.demo.s.coach.ownFail">That image couldn't be read. Try another one.</span>
+			<span data-s="coach.done" data-i18n="iw.demo.s.coach.done">You found everything. The real thing does all of this on your PC, and a lot more.</span>
+			<span data-s="toast.copied" data-i18n="iw.demo.s.toast.copied">Copied {x}</span>
+			<span data-s="toast.action" data-i18n="iw.demo.s.toast.action">On your PC, ii would really do that.</span>
+			<span data-s="toast.web" data-i18n="iw.demo.s.toast.web">That would open in your browser.</span>
+			<span data-s="toast.dndOn" data-i18n="iw.demo.s.toast.dndOn">Do not disturb is on</span>
+			<span data-s="toast.dndOff" data-i18n="iw.demo.s.toast.dndOff">Do not disturb is off</span>
+			<span data-s="app.terminal" data-i18n="iw.demo.s.app.terminal">Terminal</span>
+			<span data-s="app.files" data-i18n="iw.demo.s.app.files">Files</span>
+			<span data-s="app.notes" data-i18n="iw.demo.s.app.notes">Notes</span>
+			<span data-s="app.music" data-i18n="iw.demo.s.app.music">Music</span>
+			<span data-s="app.settings" data-i18n="iw.demo.s.app.settings">Settings</span>
+			<span data-s="files.docs" data-i18n="iw.demo.s.files.docs">Documents</span>
+			<span data-s="files.pics" data-i18n="iw.demo.s.files.pics">Pictures</span>
+			<span data-s="files.music" data-i18n="iw.demo.s.files.music">Music</span>
+			<span data-s="files.down" data-i18n="iw.demo.s.files.down">Downloads</span>
+			<span data-s="files.video" data-i18n="iw.demo.s.files.video">Videos</span>
+			<span data-s="files.proj" data-i18n="iw.demo.s.files.proj">Projects</span>
+			<span data-s="notes.text" data-i18n="iw.demo.s.notes.text">To do: try Win + Tab, pick a wallpaper, drink some water.</span>
+			<span data-s="settings.style" data-i18n="iw.demo.s.settings.style">Bar style</span>
+			<span data-s="side.dark" data-i18n="iw.demo.s.side.dark">Dark mode</span>
+			<span data-s="side.night" data-i18n="iw.demo.s.side.night">Night light</span>
+			<span data-s="act.lock" data-i18n="iw.demo.s.act.lock">Lock</span>
+			<span data-s="act.sleep" data-i18n="iw.demo.s.act.sleep">Sleep</span>
+			<span data-s="act.restart" data-i18n="iw.demo.s.act.restart">Restart</span>
+			<span data-s="act.shutdown" data-i18n="iw.demo.s.act.shutdown">Shut down</span>
+			<span data-s="spot.web" data-i18n="iw.demo.s.spot.web">Search the web for “{q}”</span>
+			<span data-s="kind.math" data-i18n="iw.demo.s.kind.math">Math</span>
+			<span data-s="kind.app" data-i18n="iw.demo.s.kind.app">App</span>
+			<span data-s="kind.act" data-i18n="iw.demo.s.kind.act">Action</span>
+			<span data-s="kind.emoji" data-i18n="iw.demo.s.kind.emoji">Emoji</span>
+			<span data-s="kind.clip" data-i18n="iw.demo.s.kind.clip">Clipboard</span>
+			<span data-s="kind.web" data-i18n="iw.demo.s.kind.web">Web</span>
+			<span data-s="ws" data-i18n="iw.demo.s.ws">Workspace {n}</span>
+		</div>
+
 		<dialog class="lightbox" id="lightbox" aria-label="Image viewer" data-i18n-attr="aria-label:iw.lightbox.label">
 			<button class="lightbox-btn lightbox-close" id="lightboxClose" type="button" aria-label="Close image" data-i18n-attr="aria-label:iw.lightbox.close">✕</button>
 			<button class="lightbox-btn lightbox-prev" id="lightboxPrev" type="button" aria-label="Previous image" data-i18n-attr="aria-label:iw.lightbox.prev">&larr;</button>
@@ -2431,6 +2783,43 @@
 				select(root.getAttribute("data-aud") === "advanced" ? "advanced" : "beginner", false);
 			})();
 		</script>
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261011-1"></script>
+
+		<script type="module">
+			/*
+			 * Liga o modo completo (rich/rich.js) quando o lite.js nao escolheu o
+			 * modo leve, e troca de modo sem recarregar quando o botao Efeitos ou
+			 * a deteccao automatica mudam de ideia.
+			 */
+			const root = document.documentElement;
+			const lite = window.daeeseLite;
+			const button = document.querySelector(".fx-toggle");
+			let mod = null;
+
+			async function sync() {
+				const rich = !(lite && lite.on);
+				button.setAttribute("aria-pressed", String(rich));
+				if (rich) {
+					root.classList.add("rich");
+					try {
+						mod = mod || (await import("./rich/rich.js?v=20261013-1"));
+						mod.start();
+						// Mede o fps com os efeitos rodando (lite.js, data-lite-watch).
+						if (lite) setTimeout(() => lite.watch(), 1500);
+					} catch (err) {
+						root.classList.remove("rich");
+						console.error(err);
+					}
+				} else {
+					root.classList.remove("rich");
+					if (mod) mod.destroy();
+				}
+			}
+
+			button.addEventListener("click", () => lite && lite.set(!lite.on));
+			document.addEventListener("lite:change", sync);
+			sync();
+		</script>
+
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261013-1"></script>
 	</body>
 </html>

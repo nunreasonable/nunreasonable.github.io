@@ -19,6 +19,8 @@
  *     por isso a pagina pode pedir para esperar: <html data-lite-watch="manual">
  *     e depois daeeseLite.watch(), quando os efeitos comecarem.
  *  4. A decisao automatica vale 7 dias no localStorage; depois mede de novo.
+ *  5. A pagina pode oferecer um botao: daeeseLite.set(true/false) grava a
+ *     escolha como manual (igual ao ?lite=1 / ?lite=0) e aplica na hora.
  *
  * As paginas reagem por CSS (:root[data-lite] ...) e, no que for JS (canvas,
  * animacoes de layout), pelo evento "lite:change" no document ou por
@@ -77,6 +79,7 @@
 		reason: "",
 		enable: enable,
 		disable: disable,
+		set: set,
 		watch: watch
 	};
 	window.daeeseLite = api;
@@ -103,6 +106,15 @@
 	function disable() {
 		write("off:manual");
 		apply(false, "manual");
+	}
+
+	// Escolha do visitante (botao na pagina): vale como o ?lite=1 / ?lite=0.
+	var userChose = false;
+
+	function set(on) {
+		userChose = true;
+		write(on ? "on:manual" : "off:manual");
+		apply(!!on, "manual");
 	}
 
 	function weakHardware() {
@@ -137,7 +149,8 @@
 		var slowWindows = 0;
 
 		function tick(now) {
-			if (api.on) {
+			// Quem escolheu no botao nao e mais medido nesta visita.
+			if (api.on || userChose) {
 				return;
 			}
 			if (document.hidden) {
