@@ -2595,7 +2595,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261009-4")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261014-1")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -2802,7 +2802,8 @@
               "0.5.0, a day later, lets you hold Win and drag to move a window or Win + right drag to resize it, with tiling and across monitors with different scaling. Windows draws the wallpaper again and ii only puts its widgets on the desktop, so changing the wallpaper in Windows recolors ii. The bar shrinks its applets when they don't fit, and there's a media visualizer, a native color picker, weather, game mode and a WARP toggle.",
               "0.6.0 starts much faster on weaker machines: on a VM held to two slow cores and a slow disk the bar shows in about 4 seconds instead of about 43. The Windows key opens a Spotlight search for apps, files, clipboard history, emoji, system actions and the web, Win+Tab the workspaces, and the cheatsheet gets a System tab with CPU, GPU, memory and disks. 0.6.1 brings almost every option into the Settings app, now also in Brazilian Portuguese, and 0.6.2 makes everything faster again: the bar shows in about 2 seconds on that same VM, Settings opens inside ii in under a second and the download is about 45 MB lighter.",
               "0.7.0 lets you choose between ii's original look and the look of pctrade's end4-pC fork, in the setup or any time in Settings, with the same features and options in both. It also starts a little faster, uses about 26 MB less memory after start and is about 25 MB smaller installed.",
-              "0.9.0, planned as two releases (0.8.0 and 0.9.0) that ended up shipping as one, is also the first release with a name: “Exploding Baby”. It brings over most of pctrade's end4-pC fork into both looks — a bar you can rearrange with a dynamic island and an optional screen frame, a dock on any screen edge, a dozen desktop widgets, Wallhaven search in the wallpaper picker, a sidebar banner with a media card, dashboard-style settings with presets, and Ctrl+Super+P to swap ii's bar for the Windows taskbar and back — plus Spicy Stuff sources (Konachan, the booru sidebar, Wallhaven) locked until Windows confirms a Microsoft account is 18 or older. Startup is unchanged on the same slow VM, and it's about 195 MB installed (80 MB zip) instead of 185. It's still experimental, and the setup isn't signed yet, so SmartScreen may warn about it."
+              "0.9.0, planned as two releases (0.8.0 and 0.9.0) that ended up shipping as one, is also the first release with a name: “Exploding Baby”. It brings over most of pctrade's end4-pC fork into both looks — a bar you can rearrange with a dynamic island and an optional screen frame, a dock on any screen edge, a dozen desktop widgets, Wallhaven search in the wallpaper picker, a sidebar banner with a media card, dashboard-style settings with presets, and Ctrl+Super+P to swap ii's bar for the Windows taskbar and back — plus Spicy Stuff sources (Konachan, the booru sidebar, Wallhaven) locked until Windows confirms a Microsoft account is 18 or older. Startup is unchanged on the same slow VM, and it's about 195 MB installed (80 MB zip) instead of 185.",
+              "0.10 brings live wallpapers, a video playing behind the desktop icons, and a keybind editor. Then 1.0.0, “Jazz-Handed Octopus”, is the first stable release: the rest of end4-pC in both looks (four more bar styles, a dock with a right-click menu, a Now Playing pill that flies out of the bar), a 10-band equalizer, a System page in Settings for displays, keyboard and mouse, window borders and the apps that start with Windows, and animations that follow your fastest monitor, so a 144 or 200 Hz screen no longer feels like 60. The setup isn't signed yet, so SmartScreen may warn about it."
             ],
             images: [
               { src: "./filearchive/projects/ii-windows/themed.webp", w: 1600, h: 900, alt: "Windows 11 desktop with the ii bar and clock, colored from an anime wallpaper", caption: "ii's colors taken from the Windows wallpaper; the taskbar only shows up at the bottom edge" },
@@ -4376,6 +4377,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261011-1"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261014-1"></script>
   </body>
 </html>
