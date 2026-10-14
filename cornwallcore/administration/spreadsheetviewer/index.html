@@ -138,7 +138,7 @@
 
 			.button {
 				border: 1px solid var(--line);
-				background: linear-gradient(135deg, rgba(207, 20, 43, 0.28), rgba(31, 74, 168, 0.28));
+				background: #1f4aa8;
 				border-radius: 12px;
 				font: inherit;
 				font-weight: 700;
@@ -226,7 +226,7 @@
 			}
 
 			.sheet-btn.active {
-				background: linear-gradient(135deg, rgba(207, 20, 43, 0.24), rgba(31, 74, 168, 0.2));
+				background: rgba(80, 126, 220, 0.22);
 				border-color: var(--line-strong);
 				font-weight: 700;
 			}
@@ -592,6 +592,36 @@
 					min-height: 42px;
 				}
 			}
+
+            .shell { width: min(1560px, calc(100% - 32px)); gap: 16px; margin: 20px auto; }
+            header.card { padding: 20px 24px; gap: 12px; }
+            h1 { font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.15; }
+            .subtitle { font-size: .9rem; }
+            .meta-row .pill { border: 0; background: transparent; padding: 2px 0; margin-right: 14px; font-size: .72rem; color: var(--muted); }
+            .workspace { grid-template-columns: 210px minmax(0, 1fr); }
+            .sheet-content { grid-template-rows: auto auto auto minmax(0, 1fr); }
+            .sheet-content:has(.record-find:not([hidden])) { grid-template-rows: auto auto auto auto minmax(0, 1fr); }
+            .summary-item { padding: 8px 10px; }
+            .summary-label { font-size: .66rem; }
+            .summary-value { margin-top: 3px; }
+            thead th.identity-cell { left: 0; z-index: 4; }
+            tbody td.identity-cell { position: sticky; left: 0; z-index: 1; background: #102345; border-right: 1px solid var(--line-strong); }
+            tbody tr:hover td.identity-cell { background: #1d3760; }
+            .table-wrap:focus-visible { outline: 2px solid var(--ink); outline-offset: -3px; }
+            @media (max-width: 860px) {
+              .shell { width: calc(100% - 20px); }
+              header.card { padding: 18px; }
+              .workspace { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+              .sheet-content { grid-template-rows: auto auto auto minmax(180px, 1fr); }
+              .sheet-sidebar { grid-auto-columns: max-content; padding: 10px; gap: 6px; }
+              .sheet-btn { white-space: nowrap; font-size: .85rem; }
+              .controls { grid-template-columns: minmax(0, 1fr) auto; }
+              .button { font-size: .85rem; padding-inline: 12px; }
+              .records-grid { grid-template-columns: minmax(0, 1fr); }
+              .record-card { overflow-wrap: anywhere; }
+              .data-card { height: max(640px, 85svh); }
+            }
+            @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; } }
 		</style>
 	</head>
 	<body>
@@ -653,7 +683,7 @@
 						<div id="summaryGrid" class="summary-grid"></div>
 						<div id="viewerStage" class="viewer-stage">
 							<div id="recordsWrap" class="records-wrap" hidden></div>
-							<div id="tableWrap" class="table-wrap">
+							<div id="tableWrap" class="table-wrap" tabindex="0" role="region" aria-label="Scrollable spreadsheet cells">
 								<table id="sheetTable"></table>
 								<div id="emptyState" class="empty" hidden>No results for the current filter.</div>
 							</div>
@@ -710,7 +740,8 @@
 			let allRows = [];
 			let recordMatches = [];
 			let activeRecordMatchIndex = -1;
-			let activeViewerMode = "table";
+			const initialViewerMode = matchMedia("(max-width: 640px)").matches ? "records" : "table";
+            let activeViewerMode = initialViewerMode;
 			// Incrementado a cada carga. Uma resposta so pinta a tela se ainda for
 			// a requisicao corrente, senao trocar de aba durante um refresh faz a
 			// resposta antiga sobrescrever a nova.
@@ -1107,6 +1138,8 @@
 				tableWrapEl.hidden = isRecords;
 				viewTabRecordsEl.classList.toggle("active", isRecords);
 				viewTabTableEl.classList.toggle("active", !isRecords);
+                viewTabRecordsEl.setAttribute("aria-pressed", String(isRecords));
+                viewTabTableEl.setAttribute("aria-pressed", String(!isRecords));
 
 				if (!isRecords) {
 					closeRecordFindBar();
@@ -1134,16 +1167,18 @@
 
 				emptyStateEl.hidden = true;
 
+                const identityIndex = headers.findIndex((header) => /nome.*usu[aá]rio|username|^user$/i.test(header));
+                const pinnedIndex = identityIndex < 0 ? 0 : identityIndex;
 				let html = "<thead><tr>";
-				headers.forEach((header) => {
-					html += "<th>" + escapeHtml(header) + "</th>";
+				headers.forEach((header, index) => {
+					html += '<th scope="col"' + (index === pinnedIndex ? ' class="identity-cell"' : '') + '>' + escapeHtml(header) + "</th>";
 				});
 				html += "</tr></thead><tbody>";
 
 				filteredRows.forEach((row) => {
 					html += "<tr>";
-					row.forEach((cell) => {
-						html += "<td>" + escapeHtml(cell) + "</td>";
+					row.forEach((cell, index) => {
+						html += '<td' + (index === pinnedIndex ? ' class="identity-cell"' : '') + '>' + escapeHtml(cell) + "</td>";
 					});
 					html += "</tr>";
 				});
@@ -1327,7 +1362,7 @@
 			(async () => {
 				setStatus("Preparing the tabs...");
 				try {
-					setActiveViewerMode("table");
+					setActiveViewerMode(initialViewerMode);
 					sheetTabs = KNOWN_SHEETS;
 					renderSheetButtons(sheetTabs);
 					await loadAndRenderData();

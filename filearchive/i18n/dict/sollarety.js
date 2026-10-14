@@ -10,6 +10,22 @@
  * quebraria a frase montada na tela.
  */
 export const pt = {
+  "sollarety.reference": "Referência de comandos",
+  "sollarety.find_command": "Veja mais de perto.",
+  "sollarety.reference_note": "Abra uma categoria para ver comandos, permissões e como funciona.",
+  "sollarety.overview_title": "Moderação, música e Roblox. Juntos.",
+  "sollarety.overview_lead": "Organize sua comunidade, vincule contas Roblox e compartilhe a próxima música — com um único bot.",
+  "sollarety.explore_commands": "Explorar comandos",
+  "sollarety.example": "Explore um exemplo",
+  "sollarety.examples": "Exemplos",
+  "sollarety.warning_title": "Um histórico, não uma advertência isolada.",
+  "sollarety.warning_example": "Consulte as advertências de um membro num só lugar antes de decidir o próximo passo.",
+  "sollarety.verify_title": "Uma conta. Os cargos do seu servidor.",
+  "sollarety.verify_example": "Os membros entram pelo Roblox. Seu servidor decide quais cargos e apelido eles recebem.",
+  "sollarety.music_title": "Traga a próxima música.",
+  "sollarety.music_example": "Busque pelo nome ou compartilhe um link do YouTube, SoundCloud ou Spotify. Organizem a fila juntos.",
+  "sollarety.illustration": "Exemplos ilustrativos. Nenhuma conta do Discord está conectada aqui.",
+
   "sollarety.discord_bot": "Bot de Discord",
   "sollarety.a_moderation_and_fun_bot":
     "Um bot de moderação, verificação Roblox, música e diversão para servidores de comunidade. Roda na mesma infraestrutura do",

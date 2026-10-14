@@ -792,6 +792,33 @@
 			:root[data-lite] .status-dot::after {
 				animation: none !important;
 			}
+
+            .hero { padding-top: calc(var(--nav-h) + 40px); padding-bottom: 64px; }
+            .command-tools { padding: 20px 0 28px; }
+            .command-tools label { display: block; font-size: .88rem; color: var(--muted); margin-bottom: 10px; }
+            .command-search-row { display: flex; gap: 10px; max-width: 680px; }
+            .command-search-row input { flex: 1; min-width: 0; font: inherit; padding: 13px 16px; color: var(--text); background: #0b1f44; border: 1px solid var(--line); border-radius: 12px; }
+            .command-search-row input::placeholder { color: var(--faint); }
+            .command-search-row button { font: inherit; padding: 12px 16px; color: var(--text); border: 1px solid var(--line); border-radius: 12px; background: transparent; cursor: pointer; }
+            .command-search-row :focus-visible { outline: 2px solid var(--blue-lit); outline-offset: 3px; }
+            .command-jumps { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+            .command-jumps a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); padding: 8px 0; margin-right: 16px; font-size: .8rem; }
+            .command-jumps a:hover, .command-jumps a:focus-visible { color: var(--text); border-color: var(--blue-lit); }
+            .cmd-group { scroll-margin-top: calc(var(--nav-h) + 24px); }
+            .cmd-group[hidden], .cmd[hidden], .command-empty[hidden], .command-jumps a[hidden] { display: none; }
+            .command-empty { padding: 24px; border: 1px solid var(--line); border-radius: 12px; color: var(--muted); }
+            @media (max-width: 640px) {
+              :root { --nav-h: 100px; }
+              .nav { display: grid; grid-template-columns: 1fr auto; grid-template-rows: 52px 40px; gap: 0 12px; align-content: center; }
+              .nav-brand { grid-row: 1; grid-column: 1; }
+              .nav-end { display: contents; }
+              .nav-end > [data-i18n-switcher] { grid-row: 1; grid-column: 2; }
+              .nav-links { display: flex; grid-row: 2; grid-column: 1 / -1; gap: 24px; }
+              .nav-links a { font-size: .72rem; padding-block: 10px; }
+              .hero { padding-bottom: 32px; }
+              .hero-emblem { width: 88px; }
+              .command-jumps { gap: 4px; }
+            }
 		</style>
 		<link rel="stylesheet" href="../filearchive/i18n/i18n.css" />
 	</head>
@@ -903,6 +930,13 @@
 					<h2 id="commandsTitle" data-i18n="ccore.nav_commands">Commands</h2>
 					<p class="section-lede" data-i18n="ccore.useful_info_yezz">Useful info? Yezz.</p>
 				</header>
+
+                <div class="command-tools">
+                  <label for="commandSearch" data-i18n="ccore.search_label">Find a command</label>
+                  <div class="command-search-row"><input id="commandSearch" type="search" placeholder="Command, purpose or permission…" data-i18n-attr="placeholder:ccore.search_placeholder" /><button id="clearCommandSearch" type="button" data-i18n="ccore.clear_search">Clear</button></div>
+                  <nav class="command-jumps" id="commandJumps" aria-label="Command categories" data-i18n-attr="aria-label:ccore.command_categories"></nav>
+                </div>
+                <p class="command-empty" id="commandEmpty" role="status" hidden data-i18n="ccore.no_commands">No commands match. Try another word or clear the search.</p>
 
 				<!--
 				  Nomes conferidos com os [SlashCommand] do repositorio do bot
@@ -1117,6 +1151,41 @@
 		  dicionario de portugues, entao a pagina continua completa e indexavel
 		  sem JavaScript.
 		-->
-		<script type="module" src="../filearchive/i18n/i18n.js" data-dict="dict/ccore.js?v=20261006-2"></script>
+		<script type="module" src="../filearchive/i18n/i18n.js" data-dict="dict/ccore.js?v=20261014-2"></script>
+	<script>
+          (() => {
+            const search = document.getElementById("commandSearch");
+            const groups = [...document.querySelectorAll(".cmd-group")];
+            const jumps = document.getElementById("commandJumps");
+            const normalize = (text) => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            groups.forEach((group, index) => {
+              group.id = "command-category-" + index;
+              const link = document.createElement("a");
+              link.href = "#" + group.id;
+              jumps.append(link);
+            });
+            function filter() {
+              const terms = normalize(search.value).trim().split(/\s+/).filter(Boolean);
+              let count = 0;
+              groups.forEach((group, index) => {
+                const heading = group.querySelector("h3").textContent;
+                const commands = [...group.querySelectorAll(".cmd")];
+                commands.forEach((command) => {
+                  const text = normalize(heading + " " + command.textContent);
+                  command.hidden = !terms.every((term) => text.includes(term));
+                  if (!command.hidden) count++;
+                });
+                group.hidden = commands.every((command) => command.hidden);
+                jumps.children[index].textContent = heading;
+                jumps.children[index].hidden = group.hidden;
+              });
+              document.getElementById("commandEmpty").hidden = count > 0;
+            }
+            search.addEventListener("input", filter);
+            document.getElementById("clearCommandSearch").addEventListener("click", () => { search.value = ""; filter(); search.focus(); });
+            document.addEventListener("i18n:change", filter);
+            filter();
+          })();
+        </script>
 	</body>
 </html>

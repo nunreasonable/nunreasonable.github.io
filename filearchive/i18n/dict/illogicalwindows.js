@@ -13,6 +13,8 @@
  * Quickshell, Tauri...) ficam em ingles, como no original.
  */
 export const pt = {
+  "iw.releases.showHistory": "Explorar versões anteriores",
+  "iw.releases.hideHistory": "Mostrar versões recentes",
   "iw.skip": "Ir para o conteúdo",
   "iw.brand": "II for Windows",
   "iw.nav.label": "Seções",

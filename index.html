@@ -1092,7 +1092,7 @@
        *
        * As linhas sao escalonadas por --i no proprio HTML, e nao por timer no
        * JS: uma linha a mais e uma linha a mais na marcacao, sem recalcular
-       * atraso nenhum. O tempo total sai em ~1,6s.
+       * atraso nenhum. O tempo total sai em ~0,9s.
        * ==================================================================== */
       .intro {
         position: fixed;
@@ -1106,7 +1106,7 @@
 
       .intro.is-running {
         display: grid;
-        animation: intro-out 320ms ease 1300ms both;
+        animation: intro-out 240ms ease 650ms both;
       }
 
       .intro-terminal {
@@ -1123,7 +1123,7 @@
         white-space: nowrap;
         opacity: 0;
         animation: line-in 220ms ease both;
-        animation-delay: calc(var(--i) * 200ms);
+        animation-delay: calc(var(--i) * 100ms);
       }
 
       /* O prompt em carmim: e o que amarra a intro ao resto da pagina. */
@@ -2296,6 +2296,45 @@
         }
 
       }
+
+      /* Refinamento da vitrine: previews e acesso direto, mantendo os cards. */
+      .hero { min-height: min(820px, 92svh); align-items: center; padding-bottom: 86px; }
+      .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+      .hero-action { min-height: 46px; display: inline-flex; align-items: center; padding: 11px 20px; border: 1px solid var(--accent-line); border-radius: 999px; color: var(--text); text-decoration: none; font-weight: 600; }
+      .hero-action.is-primary { background: var(--accent-lit); color: var(--bg-start); }
+      .hero-action:hover { border-color: var(--text); }
+      .hero-action:focus-visible, .blur-overlay:focus-visible .blur-message { outline: 2px solid var(--text); outline-offset: 4px; }
+      .projects { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 24px; }
+      .project-card { grid-column: span 2; }
+      .project-card.is-featured { grid-column: span 3; }
+      .project-card.is-open { grid-column: 1 / -1; }
+      .project-card.is-featured .project-cover { aspect-ratio: 16 / 8; }
+      .project-preview-actions { display: flex; align-items: center; justify-content: space-between; margin: 0 18px; padding: 12px 0 16px; border-top: 1px solid var(--line); color: var(--accent-lit); }
+      .project-preview-actions .project-action { padding: 0; border: 0; background: transparent; font-size: .85rem; }
+      .project-card.is-open .project-preview-actions { display: none; }
+      .now-playing-title-inner { max-width: 100%; overflow: hidden; text-overflow: ellipsis; vertical-align: bottom; }
+      .now-playing-title.is-scrolling .now-playing-title-inner { max-width: none; overflow: visible; }
+      @media (max-width: 1100px) {
+        .projects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .project-card, .project-card.is-featured { grid-column: auto; }
+        .project-card.is-open { grid-column: 1 / -1; }
+      }
+      @media (max-width: 860px) { .hero { min-height: auto; gap: 36px; padding-bottom: 48px; } }
+      @media (max-width: 640px) {
+        .projects { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+        .nav { gap: 8px; }
+        .nav-end, .nav-links { gap: 8px; }
+        .nav-brand { font-size: 1.35rem; flex-shrink: 0; }
+        .nav-links a { font-size: .65rem; letter-spacing: .03em; }
+        .nav .i18n-switcher__btn { padding: 5px 6px; }
+        .hero .name { font-size: clamp(4.6rem, 22vw, 8rem); }
+        .hero .bio { max-width: 38ch; }
+        .hero-action { flex: 1; justify-content: center; padding-inline: 14px; font-size: .9rem; }
+        .hero-side .link-btn:has(.now-playing-left) { grid-template-columns: minmax(0, 1fr); }
+        .hero-side .link-btn:has(.now-playing-left) > .right { display: none; }
+        .section { padding-top: 40px; }
+        .project-preview-actions { margin-inline: 16px; }
+      }
     </style>
   </head>
   <body>
@@ -2347,7 +2386,7 @@
       </div>
     </div>
 
-    <div class="blur-overlay" id="blurOverlay">
+    <div class="blur-overlay" id="blurOverlay" role="button" tabindex="0" aria-label="Enter website" data-i18n-attr="aria-label:home.enter">
       <div class="blur-message" data-i18n="home.gate">click to enter</div>
     </div>
 
@@ -2409,6 +2448,7 @@
           </div>
           <p class="bio reveal" id="bio" data-i18n="home.bio"></p>
           <ul class="badges reveal" id="badges"></ul>
+          <div class="hero-actions reveal"><a class="hero-action is-primary" href="#work" data-i18n="home.viewProjects">Explore projects</a><a class="hero-action" href="#contact" data-i18n="home.contactAction">Get in touch</a></div>
           <div class="socials-inline reveal" id="socialLinksInline"></div>
         </div>
 
@@ -2595,7 +2635,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261014-1")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261014-2")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -2613,8 +2653,12 @@
 
       // Blur overlay handler
       const blurOverlay = document.getElementById("blurOverlay");
-      blurOverlay.addEventListener("click", () => {
-        playSFX('click');
+      function enterSite(event) {
+        if (document.body.classList.contains("has-entered")) return;
+        const direct = !event;
+        if (!direct) playSFX('click');
+        blurOverlay.setAttribute("aria-hidden", "true");
+        blurOverlay.tabIndex = -1;
         blurOverlay.style.opacity = "0";
         blurOverlay.style.pointerEvents = "none";
 
@@ -2686,7 +2730,7 @@
          * camada e o animationend nunca vem, por isso o display volta aqui.
          */
         const intro = document.getElementById("intro");
-        if (intro && !reduceMotionQuery.matches) {
+        if (intro && !direct && !reduceMotionQuery.matches) {
           intro.classList.add("is-running");
 
           const encerrarIntro = () => intro.classList.remove("is-running");
@@ -2721,6 +2765,13 @@
         // ate ele.
         if (openProjectCard) {
           window.setTimeout(() => scrollToProject(openProjectCard), 260);
+        }
+      }
+      blurOverlay.addEventListener("click", enterSite);
+      blurOverlay.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          enterSite(event);
         }
       });
 
@@ -3633,6 +3684,7 @@
         card.className = "project-card";
         card.id = `work-${project.slug}`;
         card.dataset.slug = project.slug;
+        card.classList.toggle("is-featured", ["blood-oath", "ii-windows"].includes(project.slug));
 
         card.innerHTML = `
           <div class="project-clip">
@@ -3653,6 +3705,7 @@
             </button>
           </h3>
           <ul class="project-tags" aria-label="Stack" data-i18n-attr="aria-label:home.project.stack">${tags}</ul>
+          ${project.links?.length ? `<div class="project-preview-actions"><a class="project-action" href="${escapeHtml(normalizeUrl(project.links[0].href) || "#")}" target="_blank" rel="noopener noreferrer"${i18nAttr(key("link0"))}>${escapeHtml(project.links[0].label)}</a></div>` : ""}
           <div class="project-details" id="details-${escapeHtml(project.slug)}" role="region" aria-label="${escapeHtml(project.title)}" hidden>
             <div class="project-body">
               ${paragraphs}
@@ -3784,7 +3837,14 @@
         }
         const columns = getComputedStyle(projectsEl).gridTemplateColumns.split(" ").filter(Boolean).length || 1;
         const index = cards.indexOf(card);
-        const rowStart = index - (index % columns);
+        let rowStart = 0;
+        let used = 0;
+        for (let i = 0; i <= index; i++) {
+          const span = columns === 6 ? (cards[i].classList.contains("is-featured") ? 3 : 2) : 1;
+          if (used + span > columns) { rowStart = i; used = 0; }
+          used += span;
+          if (used === columns && i < index) { rowStart = i + 1; used = 0; }
+        }
         card.style.order = String(rowStart * 2 - 1);
       }
 
@@ -4062,7 +4122,7 @@
       syncNav();
 
       // --- Link direto para um projeto (#work/<slug>) ------------------------
-      (function openProjectFromHash() {
+      function openProjectFromHash() {
         const match = /^#work\/([\w-]+)$/.exec(location.hash);
         if (!match) {
           return;
@@ -4072,9 +4132,19 @@
         if (card) {
           // Sem animacao nem rolagem: a pagina ainda esta atras do portao. A
           // rolagem ate o card acontece no clique de entrada.
-          openProject(card, { animate: false, scroll: false });
+          openProject(card, { animate: false, scroll: document.body.classList.contains("has-entered") });
         }
-      })();
+      }
+      openProjectFromHash();
+      window.addEventListener("hashchange", openProjectFromHash);
+
+      // Links diretos chegam ao conteudo sem exigir audio ou outra entrada.
+      if (location.hash) {
+        enterSite();
+        if (!openProjectCard) {
+          requestAnimationFrame(() => document.getElementById(location.hash.slice(1))?.scrollIntoView());
+        }
+      }
 
       const socialsInlineEl = document.getElementById("socialLinksInline");
 
@@ -4377,6 +4447,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261014-1"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261014-2"></script>
   </body>
 </html>

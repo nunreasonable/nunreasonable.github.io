@@ -33,7 +33,7 @@
 		<link rel="apple-touch-icon" href="assets/icon-180.png" />
 
 		<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
-		<link rel="stylesheet" href="rich/rich.css?v=20261013-4" />
+		<link rel="stylesheet" href="rich/rich.css?v=20261014-2" />
 		<script src="../../filearchive/perf/lite.js"></script>
 
 		<script>
@@ -85,22 +85,22 @@
 			 * cor, e somem com prefers-reduced-motion.
 			 */
 			:root {
-				color-scheme: light dark;
-				--bg: #f7f8fa;
-				--bg-alt: #eef1f4;
-				--surface: #ffffff;
-				--surface-tint: #fff8fb;
-				--line: rgba(16, 24, 32, 0.1);
-				--line-strong: rgba(16, 24, 32, 0.18);
-				--text: #14171c;
-				--muted: #5a626e;
-				--accent: #e4509a;
-				--accent-ink: #82174d;
-				--accent-soft: rgba(228, 80, 154, 0.14);
-				--on-accent: #2c0719;
-				--header-bg: rgba(247, 248, 250, 0.94);
-				--shadow: 0 1px 2px rgba(16, 24, 32, 0.05), 0 10px 30px rgba(16, 24, 32, 0.07);
-				--shadow-lg: 0 2px 6px rgba(16, 24, 32, 0.06), 0 30px 70px rgba(16, 24, 32, 0.14);
+				color-scheme: dark;
+				--bg: #0e1013;
+				--bg-alt: #13161a;
+				--surface: #171a1f;
+				--surface-tint: #25161e;
+				--line: rgba(255, 255, 255, 0.08);
+				--line-strong: rgba(255, 255, 255, 0.16);
+				--text: #eceff3;
+				--muted: #9ba4af;
+				--accent: #e160a1;
+				--accent-ink: #e970ad;
+				--accent-soft: rgba(225, 96, 161, 0.12);
+				--on-accent: #280818;
+				--header-bg: rgba(14, 16, 19, 0.94);
+				--shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.3);
+				--shadow-lg: 0 2px 6px rgba(0, 0, 0, 0.35), 0 30px 70px rgba(0, 0, 0, 0.5);
 				--radius: 14px;
 				--radius-sm: 8px;
 				--wrap: 1120px;
@@ -111,26 +111,6 @@
 				--font-display: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system,
 					BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
 				--font-mono: "Cascadia Code", "Cascadia Mono", Consolas, ui-monospace, "SF Mono", Menlo, monospace;
-			}
-
-			@media (prefers-color-scheme: dark) {
-				:root {
-					--bg: #0e1013;
-					--bg-alt: #13161a;
-					--surface: #171a1f;
-					--surface-tint: #25161e;
-					--line: rgba(255, 255, 255, 0.08);
-					--line-strong: rgba(255, 255, 255, 0.16);
-					--text: #eceff3;
-					--muted: #9ba4af;
-					--accent: #e160a1;
-					--accent-ink: #e970ad;
-					--accent-soft: rgba(225, 96, 161, 0.12);
-					--on-accent: #280818;
-					--header-bg: rgba(14, 16, 19, 0.94);
-					--shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.3);
-					--shadow-lg: 0 2px 6px rgba(0, 0, 0, 0.35), 0 30px 70px rgba(0, 0, 0, 0.5);
-				}
 			}
 
 			*,
@@ -314,15 +294,15 @@
 			/* Gradiente estatico, so dentro do hero: nada anima e nada repete em
 			   ladrilho, entao nao custa nada depois do primeiro paint. */
 			.hero {
-				padding-top: clamp(48px, 9vw, 104px);
+				padding-top: clamp(28px, 4vw, 48px);
 				background: radial-gradient(70% 55% at 50% 0%, var(--accent-soft), transparent 70%);
 				text-align: center;
 			}
 
 			.hero-icon {
-				width: 84px;
-				height: 84px;
-				margin: 0 auto 22px;
+				width: 56px;
+				height: 56px;
+				margin: 0 auto 12px;
 			}
 
 			.eyebrow {
@@ -339,7 +319,7 @@
 			}
 
 			.hero h1 {
-				font-size: clamp(2.6rem, 8vw, 5rem);
+				font-size: clamp(2.6rem, 6vw, 4.5rem);
 				font-weight: 650;
 				letter-spacing: -0.03em;
 			}
@@ -354,7 +334,7 @@
 				max-width: 34ch;
 				margin: 22px auto 0;
 				font-family: var(--font-display);
-				font-size: clamp(1.3rem, 3.2vw, 1.85rem);
+				font-size: clamp(1.15rem, 2.5vw, 1.5rem);
 				line-height: 1.3;
 				font-weight: 500;
 				letter-spacing: -0.01em;
@@ -1299,6 +1279,18 @@
 					transform: none;
 				}
 			}
+
+            .releases > li[hidden] { display: none !important; }
+            .release-history-toggle { display: flex; margin: 28px auto 0; cursor: pointer; }
+            .release-history-toggle [hidden] { display: none; }
+            .hero .cta { margin-top: 24px; }
+            .hero .facts { margin-top: 20px; font-size: .85rem; }
+            .hero .hero-note { font-size: .8rem; }
+            @media (max-width: 520px) {
+                .hero .facts { flex-direction: column; gap: 6px; }
+                .hero .cta { gap: 8px; }
+                .hero .btn { padding-inline: 18px; }
+            }
 		</style>
 	</head>
 	<body>
@@ -2306,7 +2298,7 @@
 						<p class="hero-note" data-i18n="iw.releases.namingNote">From now on every release gets a name. Earlier ones are Unnamed.</p>
 					</header>
 
-					<ol class="releases">
+					<ol class="releases" id="release-history">
 						<li>
 							<div class="rel-head">
 								<span class="rel-ver">1.0.0</span>
@@ -2332,7 +2324,7 @@
 							</div>
 							<p data-i18n="iw.releases.v0101fix2">The AI sidebar works on Windows now: requests go through Windows' own curl instead of bash, so Gemini and the other online models work once you set a key, and a new /guide command walks you through getting started. Until 1.0.0, fixes come out as 0.10.1-fixN.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.10.1</span>
 								<span class="rel-name">Tahiti Mangosellers</span>
@@ -2340,7 +2332,7 @@
 							</div>
 							<p data-i18n="iw.releases.v0101">Tahiti Mangosellers adds a keybind editor: Ctrl+Win+/ or the new pencil on the keybind list opens it, and turning a shortcut off gives it back to Windows (the Windows key for the Start menu, Win+V, Win+Shift+S...). You can also change a shortcut's keys without touching any file. It also fixes wallpaper thumbnails on scaled screens and an empty math result in the search.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.10.0</span>
 								<span class="rel-name">Dancing Lighthouse</span>
@@ -2348,7 +2340,7 @@
 							</div>
 							<p data-i18n="iw.releases.v0100">Dancing Lighthouse brings live wallpapers: pick a video in the wallpaper selector and it plays behind the desktop icons on every monitor, decoded on the GPU, with ii's colors taken from one of its frames. It pauses when a window covers the desktop, while the screen is locked and in game mode.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.9.2.2</span>
 								<span class="rel-name">Melomaniac Aviator</span>
@@ -2356,7 +2348,7 @@
 							</div>
 							<p data-i18n="iw.releases.v0922">Melomaniac Aviator is a round of fixes: applying a preset with the dock on the side no longer freezes the shell, emoji search puts exact matches first, each visual style keeps its own bar layout, desktop widgets land in a free spot and take the keyboard right away, the bar says Desktop when nothing is focused, and a new option hides the computer name.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.9.2.1</span>
 								<span class="rel-name">Sleepwalking Toaster</span>
@@ -2364,7 +2356,7 @@
 							</div>
 							<p data-i18n="iw.releases.v0921">Sleepwalking Toaster fixes four more reports: panels open on the monitor your mouse is on and stay there, the end4-pC settings card gets a close button, starting a recording closes the region selector on the other monitors, and media cover art matches the song again.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.9.2</span>
 								<span class="rel-name">Caffeinated Pigeon</span>
@@ -2372,7 +2364,7 @@
 							</div>
 							<p data-i18n="iw.releases.v092">Caffeinated Pigeon cleans up text: it's drawn with grayscale antialiasing like ii on Linux, without ClearType's colored fringes and uneven letters at scales like 150%. Settings also gets an option to stay open when you click outside the end4-pC card.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.9.1</span>
 								<span class="rel-name">Haunted Spatula</span>
@@ -2380,7 +2372,7 @@
 							</div>
 							<p data-i18n="iw.releases.v091">Haunted Spatula fixes the first reports after Exploding Baby: the dock, bar and overview show each app's real icon instead of a generic gear, the default pins are File Explorer and Windows Terminal, panels open on the monitor you're using, region screenshots on a second monitor reach the clipboard, and the floating bar drops its outline when its background is off.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.9.0</span>
 								<span class="rel-name">Exploding Baby</span>
@@ -2388,7 +2380,7 @@
 							</div>
 							<p data-i18n="iw.releases.v090">Exploding Baby, the project's first named release, planned as 0.8.0 and 0.9.0 but shipped as one. Most of end4-pC comes over, in both looks: a bar you can rearrange between left, middle and right with a dynamic island for media, notifications and the OSD plus an optional screen frame, a dock on any screen edge, a dozen desktop widgets, Wallhaven search in the wallpaper picker, a sidebar banner with a media card, dashboard-style Settings with presets, and Ctrl+Super+P to swap ii's bar for the Windows taskbar and back. Spicy Stuff sources (Konachan, the booru sidebar, Wallhaven) unlock once Windows confirms a Microsoft account is 18 or older. Startup is unchanged on a VM limited like a weak PC (about 2.9 s), and it's about 195 MB installed (80 MB zip). Fixes rounded clipping drawing nothing on Windows, which hid the image card and part of Settings.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.7.0</span>
 								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
@@ -2396,7 +2388,7 @@
 							</div>
 							<p data-i18n="iw.releases.v070">Pick your look: ii's original style or the one from pctrade's end4-pC fork, in the setup (with a picture of each) or any time in Settings &gt; Quick &gt; Style. Both have the same features and options; the end4-pC style brings its floating settings card, which Spotlight and the overview can search. It also starts a little faster on the same slow VM (the bar in about 1.6 s), uses about 26 MB less memory after start and takes about 185 MB installed instead of 210. Fixes the bar showing up lower and jumping a couple of seconds later after a crash or an update.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.6.2</span>
 								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
@@ -2404,7 +2396,7 @@
 							</div>
 							<p data-i18n="iw.releases.v062">Faster everywhere, especially on weaker machines: the bar shows in about 2 seconds instead of 5 on the same slow VM, Settings opens inside ii already themed and translated in under a second, panels keep their window after the first open and the mouse hook only wakes ii when something under the pointer changes. About 45 MB lighter. Fixes external monitors being set back to full brightness on every start and translations not loading with the language on "auto".</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.6.1</span>
 								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
@@ -2412,7 +2404,7 @@
 							</div>
 							<p data-i18n="iw.releases.v061">The Settings app now has almost every option that used to live only in config.json (bar auto-hide, transparency and accent color, date formats, dock, on-screen keyboard, night light schedule, translator languages, search and more); options that only do something on Linux stay hidden. It's also translated to Brazilian Portuguese.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.6.0</span>
 								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
@@ -2420,7 +2412,7 @@
 							</div>
 							<p data-i18n="iw.releases.v060">Starts much faster on weaker machines: on a VM held to two slow cores and a slow disk the bar shows in about 4 seconds instead of about 43. Spotlight search on the Windows key (apps, files, clipboard history, emoji, system actions and the web), with Win+Tab for the workspaces. A System tab in the cheatsheet with CPU, GPU, memory and disks, and CPU, RAM and disk cards for the desktop. Fixes mouse and keyboard lag on weaker machines, empty emoji search and crashes when ii reloaded mid-task.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.5.0</span>
 								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
@@ -2428,7 +2420,7 @@
 							</div>
 							<p data-i18n="iw.releases.v050">Hold Win and drag to move a window, Win + right drag to resize it, with tiling and across monitors with different scaling. Windows draws the wallpaper again and ii only puts its widgets on the desktop; changing the wallpaper in Windows recolors ii. The bar shrinks its applets when they don't fit. Media visualizer, native color picker (Win+Shift+C), weather, game mode, the WARP toggle and a warning before shutting down while winget is installing. Fixes the bar sitting below the top or not reserving its space after a display scale change, and closing windows of apps running as administrator.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.4.0</span>
 								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
@@ -2436,7 +2428,7 @@
 							</div>
 							<p data-i18n="iw.releases.v040">Optional tiling with Hyprland's dwindle layout on Windows' virtual desktops. The screen translator lays each translated paragraph over the original, desktop widgets sit next to the icons and can be dragged, tray icons of apps started before ii respond to clicks (Windows 10 included), and the classic console gets ii's colors and font. Fixes a crash in the Windows 10 virtual desktop helper, a second copy of ii starting on top of the first, and the bar losing its reserved space.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.3.1</span>
 								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
@@ -2444,7 +2436,7 @@
 							</div>
 							<p data-i18n="iw.releases.v031">Windows 10's blur no longer shows as a band around the floating bar's rounded ends, and the setup's window opens in the free part of the screen.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.3.0</span>
 								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
@@ -2452,7 +2444,7 @@
 							</div>
 							<p data-i18n="iw.releases.v030">Screen recording with Windows' own capture and encoder, no FFmpeg needed. ii's own system tray, shared with Explorer's. Wallpaper and widgets behind the desktop icons. Translation, music recognition and LaTeX in the AI chat. The setup updates itself from GitHub. Built on Quickshell 0.3.1 and the latest ii from end-4.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.2.0</span>
 								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
@@ -2460,7 +2452,7 @@
 							</div>
 							<p data-i18n="iw.releases.v020">Windows 10 support (version 2004 or newer): virtual desktops, blur and the hover-only taskbar on any edge. The Visual C++ runtime is included, brightness works on laptop screens and dims in software elsewhere, and the setup checks for WebView2 and can install Windows Terminal and winget.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.1.1</span>
 								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
@@ -2468,7 +2460,7 @@
 							</div>
 							<p data-i18n="iw.releases.v011">Fixes mouse and keyboard lag on real hardware: window events moved off ii's main thread and the mouse hook runs at high priority.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.1.0</span>
 								<span class="rel-name rel-unnamed" data-i18n="iw.releases.unnamed">Unnamed</span>
@@ -2477,6 +2469,7 @@
 							<p data-i18n="iw.releases.v010">First release, Windows 11 only, with a setup that downloads the package, checks its SHA-256 and installs it for the current user.</p>
 						</li>
 					</ol>
+                    <button class="btn btn-secondary release-history-toggle" type="button" aria-expanded="false" aria-controls="release-history" id="releaseHistoryToggle"><span class="history-more" data-i18n="iw.releases.showHistory">Explore earlier releases</span><span class="history-less" data-i18n="iw.releases.hideHistory" hidden>Show recent releases</span></button>
 					<p class="center-link"><a href="https://github.com/nunreasonable/ii-windows/releases" data-i18n="iw.releases.all">All releases on GitHub</a></p>
 				</div>
 			</section>
@@ -2835,7 +2828,7 @@
 				if (rich) {
 					root.classList.add("rich");
 					try {
-						mod = mod || (await import("./rich/rich.js?v=20261013-4"));
+						mod = mod || (await import("./rich/rich.js?v=20261014-2"));
 						mod.start();
 						// Mede o fps com os efeitos rodando (lite.js, data-lite-watch).
 						if (lite) setTimeout(() => lite.watch(), 1500);
@@ -2854,6 +2847,16 @@
 			sync();
 		</script>
 
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261014-1"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261014-2"></script>
+	<script>
+          document.getElementById("releaseHistoryToggle").addEventListener("click", function () {
+            const expanded = this.getAttribute("aria-expanded") !== "true";
+            this.setAttribute("aria-expanded", String(expanded));
+            document.querySelectorAll("[data-history-release]").forEach((item) => { item.hidden = !expanded; });
+            this.querySelector(".history-more").hidden = expanded;
+            this.querySelector(".history-less").hidden = !expanded;
+            window.dispatchEvent(new Event("scroll"));
+          });
+        </script>
 	</body>
 </html>

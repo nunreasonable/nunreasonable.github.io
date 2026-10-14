@@ -10,6 +10,12 @@
  * vitrine do bot para o proprio regimento, nao uma pagina institucional.
  */
 export const pt = {
+  "ccore.search_label": "Encontre um comando",
+  "ccore.search_placeholder": "Comando, finalidade ou permissão…",
+  "ccore.clear_search": "Limpar",
+  "ccore.command_categories": "Categorias de comandos",
+  "ccore.no_commands": "Nenhum comando encontrado. Tente outra palavra ou limpe a busca.",
+
   // --- Navegacao ---------------------------------------------------------
   "ccore.skip_to_content": "Pular para o conteúdo",
   "ccore.sections": "Seções",

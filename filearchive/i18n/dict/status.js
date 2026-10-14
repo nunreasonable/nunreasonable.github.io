@@ -5,6 +5,8 @@
  * por aqui - o que este dicionario traduz sao os rotulos em volta deles.
  */
 export const pt = {
+  "status.refresh_now": "Atualizar agora",
+
   "status.ccore_status": "ccore — Status",
   "status.status_of_the_12_regimento":
     'Status do bot do 12° Regimento de Infantaria "Chaves".',

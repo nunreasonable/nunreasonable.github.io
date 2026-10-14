@@ -71,7 +71,7 @@ function setupPalette(area) {
 			PAGE_KEYS.forEach((k) => html.style.removeProperty(k));
 			return;
 		}
-		const p = pageScheme(tones, darkQuery.matches);
+		const p = pageScheme(tones, true);
 		for (const k in p) html.style.setProperty(k, p[k]);
 	}
 
@@ -403,7 +403,7 @@ function setupReleases() {
 		const mark = innerHeight * 0.6;
 		const p = Math.min(1, Math.max(0, (mark - r.top) / r.height));
 		fill.style.transform = `scaleY(${p.toFixed(4)})`;
-		items.forEach((li) => li.classList.toggle("is-passed", li.getBoundingClientRect().top < mark));
+		items.forEach((li) => li.classList.toggle("is-passed", !li.hidden && li.getBoundingClientRect().top < mark));
 	}
 	const onScroll = () => {
 		if (active && !raf) raf = requestAnimationFrame(update);

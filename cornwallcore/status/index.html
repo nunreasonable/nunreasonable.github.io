@@ -72,7 +72,6 @@
 					radial-gradient(circle at top left, rgba(207, 20, 43, 0.22), transparent 28%),
 					radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.12), transparent 34%),
 					linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
-				background-attachment: fixed;
 			}
 
 			.shell {
@@ -232,18 +231,41 @@
 					transition-duration: 0.001ms !important;
 				}
 			}
+
+            .shell { padding-top: 28px; }
+            .topbar { gap: 20px; box-shadow: none; }
+            .actions { align-items: center; }
+            .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .metric { padding: 20px; }
+            .metric dd { font-variant-numeric: tabular-nums; }
+            #statusCard { position: relative; }
+            .headline { padding-right: 150px; }
+            .refresh-button { position: absolute; top: 22px; right: 22px; font: inherit; cursor: pointer; }
+            .refresh-button:disabled { opacity: .55; cursor: wait; }
+            .button:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+            @media (max-width: 640px) {
+              .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+              .metric { padding: 14px; }
+              .metric dt { font-size: .72rem; }
+              .metric dd { font-size: 1.1rem; }
+              .headline { padding-right: 0; }
+              .refresh-button { position: static; margin-top: 16px; }
+              .card { padding: 18px; }
+              .topbar .actions { width: 100%; }
+              .topbar [data-i18n-switcher] { flex-basis: 100%; }
+            }
 		</style>
 			<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
 	</head>
 	<body>
-		<div data-i18n-switcher class="i18n-floating"></div>
+
 		<main class="shell">
 			<header class="topbar">
 				<div class="brand">
 					<h1 data-i18n="status.ccore_status" class="brand-title">ccore — Status</h1>
 					<p data-i18n="status.status_of_the_12_regimento" class="brand-meta">Status of the 12° Regimento de Infantaria "Chaves" bot.</p>
 				</div>
-				<div class="actions">
+				<div class="actions"><div data-i18n-switcher></div>
 					<a data-i18n="status.back_to_ccore" class="button" href="../">Back to ccore</a>
 					<a data-i18n="status.dashboard" class="button" href="https://dashboard.daeese.me/">Dashboard</a>
 				</div>
@@ -254,6 +276,7 @@
 					<span class="dot" aria-hidden="true"></span>
 					<h2 id="statusHeadline">Checking the bot…</h2>
 				</div>
+				<button class="button refresh-button" type="button" id="refreshStatus" data-i18n="status.refresh_now">Refresh now</button>
 				<p class="headline-note" id="statusNote">Fetching the current status from the bot's API.</p>
 
 				<dl class="metrics" id="metrics">
@@ -309,14 +332,16 @@
 
 			const LIVE_STRINGS = {
 				en: {
-					online: "The bot is online",
+					checking: "Checking the bot…", checkingNote: "Fetching the current status from the bot's API.",
+                    online: "The bot is online",
 					onlineNote: "Connected to the Discord gateway and responding to commands.",
 					offline: "The bot is offline",
 					offlineTimeout: "The API did not answer in time. The bot, or the tunnel that exposes it, may be down.",
 					offlineError: (msg) => `Could not reach the bot's API: ${msg}`
 				},
 				pt: {
-					online: "O bot está online",
+					checking: "Consultando o bot…", checkingNote: "Buscando o estado atual na API do bot.",
+                    online: "O bot está online",
 					onlineNote: "Conectado ao gateway do Discord e respondendo aos comandos.",
 					offline: "O bot está offline",
 					offlineTimeout: "A API não respondeu a tempo. O bot, ou o túnel que o expõe, pode estar fora do ar.",
@@ -333,9 +358,9 @@
 			// valor vivo e o proximo tick o traria de volta em ingles). Guardamos o
 			// ultimo desfecho como funcoes do dicionario para reaplicar no novo idioma
 			// quando o visitante troca sem esperar um refresh.
-			let lastHeadline = (s) => s.online;
-			let lastNote = (s) => s.onlineNote;
-			let hasResult = false;
+			let lastHeadline = (s) => s.checking;
+			let lastNote = (s) => s.checkingNote;
+			let hasResult = true;
 
 			function applyLiveText() {
 				if (!hasResult) return;
@@ -357,7 +382,12 @@
 				});
 			}
 
+            let refreshing = false;
 			async function refresh() {
+                if (refreshing) return;
+                refreshing = true;
+                document.getElementById("refreshStatus").disabled = true;
+                els.card.setAttribute("aria-busy", "true");
 				try {
 					// AbortController porque um tunnel fora do ar pode deixar o
 					// fetch pendurado bem alem do intervalo de refresh, e a
@@ -415,13 +445,18 @@
 
 					clearMetrics();
 					els.measured.textContent = new Date().toLocaleString("en-US");
-				}
+				} finally {
+                    refreshing = false;
+                    document.getElementById("refreshStatus").disabled = false;
+                    els.card.setAttribute("aria-busy", "false");
+                }
 			}
 
 			// Reaplica o texto vivo quando o visitante troca de idioma, sem
 			// esperar o proximo refresh.
 			document.addEventListener("i18n:change", applyLiveText);
 
+            document.getElementById("refreshStatus").addEventListener("click", refresh);
 			refresh();
 			window.setInterval(refresh, REFRESH_MS);
 		</script>
@@ -430,6 +465,6 @@
 		  dicionario de portugues, entao a pagina continua completa e indexavel
 		  sem JavaScript.
 		-->
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/status.js"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/status.js?v=20261014-2"></script>
 	</body>
 </html>

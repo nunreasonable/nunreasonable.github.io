@@ -104,12 +104,23 @@
           height: calc(100vh - 210px);
         }
       }
+
+      .shell { padding-top: 24px; }
+      .policy-nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 24px; }
+      .policy-nav a { color: var(--muted); text-decoration: none; font-size: .9rem; }
+      .policy-nav a:hover { color: var(--text); }
+      .policy-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+      .intro { margin-bottom: 24px; }
+      .intro h1 { font-size: clamp(1.5rem, 3vw, 2.2rem); margin-bottom: 12px; }
+      .intro p { line-height: 1.65; }
+      .frame { height: max(520px, 70svh); border-radius: 16px; }
+      @media (max-width: 720px) { .shell { width: calc(100% - 24px); } .frame { height: max(480px, 70svh); } }
     </style>
       <link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
   </head>
   <body>
-    <div data-i18n-switcher class="i18n-floating"></div>
-    <main class="shell">
+
+    <main class="shell"><nav class="policy-nav" aria-label="Navigation"><a href="../" data-i18n="ccore_pp_shell.back">← Back to ccore</a><div data-i18n-switcher></div></nav>
       <!--
         Este resumo nao e enfeite. A pagina era so o iframe, entao a URL que
         esta no sitemap E registrada no portal do Discord nao tinha texto
@@ -122,7 +133,7 @@
         <p><a data-i18n="ccore_pp_shell.read_the_full_privacy_policy" href="./pp.html">Read the full Privacy Policy</a></p>
       </div>
       <section data-i18n-attr="aria-label:ccore_pp_shell.privacy_policy_content" class="frame" aria-label="Privacy Policy content">
-        <iframe title="ccore Privacy Policy" src="./pp.html"></iframe>
+        <iframe title="ccore Privacy Policy" src="./pp.html?embedded=1&amp;v=20261014-2"></iframe>
       </section>
     </main>
       <!--
@@ -130,6 +141,6 @@
       dicionario de portugues, entao a pagina continua completa e indexavel
       sem JavaScript.
     -->
-    <script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/ccore_pp_shell.js"></script>
+    <script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/ccore_pp_shell.js?v=20261014-2"></script>
   </body>
 </html>

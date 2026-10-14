@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+        <script>
+          if (window.parent !== window && new URLSearchParams(location.search).get("embedded") === "1") {
+            document.documentElement.dataset.embedded = "true";
+          }
+        </script>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>ccore Privacy Policy</title>
@@ -361,6 +366,13 @@
 					max-width: 100%;
 				}
 			}
+
+            :root[data-embedded] [data-i18n-switcher].i18n-floating { display: none; }
+            :root[data-embedded] .shell { width: calc(100% - 24px); padding-top: 12px; }
+            :root[data-embedded] .hero { border-radius: 14px; box-shadow: none; }
+            :root[data-embedded] .hero-inner { padding: 22px; gap: 16px; }
+            :root[data-embedded] h1 { font-size: clamp(1.8rem, 4vw, 2.5rem); max-width: none; line-height: 1.1; }
+            @media (max-width: 640px) { :root[data-embedded] .hero-inner { padding: 16px; } }
 		</style>
 			<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
 	</head>

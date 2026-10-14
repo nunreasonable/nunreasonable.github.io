@@ -17,6 +17,9 @@
  * por diante. Reordenar as imagens la exige reordenar aqui.
  */
 export const pt = {
+  "home.enter": "Entrar no site",
+  "home.viewProjects": "Explorar projetos",
+  "home.contactAction": "Entre em contato",
   // --- Portao e intro ------------------------------------------------------
   "home.gate": "clique para entrar",
   "home.intro.init": "inicializando daeese.me",
