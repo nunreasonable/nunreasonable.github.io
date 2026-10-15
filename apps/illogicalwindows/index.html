@@ -33,7 +33,8 @@
 		<link rel="apple-touch-icon" href="assets/icon-180.png" />
 
 		<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
-		<link rel="stylesheet" href="rich/rich.css?v=20261014-2" />
+		<link rel="stylesheet" href="rich/rich.css?v=20261014-4" />
+        <link rel="stylesheet" href="rich/showcase.css?v=20261014-4" />
 		<script src="../../filearchive/perf/lite.js"></script>
 
 		<script>
@@ -1298,11 +1299,13 @@
 
 		<header class="site-header">
 			<div class="wrap header-inner">
-				<a class="brand" href="#top">
+				<a class="brand" href="#top" aria-label="II for Windows" data-i18n-attr="aria-label:iw.brand">
 					<img src="assets/icon.webp" width="28" height="28" alt="" />
 					<span data-i18n="iw.brand">II for Windows</span>
 				</a>
 				<nav class="nav" aria-label="Sections" data-i18n-attr="aria-label:iw.nav.label">
+                    <a class="rich-only" href="#journey" data-i18n="iw.show.nav.tour">Discover</a>
+                    <a class="rich-only" href="#play" data-i18n="iw.show.nav.play">Try it</a>
 					<a href="#learn" data-i18n="iw.nav.learn">Learn</a>
 					<a href="#features" data-i18n="iw.nav.features">Features</a>
 					<a href="#gallery" data-i18n="iw.nav.gallery">Gallery</a>
@@ -1323,6 +1326,7 @@
 					<img class="hero-icon" src="assets/icon.webp" width="84" height="84" alt="" />
 					<p class="eyebrow" data-i18n="iw.hero.eyebrow">Unofficial port · 1.0</p>
 					<h1 data-i18n="iw.hero.title">II for Windows</h1>
+                    <h2 class="launch-title rich-only"><span data-i18n="iw.show.hero.a">Your desktop.</span><span data-i18n="iw.show.hero.b">Entirely your own.</span></h2>
 					<p class="codename" data-i18n="iw.hero.codename">Codename Illogical Windows</p>
 					<p class="pitch" data-i18n="iw.hero.pitch">end-4's illogical-impulse desktop, running natively on Windows 11 and Windows 10.</p>
 
@@ -1336,6 +1340,14 @@
 						>
 						<a class="btn btn-secondary" href="https://github.com/nunreasonable/ii-windows" data-i18n="iw.hero.github">View on GitHub</a>
 					</div>
+
+                    <div class="launch-stage rich-only" aria-label="ii on Windows desktop" data-i18n-attr="aria-label:iw.show.desktopLabel">
+                      <div class="launch-orbit" aria-hidden="true"></div>
+                      <div class="launch-desktop"><img data-showcase-src="assets/showcase/desktop.webp" width="1000" height="563" fetchpriority="high" decoding="async" alt="ii desktop with clock, calendar, timers and resource widgets in a pink palette" data-i18n-attr="alt:iw.show.desktopAlt" /></div>
+                      <img class="launch-panel launch-search" data-showcase-src="assets/showcase/spotlight.webp" width="896" height="574" decoding="async" alt="" aria-hidden="true" />
+                      <img class="launch-panel launch-side" data-showcase-src="assets/showcase/sidebar.webp" width="460" height="1040" decoding="async" alt="" aria-hidden="true" />
+                      <a href="#journey" class="launch-tour"><span data-i18n="iw.show.tour">Scroll to discover</span><span aria-hidden="true">↓</span></a>
+                    </div>
 
 					<!-- Versao atual: atualizar junto com cada release (VERSION do ii-windows). -->
 					<ul class="facts">
@@ -1362,6 +1374,48 @@
 					</a>
 					<figcaption data-i18n="iw.hero.shotCaption">Widgets on the desktop and the bar on top, all colored from the wallpaper; the Windows taskbar only shows up at the bottom edge.</figcaption>
 				</figure>
+
+			</section>
+
+			<!-- ================= Aviso: nao oficial ================= -->
+			<div class="notice-band">
+				<aside class="wrap notice" aria-labelledby="notice-title">
+					<span class="notice-mark" aria-hidden="true">i</span>
+					<h2 id="notice-title" data-i18n="iw.notice.title">Unofficial and not affiliated with Microsoft</h2>
+					<p data-i18n="iw.notice.body">
+						II for Windows is an independent community port. It isn't made, endorsed or supported by Microsoft, by end-4 or by the Quickshell developers. Windows is a trademark of the Microsoft group of companies.
+					</p>
+					<p>
+						<span data-i18n="iw.notice.issuesBefore">Found a problem on Windows? Please report it</span>
+						<a href="https://github.com/nunreasonable/ii-windows/issues" data-i18n="iw.notice.issuesLink">on this project's issue tracker</a><span data-i18n="iw.notice.issuesAfter">, not upstream.</span>
+					</p>
+				</aside>
+			</div>
+
+
+            <section class="journey rich-only" id="journey" aria-labelledby="journeyTitle">
+              <div class="journey-pin">
+                <div class="journey-topline"><span data-i18n="iw.show.eyebrow">A different kind of everyday</span><span class="journey-counter" aria-hidden="true">01 / 03</span></div>
+                <h2 class="visually-hidden" id="journeyTitle" data-i18n="iw.show.journeyTitle">Discover the desktop</h2>
+                <div class="journey-scenes">
+                  <article class="journey-scene is-current" data-scene="0">
+                    <div class="journey-copy"><span class="chapter-number" aria-hidden="true">01</span><h3><span data-i18n="iw.show.search.a">Less searching.</span><span data-i18n="iw.show.search.b">More doing.</span></h3><p data-i18n="iw.show.search.text">Apps, files, emoji and quick calculations. One place, one key, right when you need it.</p><a href="#demo-area" class="scene-try" data-try="spot" data-i18n="iw.show.search.try">Try Spotlight ↗</a><span class="scene-key"><kbd>Win</kbd><span data-i18n="iw.show.search.key">and start typing</span></span></div>
+                    <div class="journey-visual scene-search"><div class="scene-halo"></div><img data-showcase-src="assets/showcase/spotlight.webp" width="896" height="574" loading="lazy" decoding="async" alt="Spotlight finding apps on Windows" data-i18n-attr="alt:iw.show.search.alt" /><span class="scene-label" data-i18n="iw.show.search.label">Everything starts here.</span></div>
+                  </article>
+                  <article class="journey-scene" data-scene="1">
+                    <div class="journey-copy"><span class="chapter-number" aria-hidden="true">02</span><h3><span data-i18n="iw.show.controls.a">Small adjustments.</span><span data-i18n="iw.show.controls.b">Big difference.</span></h3><p data-i18n="iw.show.controls.text">Your music, notifications and everyday controls, together in a sidebar that feels like part of your desktop.</p><a href="#demo-area" class="scene-try" data-try="side" data-i18n="iw.show.controls.try">Open quick settings ↗</a></div>
+                    <div class="journey-visual scene-controls"><div class="scene-halo"></div><img data-showcase-src="assets/showcase/sidebar.webp" width="460" height="1040" loading="lazy" decoding="async" alt="Quick settings and notifications in the ii sidebar" data-i18n-attr="alt:iw.show.controls.alt" /><div class="control-word" aria-hidden="true">ii.</div></div>
+                  </article>
+                  <article class="journey-scene" data-scene="2">
+                    <div class="journey-copy"><span class="chapter-number" aria-hidden="true">03</span><h3><span data-i18n="iw.show.widgets.a">Make room.</span><span data-i18n="iw.show.widgets.b">For your day.</span></h3><p data-i18n="iw.show.widgets.text">A clock, your notes, the weather, a focus timer. Widgets sit beside your icons, with colors drawn from your wallpaper.</p><a href="#demo-area" class="scene-try" data-try="wall" data-i18n="iw.show.widgets.try">Play with the colors ↗</a></div>
+                    <div class="journey-visual scene-widgets"><div class="scene-halo"></div><img data-showcase-src="assets/showcase/desktop.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Desktop widgets arranged around a glass wallpaper" data-i18n-attr="alt:iw.show.widgets.alt" /></div>
+                  </article>
+                </div>
+                <div class="journey-progress" aria-hidden="true"><i></i><i></i><i></i></div>
+              </div>
+            </section>
+            <section class="hands-on rich-only" id="play" aria-labelledby="playTitle">
+              <header class="wrap hands-on-head"><p class="show-kicker" data-i18n="iw.show.play.eyebrow">Your turn</p><h2 id="playTitle"><span data-i18n="iw.show.play.a">Don't just look.</span><span data-i18n="iw.show.play.b">Make yourself at home.</span></h2><p data-i18n="iw.show.play.text">This desktop responds. Open apps, move windows and change the wallpaper. Nothing to install.</p></header>
 
 				<!-- Modo completo: o ii jogavel. No modo leve fica escondido e o print acima aparece. -->
 				<div class="wrap demo-area rich-only" id="demo-area">
@@ -1470,51 +1524,96 @@
 					</div>
 				</div>
 
-			</section>
+            </section>
 
-			<!-- ================= Aviso: nao oficial ================= -->
-			<div class="notice-band">
-				<aside class="wrap notice" aria-labelledby="notice-title">
-					<span class="notice-mark" aria-hidden="true">i</span>
-					<h2 id="notice-title" data-i18n="iw.notice.title">Unofficial and not affiliated with Microsoft</h2>
-					<p data-i18n="iw.notice.body">
-						II for Windows is an independent community port. It isn't made, endorsed or supported by Microsoft, by end-4 or by the Quickshell developers. Windows is a trademark of the Microsoft group of companies.
-					</p>
-					<p>
-						<span data-i18n="iw.notice.issuesBefore">Found a problem on Windows? Please report it</span>
-						<a href="https://github.com/nunreasonable/ii-windows/issues" data-i18n="iw.notice.issuesLink">on this project's issue tracker</a><span data-i18n="iw.notice.issuesAfter">, not upstream.</span>
-					</p>
-				</aside>
-			</div>
+			<!-- ================= Recursos ================= -->
+			<section class="section alt" id="features">
+				<div class="wrap">
+					<header class="section-head">
+						<h2 data-i18n="iw.features.title">Everything you'd expect from ii</h2>
+						<p data-i18n="iw.features.lead">The same QML as on Linux wherever it could stay the same, with Windows doing the work underneath.</p>
+					</header>
 
-
-			<!-- ================= Modo completo: historia presa na tela ================= -->
-			<section class="story rich-only" id="story" aria-labelledby="story-title" data-step="0">
-				<div class="story-pin">
-					<div class="wrap story-inner">
-						<div class="story-copy">
-							<p class="story-eyebrow" data-i18n="iw.story.eyebrow">How it fits in</p>
-							<h2 id="story-title" data-i18n="iw.story.title">From Windows to ii, one scroll at a time</h2>
-							<ol class="story-steps">
-							<li><strong data-i18n="iw.story.s0.title">Windows, as you know it</strong> <span data-i18n="iw.story.s0.text">Your desktop, your icons, the taskbar at the bottom.</span></li>
-							<li><strong data-i18n="iw.story.s1.title">The taskbar steps aside</strong> <span data-i18n="iw.story.s1.text">It hides until the pointer touches the bottom edge. Nothing is removed.</span></li>
-							<li><strong data-i18n="iw.story.s2.title">ii's bar takes the top</strong> <span data-i18n="iw.story.s2.text">Workspaces, media, the clock and quick settings, with its space reserved like any Windows app bar.</span></li>
-							<li><strong data-i18n="iw.story.s3.title">Colors from your wallpaper</strong> <span data-i18n="iw.story.s3.text">Pick a picture and ii builds a Material You palette from it, for itself, Windows and the terminal.</span></li>
-							<li><strong data-i18n="iw.story.s4.title">Widgets on the desktop</strong> <span data-i18n="iw.story.s4.text">Clock, weather and resources sit next to your icons, over the Windows wallpaper.</span></li>
-							</ol>
-						</div>
-						<div class="story-stage" aria-hidden="true">
-							<div class="ss-wall ss-wall-win"></div>
-							<div class="ss-wall ss-wall-ii"></div>
-							<div class="ss-icons"><i></i><i></i><i></i><i></i></div>
-							<div class="ss-widgets">
-								<div class="ss-clock"><span class="demo-time">12:00</span><span class="demo-date"></span></div>
-								<div class="ss-res"><i style="--v: 0.38"></i><i style="--v: 0.62"></i><i style="--v: 0.24"></i></div>
-							</div>
-							<div class="ss-bar"><i class="ss-dot on"></i><i class="ss-dot"></i><i class="ss-dot"></i><span class="ss-pill"></span><span class="demo-time">12:00</span><span class="ss-pill short"></span></div>
-							<div class="ss-taskbar"><span class="tb-start"><i></i><i></i><i></i><i></i></span><span class="tb-search"></span><span class="tb-app"></span><span class="tb-app"></span><span class="tb-app"></span></div>
-						</div>
-					</div>
+					<ul class="features">
+						<li>
+							<h3 data-i18n="iw.features.styles.title">Two looks</h3>
+							<p data-i18n="iw.features.styles.text">ii's original style or the one from pctrade's end4-pC fork, with nearly the same features in both now: dashboard-style Settings, presets you can save and apply, and the fork's own floating settings card.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.bar.title">Bar and system tray</h3>
+							<p data-i18n="iw.features.bar.text">Rearrange widgets between left, middle and right, with a dynamic island for media and notifications, an optional screen frame, and tray icons shared with Explorer's own tray.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.sidebars.title">Sidebars</h3>
+							<p data-i18n="iw.features.sidebars.text">A banner with your picture and uptime, a media card and reorderable sections on the right; AI chat and a translator on the left.</p>
+							<button type="button" class="try rich-only" data-try="side" data-i18n="iw.try">Try it in the demo</button>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.search.title">Spotlight search</h3>
+							<p data-i18n="iw.features.search.text">Tap the Windows key for apps, files, clipboard history, emoji, system actions and the web in one box. Win+Tab opens the overview.</p>
+							<button type="button" class="try rich-only" data-try="spot" data-i18n="iw.try">Try it in the demo</button>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.colors.title">Colors from your wallpaper</h3>
+							<p data-i18n="iw.features.colors.text">Material You palettes from matugen, with Wallhaven search built into the wallpaper picker. Windows' accent color and light/dark mode follow along.</p>
+							<button type="button" class="try rich-only" data-try="wall" data-i18n="iw.try">Try it in the demo</button>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.live.title">Live wallpapers</h3>
+							<p data-i18n="iw.features.live.text">Pick a video like any picture and it plays behind your desktop icons, decoded on the GPU, with the colors taken from one of its frames. It pauses when a window covers the desktop.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.workspaces.title">Workspaces and overview</h3>
+							<p data-i18n="iw.features.workspaces.text">ii's workspaces are Windows' own virtual desktops, with live previews in the overview.</p>
+							<button type="button" class="try rich-only" data-try="overview" data-i18n="iw.try">Try it in the demo</button>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.tiling.title">Tiling and Win + drag</h3>
+							<p data-i18n="iw.features.tiling.text">Hyprland's dwindle layout with ii's keybinds (off by default), and since 0.5.0 Win + drag moves windows and Win + right drag resizes them.</p>
+							<button type="button" class="try rich-only" data-try="tile" data-i18n="iw.try">Try it in the demo</button>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.screen.title">Screen tools</h3>
+							<p data-i18n="iw.features.screen.text">Snip, copy text with on-device OCR, record to MP4 and translate what's on screen.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.notif.title">Notifications</h3>
+							<p data-i18n="iw.features.notif.text">Toasts from other apps show up in ii's panel too, with a history.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.terminal.title">Terminal look</h3>
+							<p data-i18n="iw.features.terminal.text">Windows Terminal and the classic console in ii's colors, with a Nerd Font prompt.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.dock.title">Dock</h3>
+							<p data-i18n="iw.features.dock.text">A dock on any screen edge, floating or flush, with its own colors, border, radius and icon size, plus a media card and window previews.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.widgets.title">Desktop widgets</h3>
+							<p data-i18n="iw.features.widgets.text">A dozen widgets for the desktop — calendar, notes, to-do, timers, world clock, media and more — that snap to a grid and lock with a right-click.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.taskbarmode.title">Windows taskbar mode</h3>
+							<p data-i18n="iw.features.taskbarmode.text">Ctrl+Super+P swaps ii's bar for the Windows taskbar while keeping widgets, sidebars and search. Press it again to bring ii's bar back.</p>
+							<button type="button" class="try rich-only" data-try="taskbar" data-i18n="iw.try">Try it in the demo</button>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.system.title">System settings</h3>
+							<p data-i18n="iw.features.system.text">Displays (resolution, refresh rate, scale, HDR) with a keep-or-revert countdown, keyboard, mouse and touchpad, window borders and corners, sleep times and the apps that start with Windows.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.eq.title">Equalizer</h3>
+							<p data-i18n="iw.features.eq.text">10 bands with presets and an Auto mode that follows the song's genre, through Equalizer APO (free, installed separately).</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.nowplaying.title">Now Playing</h3>
+							<p data-i18n="iw.features.nowplaying.text">When the song changes, the cover flies out of the bar into a floating pill with the title, artists and album. Drag it anywhere.</p>
+						</li>
+						<li>
+							<h3 data-i18n="iw.features.webapps.title">Web apps and updates</h3>
+							<p data-i18n="iw.features.webapps.text">Type a site and get a Start menu app that opens it in its own window. ii checks for new releases when it starts and asks before updating.</p>
+						</li>
+					</ul>
 				</div>
 			</section>
 
@@ -1891,97 +1990,6 @@
 							</article>
 						</div>
 					</div>
-				</div>
-			</section>
-
-			<!-- ================= Recursos ================= -->
-			<section class="section alt" id="features">
-				<div class="wrap">
-					<header class="section-head">
-						<h2 data-i18n="iw.features.title">Everything you'd expect from ii</h2>
-						<p data-i18n="iw.features.lead">The same QML as on Linux wherever it could stay the same, with Windows doing the work underneath.</p>
-					</header>
-
-					<ul class="features">
-						<li>
-							<h3 data-i18n="iw.features.styles.title">Two looks</h3>
-							<p data-i18n="iw.features.styles.text">ii's original style or the one from pctrade's end4-pC fork, with nearly the same features in both now: dashboard-style Settings, presets you can save and apply, and the fork's own floating settings card.</p>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.bar.title">Bar and system tray</h3>
-							<p data-i18n="iw.features.bar.text">Rearrange widgets between left, middle and right, with a dynamic island for media and notifications, an optional screen frame, and tray icons shared with Explorer's own tray.</p>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.sidebars.title">Sidebars</h3>
-							<p data-i18n="iw.features.sidebars.text">A banner with your picture and uptime, a media card and reorderable sections on the right; AI chat and a translator on the left.</p>
-							<button type="button" class="try rich-only" data-try="side" data-i18n="iw.try">Try it in the demo</button>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.search.title">Spotlight search</h3>
-							<p data-i18n="iw.features.search.text">Tap the Windows key for apps, files, clipboard history, emoji, system actions and the web in one box. Win+Tab opens the overview.</p>
-							<button type="button" class="try rich-only" data-try="spot" data-i18n="iw.try">Try it in the demo</button>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.colors.title">Colors from your wallpaper</h3>
-							<p data-i18n="iw.features.colors.text">Material You palettes from matugen, with Wallhaven search built into the wallpaper picker. Windows' accent color and light/dark mode follow along.</p>
-							<button type="button" class="try rich-only" data-try="wall" data-i18n="iw.try">Try it in the demo</button>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.live.title">Live wallpapers</h3>
-							<p data-i18n="iw.features.live.text">Pick a video like any picture and it plays behind your desktop icons, decoded on the GPU, with the colors taken from one of its frames. It pauses when a window covers the desktop.</p>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.workspaces.title">Workspaces and overview</h3>
-							<p data-i18n="iw.features.workspaces.text">ii's workspaces are Windows' own virtual desktops, with live previews in the overview.</p>
-							<button type="button" class="try rich-only" data-try="overview" data-i18n="iw.try">Try it in the demo</button>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.tiling.title">Tiling and Win + drag</h3>
-							<p data-i18n="iw.features.tiling.text">Hyprland's dwindle layout with ii's keybinds (off by default), and since 0.5.0 Win + drag moves windows and Win + right drag resizes them.</p>
-							<button type="button" class="try rich-only" data-try="tile" data-i18n="iw.try">Try it in the demo</button>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.screen.title">Screen tools</h3>
-							<p data-i18n="iw.features.screen.text">Snip, copy text with on-device OCR, record to MP4 and translate what's on screen.</p>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.notif.title">Notifications</h3>
-							<p data-i18n="iw.features.notif.text">Toasts from other apps show up in ii's panel too, with a history.</p>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.terminal.title">Terminal look</h3>
-							<p data-i18n="iw.features.terminal.text">Windows Terminal and the classic console in ii's colors, with a Nerd Font prompt.</p>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.dock.title">Dock</h3>
-							<p data-i18n="iw.features.dock.text">A dock on any screen edge, floating or flush, with its own colors, border, radius and icon size, plus a media card and window previews.</p>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.widgets.title">Desktop widgets</h3>
-							<p data-i18n="iw.features.widgets.text">A dozen widgets for the desktop — calendar, notes, to-do, timers, world clock, media and more — that snap to a grid and lock with a right-click.</p>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.taskbarmode.title">Windows taskbar mode</h3>
-							<p data-i18n="iw.features.taskbarmode.text">Ctrl+Super+P swaps ii's bar for the Windows taskbar while keeping widgets, sidebars and search. Press it again to bring ii's bar back.</p>
-							<button type="button" class="try rich-only" data-try="taskbar" data-i18n="iw.try">Try it in the demo</button>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.system.title">System settings</h3>
-							<p data-i18n="iw.features.system.text">Displays (resolution, refresh rate, scale, HDR) with a keep-or-revert countdown, keyboard, mouse and touchpad, window borders and corners, sleep times and the apps that start with Windows.</p>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.eq.title">Equalizer</h3>
-							<p data-i18n="iw.features.eq.text">10 bands with presets and an Auto mode that follows the song's genre, through Equalizer APO (free, installed separately).</p>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.nowplaying.title">Now Playing</h3>
-							<p data-i18n="iw.features.nowplaying.text">When the song changes, the cover flies out of the bar into a floating pill with the title, artists and album. Drag it anywhere.</p>
-						</li>
-						<li>
-							<h3 data-i18n="iw.features.webapps.title">Web apps and updates</h3>
-							<p data-i18n="iw.features.webapps.text">Type a site and get a Start menu app that opens it in its own window. ii checks for new releases when it starts and asks before updating.</p>
-						</li>
-					</ul>
 				</div>
 			</section>
 
@@ -2821,18 +2829,23 @@
 			const lite = window.daeeseLite;
 			const button = document.querySelector(".fx-toggle");
 			let mod = null;
-
+            let revision = 0;
+            let watchTimer = 0;
 			async function sync() {
+                const current = ++revision;
+                clearTimeout(watchTimer);
 				const rich = !(lite && lite.on);
 				button.setAttribute("aria-pressed", String(rich));
 				if (rich) {
 					root.classList.add("rich");
 					try {
-						mod = mod || (await import("./rich/rich.js?v=20261014-2"));
+						mod = mod || (await import("./rich/rich.js?v=20261014-4"));
+                        if (current !== revision || (lite && lite.on)) return;
 						mod.start();
 						// Mede o fps com os efeitos rodando (lite.js, data-lite-watch).
-						if (lite) setTimeout(() => lite.watch(), 1500);
+						if (lite) watchTimer = setTimeout(() => lite.watch(), 1500);
 					} catch (err) {
+                        if (current !== revision) return;
 						root.classList.remove("rich");
 						console.error(err);
 					}
@@ -2847,7 +2860,7 @@
 			sync();
 		</script>
 
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261014-2"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261014-4"></script>
 	<script>
           document.getElementById("releaseHistoryToggle").addEventListener("click", function () {
             const expanded = this.getAttribute("aria-expanded") !== "true";

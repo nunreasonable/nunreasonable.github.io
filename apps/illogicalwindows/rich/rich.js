@@ -8,13 +8,15 @@
  *
  * Partes:
  *  - o mini ii jogavel (desktop.js) e os papeis de parede/cores (palette.js);
- *  - a historia "Do Windows ao ii", presa na tela enquanto a pagina rola;
+ *  - a apresentacao por cenas (showcase.js), ligada a rolagem;
  *  - a corrida de inicializacao (mesma VM lenta, versoes diferentes);
  *  - o explorador de recursos (imagens de um recurso so);
  *  - pergunta de publico, "Testar no demo", linha do tempo das versoes e
  *    entradas suaves das secoes.
  * Tudo que fica em loop para fora da tela ou com a aba escondida.
  */
+
+import { setupShowcase } from "./showcase.js?v=20261014-4";
 
 import { createDesktop } from "./desktop.js?v=20261013-1";
 import { PRESETS, wallpaperUrl, drawThumb, presetTones, demoScheme, pageScheme, PAGE_KEYS, tonesFromFile } from "./palette.js?v=20261013-1";
@@ -52,7 +54,7 @@ function saveWall(id) {
 
 function setupPalette(area) {
 	const stage = area.querySelector(".demo");
-	const walls = document.querySelectorAll(".demo-wall, .ss-wall-ii");
+	const walls = document.querySelectorAll(".demo-wall");
 	const swatches = area.querySelector(".demo-swatches");
 	const fileInput = area.querySelector(".demo-upload input");
 	let tones = presetTones("rose");
@@ -64,7 +66,6 @@ function setupPalette(area) {
 		const d = demoScheme(tones, demoDark);
 		for (const k in d) {
 			stage.style.setProperty(k, d[k]);
-			document.querySelectorAll(".story-stage").forEach((el) => el.style.setProperty(k, d[k]));
 		}
 		stage.classList.toggle("is-light", !demoDark);
 		if (current === "rose" && !userUrl) {
@@ -177,110 +178,67 @@ function setupPalette(area) {
 	};
 }
 
-// --- Historia presa na tela ----------------------------------------------
-
-function setupStory() {
-	const story = document.getElementById("story");
-	if (!story) return;
-	const steps = [...story.querySelectorAll(".story-steps li")];
-	const total = steps.length;
-	let active = false;
-	let raf = 0;
-	let last = -1;
-
-	function update() {
-		raf = 0;
-		const r = story.getBoundingClientRect();
-		const span = r.height - innerHeight;
-		const p = span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 0;
-		story.style.setProperty("--p", p.toFixed(3));
-		const step = Math.min(total - 1, Math.floor(p * total * 0.999));
-		if (step !== last) {
-			last = step;
-			story.dataset.step = String(step);
-			steps.forEach((li, i) => {
-				li.classList.toggle("is-on", i === step);
-				li.classList.toggle("is-past", i < step);
-			});
-		}
-	}
-
-	const onScroll = () => {
-		if (active && !raf) raf = requestAnimationFrame(update);
-	};
-	const io = new IntersectionObserver((entries) => {
-		active = entries[0].isIntersecting;
-		if (active) onScroll();
-	});
-	io.observe(story);
-	on(window, "scroll", onScroll, { passive: true });
-	on(window, "resize", onScroll);
-	update();
-	cleanups.push(() => {
-		io.disconnect();
-		cancelAnimationFrame(raf);
-	});
-}
-
 // --- Corrida de inicializacao ---------------------------------------------
 
 function setupRace() {
-	const race = document.getElementById("race");
-	if (!race) return;
-	const lanes = [...race.querySelectorAll(".race-lane")];
-	const SPEED = 6; // 1 s na tela = 6 s na VM
-	let raf = 0;
-	let t0 = 0;
-
-	function frame(now) {
-		if (!t0) t0 = now;
-		const simulated = ((now - t0) / 1000) * SPEED;
-		let running = false;
-		lanes.forEach((lane) => {
-			const goal = Number(lane.dataset.seconds);
-			const p = Math.min(1, simulated / goal);
-			lane.style.setProperty("--race", p.toFixed(4));
-			lane.querySelector(".race-time").textContent = `${Math.min(simulated, goal).toFixed(1)} s`;
-			if (p >= 1 && !lane.classList.contains("is-done")) lane.classList.add("is-done");
-			if (p < 1) running = true;
-		});
-		raf = running ? requestAnimationFrame(frame) : 0;
-		if (!running) race.classList.add("is-finished");
-	}
-
-	function run() {
-		cancelAnimationFrame(raf);
-		t0 = 0;
-		race.classList.remove("is-finished");
-		lanes.forEach((lane) => {
-			lane.classList.remove("is-done");
-			lane.style.setProperty("--race", "0");
-		});
-		if (reduce.matches) {
-			lanes.forEach((lane) => {
-				lane.classList.add("is-done");
-				lane.style.setProperty("--race", "1");
-				lane.querySelector(".race-time").textContent = `${Number(lane.dataset.seconds).toFixed(1)} s`;
-			});
-			race.classList.add("is-finished");
-			return;
-		}
-		raf = requestAnimationFrame(frame);
-	}
-
-	let started = false;
-	const io = new IntersectionObserver((entries) => {
-		if (entries[0].isIntersecting && !started) {
-			started = true;
-			run();
-		}
-	}, { threshold: 0.5 });
-	io.observe(race);
-	on(race.querySelector(".race-replay"), "click", run);
-	cleanups.push(() => {
-		io.disconnect();
-		cancelAnimationFrame(raf);
-	});
+    const race = document.getElementById("race");
+    if (!race) return;
+    const lanes = [...race.querySelectorAll(".race-lane")].map((element) => ({
+        element, goal: Number(element.dataset.seconds), label: element.querySelector(".race-time"), text: ""
+    }));
+    const SPEED = 6;
+    let raf = 0;
+    let elapsed = 0;
+    let last = 0;
+    let visible = false;
+    let started = false;
+    let finished = false;
+    function paint(simulated) {
+        let running = false;
+        lanes.forEach((lane) => {
+            const p = Math.min(1, simulated / lane.goal);
+            if (!lane.element.classList.contains("is-done")) {
+                lane.element.style.setProperty("--race", p.toFixed(4));
+            }
+            const text = `${Math.min(simulated, lane.goal).toFixed(1)} s`;
+            if (text !== lane.text) { lane.label.textContent = text; lane.text = text; }
+            lane.element.classList.toggle("is-done", p >= 1);
+            if (p < 1) running = true;
+        });
+        finished = !running;
+        race.classList.toggle("is-finished", finished);
+    }
+    function frame(now) {
+        raf = 0;
+        if (!visible || document.hidden) { last = 0; return; }
+        if (last) elapsed += now - last;
+        last = now;
+        paint(elapsed / 1000 * SPEED);
+        if (!finished) raf = requestAnimationFrame(frame);
+    }
+    function syncVisibility() {
+        if (!visible || document.hidden) {
+            cancelAnimationFrame(raf); raf = 0; last = 0;
+        } else if (started && !finished && !raf) {
+            raf = requestAnimationFrame(frame);
+        }
+    }
+    function run() {
+        cancelAnimationFrame(raf); raf = 0;
+        elapsed = 0; last = 0; started = true; finished = false;
+        lanes.forEach((lane) => lane.element.classList.remove("is-done"));
+        paint(reduce.matches ? Infinity : 0);
+        syncVisibility();
+    }
+    const io = new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible && !started) run();
+        else syncVisibility();
+    }, {threshold: .5});
+    io.observe(race);
+    on(document, "visibilitychange", syncVisibility);
+    on(race.querySelector(".race-replay"), "click", run);
+    cleanups.push(() => { io.disconnect(); cancelAnimationFrame(raf); });
 }
 
 // --- Explorador de recursos --------------------------------------------------
@@ -512,12 +470,17 @@ function setupChooser() {
 }
 
 function setupTry(palette) {
+    const timers = new Set();
+    cleanups.push(() => timers.forEach(clearTimeout));
 	const demo = document.getElementById("demo-area");
 	document.querySelectorAll("[data-try]").forEach((b) =>
-		on(b, "click", () => {
+		on(b, "click", (event) => {
+            event.preventDefault();
 			demo.scrollIntoView({ behavior: reduce.matches ? "auto" : "smooth", block: "center" });
 			const stage = demo.querySelector(".demo");
-			setTimeout(() => {
+			const timer = setTimeout(() => {
+                timers.delete(timer);
+                if (!desktop) return;
 				stage.focus({ preventScroll: true });
 				const what = b.dataset.try;
 				if (what === "spot") desktop.spotlight("");
@@ -528,6 +491,7 @@ function setupTry(palette) {
 				else if (what === "wall") palette.cycle();
 				else if (what === "taskbar") desktop.showTaskbar();
 			}, reduce.matches ? 0 : 450);
+            timers.add(timer);
 		})
 	);
 }
@@ -544,7 +508,7 @@ export function start() {
 	});
 	palette = setupPalette(area);
 	cleanups.push(() => palette.destroy());
-	setupStory();
+	cleanups.push(setupShowcase());
 	setupRace();
 	setupExplorer();
 	setupReleases();
