@@ -1351,7 +1351,7 @@
 
 					<!-- Versao atual: atualizar junto com cada release (VERSION do ii-windows). -->
 					<ul class="facts">
-						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>1.0.6</strong> <span class="rel-name">— Jazz-Handed Octopus</span></li>
+						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>1.0.8</strong> <span class="rel-name">— Jazz-Handed Octopus</span></li>
 						<li data-i18n="iw.hero.requirements">Windows 11, or Windows 10 version 2004+ (22H2 recommended)</li>
 						<li data-i18n="iw.hero.free">Free and open source, GPL-3.0</li>
 					</ul>
@@ -1379,7 +1379,8 @@
 
 			<!-- ================= Aviso: nao oficial ================= -->
 			<div class="notice-band">
-				<aside class="wrap notice" aria-labelledby="notice-title">
+				<aside class="wrap notice" aria-label="1.0.8 update"><h2 data-i18n="iw.update.title">Updating after a Defender detection</h2><p data-i18n="iw.update.text">If 1.0.7 disappeared from your PC: some Windows 11 machines had qsw.exe flagged by Microsoft Defender as Trojan:Win32/Bearfoos.A!ml. The release notes identify this as a false positive being reported to Microsoft; 1.0.8 was tested with Defender enabled without a detection. Download the latest setup and choose Update, or open Settings → Apps → Installed apps → illogical-impulse → Modify. Your settings stay.</p><a href="https://github.com/nunreasonable/ii-windows/releases/tag/v1.0.8" data-i18n="iw.update.link">Read the release notice and download 1.0.8</a></aside>
+<aside class="wrap notice" aria-labelledby="notice-title">
 					<span class="notice-mark" aria-hidden="true">i</span>
 					<h2 id="notice-title" data-i18n="iw.notice.title">Unofficial and not affiliated with Microsoft</h2>
 					<p data-i18n="iw.notice.body">
@@ -2287,7 +2288,7 @@
 								<li data-i18n="iw.changes.un2">Takes ii's block out of your PowerShell profiles (with a backup) and puts the execution policy back if the setup changed it.</li>
 								<li data-i18n="iw.changes.un3">Uninstalls only the tools and fonts the setup installed itself.</li>
 								<li data-i18n="iw.changes.un4">Restores your wallpaper, light/dark mode, accent color and taskbar auto-hide.</li>
-								<li data-i18n="iw.changes.un5">Deletes your ii settings and saved API keys, unless you tick Keep my settings.</li>
+								<li data-i18n="iw.changes.un5">Keeps your settings, presets, notes, to-dos, AI chats and saved API keys by default. To remove them too, select Also delete my settings and data.</li>
 							</ul>
 							<p class="muted-note" data-i18n="iw.changes.cant">
 								It can't undo virtual desktops, files you made (screenshots, recordings) or ordinary Windows settings you changed through ii, like volume, Wi-Fi or Bluetooth pairings.
@@ -2307,16 +2308,18 @@
 					</header>
 
 					<ol class="releases" id="release-history">
+<li><div class="rel-head"><span class="rel-ver">1.0.8</span><span class="rel-name">Jazz-Handed Octopus</span><time datetime="2026-10-15">2026-10-15</time><span class="rel-latest" data-i18n="iw.releases.latest">Latest</span></div><p data-i18n="iw.releases.v108">Recovery instructions for PCs where Defender removed 1.0.7 are shown above. Spotlight now uses a window around its search box and results instead of covering the whole screen, so live wallpaper apps no longer mistake it for a fullscreen app.</p></li>
+<li><div class="rel-head"><span class="rel-ver">1.0.7</span><span class="rel-name">Jazz-Handed Octopus</span><time datetime="2026-10-15">2026-10-15</time></div><p data-i18n="iw.releases.v107">Fixes wallpaper transitions showing the old picture zoomed, shifted or split, and Report a problem selecting an empty helper log. Uninstall now keeps settings and data by default; deletion requires Also delete my settings and data. The setup only updates itself on its first page and never during uninstall. Repair and update on Windows 10 no longer install winget unless selected.</p></li>
+
                         <li>
                             <div class="rel-head">
                                 <span class="rel-ver">1.0.6</span>
                                 <span class="rel-name">Jazz-Handed Octopus</span>
                                 <time datetime="2026-10-15">2026-10-15</time>
-                                <span class="rel-latest" data-i18n="iw.releases.latest">Latest</span>
                             </div>
                             <p data-i18n="iw.releases.v106">Report a problem from Settings &gt; About: ii creates a zip on your Desktop with logs and system info, removes your user name from paths and opens a new issue for you to attach it. Nothing is uploaded automatically; crash dumps are optional. Screenshots and clipboard images no longer hold up the shell while saving or decoding. Long clipboard texts stay on disk, online wallpaper catalogs are released when their tab closes, and rendered LaTeX has a bounded cache reused after a restart.</p>
                         </li>
-                        <li>
+                        <li hidden data-history-release>
                             <div class="rel-head">
                                 <span class="rel-ver">1.0.5</span>
                                 <span class="rel-name">Jazz-Handed Octopus</span>
@@ -2324,7 +2327,7 @@
                             </div>
                             <p data-i18n="iw.releases.v105">Fixes updating from the notification failing because the fonts folder was in use. Apps launched by ii no longer inherit its open files, and the setup protects itself when launched by an older ii too, so this fix also helps when updating from an older version.</p>
                         </li>
-                        <li>
+                        <li hidden data-history-release>
                             <div class="rel-head">
                                 <span class="rel-ver">1.0.4</span>
                                 <span class="rel-name">Jazz-Handed Octopus</span>
@@ -2909,7 +2912,7 @@
 			sync();
 		</script>
 
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261015-3"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261015-5"></script>
 	<script>
           document.getElementById("releaseHistoryToggle").addEventListener("click", function () {
             const expanded = this.getAttribute("aria-expanded") !== "true";

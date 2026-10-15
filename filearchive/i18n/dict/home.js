@@ -110,7 +110,10 @@ export const pt = {
   "p.ii-windows.title": "ii no Windows",
   "p.ii-windows.tagline":
     "O desktop illogical-impulse do end-4, feito em Quickshell, portado do Hyprland para o Windows 11 e 10.",
-  "p.ii-windows.status": "Versão estável · v1.0.6 — Jazz-Handed Octopus",
+  "p.ii-windows.status": "Versão estável · v1.0.8 — Jazz-Handed Octopus",
+  "p.ii-windows.updateTitle": "Atualizar após uma detecção do Defender",
+  "p.ii-windows.updateNotice": "Se a 1.0.7 sumiu do seu PC: em algumas máquinas com Windows 11, o Microsoft Defender detectou qsw.exe como Trojan:Win32/Bearfoos.A!ml. As notas da release identificam isso como um falso positivo sendo reportado à Microsoft; a 1.0.8 foi testada com o Defender ligado sem detecção. Baixe o instalador mais recente e escolha Atualizar, ou abra Configurações → Apps → Apps instalados → illogical-impulse → Modificar. Suas configurações são preservadas.",
+  "p.ii-windows.updateLink": "Leia o aviso da release",
   "p.ii-windows.d0": "O desktop illogical-impulse do end-4, rodando nativamente no Windows 10 e 11. Seus apps e arquivos continuam onde estão; o ii traz outra barra, barras laterais e widgets ao redor deles.",
   "p.ii-windows.d1": "Busque com a tecla Windows, controle música e notificações pela barra lateral e organize widgets e janelas do seu jeito. As cores acompanham o wallpaper, com dois visuais para escolher.",
   "p.ii-windows.d2": "Portei o Quickshell para Windows com C++/WinRT, Qt e Direct3D 11 e adaptei o ii aos serviços nativos do Windows: desktops virtuais, áudio, notificações, captura de tela e atalhos globais. O design do desktop é do end-4; o backend e a integração com Windows são meu trabalho.",

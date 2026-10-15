@@ -1684,6 +1684,10 @@
         font-size: 0.98rem;
       }
 
+      .project-update-notice { padding: 18px; margin-bottom: 24px; border: 1px solid var(--accent-line); border-radius: 14px; background: var(--accent-soft); }
+      .project-update-notice h4 { margin: 0 0 10px; }
+      .project-update-notice a { color: var(--text); text-underline-offset: 3px; }
+
       .project-detail-heading {
         margin: 22px 0 8px;
         font-size: 1.05rem;
@@ -2648,7 +2652,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261015-4")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261015-5")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -2848,7 +2852,7 @@
             slug: "ii-windows",
             title: "ii on Windows",
             tagline: "end-4's illogical-impulse Quickshell desktop, ported from Hyprland to Windows 11 and 10.",
-            status: "Stable · v1.0.6 — Jazz-Handed Octopus",
+            status: "Stable · v1.0.8 — Jazz-Handed Octopus",
             tags: ["C++", "C++/WinRT", "Qt 6 / QML", "Quickshell"],
             image: "./filearchive/projects/ii-windows/thumb.webp",
             cover: { src: "./apps/illogicalwindows/assets/showcase/desktop.webp", w: 1600, h: 900 },
@@ -2860,6 +2864,7 @@
               "I ported Quickshell to Windows with C++/WinRT, Qt and Direct3D 11, then adapted ii to native Windows services: virtual desktops, audio, notifications, screen capture and global shortcuts. The desktop design is end-4’s; the Windows backend and integration are my work.",
               "Free and open source. One per-user setup installs, updates and removes it. Explore the interactive demo on the product site, or read the release notes on GitHub."
 ],
+            updateNotice: "If 1.0.7 disappeared from your PC: some Windows 11 machines had qsw.exe flagged by Microsoft Defender as Trojan:Win32/Bearfoos.A!ml. The release notes identify this as a false positive being reported to Microsoft; 1.0.8 was tested with Defender enabled without a detection. Download the latest setup and choose Update, or open Settings → Apps → Installed apps → illogical-impulse → Modify. Your settings stay.",
             detailHeadings: ["Your everyday desktop", "The Windows port", "Try it yourself"],
             images: [
               {"src": "./filearchive/projects/ii-windows/shots/frieren-desktop.webp", "w": 1600, "h": 900, "alt": "Desktop widgets, colored from your wallpaper.", "caption": "Desktop widgets, colored from your wallpaper."},
@@ -3707,6 +3712,7 @@
           ${project.links?.length ? `<div class="project-preview-actions"><a class="project-action" href="${escapeHtml(normalizeUrl(project.links[0].href) || "#")}" target="_blank" rel="noopener noreferrer"${i18nAttr(key("link0"))}>${escapeHtml(project.links[0].label)}</a></div>` : ""}
           <div class="project-details" id="details-${escapeHtml(project.slug)}" role="region" aria-label="${escapeHtml(project.title)}" hidden>
             <div class="project-body">
+              ${project.updateNotice ? `<aside class="project-update-notice"><h4${i18nAttr(key("updateTitle"))}>Updating after a Defender detection</h4><p${i18nAttr(key("updateNotice"))}>${escapeHtml(project.updateNotice)}</p><a href="https://github.com/nunreasonable/ii-windows/releases/tag/v1.0.8" target="_blank" rel="noopener noreferrer"${i18nAttr(key("updateLink"))}>Read the release notice</a></aside>` : ""}
               ${paragraphs}
               ${actions ? `<div class="project-actions">${actions}</div>` : ""}
               <button class="project-close" type="button" data-i18n="home.project.close">Close project</button>
@@ -4446,6 +4452,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261015-4"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261015-5"></script>
   </body>
 </html>
