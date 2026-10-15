@@ -1351,7 +1351,7 @@
 
 					<!-- Versao atual: atualizar junto com cada release (VERSION do ii-windows). -->
 					<ul class="facts">
-						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>1.0.2</strong> <span class="rel-name">— Jazz-Handed Octopus</span></li>
+						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>1.0.4</strong> <span class="rel-name">— Jazz-Handed Octopus</span></li>
 						<li data-i18n="iw.hero.requirements">Windows 11, or Windows 10 version 2004+ (22H2 recommended)</li>
 						<li data-i18n="iw.hero.free">Free and open source, GPL-3.0</li>
 					</ul>
@@ -2309,14 +2309,30 @@
 					<ol class="releases" id="release-history">
                         <li>
                             <div class="rel-head">
+                                <span class="rel-ver">1.0.4</span>
+                                <span class="rel-name">Jazz-Handed Octopus</span>
+                                <time datetime="2026-10-15">2026-10-15</time>
+                                <span class="rel-latest" data-i18n="iw.releases.latest">Latest</span>
+                            </div>
+                            <p data-i18n="iw.releases.v104">With Use same wallpaper for both enabled, changing the wallpaper in ii now also updates the Windows lock screen when it is set to Picture. Windows spotlight and slideshow are left alone.</p>
+                        </li>
+                        <li>
+                            <div class="rel-head">
+                                <span class="rel-ver">1.0.3</span>
+                                <span class="rel-name">Jazz-Handed Octopus</span>
+                                <time datetime="2026-10-15">2026-10-15</time>
+                            </div>
+                            <p data-i18n="iw.releases.v103">Fixes text and icons turning into empty boxes or the wrong symbols on PCs with many fonts installed, or with one of ii's fonts also installed in Windows. ii now raises the open-file limit at startup so the font engine can keep loading fonts.</p>
+                        </li>
+                        <li>
+                            <div class="rel-head">
                                 <span class="rel-ver">1.0.2</span>
                                 <span class="rel-name">Jazz-Handed Octopus</span>
                                 <time datetime="2026-10-14">2026-10-14</time>
-                                <span class="rel-latest" data-i18n="iw.releases.latest">Latest</span>
                             </div>
                             <p data-i18n="iw.releases.v102">Opening Settings from the Start menu now opens the same window as the sidebar gear. This fixes Choose file not opening the wallpaper picker and Light/Dark leaving that window unchanged. Settings still opens on its own when ii isn't running.</p>
                         </li>
-                        <li>
+                        <li hidden data-history-release>
                             <div class="rel-head">
                                 <span class="rel-ver">1.0.1</span>
                                 <span class="rel-name">Jazz-Handed Octopus</span>
@@ -2325,7 +2341,7 @@
                             </div>
                             <p data-i18n="iw.releases.v101">Less CPU and memory use: invisible animations and the covered desktop visualizer pause, the stopwatch only updates while visible, and closed panels, deleted AI messages, dismissed notifications and image previews release memory sooner. Fixes the spinning desktop clock, AI chat /save and /load, duplicate pictures in clipboard history, recordings sharing a filename and repeated tiling retries on frozen windows.</p>
                         </li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">1.0.0</span>
 								<span class="rel-name">Jazz-Handed Octopus</span>
@@ -2877,7 +2893,7 @@
 			sync();
 		</script>
 
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261015-1"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261015-2"></script>
 	<script>
           document.getElementById("releaseHistoryToggle").addEventListener("click", function () {
             const expanded = this.getAttribute("aria-expanded") !== "true";

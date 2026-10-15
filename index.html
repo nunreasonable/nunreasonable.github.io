@@ -2635,7 +2635,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261015-1")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261015-2")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -2835,7 +2835,7 @@
             slug: "ii-windows",
             title: "ii on Windows",
             tagline: "end-4's illogical-impulse Quickshell desktop, ported from Hyprland to Windows 11 and 10.",
-            status: "Stable · v1.0.2 — Jazz-Handed Octopus",
+            status: "Stable · v1.0.4 — Jazz-Handed Octopus",
             tags: ["C++", "C++/WinRT", "Qt 6 / QML", "Quickshell"],
             image: "./filearchive/projects/ii-windows/thumb.webp",
             cover: { src: "./filearchive/projects/ii-windows/cover.webp", w: 760, h: 475 },
@@ -2854,7 +2854,7 @@
               "0.6.0 starts much faster on weaker machines: on a VM held to two slow cores and a slow disk the bar shows in about 4 seconds instead of about 43. The Windows key opens a Spotlight search for apps, files, clipboard history, emoji, system actions and the web, Win+Tab the workspaces, and the cheatsheet gets a System tab with CPU, GPU, memory and disks. 0.6.1 brings almost every option into the Settings app, now also in Brazilian Portuguese, and 0.6.2 makes everything faster again: the bar shows in about 2 seconds on that same VM, Settings opens inside ii in under a second and the download is about 45 MB lighter.",
               "0.7.0 lets you choose between ii's original look and the look of pctrade's end4-pC fork, in the setup or any time in Settings, with the same features and options in both. It also starts a little faster, uses about 26 MB less memory after start and is about 25 MB smaller installed.",
               "0.9.0, planned as two releases (0.8.0 and 0.9.0) that ended up shipping as one, is also the first release with a name: “Exploding Baby”. It brings over most of pctrade's end4-pC fork into both looks — a bar you can rearrange with a dynamic island and an optional screen frame, a dock on any screen edge, a dozen desktop widgets, Wallhaven search in the wallpaper picker, a sidebar banner with a media card, dashboard-style settings with presets, and Ctrl+Super+P to swap ii's bar for the Windows taskbar and back — plus Spicy Stuff sources (Konachan, the booru sidebar, Wallhaven) locked until Windows confirms a Microsoft account is 18 or older. Startup is unchanged on the same slow VM, and it's about 195 MB installed (80 MB zip) instead of 185.",
-              "0.10 brings live wallpapers, a video playing behind the desktop icons, and a keybind editor. Then 1.0.0, “Jazz-Handed Octopus”, is the first stable release: the rest of end4-pC in both looks (four more bar styles, a dock with a right-click menu, a Now Playing pill that flies out of the bar), a 10-band equalizer, a System page in Settings for displays, keyboard and mouse, window borders and the apps that start with Windows, and animations that follow your fastest monitor, so a 144 or 200 Hz screen no longer feels like 60. The setup isn't signed yet, so SmartScreen may warn about it. 1.0.1 reduces CPU and memory use and fixes the clock, AI chat saves, clipboard history, recording filenames and tiling retries. 1.0.2 fixes the wallpaper picker and Light/Dark when Settings is opened from the Start menu."
+              "0.10 brings live wallpapers, a video playing behind the desktop icons, and a keybind editor. Then 1.0.0, “Jazz-Handed Octopus”, is the first stable release: the rest of end4-pC in both looks (four more bar styles, a dock with a right-click menu, a Now Playing pill that flies out of the bar), a 10-band equalizer, a System page in Settings for displays, keyboard and mouse, window borders and the apps that start with Windows, and animations that follow your fastest monitor, so a 144 or 200 Hz screen no longer feels like 60. The setup isn't signed yet, so SmartScreen may warn about it. 1.0.1 reduces CPU and memory use and fixes the clock, AI chat saves, clipboard history, recording filenames and tiling retries. 1.0.2 fixes the wallpaper picker and Light/Dark when Settings is opened from the Start menu. 1.0.3 fixes text and icons turning into boxes on PCs with many fonts. 1.0.4 makes the Windows lock screen follow wallpapers chosen in ii when set to Picture, preserving Windows spotlight and slideshow."
             ],
             images: [
               { src: "./filearchive/projects/ii-windows/themed.webp", w: 1600, h: 900, alt: "Windows 11 desktop with the ii bar and clock, colored from an anime wallpaper", caption: "ii's colors taken from the Windows wallpaper; the taskbar only shows up at the bottom edge" },
@@ -4447,6 +4447,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261015-1"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261015-2"></script>
   </body>
 </html>
