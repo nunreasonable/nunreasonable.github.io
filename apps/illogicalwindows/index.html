@@ -1351,7 +1351,7 @@
 
 					<!-- Versao atual: atualizar junto com cada release (VERSION do ii-windows). -->
 					<ul class="facts">
-						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>1.0.0</strong> <span class="rel-name">— Jazz-Handed Octopus</span></li>
+						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>1.0.2</strong> <span class="rel-name">— Jazz-Handed Octopus</span></li>
 						<li data-i18n="iw.hero.requirements">Windows 11, or Windows 10 version 2004+ (22H2 recommended)</li>
 						<li data-i18n="iw.hero.free">Free and open source, GPL-3.0</li>
 					</ul>
@@ -2307,16 +2307,33 @@
 					</header>
 
 					<ol class="releases" id="release-history">
+                        <li>
+                            <div class="rel-head">
+                                <span class="rel-ver">1.0.2</span>
+                                <span class="rel-name">Jazz-Handed Octopus</span>
+                                <time datetime="2026-10-14">2026-10-14</time>
+                                <span class="rel-latest" data-i18n="iw.releases.latest">Latest</span>
+                            </div>
+                            <p data-i18n="iw.releases.v102">Opening Settings from the Start menu now opens the same window as the sidebar gear. This fixes Choose file not opening the wallpaper picker and Light/Dark leaving that window unchanged. Settings still opens on its own when ii isn't running.</p>
+                        </li>
+                        <li>
+                            <div class="rel-head">
+                                <span class="rel-ver">1.0.1</span>
+                                <span class="rel-name">Jazz-Handed Octopus</span>
+                                <time datetime="2026-10-14">2026-10-14</time>
+
+                            </div>
+                            <p data-i18n="iw.releases.v101">Less CPU and memory use: invisible animations and the covered desktop visualizer pause, the stopwatch only updates while visible, and closed panels, deleted AI messages, dismissed notifications and image previews release memory sooner. Fixes the spinning desktop clock, AI chat /save and /load, duplicate pictures in clipboard history, recordings sharing a filename and repeated tiling retries on frozen windows.</p>
+                        </li>
 						<li>
 							<div class="rel-head">
 								<span class="rel-ver">1.0.0</span>
 								<span class="rel-name">Jazz-Handed Octopus</span>
 								<time datetime="2026-10-14">2026-10-14</time>
-								<span class="rel-latest" data-i18n="iw.releases.latest">Latest</span>
 							</div>
 							<p data-i18n="iw.releases.v100">Jazz-Handed Octopus is 1.0: everything from end4-pC in both looks, plus a System page in Settings for displays, keyboard and mouse, window borders and the apps that start with Windows. Animations follow your fastest monitor, so a 144 or 200 Hz screen no longer feels like 60 Hz, and animations nobody can see stop running. Also new: the Now Playing pill, an AI usage tab in the cheatsheet, files attached to Gemini, and the fixes for the monitor crash and the scrambled text.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.10.1-fix3</span>
 								<span class="rel-name">Tahiti Mangosellers</span>
@@ -2324,7 +2341,7 @@
 							</div>
 							<p data-i18n="iw.releases.v0101fix3">The music card on the dock now sits inside the dock, with rounded corners and cover. Applying a preset no longer leaves old pages drawn behind the left sidebar or keeps the previous preset's colors, downloaded presets show their real names, and the minimal Settings style scrolls its side menu instead of spilling out.</p>
 						</li>
-						<li>
+						<li hidden data-history-release>
 							<div class="rel-head">
 								<span class="rel-ver">0.10.1-fix2</span>
 								<span class="rel-name">Tahiti Mangosellers</span>
@@ -2860,7 +2877,7 @@
 			sync();
 		</script>
 
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261014-4"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261015-1"></script>
 	<script>
           document.getElementById("releaseHistoryToggle").addEventListener("click", function () {
             const expanded = this.getAttribute("aria-expanded") !== "true";
