@@ -1684,6 +1684,19 @@
         font-size: 0.98rem;
       }
 
+      .project-detail-heading {
+        margin: 22px 0 8px;
+        font-size: 1.05rem;
+        color: var(--text);
+      }
+
+      #work-ii-windows .project-body > p:first-child {
+        font-size: 1.1rem;
+        color: var(--text);
+      }
+
+      #work-ii-windows .gallery { align-self: start; }
+
       .project-actions {
         display: flex;
         flex-wrap: wrap;
@@ -2635,7 +2648,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261015-3")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261015-4")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -2838,37 +2851,23 @@
             status: "Stable · v1.0.6 — Jazz-Handed Octopus",
             tags: ["C++", "C++/WinRT", "Qt 6 / QML", "Quickshell"],
             image: "./filearchive/projects/ii-windows/thumb.webp",
-            cover: { src: "./filearchive/projects/ii-windows/cover.webp", w: 760, h: 475 },
+            cover: { src: "./apps/illogicalwindows/assets/showcase/desktop.webp", w: 1600, h: 900 },
             thumbWide: true,
             logo: { src: "./filearchive/projects/ii-windows/logo.webp", w: 1000, h: 310, alt: "illogical-impulse for Windows" },
             details: [
-              "illogical-impulse (ii) is end-4's Quickshell desktop shell for Hyprland: the bar, sidebars, overview and widgets. This port gets it running on a real Windows desktop, 11 or 10, and it takes two forks to get there.",
-              "The first is Quickshell itself, with its core made portable and a new native Windows backend. It reserves screen space as an AppBar, draws translucent frameless windows on Direct3D 11, and tracks windows and virtual desktops behind the same Quickshell.Hyprland API that ii already uses. Around that sit global hotkeys (a lone Super press included), Core Audio, media controls, live window capture for the overview previews, a notification server that mirrors Windows toasts, OCR, blur behind panels and a crash handler that writes a minidump and relaunches the shell. Every WinRT service runs on its own multithreaded-apartment thread and posts results back to Qt.",
-              "The second is ii on top: the config's history split out of the dots repository, so upstream changes still merge, with every Linux command mapped to a native API or switched off cleanly. ii takes the Windows wallpaper and builds its Material You palette with matugen, and the same palette themes Windows Terminal: a color scheme, a profile and an Oh My Posh prompt in ii's colors, from a C++ port of ii's terminal color code that matches the Python version bit for bit.",
-              "Tested on the VM so far: the bar, the right sidebar, the overview with live previews, notifications, light and dark mode and the color schemes, the wallpaper picker, region screenshots with OCR, virtual desktops, a taskbar that only shows up at the bottom edge and the keybind cheatsheet, which follows the keyboard layout. All of it is cross-compiled from Linux with clang-cl, xwin and Qt 6.11.",
-              "Version 0.1.0 came out on October 2 with a small GUI setup, written in Rust with Tauri, that downloads the package from the GitHub release, checks its SHA-256 and installs everything for the current user, with no administrator rights needed. The same setup updates, repairs and uninstalls, and uninstalling puts back the wallpaper, light or dark mode, accent color and taskbar setting it found. 0.1.1 went after mouse and keyboard lag on real hardware by moving window events off ii's main thread.",
-              "0.2.0 brings Windows 10 (version 2004 or newer): virtual desktops, blur behind panels and the hover-only taskbar, on any screen edge, work there too, and the setup checks for WebView2 and installs Windows Terminal or winget when they're missing. It also ships the Visual C++ runtime, which 0.1.x needed already installed, and brightness now works on laptop screens, dimming in software on monitors without DDC/CI.",
-              "0.3.0, out on October 5, records the screen with Windows' own capture and H.264 encoder, so FFmpeg isn't needed anymore, adds a system tray to ii's bar that shares Explorer's icons, and moves the wallpaper and widgets inside the Windows desktop, behind the icons. The translator and screen translator, music recognition (SongRec) and LaTeX in the AI chat (a cross-compiled MicroTeX) now work on Windows too. It's merged with Quickshell 0.3.1 and the latest ii from end-4, and the setup now checks GitHub for a newer release every time it opens and updates itself first. 0.3.1 followed the same day with two fixes: the Windows 10 blur no longer shows as a band around the floating bar's rounded ends, and the setup window opens in the free part of the screen instead of under ii's bar.",
-              "0.4.0, released the same evening, adds optional tiling: Hyprland's dwindle layout on top of Windows' own virtual desktops, driven by ii's keybinds, with no extra window manager to install (it's off by default). The screen translator now lays each translated paragraph over the original text, desktop widgets sit next to the icons and can be dragged again, tray icons of apps started before ii respond to clicks, and the classic PowerShell console gets ii's colors and font. It also fixes a crash in the Windows 10 virtual desktop helper, a second copy of ii starting on top of the first, and the bar sometimes losing its reserved space.",
-              "0.5.0, a day later, lets you hold Win and drag to move a window or Win + right drag to resize it, with tiling and across monitors with different scaling. Windows draws the wallpaper again and ii only puts its widgets on the desktop, so changing the wallpaper in Windows recolors ii. The bar shrinks its applets when they don't fit, and there's a media visualizer, a native color picker, weather, game mode and a WARP toggle.",
-              "0.6.0 starts much faster on weaker machines: on a VM held to two slow cores and a slow disk the bar shows in about 4 seconds instead of about 43. The Windows key opens a Spotlight search for apps, files, clipboard history, emoji, system actions and the web, Win+Tab the workspaces, and the cheatsheet gets a System tab with CPU, GPU, memory and disks. 0.6.1 brings almost every option into the Settings app, now also in Brazilian Portuguese, and 0.6.2 makes everything faster again: the bar shows in about 2 seconds on that same VM, Settings opens inside ii in under a second and the download is about 45 MB lighter.",
-              "0.7.0 lets you choose between ii's original look and the look of pctrade's end4-pC fork, in the setup or any time in Settings, with the same features and options in both. It also starts a little faster, uses about 26 MB less memory after start and is about 25 MB smaller installed.",
-              "0.9.0, planned as two releases (0.8.0 and 0.9.0) that ended up shipping as one, is also the first release with a name: “Exploding Baby”. It brings over most of pctrade's end4-pC fork into both looks — a bar you can rearrange with a dynamic island and an optional screen frame, a dock on any screen edge, a dozen desktop widgets, Wallhaven search in the wallpaper picker, a sidebar banner with a media card, dashboard-style settings with presets, and Ctrl+Super+P to swap ii's bar for the Windows taskbar and back — plus Spicy Stuff sources (Konachan, the booru sidebar, Wallhaven) locked until Windows confirms a Microsoft account is 18 or older. Startup is unchanged on the same slow VM, and it's about 195 MB installed (80 MB zip) instead of 185.",
-              "0.10 brings live wallpapers, a video playing behind the desktop icons, and a keybind editor. Then 1.0.0, “Jazz-Handed Octopus”, is the first stable release: the rest of end4-pC in both looks (four more bar styles, a dock with a right-click menu, a Now Playing pill that flies out of the bar), a 10-band equalizer, a System page in Settings for displays, keyboard and mouse, window borders and the apps that start with Windows, and animations that follow your fastest monitor, so a 144 or 200 Hz screen no longer feels like 60. The setup isn't signed yet, so SmartScreen may warn about it. 1.0.1 reduces CPU and memory use and fixes the clock, AI chat saves, clipboard history, recording filenames and tiling retries. 1.0.2 fixes the wallpaper picker and Light/Dark when Settings is opened from the Start menu. 1.0.3 fixes text and icons turning into boxes on PCs with many fonts. 1.0.4 makes the Windows lock screen follow wallpapers chosen in ii when set to Picture, preserving Windows spotlight and slideshow. 1.0.5 fixes updates blocked by open font files. 1.0.6 adds a local diagnostic zip from Settings > About and smoother screenshots and clipboard images, with less memory retained by clipboard text, wallpaper catalogs and LaTeX."
-            ],
+              "end-4’s illogical-impulse desktop, running natively on Windows 10 and 11. Your apps and files stay where they are; ii brings a different bar, sidebars and widgets around them.",
+              "Search with the Windows key, control music and notifications from the sidebar, and arrange widgets and windows your way. Colors follow your wallpaper, with two looks to choose from.",
+              "I ported Quickshell to Windows with C++/WinRT, Qt and Direct3D 11, then adapted ii to native Windows services: virtual desktops, audio, notifications, screen capture and global shortcuts. The desktop design is end-4’s; the Windows backend and integration are my work.",
+              "Free and open source. One per-user setup installs, updates and removes it. Explore the interactive demo on the product site, or read the release notes on GitHub."
+],
+            detailHeadings: ["Your everyday desktop", "The Windows port", "Try it yourself"],
             images: [
-              { src: "./filearchive/projects/ii-windows/themed.webp", w: 1600, h: 900, alt: "Windows 11 desktop with the ii bar and clock, colored from an anime wallpaper", caption: "ii's colors taken from the Windows wallpaper; the taskbar only shows up at the bottom edge" },
-              { src: "./filearchive/projects/ii-windows/system.webp", w: 1600, h: 900, alt: "ii's cheatsheet on the System tab, running on a real PC with an RTX 5060 Ti: host details, CPU, GPU and memory gauges and the drives", caption: "The cheatsheet's System tab on a real PC (Windows 11 26H2, RTX 5060 Ti): CPU, GPU, memory and drives, new in 0.6.0" },
-              { src: "./filearchive/projects/ii-windows/spotlight.webp", w: 900, h: 600, alt: "ii's Spotlight search showing the installed apps with their icons", caption: "Spotlight on the Windows key: apps, files, system actions, emoji and the clipboard, new in 0.6.0" },
-              { src: "./filearchive/projects/ii-windows/tiling.webp", w: 1024, h: 768, alt: "Four Notepad windows arranged by ii's tiling in Hyprland's dwindle layout, under ii's bar", caption: "Optional tiling: Hyprland's dwindle layout on Windows' virtual desktops, new in 0.4.0" },
-              { src: "./filearchive/projects/ii-windows/installer.webp", w: 980, h: 660, alt: "The ii-windows setup's Welcome page, already installed at 0.9.0, with the version and release name in the title bar", caption: "The setup: install, update, repair and uninstall, all per user, and since 0.9.0 the title bar shows the release name too" },
-              { src: "./filearchive/projects/ii-windows/desktop-icons.webp", w: 1024, h: 768, alt: "Windows 10 desktop where ii's wallpaper and clock sit behind the desktop icons", caption: "Windows 10 (0.2.0), with the wallpaper and clock behind the desktop icons (0.3.0)" },
-              { src: "./filearchive/projects/ii-windows/translator.webp", w: 1280, h: 800, alt: "ii's left sidebar translator turning a Portuguese sentence into English", caption: "The translator in the left sidebar, new in 0.3.0" },
-              { src: "./filearchive/projects/ii-windows/terminal.webp", w: 1600, h: 900, alt: "Windows Terminal windows in ii's pink palette with an Oh My Posh prompt", caption: "Windows Terminal themed with ii's colors and an Oh My Posh prompt" },
-              { src: "./filearchive/projects/ii-windows/cheatsheet.webp", w: 1600, h: 900, alt: "ii keybind cheatsheet listing shell, media, window and app shortcuts", caption: "Keybind cheatsheet on Super+/, following the keyboard layout" },
-              { src: "./filearchive/projects/ii-windows/sidebar.webp", w: 1600, h: 900, alt: "ii right sidebar open with quick toggles, notifications and a calendar", caption: "Right sidebar: quick toggles, notifications and calendar" },
-              { src: "./filearchive/projects/ii-windows/overview.webp", w: 1600, h: 900, alt: "ii workspace overview with a search field", caption: "Workspace overview, on Win+Tab since 0.6.0" },
-              { src: "./filearchive/projects/ii-windows/styles.webp", w: 1600, h: 900, alt: "ii's bar with workspace numbers and the end4-pC settings card open over an anime wallpaper", caption: "The end4-pC style, new in 0.7.0: its settings card, workspace numbers and a color picker on the bar" }
+              {"src": "./filearchive/projects/ii-windows/shots/frieren-desktop.webp", "w": 1600, "h": 900, "alt": "Desktop widgets, colored from your wallpaper.", "caption": "Desktop widgets, colored from your wallpaper."},
+              {"src": "./filearchive/projects/ii-windows/shots/tokyo-spotlight.webp", "w": 1600, "h": 900, "alt": "One key for apps, files and quick actions.", "caption": "One key for apps, files and quick actions."},
+              {"src": "./filearchive/projects/ii-windows/shots/frieren-sidebar-right.webp", "w": 1600, "h": 900, "alt": "Music, notifications and quick settings together.", "caption": "Music, notifications and quick settings together."},
+              {"src": "./filearchive/projects/ii-windows/shots/frieren-settings.webp", "w": 1600, "h": 900, "alt": "Two looks, with settings to make them your own.", "caption": "Two looks, with settings to make them your own."},
+              {"src": "./filearchive/projects/ii-windows/shots/glassy-wallpaper-selector.webp", "w": 1600, "h": 900, "alt": "Pick a wallpaper and let the colors follow.", "caption": "Pick a wallpaper and let the colors follow."},
+              {"src": "./filearchive/projects/ii-windows/terminal.webp", "w": 1600, "h": 900, "alt": "Windows Terminal in the same palette.", "caption": "Windows Terminal in the same palette."},
             ],
             links: [
               { label: "Website", href: "https://apps.daeese.me/illogicalwindows/", primary: true },
@@ -3671,7 +3670,7 @@
           .map((tag) => `<li${i18nAttr(`tag.${tag}`)}>${escapeHtml(tag)}</li>`)
           .join("");
         const paragraphs = (project.details || [])
-          .map((text, i) => `<p${i18nAttr(key(`d${i}`))}>${escapeHtml(text)}</p>`)
+          .map((text, i) => `${project.detailHeadings && i > 0 ? `<h4 class="project-detail-heading"${i18nAttr(key(`heading${i - 1}`))}>${escapeHtml(project.detailHeadings[i - 1])}</h4>` : ""}<p${i18nAttr(key(`d${i}`))}>${escapeHtml(text)}</p>`)
           .join("");
         const actions = (project.links || [])
           .map(
@@ -4447,6 +4446,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261015-3"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261015-4"></script>
   </body>
 </html>

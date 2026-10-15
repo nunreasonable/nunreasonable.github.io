@@ -111,61 +111,30 @@ export const pt = {
   "p.ii-windows.tagline":
     "O desktop illogical-impulse do end-4, feito em Quickshell, portado do Hyprland para o Windows 11 e 10.",
   "p.ii-windows.status": "Versão estável · v1.0.6 — Jazz-Handed Octopus",
-  "p.ii-windows.d0":
-    "O illogical-impulse (ii) é o shell de desktop em Quickshell que o end-4 fez para o Hyprland: a barra, as barras laterais, o overview e os widgets. Este port faz ele rodar num desktop de verdade do Windows, 11 ou 10, e chegar lá exige dois forks.",
-  "p.ii-windows.d1":
-    "O primeiro é o próprio Quickshell, com o núcleo tornado portável e um backend nativo novo para Windows. Ele reserva espaço na tela como AppBar, desenha janelas translúcidas sem moldura em Direct3D 11 e acompanha janelas e desktops virtuais por trás da mesma API Quickshell.Hyprland que o ii já usa. Em volta disso ficam atalhos globais (inclusive apertar só a tecla Super), Core Audio, controles de mídia, captura de janelas ao vivo para as prévias do overview, um servidor de notificações que espelha os avisos do Windows, OCR, blur atrás dos painéis e um crash handler que grava um minidump e reabre o shell. Cada serviço WinRT roda na sua própria thread multithreaded apartment e devolve os resultados para o Qt.",
-  "p.ii-windows.d2":
-    "O segundo é o ii por cima: o histórico da config separado do repositório de dotfiles, para as mudanças do upstream continuarem entrando, com cada comando de Linux trocado por uma API nativa ou desligado sem erro. O ii pega o wallpaper do Windows e monta a paleta Material You com o matugen, e a mesma paleta veste o Windows Terminal: esquema de cores, perfil e um prompt do Oh My Posh nas cores do ii, gerados por um port em C++ do código de cores de terminal do ii que bate bit a bit com a versão em Python.",
-  "p.ii-windows.d3":
-    "Já testado na VM: a barra, a barra lateral direita, o overview com prévias ao vivo, as notificações, os modos claro e escuro e os esquemas de cores, o seletor de wallpaper, recortes de tela com OCR, desktops virtuais, uma taskbar que só aparece na borda de baixo e o cheatsheet de atalhos, que segue o layout do teclado. Tudo é compilado a partir do Linux com clang-cl, xwin e Qt 6.11.",
-  "p.ii-windows.d4":
-    "A versão 0.1.0 saiu em 2 de outubro com um instalador gráfico pequeno, feito em Rust com Tauri, que baixa o pacote do release no GitHub, confere o SHA-256 e instala tudo para o usuário atual, sem precisar de administrador. O mesmo instalador atualiza, repara e desinstala, e a desinstalação devolve o wallpaper, o modo claro ou escuro, a cor de destaque e a configuração da taskbar que ele encontrou. A 0.1.1 atacou o travamento de mouse e teclado em hardware de verdade, tirando os eventos de janela da thread principal do ii.",
-  "p.ii-windows.d5":
-    "A 0.2.0 traz o Windows 10 (versão 2004 ou mais nova): desktops virtuais, blur atrás dos painéis e a taskbar que só aparece com o ponteiro, em qualquer borda da tela, funcionam lá também, e o instalador confere o WebView2 e instala o Windows Terminal ou o winget quando faltam. Ela também já vem com o runtime do Visual C++, que a 0.1.x exigia instalado, e o brilho agora funciona na tela de notebooks, escurecendo por software em monitores sem DDC/CI.",
-  "p.ii-windows.d6":
-    "A 0.3.0, de 5 de outubro, grava a tela com a captura e o codificador H.264 do próprio Windows, então o FFmpeg deixou de ser necessário, põe uma bandeja do sistema na barra do ii que divide os ícones com a do Explorer e leva o wallpaper e os widgets para dentro da área de trabalho do Windows, atrás dos ícones. O tradutor e o tradutor de tela, o reconhecimento de música (SongRec) e o LaTeX no chat de IA (um MicroTeX compilado para Windows) agora funcionam no Windows também. Ela está mesclada com o Quickshell 0.3.1 e o ii mais recente do end-4, e o instalador agora procura um release mais novo no GitHub toda vez que abre e se atualiza antes. A 0.3.1 veio no mesmo dia com duas correções: o blur do Windows 10 não aparece mais como uma faixa nas pontas arredondadas da barra flutuante, e a janela do instalador abre na parte livre da tela em vez de embaixo da barra do ii.",
-  "p.ii-windows.d7":
-    "A 0.4.0, lançada na mesma noite, traz tiling opcional: o layout dwindle do Hyprland em cima das áreas de trabalho virtuais do próprio Windows, comandado pelos atalhos do ii, sem nenhum gerenciador de janelas a mais para instalar (vem desligado). O tradutor de tela agora põe cada parágrafo traduzido por cima do texto original, os widgets da área de trabalho ficam junto dos ícones e voltam a poder ser arrastados, os ícones da bandeja de apps abertos antes do ii respondem ao clique e o console clássico do PowerShell ganha as cores e a fonte do ii. Ela também corrige um crash no ajudante de áreas de trabalho virtuais do Windows 10, uma segunda cópia do ii abrindo por cima da primeira e a barra às vezes perdendo o espaço reservado.",
-  "p.ii-windows.d8":
-    "A 0.5.0, um dia depois, deixa segurar Win e arrastar para mover uma janela, ou Win + arrastar com o botão direito para redimensionar, com tiling e entre monitores com escalas diferentes. O Windows volta a desenhar o papel de parede e o ii só põe os widgets dele na área de trabalho, então trocar o papel de parede no Windows recolore o ii. A barra encolhe os applets quando eles não cabem, e chegam um visualizador de mídia, um seletor de cor nativo, clima, game mode e o botão do WARP.",
-  "p.ii-windows.d9":
-    "A 0.6.0 inicia bem mais rápido em máquinas mais fracas: numa VM limitada a dois núcleos lentos e um disco lento, a barra aparece em uns 4 segundos em vez de uns 43. A tecla do Windows abre uma busca Spotlight para apps, arquivos, histórico da área de transferência, emoji, ações do sistema e a web, o Win+Tab abre os workspaces, e o cheatsheet ganha uma aba System com CPU, GPU, memória e discos. A 0.6.1 traz quase todas as opções para o app de Configurações, agora também em português do Brasil, e a 0.6.2 deixa tudo mais rápido de novo: a barra aparece em uns 2 segundos naquela mesma VM, as Configurações abrem dentro do ii em menos de um segundo e o download ficou uns 45 MB mais leve.",
-  "p.ii-windows.d10":
-    "A 0.7.0 deixa escolher entre o visual original do ii e o visual do fork end4-pC do pctrade, no instalador ou quando quiser nas Configurações, com as mesmas funções e opções nos dois. Também inicia um pouco mais rápido, usa uns 26 MB a menos de memória depois de abrir e ocupa uns 25 MB a menos instalado.",
-  "p.ii-windows.d11":
-    "A 0.9.0, planejada como dois releases (0.8.0 e 0.9.0) que acabaram saindo como um só, também é o primeiro release com nome: \"Exploding Baby\". Ela traz a maior parte do fork end4-pC do pctrade para os dois visuais — uma barra que dá pra reorganizar com uma dynamic island e uma moldura de tela opcional, um dock em qualquer borda da tela, uma dezena de widgets de área de trabalho, busca no Wallhaven no seletor de papel de parede, um banner com cartão de mídia na barra lateral, configurações no estilo dashboard com presets, e Ctrl+Super+P pra trocar a barra do ii pela barra de tarefas do Windows e voltar — além de fontes de Spicy Stuff (Konachan, a barra lateral de booru, Wallhaven) travadas até o Windows confirmar que a conta Microsoft tem 18 anos ou mais. O início continua igual na mesma VM lenta, e ocupa uns 195 MB instalado (80 MB em zip) em vez de 185.",
-  "p.ii-windows.d12":
-    "A 0.10 traz papéis de parede animados, um vídeo tocando atrás dos ícones da área de trabalho, e um editor de atalhos. Depois, a 1.0.0, \"Jazz-Handed Octopus\", é a primeira versão estável: o resto do end4-pC nos dois visuais (mais quatro estilos de barra, uma dock com menu no clique direito, uma pílula Now Playing que sai da barra), um equalizador de 10 bandas, uma página Sistema nas Configurações para telas, teclado e mouse, bordas das janelas e os apps que iniciam com o Windows, e animações que seguem o seu monitor mais rápido, então uma tela de 144 ou 200 Hz não parece mais de 60. O instalador ainda não é assinado, então o SmartScreen pode avisar. A 1.0.1 reduz o uso de CPU e memória e corrige o relógio, conversas salvas da IA, histórico da área de transferência, nomes de gravações e tentativas de tiling. A 1.0.2 corrige o seletor de papel de parede e Claro/Escuro nas Configurações abertas pelo Menu Iniciar. A 1.0.3 corrige textos e ícones virando caixinhas em PCs com muitas fontes. A 1.0.4 faz a tela de bloqueio do Windows acompanhar os papéis de parede escolhidos no ii quando está em Imagem, preservando o Destaque do Windows e a apresentação de slides. A 1.0.5 corrige atualizações bloqueadas por arquivos de fontes abertos. A 1.0.6 gera um zip de diagnóstico local em Configurações > Sobre e deixa capturas e imagens da área de transferência mais fluidas, com menos memória retida por textos copiados, catálogos de wallpapers e LaTeX.",
+  "p.ii-windows.d0": "O desktop illogical-impulse do end-4, rodando nativamente no Windows 10 e 11. Seus apps e arquivos continuam onde estão; o ii traz outra barra, barras laterais e widgets ao redor deles.",
+  "p.ii-windows.d1": "Busque com a tecla Windows, controle música e notificações pela barra lateral e organize widgets e janelas do seu jeito. As cores acompanham o wallpaper, com dois visuais para escolher.",
+  "p.ii-windows.d2": "Portei o Quickshell para Windows com C++/WinRT, Qt e Direct3D 11 e adaptei o ii aos serviços nativos do Windows: desktops virtuais, áudio, notificações, captura de tela e atalhos globais. O design do desktop é do end-4; o backend e a integração com Windows são meu trabalho.",
+  "p.ii-windows.d3": "Grátis e de código aberto. Um instalador por usuário instala, atualiza e remove tudo. Explore a demo interativa no site do produto ou leia as notas de versão no GitHub.",
+  "p.ii-windows.heading0": "Seu desktop no dia a dia",
+  "p.ii-windows.heading1": "O port para Windows",
+  "p.ii-windows.heading2": "Experimente",
+  "p.ii-windows.cap0": "Widgets do desktop com as cores do seu wallpaper.",
+  "p.ii-windows.alt0": "Widgets do desktop com as cores do seu wallpaper.",
+  "p.ii-windows.cap1": "Uma tecla para apps, arquivos e ações rápidas.",
+  "p.ii-windows.alt1": "Uma tecla para apps, arquivos e ações rápidas.",
+  "p.ii-windows.cap2": "Música, notificações e controles rápidos juntos.",
+  "p.ii-windows.alt2": "Música, notificações e controles rápidos juntos.",
+  "p.ii-windows.cap3": "Dois visuais com configurações para deixar do seu jeito.",
+  "p.ii-windows.alt3": "Dois visuais com configurações para deixar do seu jeito.",
+  "p.ii-windows.cap4": "Escolha um wallpaper e deixe as cores acompanharem.",
+  "p.ii-windows.alt4": "Escolha um wallpaper e deixe as cores acompanharem.",
+  "p.ii-windows.cap5": "Windows Terminal na mesma paleta.",
+  "p.ii-windows.alt5": "Windows Terminal na mesma paleta.",
   "p.ii-windows.link0": "Site",
   "p.ii-windows.link1": "Baixar o instalador",
   "p.ii-windows.link2": "ii-windows no GitHub",
   "p.ii-windows.link3": "Fork do Quickshell",
   "p.ii-windows.link4": "Fork do ii",
-  "p.ii-windows.cap0": "As cores do ii tiradas do wallpaper do Windows; a taskbar só aparece na borda de baixo",
-  "p.ii-windows.cap1": "A aba System do cheatsheet num PC de verdade (Windows 11 26H2, RTX 5060 Ti): CPU, GPU, memória e discos, novidade da 0.6.0",
-  "p.ii-windows.cap2": "Spotlight na tecla do Windows: apps, arquivos, ações do sistema, emoji e a área de transferência, novidade da 0.6.0",
-  "p.ii-windows.cap3": "Tiling opcional: o layout dwindle do Hyprland nas áreas de trabalho virtuais do Windows, novidade da 0.4.0",
-  "p.ii-windows.cap4": "O instalador: instala, atualiza, repara e desinstala, tudo por usuário, e desde a 0.9.0 a barra de título também mostra o nome do release",
-  "p.ii-windows.cap5": "Windows 10 (0.2.0), com o wallpaper e o relógio atrás dos ícones da área de trabalho (0.3.0)",
-  "p.ii-windows.cap6": "O tradutor na barra lateral esquerda, novidade da 0.3.0",
-  "p.ii-windows.cap7": "Windows Terminal com as cores do ii e um prompt do Oh My Posh",
-  "p.ii-windows.cap8": "Cheatsheet de atalhos no Super+/, seguindo o layout do teclado",
-  "p.ii-windows.cap9": "Barra lateral direita: atalhos rápidos, notificações e calendário",
-  "p.ii-windows.cap10": "Overview dos workspaces, no Win+Tab desde a 0.6.0",
-  "p.ii-windows.alt0": "Desktop do Windows 11 com a barra e o relógio do ii, coloridos a partir de um wallpaper de anime",
-  "p.ii-windows.alt1": "O cheatsheet do ii na aba System, rodando num PC de verdade com uma RTX 5060 Ti: dados do host, medidores de CPU, GPU e memória e os discos",
-  "p.ii-windows.alt2": "A busca Spotlight do ii mostrando os apps instalados com os ícones deles",
-  "p.ii-windows.alt3": "Quatro janelas do Bloco de Notas organizadas pelo tiling do ii no layout dwindle do Hyprland, embaixo da barra do ii",
-  "p.ii-windows.alt4": "A página de boas-vindas do instalador do ii-windows, já instalado na 0.9.0, com a versão e o nome do release na barra de título",
-  "p.ii-windows.alt5": "Área de trabalho do Windows 10 em que o wallpaper e o relógio do ii ficam atrás dos ícones",
-  "p.ii-windows.alt6": "O tradutor da barra lateral esquerda do ii passando uma frase em português para o inglês",
-  "p.ii-windows.alt7": "Janelas do Windows Terminal na paleta rosa do ii com um prompt do Oh My Posh",
-  "p.ii-windows.alt8": "Cheatsheet de atalhos do ii com os atalhos do shell, de mídia, de janelas e de apps",
-  "p.ii-windows.alt9": "Barra lateral direita do ii aberta, com atalhos rápidos, notificações e um calendário",
-  "p.ii-windows.cap11": "O estilo end4-pC, novidade da 0.7.0: o cartão de configurações dele, os números nas áreas de trabalho e o seletor de cor na barra",
-  "p.ii-windows.alt11": "A barra do ii com os números das áreas de trabalho e o cartão de configurações do end4-pC aberto sobre um papel de parede de anime",
-  "p.ii-windows.alt10": "Overview dos workspaces do ii com um campo de busca",
 
   // --- Sollarety -------------------------------------------------------------
   "p.sollarety.tagline": "Um bot de moderação, verificação Roblox, música e diversão para comunidades no Discord.",
