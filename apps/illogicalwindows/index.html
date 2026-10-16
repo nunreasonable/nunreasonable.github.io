@@ -513,25 +513,6 @@
 				align-items: start;
 			}
 
-            .defender-notice {
-                grid-template-columns: minmax(0, 1fr);
-                gap: 14px;
-                padding-bottom: 28px;
-                border-bottom: 1px solid var(--line);
-                margin-bottom: 28px;
-            }
-
-            .defender-notice > * { min-width: 0; }
-            .defender-notice pre {
-                margin: 0;
-                padding: 16px;
-                border: 1px solid var(--line);
-                border-radius: 10px;
-                background: var(--surface);
-                white-space: pre-wrap;
-                overflow-wrap: anywhere;
-            }
-
 			.notice-mark {
 				grid-row: span 3;
 				width: 28px;
@@ -1375,7 +1356,7 @@
 						<li data-i18n="iw.hero.free">Free and open source, GPL-3.0</li>
 					</ul>
 					<p class="hero-note" id="hero-note" data-i18n="iw.hero.note">
-						The setup (about 7.8 MB) isn't signed yet, so SmartScreen may warn about it: choose More info, then Run anyway.
+						The 1.0.8 setup (about 7.8 MB) is unsigned, so SmartScreen may warn about it: choose More info, then Run anyway.
 					</p>
 				</div>
 
@@ -1398,9 +1379,7 @@
 
 			<!-- ================= Aviso: nao oficial ================= -->
 			<div class="notice-band">
-				<aside class="wrap notice defender-notice" aria-labelledby="defender-title"><h2 id="defender-title" data-i18n="iw.defender.title">Microsoft Defender: review status</h2><p data-i18n="iw.defender.status">Microsoft reviewed 1.0.7 and removed its malware detection. Version 1.0.8 is still under review. If Defender removed ii, download the setup and choose Update to restore it while keeping your settings.</p><p data-i18n="iw.defender.steps">To refresh Defender’s definitions immediately, open Command Prompt as administrator, go to C:\Program Files\Windows Defender and run these commands in order. Microsoft documents this procedure for clearing dynamic signatures and fetching the latest definitions; it does not mean the 1.0.8 review is complete.</p><pre style="overflow-x:auto"><code>MpCmdRun.exe -removedefinitions -dynamicsignatures
-MpCmdRun.exe -SignatureUpdate</code></pre><a href="https://www.microsoft.com/en-us/wdsi/defenderupdates" target="_blank" rel="noopener noreferrer" data-i18n="iw.defender.source">Microsoft’s instructions</a></aside>
-<aside class="wrap notice" aria-labelledby="notice-title">
+				<aside class="wrap notice" aria-labelledby="notice-title">
 					<span class="notice-mark" aria-hidden="true">i</span>
 					<h2 id="notice-title" data-i18n="iw.notice.title">Unofficial and not affiliated with Microsoft</h2>
 					<p data-i18n="iw.notice.body">
@@ -2272,7 +2251,23 @@ MpCmdRun.exe -SignatureUpdate</code></pre><a href="https://www.microsoft.com/en-
 			</section>
 
 			<!-- ================= O que muda no PC ================= -->
-			<section class="section" id="changes">
+			<section class="section" id="code-signing">
+<div class="wrap">
+<header class="section-head"><h2 data-i18n="iw.signing.title">Code signing policy</h2></header>
+<div class="card">
+<p data-i18n="iw.signing.scope">Starting with 1.1.0, qs.exe, qsw.exe and ii-windows-setup.exe in releases will be signed. The current 1.0.8 release is unsigned; 1.1.0 has not been released yet.</p>
+<p><span data-i18n="iw.signing.creditBefore">Free code signing provided by</span> <a href="https://about.signpath.io">SignPath.io</a>, <span data-i18n="iw.signing.creditAfter">certificate by</span> <a href="https://signpath.org">SignPath Foundation</a>.</p>
+<p data-i18n="iw.signing.build">GitHub Actions builds these binaries from the source revisions pinned in sources.lock. Every signing request is approved manually. Third-party components retain their own signatures or remain unsigned.</p>
+<ul>
+<li><span data-i18n="iw.signing.reviewers">Committers and reviewers:</span> <a href="https://github.com/nunreasonable">nunreasonable</a></li>
+<li><span data-i18n="iw.signing.approvers">Approvers:</span> <a href="https://github.com/nunreasonable">nunreasonable</a></li>
+<li><a href="https://github.com/nunreasonable/ii-windows/blob/main/PRIVACY.md" data-i18n="iw.signing.privacy">Privacy policy</a></li>
+<li><a href="https://github.com/nunreasonable/ii-windows#code-signing-policy" data-i18n="iw.signing.repo">Code signing policy on GitHub</a></li>
+</ul>
+</div>
+</div>
+</section>
+<section class="section" id="changes">
 				<div class="wrap">
 					<header class="section-head">
 						<h2 data-i18n="iw.changes.title">What changes on my PC</h2>
@@ -2932,7 +2927,7 @@ MpCmdRun.exe -SignatureUpdate</code></pre><a href="https://www.microsoft.com/en-
 			sync();
 		</script>
 
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261016-2"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261016-3"></script>
 	<script>
           document.getElementById("releaseHistoryToggle").addEventListener("click", function () {
             const expanded = this.getAttribute("aria-expanded") !== "true";

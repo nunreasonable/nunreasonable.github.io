@@ -2649,7 +2649,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261016-2")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261016-3")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -2859,10 +2859,8 @@
               "end-4’s illogical-impulse desktop, running natively on Windows 10 and 11. Your apps and files stay where they are; ii brings a different bar, sidebars and widgets around them.",
               "Search with the Windows key, control music and notifications from the sidebar, and arrange widgets and windows your way. Colors follow your wallpaper, with two looks to choose from.",
               "I ported Quickshell to Windows with C++/WinRT, Qt and Direct3D 11, then adapted ii to native Windows services: virtual desktops, audio, notifications, screen capture and global shortcuts. The desktop design is end-4’s; the Windows backend and integration are my work.",
-              "Free and open source. One per-user setup installs, updates and removes it. Explore the interactive demo on the product site, or read the release notes on GitHub."
+              "Free and open source. One per-user setup installs, updates and removes it. Explore the interactive demo on the product site, or read the release notes on GitHub. Starting with 1.1.0, releases will use free code signing from SignPath.io with a certificate from SignPath Foundation. 1.0.8 is still the current, unsigned release."
 ],
-            defenderNotice: "Microsoft reviewed 1.0.7 and removed its malware detection. Version 1.0.8 is still under review. If Defender removed ii, download the setup and choose Update to restore it while keeping your settings.",
-            defenderSteps: "To refresh Defender’s definitions immediately, open Command Prompt as administrator, go to C:\\Program Files\\Windows Defender and run these commands in order. Microsoft documents this procedure for clearing dynamic signatures and fetching the latest definitions; it does not mean the 1.0.8 review is complete.",
             detailHeadings: ["Your everyday desktop", "The Windows port", "Try it yourself"],
             images: [
               {"src": "./filearchive/projects/ii-windows/shots/frieren-desktop.webp", "w": 1600, "h": 900, "alt": "Desktop widgets, colored from your wallpaper.", "caption": "Desktop widgets, colored from your wallpaper."},
@@ -2877,7 +2875,8 @@
               { label: "Download the setup", href: "https://github.com/nunreasonable/ii-windows/releases/latest" },
               { label: "ii-windows on GitHub", href: "https://github.com/nunreasonable/ii-windows" },
               { label: "Quickshell fork", href: "https://github.com/nunreasonable/quickshell/tree/windows" },
-              { label: "ii fork", href: "https://github.com/nunreasonable/dots-hyprland/tree/ii-windows" }
+              { label: "ii fork", href: "https://github.com/nunreasonable/dots-hyprland/tree/ii-windows" },
+              { label: "Code signing policy", href: "https://apps.daeese.me/illogicalwindows/#code-signing" }
             ]
           },
           {
@@ -3710,8 +3709,6 @@
           ${project.links?.length ? `<div class="project-preview-actions"><a class="project-action" href="${escapeHtml(normalizeUrl(project.links[0].href) || "#")}" target="_blank" rel="noopener noreferrer"${i18nAttr(key("link0"))}>${escapeHtml(project.links[0].label)}</a></div>` : ""}
           <div class="project-details" id="details-${escapeHtml(project.slug)}" role="region" aria-label="${escapeHtml(project.title)}" hidden>
             <div class="project-body">
-              ${project.defenderNotice ? `<aside style="padding:18px;margin-bottom:24px;border:1px solid var(--accent-line);border-radius:14px"><h4${i18nAttr(key("defenderTitle"))}>Microsoft Defender: review status</h4><p${i18nAttr(key("defenderStatus"))}>${escapeHtml(project.defenderNotice)}</p><p${i18nAttr(key("defenderSteps"))}>${escapeHtml(project.defenderSteps)}</p><pre style="overflow-x:auto"><code>MpCmdRun.exe -removedefinitions -dynamicsignatures
-MpCmdRun.exe -SignatureUpdate</code></pre><a href="https://www.microsoft.com/en-us/wdsi/defenderupdates" target="_blank" rel="noopener noreferrer"${i18nAttr(key("defenderSource"))}>Microsoft’s instructions</a></aside>` : ""}
               ${paragraphs}
               ${actions ? `<div class="project-actions">${actions}</div>` : ""}
               <button class="project-close" type="button" data-i18n="home.project.close">Close project</button>
@@ -4451,6 +4448,6 @@ MpCmdRun.exe -SignatureUpdate</code></pre><a href="https://www.microsoft.com/en-
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261016-2"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261016-3"></script>
   </body>
 </html>

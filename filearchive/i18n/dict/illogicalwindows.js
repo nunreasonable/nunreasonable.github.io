@@ -13,6 +13,16 @@
  * Quickshell, Tauri...) ficam em ingles, como no original.
  */
 export const pt = {
+  "iw.signing.title": "Política de assinatura de código (Code signing policy)",
+  "iw.signing.scope": "A partir da 1.1.0, qs.exe, qsw.exe e ii-windows-setup.exe das releases serão assinados. A versão atual, 1.0.8, não é assinada; a 1.1.0 ainda não foi lançada.",
+  "iw.signing.creditBefore": "Assinatura de código gratuita fornecida por",
+  "iw.signing.creditAfter": "certificado por",
+  "iw.signing.build": "O GitHub Actions compila esses binários a partir das revisões de código fixadas em sources.lock. Cada pedido de assinatura é aprovado manualmente. Componentes de terceiros mantêm suas próprias assinaturas ou permanecem sem assinatura.",
+  "iw.signing.reviewers": "Committers e revisores:",
+  "iw.signing.approvers": "Aprovadores:",
+  "iw.signing.privacy": "Política de privacidade",
+  "iw.signing.repo": "Política de assinatura de código no GitHub",
+
   "iw.show.nav.tour": "Conheça",
   "iw.show.nav.play": "Experimente",
   "iw.show.hero.a": "Seu desktop.",
@@ -63,7 +73,7 @@ export const pt = {
   "iw.hero.versionLabel": "Versão",
   "iw.hero.requirements": "Windows 11, ou Windows 10 versão 2004 ou mais recente (22H2 recomendado)",
   "iw.hero.free": "Grátis e de código aberto, GPL-3.0",
-  "iw.hero.note": "O instalador (cerca de 7,8 MB) ainda não é assinado, então o SmartScreen pode avisar sobre ele: escolha Mais informações e depois Executar assim mesmo.",
+  "iw.hero.note": "O instalador da 1.0.8 (cerca de 7,8 MB) não é assinado, então o SmartScreen pode avisar sobre ele: escolha Mais informações e depois Executar assim mesmo.",
   "iw.hero.shotAlt": "Área de trabalho do Windows rodando o ii sobre um papel de parede verde suave, com widgets de relógio, notas, clima, recursos e relógios mundiais",
   "iw.hero.shotCaption": "Widgets na área de trabalho e a barra no topo, tudo com as cores do papel de parede; a barra de tarefas do Windows só aparece na borda de baixo.",
   "iw.notice.title": "Não oficial e sem vínculo com a Microsoft",
@@ -288,10 +298,6 @@ export const pt = {
   "iw.releases.namingNote": "A partir de agora, todo release ganha um nome. Os anteriores são Sem nome.",
   "iw.releases.latest": "Mais recente",
   "iw.releases.unnamed": "Sem nome",
-  "iw.defender.title": "Microsoft Defender: estado da revisão",
-  "iw.defender.status": "A Microsoft revisou a 1.0.7 e removeu a detecção de malware. A versão 1.0.8 ainda está em revisão. Se o Defender removeu o ii, baixe o instalador e escolha Atualizar para restaurá-lo preservando suas configurações.",
-  "iw.defender.steps": "Para atualizar as definições do Defender imediatamente, abra o Prompt de Comando como administrador, vá para C:\\Program Files\\Windows Defender e execute os comandos abaixo, nesta ordem. A Microsoft documenta esse procedimento para limpar as assinaturas dinâmicas e buscar as definições mais recentes; isso não significa que a revisão da 1.0.8 terminou.",
-  "iw.defender.source": "Instruções da Microsoft",
   "iw.releases.v108": "A Microsoft revisou a 1.0.7 e removeu a detecção de malware. A versão 1.0.8 ainda está em revisão. Se o Defender removeu o ii, baixe o instalador e escolha Atualizar para restaurá-lo preservando suas configurações. A janela do Spotlight agora cobre só a busca e os resultados, para apps de wallpaper animado não confundirem a busca com um app em tela cheia.",
   "iw.releases.v107": "Corrige transições de wallpaper mostrando a imagem antiga ampliada, deslocada ou dividida e Relatar um problema escolhendo um log vazio de um processo auxiliar. Desinstalar agora preserva configurações e dados por padrão; apagar exige marcar Também excluir minhas configurações e dados. O instalador só se atualiza na primeira página e nunca durante a desinstalação. Reparar e atualizar no Windows 10 não instalam winget sem selecionar a opção.",
   "iw.releases.v106": "Relate um problema em Configurações > Sobre: o ii cria um zip no Desktop com logs e informações do sistema, remove seu nome de usuário dos caminhos e abre uma nova issue para você anexar o arquivo. Nada é enviado automaticamente; dumps de crash são opcionais. Capturas e imagens do histórico da área de transferência não travam mais o shell enquanto são salvas ou decodificadas. Textos longos ficam em disco, catálogos de wallpapers online são liberados ao fechar a aba e o LaTeX renderizado tem cache limitado, reutilizado após reiniciar.",
