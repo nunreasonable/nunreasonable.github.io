@@ -513,6 +513,25 @@
 				align-items: start;
 			}
 
+            .defender-notice {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 14px;
+                padding-bottom: 28px;
+                border-bottom: 1px solid var(--line);
+                margin-bottom: 28px;
+            }
+
+            .defender-notice > * { min-width: 0; }
+            .defender-notice pre {
+                margin: 0;
+                padding: 16px;
+                border: 1px solid var(--line);
+                border-radius: 10px;
+                background: var(--surface);
+                white-space: pre-wrap;
+                overflow-wrap: anywhere;
+            }
+
 			.notice-mark {
 				grid-row: span 3;
 				width: 28px;
@@ -1379,7 +1398,7 @@
 
 			<!-- ================= Aviso: nao oficial ================= -->
 			<div class="notice-band">
-				<aside class="wrap notice" aria-labelledby="defender-title"><h2 id="defender-title" data-i18n="iw.defender.title">Microsoft Defender: review status</h2><p data-i18n="iw.defender.status">Microsoft reviewed 1.0.7 and removed its malware detection. Version 1.0.8 is still under review. If Defender removed ii, download the setup and choose Update to restore it while keeping your settings.</p><p data-i18n="iw.defender.steps">To refresh Defender’s definitions immediately, open Command Prompt as administrator, go to C:\Program Files\Windows Defender and run these commands in order. Microsoft documents this procedure for clearing dynamic signatures and fetching the latest definitions; it does not mean the 1.0.8 review is complete.</p><pre style="overflow-x:auto"><code>MpCmdRun.exe -removedefinitions -dynamicsignatures
+				<aside class="wrap notice defender-notice" aria-labelledby="defender-title"><h2 id="defender-title" data-i18n="iw.defender.title">Microsoft Defender: review status</h2><p data-i18n="iw.defender.status">Microsoft reviewed 1.0.7 and removed its malware detection. Version 1.0.8 is still under review. If Defender removed ii, download the setup and choose Update to restore it while keeping your settings.</p><p data-i18n="iw.defender.steps">To refresh Defender’s definitions immediately, open Command Prompt as administrator, go to C:\Program Files\Windows Defender and run these commands in order. Microsoft documents this procedure for clearing dynamic signatures and fetching the latest definitions; it does not mean the 1.0.8 review is complete.</p><pre style="overflow-x:auto"><code>MpCmdRun.exe -removedefinitions -dynamicsignatures
 MpCmdRun.exe -SignatureUpdate</code></pre><a href="https://www.microsoft.com/en-us/wdsi/defenderupdates" target="_blank" rel="noopener noreferrer" data-i18n="iw.defender.source">Microsoft’s instructions</a></aside>
 <aside class="wrap notice" aria-labelledby="notice-title">
 					<span class="notice-mark" aria-hidden="true">i</span>
