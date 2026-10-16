@@ -508,13 +508,19 @@
 
 			.notice {
 				display: grid;
-				grid-template-columns: auto 1fr;
+				grid-template-columns: 28px minmax(0, 1fr);
 				gap: 6px 16px;
 				align-items: start;
 			}
 
+            .notice > :not(.notice-mark) {
+                grid-column: 2;
+                min-width: 0;
+            }
+
 			.notice-mark {
-				grid-row: span 3;
+                grid-column: 1;
+				grid-row: 1;
 				width: 28px;
 				height: 28px;
 				border-radius: 50%;
@@ -543,6 +549,8 @@
 				.notice {
 					grid-template-columns: 1fr;
 				}
+
+                .notice > :not(.notice-mark) { grid-column: 1; }
 
 				.notice-mark {
 					grid-row: auto;
