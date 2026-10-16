@@ -13,6 +13,8 @@
  * Quickshell, Tauri...) ficam em ingles, como no original.
  */
 export const pt = {
+  "iw.support.discord": "Thread de suporte do ii-windows no Discord",
+  "iw.support.context": "— uma thread dedicada no servidor original do ii no Discord, para este fork independente de Windows.",
   "iw.signing.title": "Política de assinatura de código (Code signing policy)",
   "iw.signing.scope": "A partir da 1.1.0, qs.exe, qsw.exe e ii-windows-setup.exe das releases serão assinados. A versão atual, 1.0.8, não é assinada; a 1.1.0 ainda não foi lançada.",
   "iw.signing.creditBefore": "Assinatura de código gratuita fornecida por",
@@ -80,7 +82,7 @@ export const pt = {
   "iw.notice.body": "II for Windows é um port independente feito pela comunidade. Não é feito, endossado nem apoiado pela Microsoft, pelo end-4 ou pelos desenvolvedores do Quickshell. Windows é uma marca registrada do grupo de empresas Microsoft.",
   "iw.notice.issuesBefore": "Encontrou um problema no Windows? Por favor, relate",
   "iw.notice.issuesLink": "no issue tracker deste projeto",
-  "iw.notice.issuesAfter": ", não no projeto original.",
+  "iw.notice.issuesAfter": ". Use os canais deste fork em vez do suporte geral do projeto original.",
   "iw.learn.title": "Explicado de dois jeitos",
   "iw.learn.lead": "Escolha o que fizer mais sentido pra você. Pode trocar quando quiser.",
   "iw.learn.tablistLabel": "Escolher uma explicação",
@@ -113,7 +115,7 @@ export const pt = {
   "iw.b.know.experimental": "A maioria das coisas é testada no Windows 10 e 11, em máquinas virtuais e em hardware de verdade, mas algumas poucas ainda não foram testadas em todo tipo de computador, como bateria de notebook e brilho da tela.",
   "iw.b.know.keys": "Alguns atalhos de teclado mudam enquanto ele está rodando. Apertar só a tecla Windows abre a busca do ii em vez do menu Iniciar. Aperte a tecla Windows e / juntas para ver a lista completa.",
   "iw.b.know.smartscreen": "Na primeira vez que você abrir o instalador, o Windows pode mostrar uma caixa azul dizendo “O Windows protegeu seu PC”. Isso é porque o instalador ainda não é assinado. Clique em Mais informações e depois em Executar assim mesmo, mas só se você baixou ele desta página ou do GitHub do projeto.",
-  "iw.b.know.help": "Alguma coisa quebrou? Avise o projeto no GitHub. Por favor não pergunte pro end-4 ou pra Microsoft sobre isso: eles não fazem este port.",
+  "iw.b.know.help": "Precisa de ajuda? Use as issues deste fork no GitHub ou a thread dedicada no servidor original do ii no Discord, com link acima. O port para Windows continua independente do end-4 e da Microsoft.",
   "iw.a.title": "A versão técnica",
   "iw.a.lead": "Dois forks, um backend nativo do Windows por trás das APIs que o ii já usa, e um instalador por usuário. Tudo aqui vem da própria documentação do projeto.",
   "iw.a.arch.title": "Arquitetura",

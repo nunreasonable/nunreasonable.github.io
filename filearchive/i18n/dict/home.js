@@ -114,7 +114,7 @@ export const pt = {
   "p.ii-windows.d0": "O desktop illogical-impulse do end-4, rodando nativamente no Windows 10 e 11. Seus apps e arquivos continuam onde estão; o ii traz outra barra, barras laterais e widgets ao redor deles.",
   "p.ii-windows.d1": "Busque com a tecla Windows, controle música e notificações pela barra lateral e organize widgets e janelas do seu jeito. As cores acompanham o wallpaper, com dois visuais para escolher.",
   "p.ii-windows.d2": "Portei o Quickshell para Windows com C++/WinRT, Qt e Direct3D 11 e adaptei o ii aos serviços nativos do Windows: desktops virtuais, áudio, notificações, captura de tela e atalhos globais. O design do desktop é do end-4; o backend e a integração com Windows são meu trabalho.",
-  "p.ii-windows.d3": "Grátis e de código aberto. Um instalador por usuário instala, atualiza e remove tudo. Explore a demo interativa no site do produto ou leia as notas de versão no GitHub. A partir da 1.1.0, as releases terão assinatura de código gratuita por SignPath.io, com certificado da SignPath Foundation. A 1.0.8 continua sendo a versão atual, sem assinatura.",
+  "p.ii-windows.d3": "Grátis e de código aberto. Um instalador por usuário instala, atualiza e remove tudo. Explore a demo interativa no site do produto ou leia as notas de versão no GitHub. Este fork também tem suporte em uma thread dedicada no servidor original do ii no Discord. A partir da 1.1.0, as releases terão assinatura de código gratuita por SignPath.io, com certificado da SignPath Foundation. A 1.0.8 continua sendo a versão atual, sem assinatura.",
   "p.ii-windows.heading0": "Seu desktop no dia a dia",
   "p.ii-windows.heading1": "O port para Windows",
   "p.ii-windows.heading2": "Experimente",
@@ -134,6 +134,7 @@ export const pt = {
   "p.ii-windows.link1": "Baixar o instalador",
   "p.ii-windows.link2": "ii-windows no GitHub",
   "p.ii-windows.link3": "Fork do Quickshell",
+  "p.ii-windows.link6": "Thread de suporte · Discord original do ii",
   "p.ii-windows.link5": "Política de assinatura de código",
   "p.ii-windows.link4": "Fork do ii",
 

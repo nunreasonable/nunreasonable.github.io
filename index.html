@@ -2649,7 +2649,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261016-3")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261016-4")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -2859,7 +2859,7 @@
               "end-4’s illogical-impulse desktop, running natively on Windows 10 and 11. Your apps and files stay where they are; ii brings a different bar, sidebars and widgets around them.",
               "Search with the Windows key, control music and notifications from the sidebar, and arrange widgets and windows your way. Colors follow your wallpaper, with two looks to choose from.",
               "I ported Quickshell to Windows with C++/WinRT, Qt and Direct3D 11, then adapted ii to native Windows services: virtual desktops, audio, notifications, screen capture and global shortcuts. The desktop design is end-4’s; the Windows backend and integration are my work.",
-              "Free and open source. One per-user setup installs, updates and removes it. Explore the interactive demo on the product site, or read the release notes on GitHub. Starting with 1.1.0, releases will use free code signing from SignPath.io with a certificate from SignPath Foundation. 1.0.8 is still the current, unsigned release."
+              "Free and open source. One per-user setup installs, updates and removes it. Explore the interactive demo on the product site, or read the release notes on GitHub. Support for this fork is also available in a dedicated thread in the original ii Discord server. Starting with 1.1.0, releases will use free code signing from SignPath.io with a certificate from SignPath Foundation. 1.0.8 is still the current, unsigned release."
 ],
             detailHeadings: ["Your everyday desktop", "The Windows port", "Try it yourself"],
             images: [
@@ -2876,7 +2876,8 @@
               { label: "ii-windows on GitHub", href: "https://github.com/nunreasonable/ii-windows" },
               { label: "Quickshell fork", href: "https://github.com/nunreasonable/quickshell/tree/windows" },
               { label: "ii fork", href: "https://github.com/nunreasonable/dots-hyprland/tree/ii-windows" },
-              { label: "Code signing policy", href: "https://apps.daeese.me/illogicalwindows/#code-signing" }
+              { label: "Code signing policy", href: "https://apps.daeese.me/illogicalwindows/#code-signing" },
+              {"label": "Support thread \u00b7 original ii Discord", "href": "https://discord.com/channels/1393080422245863506/1560371137123188738"}
             ]
           },
           {
@@ -4448,6 +4449,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261016-3"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261016-4"></script>
   </body>
 </html>
