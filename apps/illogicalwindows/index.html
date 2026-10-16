@@ -1379,7 +1379,9 @@
 
 			<!-- ================= Aviso: nao oficial ================= -->
 			<div class="notice-band">
-				<aside class="wrap notice" aria-labelledby="notice-title">
+				<aside class="wrap notice" aria-labelledby="defender-title"><h2 id="defender-title" data-i18n="iw.defender.title">Microsoft Defender: review status</h2><p data-i18n="iw.defender.status">Microsoft reviewed 1.0.7 and removed its malware detection. Version 1.0.8 is still under review. If Defender removed ii, download the setup and choose Update to restore it while keeping your settings.</p><p data-i18n="iw.defender.steps">To refresh Defender’s definitions immediately, open Command Prompt as administrator, go to C:\Program Files\Windows Defender and run these commands in order. Microsoft documents this procedure for clearing dynamic signatures and fetching the latest definitions; it does not mean the 1.0.8 review is complete.</p><pre style="overflow-x:auto"><code>MpCmdRun.exe -removedefinitions -dynamicsignatures
+MpCmdRun.exe -SignatureUpdate</code></pre><a href="https://www.microsoft.com/en-us/wdsi/defenderupdates" target="_blank" rel="noopener noreferrer" data-i18n="iw.defender.source">Microsoft’s instructions</a></aside>
+<aside class="wrap notice" aria-labelledby="notice-title">
 					<span class="notice-mark" aria-hidden="true">i</span>
 					<h2 id="notice-title" data-i18n="iw.notice.title">Unofficial and not affiliated with Microsoft</h2>
 					<p data-i18n="iw.notice.body">
@@ -2307,7 +2309,7 @@
 					</header>
 
 					<ol class="releases" id="release-history">
-<li><div class="rel-head"><span class="rel-ver">1.0.8</span><span class="rel-name">Jazz-Handed Octopus</span><time datetime="2026-10-15">2026-10-15</time><span class="rel-latest" data-i18n="iw.releases.latest">Latest</span></div><p data-i18n="iw.releases.v108">Microsoft Defender incorrectly flagged the 1.0.7 qsw.exe as Trojan:Win32/Bearfoos.A!ml; Microsoft has removed the detection. If ii was removed, download the latest setup and choose Update to restore it while keeping your settings. Spotlight now uses a window sized to its search box and results, so live wallpaper apps no longer mistake it for a fullscreen app.</p></li>
+<li><div class="rel-head"><span class="rel-ver">1.0.8</span><span class="rel-name">Jazz-Handed Octopus</span><time datetime="2026-10-15">2026-10-15</time><span class="rel-latest" data-i18n="iw.releases.latest">Latest</span></div><p data-i18n="iw.releases.v108">Microsoft reviewed 1.0.7 and removed its malware detection. Version 1.0.8 is still under review. If Defender removed ii, download the setup and choose Update to restore it while keeping your settings. Spotlight now uses a window sized to its search box and results, so live wallpaper apps no longer mistake it for a fullscreen app.</p></li>
 <li><div class="rel-head"><span class="rel-ver">1.0.7</span><span class="rel-name">Jazz-Handed Octopus</span><time datetime="2026-10-15">2026-10-15</time></div><p data-i18n="iw.releases.v107">Fixes wallpaper transitions showing the old picture zoomed, shifted or split, and Report a problem selecting an empty helper log. Uninstall now keeps settings and data by default; deletion requires Also delete my settings and data. The setup only updates itself on its first page and never during uninstall. Repair and update on Windows 10 no longer install winget unless selected.</p></li>
 
                         <li>
@@ -2911,7 +2913,7 @@
 			sync();
 		</script>
 
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261016-1"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261016-2"></script>
 	<script>
           document.getElementById("releaseHistoryToggle").addEventListener("click", function () {
             const expanded = this.getAttribute("aria-expanded") !== "true";
