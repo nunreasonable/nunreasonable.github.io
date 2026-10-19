@@ -3,15 +3,13 @@ export const pt = {
   "ginrose.eyebrow": "ROBLOX NO LINUX",
   "ginrose.lead": "Um jeito simples de entrar no Roblox pelo Linux.",
   "ginrose.intro": "Um launcher feito sobre o Rosemary. Baixa o cliente oficial de Roblox para macOS, mantém ele atualizado e abre no seu desktop Linux.",
-  "ginrose.download": "Baixar para Linux ↗",
   "ginrose.readDocs": "Ler a documentação ↓",
   "ginrose.platform": "Linux x86_64 · Software proprietário · Flathub em breve",
   "ginrose.experimental": "Experimental. Leia antes de instalar.",
   "ginrose.warning": "O Ginrose só foi testado no Fedora com Hyprland e GPU NVIDIA. Outras distribuições, desktops e GPUs não foram testados. O Rosemary e o Roblox rodando por ele também são experimentais. Não há garantia de suporte ou correções.",
   "ginrose.install": "Instalar",
-  "ginrose.requirements": "A distribuição pelo Flathub está sendo preparada. Até ficar disponível, baixe a build publicada nas Releases do GitHub.",
+  "ginrose.requirements": "A distribuição pelo Flathub está sendo preparada. O repositório do Ginrose é privado e ainda não há download público disponível nesta página.",
   "ginrose.installResult": "O Flatpak incluirá a build do Rosemary do Ginrose. Na primeira execução, a configuração inicial baixa o cliente oficial do Roblox.",
-  "ginrose.inspect": "Downloads e informações de instalação ↗",
   "ginrose.rosemary": "Rosemary no Flatpak",
   "ginrose.official": "O Flatpak incluirá a build do Rosemary do Ginrose, com entrada de microfone para chat de voz e copiar e colar com Ctrl. O Rosemary é um componente separado, de código aberto, licenciado sob GPL-3.0.",
   "ginrose.withRosemary": "Se outro app abrir os links do Roblox, selecione o Ginrose como responsável depois de instalar:",
@@ -25,9 +23,7 @@ export const pt = {
   "ginrose.usage": "Depois de instalar",
   "ginrose.features": "Abra o Ginrose pelo menu de apps ou use os botões Play do roblox.com. O launcher tem perfis gráficos por jogo, limite de quadros e FastFlags da lista permitida. O Discord Rich Presence funciona com o app do Discord aberto.",
   "ginrose.client": "O Roblox é baixado diretamente do Roblox. O Ginrose não aplica patches no cliente nem injeta código; grava as configurações locais em ClientAppSettings.json.",
-  "ginrose.fullDocs": "Documentação completa e problemas no GitHub ↗",
   "ginrose.disclaimer": "Ginrose é software proprietário. Rosemary é GPL-3.0. Sem vínculo com a Roblox Corporation.",
   "ginrose.documentation": "Documentação",
-  "ginrose.closed": "O Ginrose agora é de código fechado. As builds publicadas continuam disponíveis para baixar e usar sob sua licença proprietária.",
-  "ginrose.license": "Leia a licença do Ginrose ↗"
+  "ginrose.closed": "Ginrose é software proprietário de código fechado. Seu repositório e os arquivos das releases são privados. A distribuição pública pelo Flathub está chegando."
 };
