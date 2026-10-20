@@ -2651,7 +2651,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261017-1")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261019-1")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -2881,6 +2881,21 @@
               { label: "ii fork", href: "https://github.com/nunreasonable/dots-hyprland/tree/ii-windows" },
               { label: "Code signing policy", href: "https://apps.daeese.me/illogicalwindows/#code-signing" },
               {"label": "Support thread \u00b7 original ii Discord", "href": "https://discord.com/channels/1393080422245863506/1560371137123188738"}
+            ]
+          },
+          {
+            slug: "ginrose",
+            title: "Ginrose",
+            tagline: "The official macOS Roblox client on Linux, powered by Rosemary.",
+            status: "Flatpak available · Flathub coming soon",
+            tags: ["Rust", "Linux", "Flatpak"],
+            image: "./apps/ginrose/assets/ginrose.webp",
+            details: [
+              "Ginrose downloads the official Roblox client directly from Roblox and runs it on Linux through Rosemary. It includes per-game graphics profiles, frame caps and Discord Rich Presence.",
+              "Available as a Flatpak for x86_64 Linux. Ginrose is proprietary software; Rosemary is a separate GPL-3.0 component. The website has downloads, installation instructions and commands."
+            ],
+            links: [
+              { label: "Website & download", href: "https://apps.daeese.me/ginrose/", primary: true }
             ]
           },
           {
@@ -4453,6 +4468,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261017-1"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261019-1"></script>
   </body>
 </html>
