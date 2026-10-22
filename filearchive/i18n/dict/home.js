@@ -18,9 +18,9 @@
  */
 export const pt = {
   "p.ginrose.tagline": "O cliente oficial de Roblox para macOS no Linux, com Rosemary.",
-  "p.ginrose.status": "Flatpak disponível · Flathub em breve",
+  "p.ginrose.status": "Flatpak v0.2.2 · Rosemary 0.4.0",
   "p.ginrose.d0": "O Ginrose baixa o cliente oficial diretamente do Roblox e roda no Linux pelo Rosemary. Inclui perfis gráficos por jogo, limite de quadros e Discord Rich Presence.",
-  "p.ginrose.d1": "Disponível como Flatpak para Linux x86_64. Ginrose é software proprietário; Rosemary é um componente separado sob GPL-3.0. O site reúne download, instruções de instalação e comandos.",
+  "p.ginrose.d1": "A versão 0.2.2 traz o Rosemary 0.4.0 e uma correção para o cursor ao trocar de janela. Disponível como Flatpak para Linux x86_64. Ginrose é software proprietário; Rosemary é um componente separado sob GPL-3.0. O site reúne download, instruções de instalação e comandos.",
   "p.ginrose.link0": "Site e download",
   "home.enter": "Entrar no site",
   "home.viewProjects": "Explorar projetos",
