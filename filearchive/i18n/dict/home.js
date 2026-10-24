@@ -112,15 +112,15 @@ export const pt = {
   "p.blood-oath.alt2": "Mapa desenhado à mão de Recife e Olinda em 1898",
 
   // --- ii on Windows 11 ---------------------------------------------------
-  "p.ii-windows.title": "ii no Windows",
+  "p.ii-windows.title": "Illogical Windows",
   "p.ii-windows.tagline":
     "O desktop illogical-impulse do end-4, feito em Quickshell, portado do Hyprland para o Windows 11 e 10.",
   "p.ii-windows.defenderResponse": "A Microsoft não conseguiu reproduzir uma detecção no qsw.exe da 1.0.8. A análise continua em andamento; se a detecção persistir, a Microsoft solicita logs de suporte do PC afetado para continuar investigando.",
-  "p.ii-windows.status": "Versão estável · v1.0.8 — Jazz-Handed Octopus",
+  "p.ii-windows.status": "26.1.1.0 unstable · Estável: 1.0.8",
   "p.ii-windows.d0": "O desktop illogical-impulse do end-4, rodando nativamente no Windows 10 e 11. Seus apps e arquivos continuam onde estão; o ii traz outra barra, barras laterais e widgets ao redor deles.",
   "p.ii-windows.d1": "Busque com a tecla Windows, controle música e notificações pela barra lateral e organize widgets e janelas do seu jeito. As cores acompanham o wallpaper, com dois visuais para escolher.",
   "p.ii-windows.d2": "Portei o Quickshell para Windows com C++/WinRT, Qt e Direct3D 11 e adaptei o ii aos serviços nativos do Windows: desktops virtuais, áudio, notificações, captura de tela e atalhos globais. O design do desktop é do end-4; o backend e a integração com Windows são meu trabalho.",
-  "p.ii-windows.d3": "Grátis e de código aberto. Um instalador por usuário instala, atualiza e remove tudo. Explore a demo interativa no site do produto ou leia as notas de versão no GitHub. Este fork também tem suporte em uma thread dedicada no servidor original do ii no Discord. A partir da 26.1.1.0, as releases terão assinatura de código gratuita por SignPath.io, com certificado da SignPath Foundation. A 1.0.8 continua sendo a versão atual, sem assinatura.",
+  "p.ii-windows.d3": "Grátis e de código aberto. Um instalador por usuário instala, atualiza e remove tudo. Explore a demo interativa no site do produto ou leia as notas de versão no GitHub. Este fork também tem suporte em uma thread dedicada no servidor original do ii no Discord. A partir da versão final da 26.1.1.0, as releases terão assinatura de código gratuita por SignPath.io, com certificado da SignPath Foundation. A preview 26.1.1.0 unstable já está disponível, ainda sem assinatura; a assinatura começa na versão final. A estável continua sendo a 1.0.8. A preview traz tiling Scrolling, estilo NabyScape, claro/escuro automático, eventos de calendário e ARM64 nativo experimental.",
   "p.ii-windows.heading0": "Seu desktop no dia a dia",
   "p.ii-windows.heading1": "O port para Windows",
   "p.ii-windows.heading2": "Experimente",
