@@ -18,9 +18,9 @@
  */
 export const pt = {
   "p.ginrose.tagline": "O cliente oficial de Roblox para macOS no Linux, com Rosemary.",
-  "p.ginrose.status": "Flatpak v0.2.2 · Rosemary 0.4.0",
+  "p.ginrose.status": "Flatpak v0.2.6 · Rosemary 0.4.1",
   "p.ginrose.d0": "O Ginrose baixa o cliente oficial diretamente do Roblox e roda no Linux pelo Rosemary. Inclui perfis gráficos por jogo, limite de quadros e Discord Rich Presence.",
-  "p.ginrose.d1": "A versão 0.2.2 traz o Rosemary 0.4.0 e uma correção para o cursor ao trocar de janela. Disponível como Flatpak para Linux x86_64. Ginrose é software proprietário; Rosemary é um componente separado sob GPL-3.0. O site reúne download, instruções de instalação e comandos.",
+  "p.ginrose.d1": "A versão 0.2.6 reproduz vídeos nas experiências com som e decodificação de vídeo na GPU pelo FFmpeg 8. Inclui Rosemary 0.4.1 e correções para reabrir o Roblox. O Ginrose agora é livre e de código aberto sob GPL-3.0 ou posterior, com builds oficiais em Flatpak para Linux x86_64. O site reúne download, instalação e links do fonte.",
   "p.ginrose.link0": "Site e download",
   "home.enter": "Entrar no site",
   "home.viewProjects": "Explorar projetos",
@@ -137,7 +137,7 @@ export const pt = {
   "p.ii-windows.cap5": "Windows Terminal na mesma paleta.",
   "p.ii-windows.alt5": "Windows Terminal na mesma paleta.",
   "p.ii-windows.link0": "Site",
-  "p.ii-windows.link1": "Baixar o instalador",
+  "p.ii-windows.link1": "Baixar preview unstable",
   "p.ii-windows.link2": "ii-windows no GitHub",
   "p.ii-windows.link3": "Fork do Quickshell",
   "p.ii-windows.link6": "Thread de suporte · Discord original do ii",

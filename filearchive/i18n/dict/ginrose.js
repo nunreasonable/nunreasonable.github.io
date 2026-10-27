@@ -1,4 +1,9 @@
 export const pt = {
+  "ginrose.source": "Código-fonte ↗",
+  "ginrose.release023": "0.2.3 · 23 de outubro de 2026 — Atualizado para o Rosemary 0.4.1, mantendo a correção de sincronização do cursor.",
+  "ginrose.release024": "0.2.4 · 24 de outubro de 2026 — O Roblox volta a abrir mesmo quando a execução anterior ainda está fechando. O Ginrose encerra os processos auxiliares antes de reabrir.",
+  "ginrose.release025": "0.2.5 · 24 de outubro de 2026 — Evitou crashes em experiências com vídeo, antes da chegada da decodificação na 0.2.6.",
+  "ginrose.release026": "0.2.6 · 24 de outubro de 2026 — Vídeos nas experiências agora reproduzem imagem e som. O FFmpeg 8 decodifica H.264 na GPU e áudio AAC na CPU. O Flatpak usa a extensão de codecs do runtime; sem FFmpeg utilizável, o vídeo fica em branco em vez de causar um crash.",
   "ginrose.news": "Últimas atualizações",
   "ginrose.release022": "0.2.2 · 22 de outubro de 2026 — Atualizado para o Rosemary 0.4.0, com uma correção que mantém o cursor sincronizado ao trocar de janela.",
   "ginrose.release021": "0.2.1 · 20 de outubro de 2026 — Passou a usar o Rosemary upstream, com entrada de microfone e copiar e colar com Ctrl.",
@@ -11,14 +16,14 @@ export const pt = {
   "ginrose.lead": "Um jeito simples de entrar no Roblox pelo Linux.",
   "ginrose.intro": "Um launcher feito sobre o Rosemary. Baixa o cliente oficial de Roblox para macOS, mantém ele atualizado e abre no seu desktop Linux.",
   "ginrose.readDocs": "Ler a documentação ↓",
-  "ginrose.platform": "Linux x86_64 · Flatpak v0.2.2 · Flathub em breve",
+  "ginrose.platform": "Linux x86_64 · Flatpak v0.2.6 · GPL-3.0 ou posterior",
   "ginrose.experimental": "Experimental. Leia antes de instalar.",
   "ginrose.warning": "O Ginrose só foi testado no Fedora com Hyprland e GPU NVIDIA. Outras distribuições, desktops e GPUs não foram testados. O Rosemary e o Roblox rodando por ele também são experimentais. Não há garantia de suporte ou correções.",
   "ginrose.install": "Instalar",
   "ginrose.requirements": "Você precisa do Flatpak e de um computador x86_64. Baixe me.daeese.apps.ginrose.flatpak e SHA256SUMS da release mais recente e execute estes comandos na pasta do download:",
   "ginrose.installResult": "O Flatpak inclui a build do Rosemary do Ginrose. Na primeira execução, a configuração inicial baixa o cliente oficial do Roblox. Para atualizar o Ginrose, baixe e instale o Flatpak mais recente novamente; o comando update abaixo atualiza apenas o Roblox.",
   "ginrose.rosemary": "Rosemary no Flatpak",
-  "ginrose.official": "O Flatpak inclui o Rosemary 0.4.0 com uma correção que mantém o cursor sincronizado ao trocar de janela. A entrada de microfone para chat de voz e copiar e colar com Ctrl agora vêm do Rosemary upstream. O Rosemary é um componente separado, de código aberto, licenciado sob GPL-3.0.",
+  "ginrose.official": "O Flatpak inclui o Rosemary 0.4.1 com correções adicionais para o cursor, a reabertura do Roblox e a reprodução de vídeo. Entrada de microfone e copiar e colar com Ctrl vêm do Rosemary upstream. O Rosemary é um componente separado sob GPL-3.0.",
   "ginrose.withRosemary": "Se outro app abrir os links do Roblox, selecione o Ginrose como responsável depois de instalar:",
   "ginrose.commands": "Comandos",
   "ginrose.command0": "Abra o launcher; a configuração inicial aparece na primeira execução.",
@@ -30,7 +35,7 @@ export const pt = {
   "ginrose.usage": "Depois de instalar",
   "ginrose.features": "Abra o Ginrose pelo menu de apps ou use os botões Play do roblox.com. O launcher tem perfis gráficos por jogo, limite de quadros e FastFlags da lista permitida. O Discord Rich Presence funciona com o app do Discord aberto.",
   "ginrose.client": "O Roblox é baixado diretamente do Roblox. O Ginrose não aplica patches no cliente nem injeta código; grava apenas configurações locais da lista permitida em ClientAppSettings.json.",
-  "ginrose.disclaimer": "Ginrose é software proprietário. Rosemary é GPL-3.0. Sem vínculo com a Roblox Corporation.",
+  "ginrose.disclaimer": "Ginrose é GPL-3.0 ou posterior. Rosemary é GPL-3.0. Sem vínculo com a Roblox Corporation.",
   "ginrose.documentation": "Documentação",
-  "ginrose.closed": "Ginrose é software proprietário de código fechado. O Flatpak está disponível para download no GitHub; a distribuição pelo Flathub está chegando."
+  "ginrose.closed": "Ginrose é software livre e de código aberto sob GPL-3.0 ou posterior. As builds oficiais em Flatpak estão disponíveis no GitHub. Versões modificadas devem usar outro nome; o nome Ginrose, o logo e o ID do aplicativo seguem a política de marcas do projeto."
 };
