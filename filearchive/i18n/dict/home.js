@@ -17,10 +17,10 @@
  * por diante. Reordenar as imagens la exige reordenar aqui.
  */
 export const pt = {
-  "p.ginrose.tagline": "O cliente oficial de Roblox para macOS no Linux, com Rosemary.",
+  "p.ginrose.tagline": "Um launcher comunitário de código aberto para o cliente oficial do Roblox para macOS no Linux.",
   "p.ginrose.status": "Flatpak v0.2.6 · Rosemary 0.4.1",
-  "p.ginrose.d0": "O Ginrose baixa o cliente oficial diretamente do Roblox e roda no Linux pelo Rosemary. Inclui perfis gráficos por jogo, limite de quadros e Discord Rich Presence.",
-  "p.ginrose.d1": "A versão 0.2.6 reproduz vídeos nas experiências com som e decodificação de vídeo na GPU pelo FFmpeg 8. Inclui Rosemary 0.4.1 e correções para reabrir o Roblox. O Ginrose agora é livre e de código aberto sob GPL-3.0 ou posterior, com builds oficiais em Flatpak para Linux x86_64. O site reúne download, instalação e links do fonte.",
+  "p.ginrose.d0": "O Ginrose é um launcher independente da comunidade, sem vínculo nem endosso da Roblox Corporation. Baixa o cliente oficial do Roblox para macOS diretamente da Roblox e o executa no Linux pelo Rosemary. Inclui perfis gráficos por jogo, limite de quadros e Discord Rich Presence.",
+  "p.ginrose.d1": "A versão 0.2.6 reproduz vídeos nas experiências com som e decodificação de vídeo na GPU pelo FFmpeg 8. Inclui Rosemary 0.4.1 e correções para reabrir o Roblox. O Ginrose agora é livre e de código aberto sob GPL-3.0 ou posterior, com builds em Flatpak publicadas pelo projeto Ginrose para Linux x86_64. O site reúne download, instalação e links do fonte.",
   "p.ginrose.link0": "Site e download",
   "home.enter": "Entrar no site",
   "home.viewProjects": "Explorar projetos",

@@ -13,8 +13,8 @@ export const pt = {
   "ginrose.integrity": "Antes de cada execução, o Ginrose verifica a assinatura e os arquivos do cliente Roblox, além dos arquivos de sistema do Rosemary. Clientes modificados são recusados. Se a verificação de integridade falhar, use o comando repair para restaurar arquivos limpos e tente novamente.",
   "ginrose.docs": "Documentação",
   "ginrose.eyebrow": "ROBLOX NO LINUX",
-  "ginrose.lead": "Um jeito simples de entrar no Roblox pelo Linux.",
-  "ginrose.intro": "Um launcher feito sobre o Rosemary. Baixa o cliente oficial de Roblox para macOS, mantém ele atualizado e abre no seu desktop Linux.",
+  "ginrose.lead": "Um launcher comunitário de código aberto para o cliente oficial do Roblox para macOS.",
+  "ginrose.intro": "O Ginrose é um projeto independente da comunidade, não um launcher oficial da Roblox. Feito sobre o Rosemary, baixa o cliente oficial do Roblox para macOS e o executa no Linux. Não tem vínculo nem endosso da Roblox Corporation.",
   "ginrose.readDocs": "Ler a documentação ↓",
   "ginrose.platform": "Linux x86_64 · Flatpak v0.2.6 · GPL-3.0 ou posterior",
   "ginrose.experimental": "Experimental. Leia antes de instalar.",
@@ -35,7 +35,7 @@ export const pt = {
   "ginrose.usage": "Depois de instalar",
   "ginrose.features": "Abra o Ginrose pelo menu de apps ou use os botões Play do roblox.com. O launcher tem perfis gráficos por jogo, limite de quadros e FastFlags da lista permitida. O Discord Rich Presence funciona com o app do Discord aberto.",
   "ginrose.client": "O Roblox é baixado diretamente do Roblox. O Ginrose não aplica patches no cliente nem injeta código; grava apenas configurações locais da lista permitida em ClientAppSettings.json.",
-  "ginrose.disclaimer": "Ginrose é GPL-3.0 ou posterior. Rosemary é GPL-3.0. Sem vínculo com a Roblox Corporation.",
+  "ginrose.disclaimer": "Ginrose é um launcher independente da comunidade, sem vínculo nem endosso da Roblox Corporation. Ginrose é GPL-3.0 ou posterior; Rosemary é GPL-3.0.",
   "ginrose.documentation": "Documentação",
-  "ginrose.closed": "Ginrose é software livre e de código aberto sob GPL-3.0 ou posterior. As builds oficiais em Flatpak estão disponíveis no GitHub. Versões modificadas devem usar outro nome; o nome Ginrose, o logo e o ID do aplicativo seguem a política de marcas do projeto."
+  "ginrose.closed": "Ginrose é software livre e de código aberto sob GPL-3.0 ou posterior. As builds em Flatpak publicadas pelo projeto Ginrose estão disponíveis no GitHub. Versões modificadas devem usar outro nome; o nome Ginrose, o logo e o ID do aplicativo seguem a política de marcas do projeto."
 };
