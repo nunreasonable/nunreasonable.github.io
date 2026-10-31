@@ -24,7 +24,7 @@ import { PRESETS, wallpaperUrl, drawThumb, presetTones, demoScheme, pageScheme, 
 const html = document.documentElement;
 const reduce = matchMedia("(prefers-reduced-motion: reduce)");
 const darkQuery = matchMedia("(prefers-color-scheme: dark)");
-const WALL_KEY = "iw:wall";
+const WALL_KEY = "iw:wall:green";
 
 let cleanups = [];
 let desktop = null;
@@ -57,9 +57,9 @@ function setupPalette(area) {
 	const walls = document.querySelectorAll(".demo-wall");
 	const swatches = area.querySelector(".demo-swatches");
 	const fileInput = area.querySelector(".demo-upload input");
-	let tones = presetTones("rose");
+	let tones = presetTones("moss");
 	let demoDark = true;
-	let current = "rose";
+	let current = "moss";
 	let userUrl = null;
 
 	function applyTones() {
@@ -68,7 +68,7 @@ function setupPalette(area) {
 			stage.style.setProperty(k, d[k]);
 		}
 		stage.classList.toggle("is-light", !demoDark);
-		if (current === "rose" && !userUrl) {
+		if (current === "moss" && !userUrl) {
 			PAGE_KEYS.forEach((k) => html.style.removeProperty(k));
 			return;
 		}
@@ -160,7 +160,7 @@ function setupPalette(area) {
 	on(darkQuery, "change", applyTones);
 
 	const saved = readWall();
-	choose(PRESETS.some((p) => p.id === saved) ? saved : "rose", false);
+	choose(PRESETS.some((p) => p.id === saved) ? saved : "moss", false);
 
 	return {
 		setDark(dark) {

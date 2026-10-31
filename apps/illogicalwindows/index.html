@@ -28,13 +28,13 @@
 		<meta name="twitter:description" content="end-4's illogical-impulse desktop, running natively on Windows 11 and Windows 10. Unofficial, free and open source." />
 		<meta name="twitter:image" content="https://daeese.me/filearchive/projects/ii-windows/banner.webp" />
 
-		<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png" />
-		<link rel="icon" type="image/png" sizes="180x180" href="assets/icon-180.png" />
-		<link rel="apple-touch-icon" href="assets/icon-180.png" />
+		<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png?v=20261031" />
+		<link rel="icon" type="image/png" sizes="180x180" href="assets/icon-180.png?v=20261031" />
+		<link rel="apple-touch-icon" href="assets/icon-180.png?v=20261031" />
 
 		<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
-		<link rel="stylesheet" href="rich/rich.css?v=20261014-4" />
-        <link rel="stylesheet" href="rich/showcase.css?v=20261014-4" />
+		<link rel="stylesheet" href="rich/rich.css?v=20261031-1" />
+        <link rel="stylesheet" href="rich/showcase.css?v=20261031-1" />
 		<script src="../../filearchive/perf/lite.js"></script>
 
 		<script>
@@ -90,15 +90,15 @@
 				--bg: #0e1013;
 				--bg-alt: #13161a;
 				--surface: #171a1f;
-				--surface-tint: #25161e;
+				--surface-tint: #142420;
 				--line: rgba(255, 255, 255, 0.08);
 				--line-strong: rgba(255, 255, 255, 0.16);
 				--text: #eceff3;
 				--muted: #9ba4af;
-				--accent: #e160a1;
-				--accent-ink: #e970ad;
-				--accent-soft: rgba(225, 96, 161, 0.12);
-				--on-accent: #280818;
+				--accent: #4fd8b5;
+				--accent-ink: #5fe0bf;
+				--accent-soft: rgba(79, 216, 181, 0.12);
+				--on-accent: #04261d;
 				--header-bg: rgba(14, 16, 19, 0.94);
 				--shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.3);
 				--shadow-lg: 0 2px 6px rgba(0, 0, 0, 0.35), 0 30px 70px rgba(0, 0, 0, 0.5);
@@ -1308,7 +1308,7 @@
 		<header class="site-header">
 			<div class="wrap header-inner">
 				<a class="brand" href="#top" aria-label="Illogical Windows" data-i18n-attr="aria-label:iw.brand">
-					<img src="assets/icon.webp" width="28" height="28" alt="" />
+					<img src="assets/icon.webp?v=20261031" width="28" height="28" alt="" />
 					<span data-i18n="iw.brand">Illogical Windows</span>
 				</a>
 				<nav class="nav" aria-label="Sections" data-i18n-attr="aria-label:iw.nav.label">
@@ -1331,7 +1331,7 @@
 			<!-- ================= Hero ================= -->
 			<section class="hero" id="top">
 				<div class="wrap">
-					<img class="hero-icon" src="assets/icon.webp" width="84" height="84" alt="" />
+					<img class="hero-icon" src="assets/icon.webp?v=20261031" width="84" height="84" alt="" />
 					<p class="eyebrow" data-i18n="iw.hero.eyebrow">Unofficial port · Unstable preview</p>
 					<h1 data-i18n="iw.hero.title">Illogical Windows</h1>
                     <h2 class="launch-title rich-only"><span data-i18n="iw.show.hero.a">Your desktop.</span><span data-i18n="iw.show.hero.b">Entirely your own.</span></h2>
@@ -1441,7 +1441,7 @@
 							<div class="demo-icons"><i></i><i></i><i></i></div>
 						</div>
 						<div class="demo-bar">
-							<button type="button" class="demo-bar-btn demo-bar-search" data-act="win" aria-label="Search" data-i18n-attr="aria-label:iw.demo.searchBtn"><img src="assets/icon.webp" width="16" height="16" alt="" /></button>
+							<button type="button" class="demo-bar-btn demo-bar-search" data-act="win" aria-label="Search" data-i18n-attr="aria-label:iw.demo.searchBtn"><img src="assets/icon.webp?v=20261031" width="16" height="16" alt="" /></button>
 							<div class="demo-ws" role="group" aria-label="Workspaces" data-i18n-attr="aria-label:iw.demo.wsLabel">
 								<button type="button" data-ws="0" class="on" aria-pressed="true">1</button><button type="button" data-ws="1" aria-pressed="false">2</button><button type="button" data-ws="2" aria-pressed="false">3</button>
 							</div>
@@ -1517,9 +1517,9 @@
 					<div class="demo-walls">
 						<span class="demo-walls-label" id="demo-walls-label" data-i18n="iw.demo.walls">Wallpaper</span>
 						<div class="demo-swatches" role="radiogroup" aria-labelledby="demo-walls-label">
-						<button type="button" role="radio" aria-checked="true" data-wall="rose" aria-label="Rose" data-i18n-attr="aria-label:iw.demo.wall.rose" title="Rose"><canvas aria-hidden="true"></canvas></button>
+						<button type="button" role="radio" aria-checked="false" data-wall="rose" aria-label="Rose" data-i18n-attr="aria-label:iw.demo.wall.rose" title="Rose"><canvas aria-hidden="true"></canvas></button>
 						<button type="button" role="radio" aria-checked="false" data-wall="lagoon" aria-label="Lagoon" data-i18n-attr="aria-label:iw.demo.wall.lagoon" title="Lagoon"><canvas aria-hidden="true"></canvas></button>
-						<button type="button" role="radio" aria-checked="false" data-wall="moss" aria-label="Moss" data-i18n-attr="aria-label:iw.demo.wall.moss" title="Moss"><canvas aria-hidden="true"></canvas></button>
+						<button type="button" role="radio" aria-checked="true" data-wall="moss" aria-label="Moss" data-i18n-attr="aria-label:iw.demo.wall.moss" title="Moss"><canvas aria-hidden="true"></canvas></button>
 						<button type="button" role="radio" aria-checked="false" data-wall="ember" aria-label="Ember" data-i18n-attr="aria-label:iw.demo.wall.ember" title="Ember"><canvas aria-hidden="true"></canvas></button>
 						<button type="button" role="radio" aria-checked="false" data-wall="dusk" aria-label="Dusk" data-i18n-attr="aria-label:iw.demo.wall.dusk" title="Dusk"><canvas aria-hidden="true"></canvas></button>
 						</div>
@@ -2913,7 +2913,7 @@
 				if (rich) {
 					root.classList.add("rich");
 					try {
-						mod = mod || (await import("./rich/rich.js?v=20261014-4"));
+						mod = mod || (await import("./rich/rich.js?v=20261031-1"));
                         if (current !== revision || (lite && lite.on)) return;
 						mod.start();
 						// Mede o fps com os efeitos rodando (lite.js, data-lite-watch).

@@ -26,22 +26,22 @@
 @property --accent {
 	syntax: "<color>";
 	inherits: true;
-	initial-value: #e4509a;
+	initial-value: #3ddbb0;
 }
 @property --accent-ink {
 	syntax: "<color>";
 	inherits: true;
-	initial-value: #82174d;
+	initial-value: #0b7d64;
 }
 @property --accent-soft {
 	syntax: "<color>";
 	inherits: true;
-	initial-value: rgba(228, 80, 154, 0.14);
+	initial-value: rgba(61, 219, 176, 0.14);
 }
 @property --on-accent {
 	syntax: "<color>";
 	inherits: true;
-	initial-value: #2c0719;
+	initial-value: #032a20;
 }
 
 .rich-ready {
@@ -133,19 +133,19 @@
 }
 
 .demo {
-	--d-primary: #ffb0cf;
-	--d-on-primary: #63003b;
-	--d-primary-container: #8c0056;
-	--d-on-primary-container: #ffd9e5;
-	--d-secondary-container: #5a3f49;
-	--d-on-secondary-container: #fed9e5;
-	--d-surface: #171214;
+	--d-primary: #b0ffe7;
+	--d-on-primary: #006345;
+	--d-primary-container: #008c62;
+	--d-on-primary-container: #d9fff4;
+	--d-secondary-container: #3f5a52;
+	--d-on-secondary-container: #d9fef3;
+	--d-surface: #121716;
 	--d-surface-low: #201a1c;
 	--d-surface-mid: #241e20;
 	--d-surface-high: #2e282a;
 	--d-surface-top: #393335;
-	--d-on-surface: #ebe0e2;
-	--d-on-surface-variant: #d5c2c7;
+	--d-on-surface: #e0ebe8;
+	--d-on-surface-variant: #c2d5cf;
 	--d-outline: #9d8c91;
 	--d-outline-variant: #504348;
 	--bar-h: 2.3em;
@@ -155,7 +155,7 @@
 	overflow: hidden;
 	isolation: isolate;
 	border-radius: 18px;
-	background: #120d10;
+	background: #0d1210;
 	box-shadow: var(--shadow-lg);
 	color: var(--d-on-surface);
 	font-size: clamp(10px, 1.32cqi, 14.5px);
@@ -204,7 +204,7 @@
 	position: absolute;
 	inset: 0;
 	z-index: 0;
-	background: #1a0b14 center / cover no-repeat;
+	background: #0b1a16 center / cover no-repeat;
 	transition: opacity 0.5s ease;
 }
 
