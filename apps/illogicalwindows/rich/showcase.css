@@ -128,3 +128,6 @@
   .launch-desktop, .launch-panel, .journey-visual img { transform: none; }
   .rich-ready .journey-scene { opacity: 1; transform: none; transition: none; }
 }
+
+/* Recolore somente as capturas rosas da apresentacao, sem animar o filtro. */
+img[data-showcase-src] { filter: hue-rotate(200deg); }

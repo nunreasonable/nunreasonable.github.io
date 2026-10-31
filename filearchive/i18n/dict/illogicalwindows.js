@@ -35,7 +35,7 @@ export const pt = {
   "iw.show.hero.a": "Seu desktop.",
   "iw.show.hero.b": "Do seu jeito.",
   "iw.show.desktopLabel": "Desktop do ii no Windows",
-  "iw.show.desktopAlt": "Desktop do ii com relógio, calendário, timers e widgets de recursos numa paleta rosa",
+  "iw.show.desktopAlt": "Desktop do ii com relógio, calendário, timers e widgets de recursos numa paleta verde teal",
   "iw.show.tour": "Role para descobrir",
   "iw.show.eyebrow": "Um novo jeito de viver o dia a dia",
   "iw.show.journeyTitle": "Conheça o desktop",
