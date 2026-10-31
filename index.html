@@ -2653,7 +2653,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261030-1")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261031-1")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -2898,6 +2898,21 @@
             ],
             links: [
               { label: "Website & download", href: "https://apps.daeese.me/ginrose/", primary: true }
+            ]
+          },
+          {
+            slug: "ginrose-studio",
+            title: "Ginrose Studio",
+            tagline: "A community open-source launcher for the official Roblox Studio macOS app on Linux.",
+            status: "Flatpak v0.3.0 · Rosemary 0.5.0",
+            tags: ["Rust", "Linux", "Flatpak"],
+            image: "./apps/ginrose-studio/assets/ginrose-studio.webp?v=20261031-1",
+            details: [
+              "Ginrose Studio is an independent community launcher, not affiliated with or endorsed by Roblox Corporation. Built from the same source as Ginrose, it downloads the official Roblox Studio for macOS directly from Roblox and runs it on Linux through Rosemary.",
+              "It is a development tool, so it is permissive: any FastFlag, any environment variable for Rosemary, extra launch arguments and a Rosemary binary of your choice. Logging in, opening places, Team Create and dragging models work; it is still experimental."
+            ],
+            links: [
+              { label: "Website & download", href: "https://apps.daeese.me/ginrose-studio/", primary: true }
             ]
           },
           {
@@ -4470,6 +4485,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261030-1"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261031-1"></script>
   </body>
 </html>
