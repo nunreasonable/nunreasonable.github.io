@@ -18,9 +18,9 @@
  */
 export const pt = {
   "p.ginrose.tagline": "Um launcher comunitário de código aberto para o cliente oficial do Roblox para macOS no Linux.",
-  "p.ginrose.status": "Flatpak v0.2.6 · Rosemary 0.4.1",
+  "p.ginrose.status": "Flatpak v0.3.0 · Rosemary 0.5.0",
   "p.ginrose.d0": "O Ginrose é um launcher independente da comunidade, sem vínculo nem endosso da Roblox Corporation. Baixa o cliente oficial do Roblox para macOS diretamente da Roblox e o executa no Linux pelo Rosemary. Inclui perfis gráficos por jogo, limite de quadros e Discord Rich Presence.",
-  "p.ginrose.d1": "A versão 0.2.6 reproduz vídeos nas experiências com som e decodificação de vídeo na GPU pelo FFmpeg 8. Inclui Rosemary 0.4.1 e correções para reabrir o Roblox. O Ginrose agora é livre e de código aberto sob GPL-3.0 ou posterior, com builds em Flatpak publicadas pelo projeto Ginrose para Linux x86_64. O site reúne download, instalação e links do fonte.",
+  "p.ginrose.d1": "A versão 0.3.0 passa para o Rosemary 0.5.0 e mantém vídeos com som nas experiências, decodificados na GPU pelo FFmpeg 8. Vem junto com o Ginrose Studio, o irmão dele para o Roblox Studio. O Ginrose é livre e de código aberto sob GPL-3.0 ou posterior, com builds em Flatpak publicadas pelo projeto Ginrose para Linux x86_64. O site reúne download, instalação e links do fonte.",
   "p.ginrose.link0": "Site e download",
   "p.ginrose-studio.tagline": "Um launcher comunitário de código aberto para o Roblox Studio oficial para macOS no Linux.",
   "p.ginrose-studio.status": "Flatpak v0.3.0 · Rosemary 0.5.0",
@@ -193,6 +193,10 @@ export const pt = {
   "p.mocktail.link0": "Ver no GitHub",
   "p.mocktail.cap0": "Roblox, no Gentoo",
   "p.mocktail.alt0": "Roblox, no Gentoo: os passos de instalação e os três ebuilds",
+  "p.rosemary-overlay.tagline": "Overlay não oficial do Portage que compila o Rosemary, a camada de compatibilidade com macOS por trás do Ginrose, no Gentoo.",
+  "p.rosemary-overlay.d0": "O Rosemary roda aplicativos de macOS no Linux. Este overlay não oficial, de terceiros, empacota a release upstream dele para o Gentoo, para instalar com emerge como qualquer outra coisa.",
+  "p.rosemary-overlay.d1": "O ebuild compila o Rosemary do código com o cargo.eclass do Gentoo, offline depois que o Portage baixa as fontes, com as dependências Git fixadas no lockfile do upstream. As USE flags escolhem os backends de OpenGL, Vulkan e WebKit. Precisa do Rust 1.99 e do SDL 3.4, e é testado num contêiner limpo do Gentoo. Não tem vínculo com o Rosemary: eu mantenho o ebuild, não o software.",
+  "p.rosemary-overlay.link0": "Ver no GitHub",
 
   // --- VLTRA -------------------------------------------------------------------
   "p.vltra.tagline": "Desenvolvedor fullstack na VLTRA Entertainment.",
