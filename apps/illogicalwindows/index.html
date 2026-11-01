@@ -1148,6 +1148,10 @@
 				border-top: 0;
 			}
 
+			.releases li > :not(.rel-head) {
+				grid-column: 2;
+			}
+
 			.rel-head {
 				display: flex;
 				flex-direction: column;
@@ -1199,6 +1203,10 @@
 			@media (max-width: 560px) {
 				.releases li {
 					grid-template-columns: minmax(0, 1fr);
+				}
+
+				.releases li > :not(.rel-head) {
+					grid-column: 1;
 				}
 
 				.rel-head {
