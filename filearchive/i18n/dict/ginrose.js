@@ -1,4 +1,9 @@
 export const pt = {
+  "ginrose.devDownload": "Build dev ↓",
+  "ginrose.dev": "Build dev do Rosemary",
+  "ginrose.devText": "A build dev é o Rosemary com correções que já foram testadas em jogos, mas ainda não estão numa release. Não é uma release oficial, muda sem aviso e pode quebrar. É só para instalações nativas: o Flatpak sempre roda o Rosemary que vem com ele. Baixe rosemary-ginrose-x86_64 e SHA256SUMS da release dev-production e rode estes comandos na pasta do download:",
+  "ginrose.devBack": "Para voltar, rode ginrose setup e escolha Download Ginrose’s Rosemary.",
+  "ginrose.devRelease": "Build dev e o que ela muda ↗",
   "ginrose.studio": "Ginrose Studio ↗",
   "ginrose.release031": "0.3.1 · 1º de novembro de 2026 — Pacotes nativos para Arch, Debian, Ubuntu, Fedora e openSUSE, com a mesma build do Flatpak, além de um flake do Nix e um ebuild do Gentoo. As instalações nativas listam os runners do Rosemary que o Butter instalou.",
   "ginrose.release030": "0.3.0 · 31 de outubro de 2026 — Passou para o Rosemary 0.5.0, mantendo o vídeo na GPU e o som AAC. Os arquivos de sistema do prefixo que um Rosemary mais novo acrescenta são repostos sozinhos antes de abrir. O Ginrose Studio, para o Roblox Studio, chega junto.",
