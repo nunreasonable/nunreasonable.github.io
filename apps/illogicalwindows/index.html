@@ -1725,7 +1725,7 @@
 							<article class="card wide">
 								<h4 data-i18n="iw.b.know.title">A few things to know first</h4>
 								<ul>
-									<li data-i18n="iw.b.know.experimental">Most things are tested on Windows 10 and 11, in virtual machines and on real hardware, but a few haven't been tried on every kind of computer yet, like laptop batteries and screen brightness.</li>
+									<li data-i18n="iw.b.know.experimental">Most things are tested on Windows 10 and 11, in virtual machines and on real hardware, including an old laptop where the bar shows the battery, but a few haven't been tried on every kind of computer yet, like screen brightness on laptops.</li>
 									<li data-i18n="iw.b.know.keys">Some keyboard shortcuts change while it runs. Pressing the Windows key on its own opens ii's search instead of the Start menu. Press the Windows key and / together to see the full list.</li>
 									<li data-i18n="iw.b.know.smartscreen">The first time you open the setup, Windows may show a blue box saying “Windows protected your PC”. That's because the setup isn't signed yet. Click More info, then Run anyway, but only if you downloaded it from this page or from the project's GitHub.</li>
 									<li data-i18n="iw.b.know.help">Need help? Use this fork’s GitHub issues or its dedicated support thread in the original ii Discord server, linked above. The Windows port remains independent of end-4 and Microsoft.</li>
@@ -1998,7 +1998,7 @@
 							<article class="card wide">
 								<h4 data-i18n="iw.a.limits.title">Known limitations</h4>
 								<ul>
-									<li data-i18n="iw.a.limits.untested">Built on Windows' own APIs but barely tested: audio, media controls, battery, laptop brightness and music recognition (the VMs have no battery or laptop screen). New in 0.5.0 and so far tried only in VMs: Win + drag, the bar shrinking its applets at high scaling, game mode, the WARP toggle and the shutdown warnings.</li>
+									<li data-i18n="iw.a.limits.untested">Built on Windows' own APIs but barely tested: audio, media controls, laptop brightness and music recognition (the VMs have no laptop screen). The battery shows up on a real laptop (an HP Pavilion g6 on Windows 10). New in 0.5.0 and so far tried only in VMs: Win + drag, the bar shrinking its applets at high scaling, game mode, the WARP toggle and the shutdown warnings.</li>
 									<li data-i18n="iw.a.limits.missing">Not on Windows: ii's lock screen (Win+L uses Windows' own), the EasyEffects toggle, and content-region detection in the region selector (no OpenCV).</li>
 									<li data-i18n="iw.a.limits.win10">Windows 10: ii can't remove virtual desktops and creates them by sending Ctrl+Win+D, the older blur has slightly jagged rounded corners, and Windows draws a yellow border around a screen recording.</li>
 									<li data-i18n="iw.a.limits.notif">Mirrored notifications carry text only: no images, launch arguments or buttons. Windows keeps showing its own banners too.</li>
@@ -2959,7 +2959,7 @@
 			sync();
 		</script>
 
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261031-2"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261104-1"></script>
 	<script>
           document.getElementById("releaseHistoryToggle").addEventListener("click", function () {
             const expanded = this.getAttribute("aria-expanded") !== "true";
