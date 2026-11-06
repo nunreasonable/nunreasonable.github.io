@@ -133,6 +133,7 @@ footer a {
     color: var(--on-brand);
     border-radius: 30px; /*borda circular*/
     font-weight: bold; /* negrito */
+    text-decoration: none;
 }
 
 #cta > p {
