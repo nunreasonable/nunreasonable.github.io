@@ -196,6 +196,8 @@ function buildCcoreSitemap() {
 function buildAppsSitemap() {
   return buildSitemap([
     "https://apps.daeese.me/illogicalwindows/",
+    "https://apps.daeese.me/ginrose/",
+    "https://apps.daeese.me/ginrose-studio/",
     // Sollarety, o bot de moderacao/diversao: mudou de ccore.daeese.me/fun
     // para aqui, mas continua sendo uma aplicacao separada do ccore.
     "https://apps.daeese.me/sollarety/",

@@ -24,7 +24,7 @@ export const pt = {
   "studio.nativeRosemary": "O Rosemary não faz parte desses pacotes: o Ginrose Studio usa um rosemary do seu PATH, como o do AUR, ou baixa um na configuração, que então precisa de SDL 3.4 e OpenAL, e o login do Studio precisa do WebKitGTK 6.0. O NixOS tem um flake que compila o Ginrose Studio já com o Rosemary, e o Gentoo tem um ebuild no rosemary-gentoo-overlay; os dois compilam do código-fonte.",
   "studio.packaging": "Receitas de empacotamento ↗",
   "studio.install": "Instalação",
-  "studio.oneLine": "Você precisa do Flatpak e de um computador x86_64. O instalador baixa a release mais recente, confere com o SHA256SUMS, instala o runtime do GNOME pelo Flathub e o Ginrose Studio para o seu usuário, e faz ele abrir os links do Studio. Nada precisa de root:",
+  "studio.oneLine": "Você precisa do Flatpak e de um computador x86_64. O instalador baixa a release mais recente, confere com o SHA256SUMS, instala o runtime do GNOME pelo Flathub e o Ginrose Studio para o seu usuário, e preserva o app já associado aos links do Studio. Se necessário, use o comando de associação abaixo para selecionar o Ginrose Studio. Nada precisa de root:",
   "studio.manual": "Ou baixe me.daeese.apps.ginrose.studio.flatpak e SHA256SUMS da release mais recente e rode estes comandos na pasta do download:",
   "studio.installResult": "Na primeira execução, a configuração baixa o Roblox Studio oficial (cerca de 600 MB). O Ginrose e o Ginrose Studio podem ficar instalados juntos; cada um guarda as próprias configurações e arquivos.",
   "studio.rosemary": "Rosemary no Flatpak",

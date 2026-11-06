@@ -212,11 +212,13 @@ describe("worker fetch handler", () => {
     assert.match(body, /ccore\.daeese\.me\/status\//);
   });
 
-  test("sitemap.xml do apps lista illogicalwindows e as paginas do Sollarety", async () => {
+  test("sitemap.xml do apps lista os launchers e as paginas do Sollarety", async () => {
     installFetchStub();
     const res = await worker.fetch(new Request("https://apps.daeese.me/sitemap.xml"), {});
     const body = await res.text();
     assert.match(body, /apps\.daeese\.me\/illogicalwindows\//);
+    assert.match(body, /apps\.daeese\.me\/ginrose\//);
+    assert.match(body, /apps\.daeese\.me\/ginrose-studio\//);
     assert.match(body, /apps\.daeese\.me\/sollarety\//);
     assert.match(body, /apps\.daeese\.me\/sollarety\/invite\//);
   });

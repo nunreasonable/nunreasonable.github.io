@@ -2653,7 +2653,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261106-2")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261106-3")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -2894,7 +2894,7 @@
             image: "./apps/ginrose/assets/ginrose.webp",
             details: [
               "Ginrose is an independent community launcher, not affiliated with or endorsed by Roblox Corporation. It downloads the official Roblox macOS client directly from Roblox and runs it on Linux through Rosemary. It includes per-game graphics profiles, frame caps and Discord Rich Presence.",
-              "Version 0.3.4 brings smoother frame pacing and less CPU per draw, and on Wayland the cursor goes where Roblox puts it. It has native packages for Arch, Debian, Ubuntu, Fedora and openSUSE, plus a Nix flake and a Gentoo ebuild, on Rosemary 0.5.0 with video and sound in experiences. It comes with Ginrose Studio, its sibling for Roblox Studio. Ginrose is free and open source under GPL-3.0-or-later, with official builds published by the Ginrose project for x86_64 Linux. The website has downloads, installation instructions and source links."
+              "Version 0.3.4 reports errors when a Rosemary selection cannot be saved and preserves the app already assigned to Roblox links. Earlier updates improved frame pacing, reduced CPU per draw and corrected cursor positioning on Wayland. It has native packages for Arch, Debian, Ubuntu, Fedora and openSUSE, plus a Nix flake and a Gentoo ebuild, on Rosemary 0.5.0 with video and sound in experiences. It comes with Ginrose Studio, its sibling for Roblox Studio. Ginrose is free and open source under GPL-3.0-or-later, with official builds published by the Ginrose project for x86_64 Linux. The website has downloads, installation instructions and source links."
             ],
             links: [
               { label: "Website & download", href: "https://apps.daeese.me/ginrose/", primary: true }
@@ -2988,7 +2988,7 @@
             tags: ["Gentoo", "Portage", "ebuilds"],
             image: "./filearchive/githublogo.png",
             details: [
-              "Rosemary runs macOS applications on Linux. This third-party, unofficial overlay packages its upstream release for Gentoo, so it installs with emerge like anything else.",
+              "Rosemary runs macOS applications on Linux. This third-party, unofficial overlay packages its upstream release for Gentoo, so it installs with emerge like anything else. It also packages Ginrose and Ginrose Studio as games-util/ginrose: the player USE flag installs Ginrose, and studio installs Ginrose Studio.",
               "The ebuild builds Rosemary from source with Gentoo's cargo.eclass, offline after Portage fetches the sources, with the Git dependencies pinned to upstream's lockfile. USE flags pick the OpenGL, Vulkan and WebKit backends. It needs Rust 1.99 and SDL 3.4, and is tested in a clean Gentoo container. It isn't affiliated with Rosemary: I maintain the ebuild, not the software."
             ],
             links: [
@@ -3024,7 +3024,7 @@
             { label: "VLTRA INVITE", href: "https://discord.gg/3qdvhkNSS8", tag: "Vltra", i18n: "home.policy.vltra" },
             { label: "BLOOD OATH INVITE", href: "https://discord.com/invite/fdD6Mc6CAw", tag: "Blood Oath", i18n: "home.policy.bloodOath" }
         ],
-        footer: "Last updated October 2, 2026"
+        footer: "Last updated November 6, 2026"
       };
 
       // Capa local: a URL do Spotify que estava aqui passou a devolver 404.
@@ -4501,6 +4501,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261106-2"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261106-3"></script>
   </body>
 </html>

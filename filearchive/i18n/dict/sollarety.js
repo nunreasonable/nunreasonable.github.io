@@ -10,6 +10,7 @@
  * quebraria a frase montada na tela.
  */
 export const pt = {
+  "sollarety.personal": "Adicione o Sollarety ao servidor ou aos seus My Apps pessoais. Dezenove comandos funcionam em servidores, DMs e conversas em grupo, incluindo comandos de diversão, /profile, /userinfo e /help. Moderação, música e outros comandos exclusivos de servidor precisam do bot no servidor.",
   "sollarety.reference": "Referência de comandos",
   "sollarety.find_command": "Veja mais de perto.",
   "sollarety.reference_note": "Abra uma categoria para ver comandos, permissões e como funciona.",

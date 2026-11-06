@@ -20,7 +20,7 @@ export const pt = {
   "p.ginrose.tagline": "Um launcher comunitário de código aberto para o cliente oficial do Roblox para macOS no Linux.",
   "p.ginrose.status": "v0.3.4 · Flatpak e pacotes nativos · Rosemary 0.5.0",
   "p.ginrose.d0": "O Ginrose é um launcher independente da comunidade, sem vínculo nem endosso da Roblox Corporation. Baixa o cliente oficial do Roblox para macOS diretamente da Roblox e o executa no Linux pelo Rosemary. Inclui perfis gráficos por jogo, limite de quadros e Discord Rich Presence.",
-  "p.ginrose.d1": "A versão 0.3.4 traz ritmo de quadros mais estável e menos CPU por desenho, e no Wayland o cursor vai para onde o Roblox manda. Tem pacotes nativos para Arch, Debian, Ubuntu, Fedora e openSUSE, além de um flake do Nix e um ebuild do Gentoo, no Rosemary 0.5.0 com vídeo e som nas experiências. Vem junto com o Ginrose Studio, o irmão dele para o Roblox Studio. O Ginrose é livre e de código aberto sob GPL-3.0 ou posterior, com builds oficiais publicadas pelo projeto Ginrose para Linux x86_64. O site reúne download, instalação e links do fonte.",
+  "p.ginrose.d1": "A versão 0.3.4 informa o erro quando não consegue salvar a escolha do Rosemary e preserva o app já associado aos links do Roblox. Atualizações anteriores melhoraram o ritmo dos quadros, reduziram a CPU por desenho e corrigiram a posição do cursor no Wayland. Tem pacotes nativos para Arch, Debian, Ubuntu, Fedora e openSUSE, além de um flake do Nix e um ebuild do Gentoo, no Rosemary 0.5.0 com vídeo e som nas experiências. Vem junto com o Ginrose Studio, o irmão dele para o Roblox Studio. O Ginrose é livre e de código aberto sob GPL-3.0 ou posterior, com builds oficiais publicadas pelo projeto Ginrose para Linux x86_64. O site reúne download, instalação e links do fonte.",
   "p.ginrose.link0": "Site e download",
   "p.ginrose-studio.tagline": "Um launcher comunitário de código aberto para o Roblox Studio oficial para macOS no Linux.",
   "p.ginrose-studio.status": "v0.3.4 · Flatpak e pacotes nativos · Rosemary 0.5.0",
@@ -62,7 +62,7 @@ export const pt = {
   "home.policy.privacy": "Política de Privacidade",
   "home.policy.vltra": "CONVITE VLTRA",
   "home.policy.bloodOath": "CONVITE BLOOD OATH",
-  "home.footer": "Atualizado em 2 de outubro de 2026",
+  "home.footer": "Atualizado em 6 de novembro de 2026",
   "home.backToTop": "Voltar ao topo ↑",
 
   // --- Cards (partes comuns) ------------------------------------------------
@@ -194,7 +194,7 @@ export const pt = {
   "p.mocktail.cap0": "Roblox, no Gentoo",
   "p.mocktail.alt0": "Roblox, no Gentoo: os passos de instalação e os três ebuilds",
   "p.rosemary-overlay.tagline": "Overlay não oficial do Portage que compila o Rosemary, a camada de compatibilidade com macOS por trás do Ginrose, no Gentoo.",
-  "p.rosemary-overlay.d0": "O Rosemary roda aplicativos de macOS no Linux. Este overlay não oficial, de terceiros, empacota a release upstream dele para o Gentoo, para instalar com emerge como qualquer outra coisa.",
+  "p.rosemary-overlay.d0": "O Rosemary roda aplicativos de macOS no Linux. Este overlay não oficial, de terceiros, empacota a release upstream dele para o Gentoo, para instalar com emerge como qualquer outra coisa. Também oferece Ginrose e Ginrose Studio pelo pacote games-util/ginrose: a USE flag player instala o Ginrose e studio instala o Ginrose Studio.",
   "p.rosemary-overlay.d1": "O ebuild compila o Rosemary do código com o cargo.eclass do Gentoo, offline depois que o Portage baixa as fontes, com as dependências Git fixadas no lockfile do upstream. As USE flags escolhem os backends de OpenGL, Vulkan e WebKit. Precisa do Rust 1.99 e do SDL 3.4, e é testado num contêiner limpo do Gentoo. Não tem vínculo com o Rosemary: eu mantenho o ebuild, não o software.",
   "p.rosemary-overlay.link0": "Ver no GitHub",
 
