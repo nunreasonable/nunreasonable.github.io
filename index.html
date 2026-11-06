@@ -2653,7 +2653,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261106-1")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261106-2")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -2889,12 +2889,12 @@
             slug: "ginrose",
             title: "Ginrose",
             tagline: "A community open-source launcher for the official Roblox macOS client on Linux.",
-            status: "v0.3.3 · Flatpak and native packages · Rosemary 0.5.0",
+            status: "v0.3.4 · Flatpak and native packages · Rosemary 0.5.0",
             tags: ["Rust", "Linux", "Flatpak"],
             image: "./apps/ginrose/assets/ginrose.webp",
             details: [
               "Ginrose is an independent community launcher, not affiliated with or endorsed by Roblox Corporation. It downloads the official Roblox macOS client directly from Roblox and runs it on Linux through Rosemary. It includes per-game graphics profiles, frame caps and Discord Rich Presence.",
-              "Version 0.3.3 brings smoother frame pacing and less CPU per draw, and on Wayland the cursor goes where Roblox puts it. It has native packages for Arch, Debian, Ubuntu, Fedora and openSUSE, plus a Nix flake and a Gentoo ebuild, on Rosemary 0.5.0 with video and sound in experiences. It comes with Ginrose Studio, its sibling for Roblox Studio. Ginrose is free and open source under GPL-3.0-or-later, with official builds published by the Ginrose project for x86_64 Linux. The website has downloads, installation instructions and source links."
+              "Version 0.3.4 brings smoother frame pacing and less CPU per draw, and on Wayland the cursor goes where Roblox puts it. It has native packages for Arch, Debian, Ubuntu, Fedora and openSUSE, plus a Nix flake and a Gentoo ebuild, on Rosemary 0.5.0 with video and sound in experiences. It comes with Ginrose Studio, its sibling for Roblox Studio. Ginrose is free and open source under GPL-3.0-or-later, with official builds published by the Ginrose project for x86_64 Linux. The website has downloads, installation instructions and source links."
             ],
             links: [
               { label: "Website & download", href: "https://apps.daeese.me/ginrose/", primary: true }
@@ -2904,7 +2904,7 @@
             slug: "ginrose-studio",
             title: "Ginrose Studio",
             tagline: "A community open-source launcher for the official Roblox Studio macOS app on Linux.",
-            status: "v0.3.3 · Flatpak and native packages · Rosemary 0.5.0",
+            status: "v0.3.4 · Flatpak and native packages · Rosemary 0.5.0",
             tags: ["Rust", "Linux", "Flatpak"],
             image: "./apps/ginrose-studio/assets/ginrose-studio.webp?v=20261031-1",
             details: [
@@ -4501,6 +4501,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261106-1"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261106-2"></script>
   </body>
 </html>
