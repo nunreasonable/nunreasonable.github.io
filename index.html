@@ -36,7 +36,7 @@
       sem trocar a URL o banner novo nao aparece. Suba o numero a cada vez que
       og-banner.png for refeito.
     -->
-    <meta property="og:image" content="https://daeese.me/filearchive/og-banner.png?v=3" />
+    <meta property="og:image" content="https://daeese.me/filearchive/og-banner.png?v=4" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -54,7 +54,7 @@
       name="twitter:description"
       content="Fullstack developer. Roblox games, Discord bots and desktop shells, from C# and Luau to C++."
     />
-    <meta name="twitter:image" content="https://daeese.me/filearchive/og-banner.png?v=3" />
+    <meta name="twitter:image" content="https://daeese.me/filearchive/og-banner.png?v=4" />
     <meta
       name="twitter:image:alt"
       content="daeese portfolio: Blood Oath, Sollarety and ii on Windows 11."
@@ -1976,6 +1976,14 @@
         display: block;
       }
 
+      /* Na troca com fade a imagem nova entra por cima da antiga, no mesmo
+         lugar; quando a antiga sai, a nova volta a ser a unica e o fluxo
+         normal assume sem mudar nada na tela. */
+      .gallery-main img + img {
+        position: absolute;
+        inset: 0;
+      }
+
       .gallery-caption {
         margin: 10px 2px 0;
         color: var(--muted);
@@ -2067,6 +2075,18 @@
         border: 1px solid var(--line);
         display: block;
         margin: 0 auto;
+        transform-origin: 0 0;
+      }
+
+      /*
+       * Com o tamanho conhecido (width/height vindos dos dados), a caixa da
+       * imagem fica certa antes de o arquivo chegar: a versao media, ja
+       * decodificada na galeria, ocupa o lugar da grande ate ela carregar, e
+       * o zoom de abertura tem um retangulo final para mirar.
+       */
+      .lightbox img[width][height] {
+        width: min(100%, var(--nw, 100%), calc(82vh * var(--ar, 1.6)));
+        height: auto;
       }
 
       .lightbox figcaption {
@@ -2104,6 +2124,34 @@
         position: absolute;
         top: -54px;
         right: 0;
+      }
+
+      /*
+       * Fundo do lightbox: entra e sai so com opacidade. No zoom a partir da
+       * galeria (.is-zoom) o dialog nao desliza: quem se move e a imagem, e
+       * o resto (botoes, legenda) so aparece por opacidade, pelo JS.
+       */
+      @keyframes fade-out-soft {
+        to { opacity: 0; }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        :root:not([data-lite]) .lightbox[open]::backdrop {
+          animation: fade-in-soft 220ms ease both;
+        }
+
+        :root:not([data-lite]) .lightbox.is-zoom[open] {
+          animation: none;
+        }
+
+        :root:not([data-lite]) .lightbox.is-closing::backdrop {
+          animation: fade-out-soft 160ms ease both;
+        }
+      }
+
+      /* Modo leve: o lightbox abre e fecha na hora, como o resto. */
+      :root[data-lite] .lightbox[open] {
+        animation: none;
       }
 
       /* --- Links -------------------------------------------------------- */
@@ -3821,7 +3869,7 @@
         // aqui e para - o Esc nao chega a fechar o projeto por baixo.
         if (lightbox.open) {
           event.preventDefault();
-          lightbox.close();
+          closeLightbox();
           return;
         }
 
@@ -4072,6 +4120,12 @@
         return Boolean(window.daeeseLite && window.daeeseLite.on);
       }
 
+      // Pode animar agora? Consultado na hora de cada acao, porque o modo
+      // leve pode ligar no meio da visita.
+      function canAnimate() {
+        return !reduceMotionQuery.matches && !isLite() && typeof Element.prototype.animate === "function";
+      }
+
       function withLayoutAnimation(update) {
         if (reduceMotionQuery.matches || isLite() || typeof Element.prototype.animate !== "function") {
           update();
@@ -4270,6 +4324,24 @@
         }
       }
 
+      // Imagem do quadro principal da galeria. Durante a troca com fade ficam
+      // duas empilhadas, e a que vale e a ultima (a de cima).
+      function galleryImg(card) {
+        const imgs = card.querySelectorAll(".gallery-main img");
+        return imgs[imgs.length - 1] || null;
+      }
+
+      // Cada troca ganha um numero; a decodificacao que terminar depois de
+      // outra troca ja foi pedida e descartada.
+      const galleryTokens = new WeakMap();
+
+      function setGalleryImageSize(img, image) {
+        if (image.w && image.h) {
+          img.width = image.w;
+          img.height = image.h;
+        }
+      }
+
       function setGalleryIndex(card, index) {
         const project = projectBySlug[card.dataset.slug];
         const image = project.images[index];
@@ -4277,13 +4349,63 @@
           return;
         }
 
-        const mainImg = card.querySelector(".gallery-main img");
-        mainImg.src = midOf(image);
-        mainImg.alt = imageText(project, index, "alt");
-        if (image.w && image.h) {
-          mainImg.width = image.w;
-          mainImg.height = image.h;
+        const current = galleryImg(card);
+        const stacked = card.querySelectorAll(".gallery-main img").length > 1;
+        if (index === Number(card.dataset.galleryIndex || 0) && !stacked) {
+          return;
         }
+
+        const token = (galleryTokens.get(card) || 0) + 1;
+        galleryTokens.set(card, token);
+        const alt = imageText(project, index, "alt");
+
+        if (!canAnimate() || !current) {
+          // Sem animacao: troca o src na hora, como sempre foi, e descarta
+          // qualquer imagem que ainda estivesse no meio de um fade.
+          const imgs = card.querySelectorAll(".gallery-main img");
+          const base = imgs[0];
+          imgs.forEach((img) => img !== base && img.remove());
+          base.getAnimations().forEach((a) => a.cancel());
+          base.src = midOf(image);
+          base.alt = alt;
+          setGalleryImageSize(base, image);
+        } else {
+          /*
+           * Fade cruzado de 200ms: a imagem nova nasce transparente por cima
+           * da atual e so aparece depois de decodificada (decode()), para o
+           * fade nao comecar num quadro vazio. A antiga sai junto, porque com
+           * proporcoes diferentes ela apareceria nas sobras da nova.
+           */
+          const next = document.createElement("img");
+          next.decoding = "async";
+          next.alt = alt;
+          setGalleryImageSize(next, image);
+          next.style.opacity = "0";
+          next.src = midOf(image);
+          card.querySelectorAll(".gallery-main img").forEach((img) => (img.alt = ""));
+          current.after(next);
+
+          next.decode().catch(() => {}).then(() => {
+            if (!next.isConnected || galleryTokens.get(card) !== token) {
+              next.remove();
+              return;
+            }
+            const olds = [...card.querySelectorAll(".gallery-main img")].filter((img) => img !== next);
+            next.style.opacity = "";
+            if (!canAnimate()) {
+              olds.forEach((img) => img.remove());
+              return;
+            }
+            const fade = next.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: "ease-out" });
+            olds.forEach((img) => img.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, easing: "ease-in", fill: "forwards" }));
+            fade.finished.then(() => {
+              if (galleryTokens.get(card) === token) {
+                olds.forEach((img) => img.remove());
+              }
+            }, () => {});
+          });
+        }
+
         card.querySelector(".gallery-caption").textContent = imageText(project, index, "caption");
         card.dataset.galleryIndex = String(index);
         card.querySelectorAll(".gallery-thumb").forEach((thumb) => {
@@ -4325,7 +4447,7 @@
 
         if (event.target.closest(".gallery-main")) {
           playSFX("open");
-          openLightbox(projectBySlug[card.dataset.slug], Number(card.dataset.galleryIndex || 0));
+          openLightbox(projectBySlug[card.dataset.slug], Number(card.dataset.galleryIndex || 0), card);
           return;
         }
 
@@ -4342,43 +4464,206 @@
       const lightboxNext = document.getElementById("lightboxNext");
       let lightboxProject = null;
       let lightboxIndex = 0;
+      // Card de onde o lightbox abriu: o fechamento volta para a imagem dele.
+      let lightboxCard = null;
+      let lightboxWanted = "";
+      let lightboxAnims = [];
+      let lightboxClosing = false;
+      const ZOOM_EASE = "cubic-bezier(0.2, 0, 0, 1)";
+
+      // Botoes e legenda: aparecem e somem so por opacidade no zoom.
+      function lightboxChrome() {
+        return [lightboxCaption, ...lightbox.querySelectorAll(".lightbox-btn:not([hidden])")];
+      }
+
+      // Retangulo do que aparece de fato numa imagem com object-fit: contain
+      // (a caixa da galeria e 16:10; a sobra nao conta).
+      function containRect(img) {
+        const r = img.getBoundingClientRect();
+        const ratio = img.naturalWidth / img.naturalHeight;
+        if (!ratio || !r.width || !r.height) {
+          return r;
+        }
+        if (ratio > r.width / r.height) {
+          const height = r.width / ratio;
+          return { left: r.left, top: r.top + (r.height - height) / 2, width: r.width, height };
+        }
+        const width = r.height * ratio;
+        return { left: r.left + (r.width - width) / 2, top: r.top, width, height: r.height };
+      }
+
+      function isOnScreen(r) {
+        return r.width > 0 && r.height > 0 && r.top + r.height > 0 && r.left + r.width > 0 && r.top < window.innerHeight && r.left < window.innerWidth;
+      }
+
+      // transform que leva a caixa `base` (origem no canto, ver o CSS) para `r`.
+      function rectTransform(base, r) {
+        return `translate(${r.left - base.left}px, ${r.top - base.top}px) scale(${r.width / base.width}, ${r.height / base.height})`;
+      }
+
+      function isDecoded(img) {
+        return Boolean(img && img.complete && img.naturalWidth > 0);
+      }
+
+      /*
+       * A original (ate 1600px) so carrega aqui. Se ela ainda nao chegou mas a
+       * versao media ja esta decodificada na galeria, a media ocupa o lugar
+       * (a caixa e a mesma, pelo CSS) e a grande entra quando decodificar.
+       */
+      function setLightboxSrc(image) {
+        const full = image.src;
+        lightboxWanted = full;
+        const loader = new Image();
+        loader.src = full;
+        if (isDecoded(loader)) {
+          lightboxImg.src = full;
+          return;
+        }
+        const midUrl = new URL(midOf(image), document.baseURI).href;
+        const mid = lightboxCard && [...lightboxCard.querySelectorAll(".gallery-main img")].find((img) => img.src === midUrl && isDecoded(img));
+        if (!mid || midUrl === loader.src) {
+          lightboxImg.src = full;
+          return;
+        }
+        lightboxImg.src = midUrl;
+        const swap = () => {
+          if (lightboxWanted === full) {
+            lightboxImg.src = full;
+          }
+        };
+        loader.decode().then(swap, swap);
+      }
 
       function showLightboxImage(index) {
         const total = lightboxProject.images.length;
         lightboxIndex = (index + total) % total;
         const image = lightboxProject.images[lightboxIndex];
         const caption = imageText(lightboxProject, lightboxIndex, "caption");
-        lightboxImg.src = image.src;
+        if (image.w && image.h) {
+          lightboxImg.width = image.w;
+          lightboxImg.height = image.h;
+          lightboxImg.style.setProperty("--nw", `${Number(image.w)}px`);
+          lightboxImg.style.setProperty("--ar", String(image.w / image.h));
+        } else {
+          lightboxImg.removeAttribute("width");
+          lightboxImg.removeAttribute("height");
+        }
+        setLightboxSrc(image);
         lightboxImg.alt = imageText(lightboxProject, lightboxIndex, "alt");
         lightboxCaption.textContent = total > 1 ? `${caption} (${lightboxIndex + 1}/${total})` : caption;
         lightboxPrev.hidden = total < 2;
         lightboxNext.hidden = total < 2;
       }
 
-      function openLightbox(project, index) {
+      /*
+       * Abertura com zoom a partir da galeria (FLIP): mede onde a imagem esta
+       * no card e onde ela fica no lightbox, e anima so o transform de uma
+       * para a outra. So acontece se a imagem da galeria ja esta decodificada
+       * e na tela; senao fica o fade normal do dialog.
+       */
+      function openLightbox(project, index, card) {
         if (!project || !project.images || project.images.length === 0 || typeof lightbox.showModal !== "function") {
           return;
         }
 
         lightboxProject = project;
+        lightboxCard = card || null;
         showLightboxImage(index);
-        if (!lightbox.open) {
-          lightbox.showModal();
+        if (lightbox.open) {
+          return;
         }
+
+        const source = lightboxCard ? galleryImg(lightboxCard) : null;
+        const from = canAnimate() && isDecoded(source) && lightboxImg.hasAttribute("width") ? containRect(source) : null;
+        const zoom = Boolean(from && isOnScreen(from));
+        lightbox.classList.toggle("is-zoom", zoom);
+        lightbox.showModal();
+        if (!zoom) {
+          return;
+        }
+
+        const base = lightboxImg.getBoundingClientRect();
+        if (!base.width || !base.height) {
+          return;
+        }
+        lightboxAnims = [
+          lightboxImg.animate([{ transform: rectTransform(base, from) }, { transform: "none" }], { duration: 280, easing: ZOOM_EASE }),
+          ...lightboxChrome().map((el) => el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: "ease-out" }))
+        ];
       }
 
-      document.getElementById("lightboxClose").addEventListener("click", () => lightbox.close());
-      lightboxPrev.addEventListener("click", () => showLightboxImage(lightboxIndex - 1));
-      lightboxNext.addEventListener("click", () => showLightboxImage(lightboxIndex + 1));
+      /*
+       * Fechamento: se a imagem aberta e a mesma da galeria e ela esta na
+       * tela, a imagem volta encolhendo para o lugar dela; senao o dialog so
+       * esmaece. O close() de verdade espera a animacao, entao o foco volta
+       * para o botao da galeria so no fim, como sempre.
+       */
+      function closeLightbox() {
+        if (!lightbox.open || lightboxClosing) {
+          return;
+        }
+        if (!canAnimate()) {
+          lightbox.close();
+          return;
+        }
+
+        lightboxClosing = true;
+        // Le o estado visivel antes de cancelar a abertura, se ela ainda
+        // estiver rodando, para o fechamento partir de onde a tela esta.
+        const current = lightboxImg.getBoundingClientRect();
+        const chrome = lightboxChrome().map((el) => [el, getComputedStyle(el).opacity]);
+        lightboxAnims.forEach((a) => a.cancel());
+        const base = lightboxImg.getBoundingClientRect();
+
+        let target = null;
+        const card = lightboxCard;
+        if (card && card.classList.contains("is-open") && Number(card.dataset.galleryIndex || 0) === lightboxIndex) {
+          const img = galleryImg(card);
+          if (isDecoded(img)) {
+            const r = containRect(img);
+            target = isOnScreen(r) ? r : null;
+          }
+        }
+
+        lightbox.classList.add("is-closing");
+        if (target && base.width && base.height) {
+          lightboxAnims = [
+            lightboxImg.animate([{ transform: rectTransform(base, current) }, { transform: rectTransform(base, target) }], { duration: 220, easing: ZOOM_EASE, fill: "forwards" }),
+            ...chrome.map(([el, opacity]) => el.animate([{ opacity }, { opacity: 0 }], { duration: 140, easing: "ease", fill: "forwards" }))
+          ];
+        } else {
+          lightboxAnims = [lightbox.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: "ease", fill: "forwards" })];
+        }
+
+        Promise.all(lightboxAnims.map((a) => a.finished)).then(() => {
+          if (lightboxClosing) {
+            lightbox.close();
+          }
+        }, () => {});
+      }
+
+      document.getElementById("lightboxClose").addEventListener("click", closeLightbox);
+      lightboxPrev.addEventListener("click", () => !lightboxClosing && showLightboxImage(lightboxIndex - 1));
+      lightboxNext.addEventListener("click", () => !lightboxClosing && showLightboxImage(lightboxIndex + 1));
 
       // Clique fora da imagem (no fundo do dialog) fecha.
       lightbox.addEventListener("click", (event) => {
         if (event.target === lightbox) {
-          lightbox.close();
+          closeLightbox();
         }
       });
 
+      // Pedido de fechar vindo do sistema (Esc nativo, voltar no Android):
+      // passa pela mesma animacao.
+      lightbox.addEventListener("cancel", (event) => {
+        event.preventDefault();
+        closeLightbox();
+      });
+
       lightbox.addEventListener("keydown", (event) => {
+        if (lightboxClosing) {
+          return;
+        }
         if (event.key === "ArrowLeft") {
           event.preventDefault();
           showLightboxImage(lightboxIndex - 1);
@@ -4388,7 +4673,13 @@
         }
       });
 
-      lightbox.addEventListener("close", () => playSFX("close"));
+      lightbox.addEventListener("close", () => {
+        lightboxClosing = false;
+        lightboxAnims.forEach((a) => a.cancel());
+        lightboxAnims = [];
+        lightbox.classList.remove("is-zoom", "is-closing");
+        playSFX("close");
+      });
 
       // --- Texto ao vivo na troca de idioma ---------------------------------
       // Chamado pelo listener de i18n:change (la em cima). Reescreve so o que
@@ -4407,7 +4698,7 @@
 
           const index = Number(card.dataset.galleryIndex || 0);
           card.querySelector(".gallery-caption").textContent = imageText(project, index, "caption");
-          card.querySelector(".gallery-main img").alt = imageText(project, index, "alt");
+          galleryImg(card).alt = imageText(project, index, "alt");
           card.querySelectorAll(".gallery-thumb").forEach((thumb) => {
             thumb.setAttribute("aria-label", thumbLabel(project, Number(thumb.dataset.index)));
           });
