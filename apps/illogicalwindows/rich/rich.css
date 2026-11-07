@@ -22,31 +22,9 @@
 	display: none !important;
 }
 
-/* Troca de paleta animada (palette.js reescreve esses tokens). */
-@property --accent {
-	syntax: "<color>";
-	inherits: true;
-	initial-value: #3ddbb0;
-}
-@property --accent-ink {
-	syntax: "<color>";
-	inherits: true;
-	initial-value: #0b7d64;
-}
-@property --accent-soft {
-	syntax: "<color>";
-	inherits: true;
-	initial-value: rgba(61, 219, 176, 0.14);
-}
-@property --on-accent {
-	syntax: "<color>";
-	inherits: true;
-	initial-value: #032a20;
-}
-
-.rich-ready {
-	transition: --accent 0.6s ease, --accent-ink 0.6s ease, --accent-soft 0.6s ease, --on-accent 0.6s ease;
-}
+/* A troca de paleta (palette.js) e instantanea de proposito. Ela era uma
+   transicao dos tokens no <html>, e isso recalculava o estilo da pagina inteira
+   a cada quadro (~4 ms por quadro, quase o orcamento todo a 200 Hz). */
 
 /* O conteudo animado (historia presa, demo) aparecia de leve atras do
    cabecalho quase opaco; no modo completo ele fica opaco de vez. */

@@ -10,12 +10,8 @@ export function setupShowcase() {
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
   const visible = new Set();
   const counter = journey.querySelector(".journey-counter");
-  const modest = (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4) || (navigator.deviceMemory > 0 && navigator.deviceMemory <= 4);
-  const interval = 1000 / (modest ? 30 : 60);
   const styles = new WeakMap();
   let frame = 0;
-  let timer = 0;
-  let lastPaint = -Infinity;
   let previous = -1;
   const clamp = (n) => Math.max(0, Math.min(1, n));
 
@@ -31,14 +27,11 @@ export function setupShowcase() {
       scene.style.removeProperty("--scene-alpha");
       scene.style.removeProperty("--scene-y");
       styles.delete(scene);
-      scene.inert = false;
-      scene.removeAttribute("aria-hidden");
     });
   }
   function update(now) {
     frame = 0;
     if (document.hidden) return;
-    lastPaint = now;
     // Mede tudo antes de escrever estilos, evitando recalculo entre leituras.
     const bounds = visible.has(hero) && !reduce.matches ? hero.getBoundingClientRect() : null;
     const r = motion.matches && visible.has(journey) ? journey.getBoundingClientRect() : null;
@@ -62,8 +55,6 @@ export function setupShowcase() {
       setStyle(scene, "--scene-y", `${((1 - clamp((distance + .2) / .45)) * 65 - clamp((distance - .7) / .3) * 35).toFixed(2)}px`);
       if (current !== previous) {
         scene.classList.toggle("is-current", i === current);
-        scene.inert = i !== current;
-        scene.setAttribute("aria-hidden", String(i !== current));
       }
     });
     if (current !== previous) {
@@ -72,14 +63,22 @@ export function setupShowcase() {
       previous = current;
     }
   }
+  // Um quadro por quadro de tela, sem teto: o update custa ~0,14 ms, e um
+  // teto de 60 fps fazia a cena andar em degraus num monitor de 200 Hz.
   function request() {
-    if (frame || timer || document.hidden || !visible.size) return;
-    const remaining = interval - (performance.now() - lastPaint);
-    if (remaining > 0) {
-      timer = setTimeout(() => { timer = 0; request(); }, remaining);
-    } else {
-      frame = requestAnimationFrame(update);
-    }
+    if (frame || document.hidden || !visible.size) return;
+    frame = requestAnimationFrame(update);
+  }
+  // As cenas ficam empilhadas e so a atual aparece. Em vez de esconde-las do
+  // teclado (inert), o foco que entra numa cena rola a pagina ate ela.
+  function focusScene(event) {
+    if (!motion.matches) return;
+    const i = scenes.findIndex((scene) => scene.contains(event.target));
+    if (i < 0 || i === previous) return;
+    const r = journey.getBoundingClientRect();
+    const span = Math.max(1, r.height - innerHeight + 56);
+    const top = scrollY + r.top - 56 + ((i + .5) / scenes.length) * span;
+    scrollTo({top, behavior: "instant"});
   }
   function changeMode() {
     document.documentElement.classList.toggle("showcase-motion", motion.matches);
@@ -87,10 +86,6 @@ export function setupShowcase() {
     resetScenes();
     scenes.forEach((scene, i) => {
       scene.classList.toggle("is-current", i === 0);
-      if (motion.matches) {
-        scene.inert = i !== 0;
-        scene.setAttribute("aria-hidden", String(i !== 0));
-      }
     });
     request();
   }
@@ -107,6 +102,7 @@ export function setupShowcase() {
   observer.observe(hero);
   observer.observe(journey);
   window.addEventListener("scroll", request, {passive: true});
+  journey.addEventListener("focusin", focusScene);
   window.addEventListener("resize", request);
   document.addEventListener("visibilitychange", request);
   motion.addEventListener("change", changeMode);
@@ -117,7 +113,7 @@ export function setupShowcase() {
     revealObserver.disconnect();
     scenes.forEach((scene) => scene.classList.remove("is-seen"));
     cancelAnimationFrame(frame);
-    clearTimeout(timer);
+    journey.removeEventListener("focusin", focusScene);
     window.removeEventListener("scroll", request);
     window.removeEventListener("resize", request);
     document.removeEventListener("visibilitychange", request);

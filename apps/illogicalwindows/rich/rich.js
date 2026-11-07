@@ -16,7 +16,7 @@
  * Tudo que fica em loop para fora da tela ou com a aba escondida.
  */
 
-import { setupShowcase } from "./showcase.js?v=20261014-4";
+import { setupShowcase } from "./showcase.js?v=20261107-1";
 
 import { createDesktop } from "./desktop.js?v=20261013-1";
 import { PRESETS, wallpaperUrl, drawThumb, presetTones, demoScheme, pageScheme, PAGE_KEYS, tonesFromFile } from "./palette.js?v=20261013-1";
@@ -302,6 +302,17 @@ function setupExplorer() {
 	on(box, "pointerenter", () => {
 		paused = true;
 		clearTimeout(timer);
+	});
+	// Teclado tambem pausa: antes so o ponteiro pausava, e a aba trocava
+	// sozinha debaixo de quem navegava com Tab.
+	on(box, "focusin", () => {
+		paused = true;
+		clearTimeout(timer);
+	});
+	on(box, "focusout", (e) => {
+		if (box.contains(e.relatedTarget)) return;
+		paused = false;
+		schedule();
 	});
 	on(box, "pointerleave", () => {
 		paused = false;

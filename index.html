@@ -389,7 +389,7 @@
         place-items: center;
         pointer-events: all;
         cursor: pointer;
-        transition: opacity 220ms ease, background-color 220ms ease, backdrop-filter 220ms ease;
+        transition: opacity 220ms ease, background-color 220ms ease;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
       }
 
@@ -536,6 +536,34 @@
         background: currentColor;
       }
 
+      /* Cada status tem forma propria, como no Discord, alem da cor: so a cor
+         nao separa online de ocupado para quem nao distingue verde/vermelho. */
+      .discord-status-badge[data-status="idle"] {
+        overflow: hidden;
+      }
+
+      .discord-status-badge[data-status="idle"]::before {
+        width: 62%;
+        height: 62%;
+        place-self: start;
+        margin: -8% 0 0 -8%;
+        background: rgb(5, 2, 4);
+      }
+
+      .discord-status-badge[data-status="dnd"]::before {
+        width: 62%;
+        height: 24%;
+        border-radius: 2px;
+        background: rgb(5, 2, 4);
+      }
+
+      .discord-status-badge[data-status="offline"]::before,
+      .discord-status-badge[data-status="invisible"]::before {
+        width: 44%;
+        height: 44%;
+        background: rgb(5, 2, 4);
+      }
+
       .discord-status-badge[data-status="online"] {
         color: #23a55a;
         background: #23a55a;
@@ -650,7 +678,7 @@
         box-sizing: border-box;
         line-height: 1;
         overflow: visible;
-        transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+        transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
         box-shadow:
           0 0 0 1px rgba(255, 255, 255, 0.03) inset,
           0 0 18px color-mix(in srgb, var(--accent-deep) 22%, transparent),
@@ -661,9 +689,6 @@
         border-color: rgba(255, 255, 255, 0.28);
         transform: translateY(-1px);
         background: rgba(255, 255, 255, 0.1);
-        box-shadow:
-          0 0 20px color-mix(in srgb, var(--accent-deep) 28%, transparent),
-          0 0 32px color-mix(in srgb, var(--accent-deep) 18%, transparent);
       }
 
       .socials-inline svg {
@@ -767,7 +792,10 @@
       /* Anel de foco visivel: a pagina e navegavel so por teclado e ate agora
          so tinha o contorno padrao do navegador, que some sobre fundo escuro. */
       .link-btn:focus-visible,
-      .socials-inline a:focus-visible {
+      .socials-inline a:focus-visible,
+      .project-action:focus-visible,
+      .lightbox-btn:focus-visible,
+      .project-close:focus-visible {
         outline: 2px solid var(--accent-lit);
         outline-offset: 2px;
       }
@@ -1055,11 +1083,11 @@
         color: var(--text);
         background: linear-gradient(135deg, var(--accent), var(--accent-2));
         border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
-        transition: filter 160ms ease, transform 160ms ease;
+        transition: transform 160ms ease;
       }
 
       .player-listen-btn:hover {
-        filter: brightness(1.1);
+        background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 86%, #fff), var(--accent-2));
         transform: translateY(-1px);
       }
 
@@ -1516,8 +1544,28 @@
         object-fit: cover;
         object-position: top center;
         display: block;
-        transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1), filter 400ms ease;
-        filter: saturate(0.9) brightness(0.9);
+        transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      /* Escurece a capa ate o hover. Antes era filter: brightness animado na
+         imagem inteira, que repinta a capa a cada quadro na GPU integrada; uma
+         camada preta mudando so de opacidade sai de graca. */
+      .project-cover::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: #000;
+        opacity: 0.12;
+        pointer-events: none;
+        transition: opacity 400ms ease;
+      }
+
+      .project-cover.is-logo::after {
+        display: none;
+      }
+
+      .project-card:not(.is-open):hover .project-cover::after {
+        opacity: 0;
       }
 
       /* Projeto sem screenshot: o logo vai centralizado, pequeno. */
@@ -1535,7 +1583,6 @@
 
       .project-card:not(.is-open):hover .project-cover img {
         transform: scale(1.04);
-        filter: saturate(1) brightness(1);
       }
 
       .project-card.is-open .project-cover {
@@ -1734,7 +1781,6 @@
         background: var(--accent-soft);
         border-color: var(--accent-line);
         transform: translateY(-1px);
-        outline: none;
       }
 
       .project-action.is-primary {
@@ -2292,8 +2338,23 @@
         .sol-spin,
         .project-details,
         body.is-entering .site,
-        body.is-entering .reveal {
+        body.is-entering .reveal,
+        .player-disc,
+        .now-playing-title-inner,
+        .link-btn {
           animation: none !important;
+        }
+
+        /* A entrada do link e do player era deslize + fade: sem animacao, o
+           estado final precisa valer direto (o link nascia transparente). */
+        .link-btn {
+          opacity: 1;
+          transform: none;
+        }
+
+        .lightbox[open],
+        #playerModal {
+          animation-name: fade-in-soft !important;
         }
 
         /* Sem animacao, a camada ficaria parada na tela para sempre. */
@@ -2423,7 +2484,7 @@
       </div>
     </div>
 
-    <header class="nav" id="nav">
+    <header class="nav" id="nav" inert>
       <a class="nav-brand" href="#top">daeese<span>.</span></a>
       <div class="nav-end">
         <nav class="nav-links" aria-label="Sections" data-i18n-attr="aria-label:home.nav.label">
@@ -2438,7 +2499,7 @@
       </div>
     </header>
 
-    <main class="site">
+    <main class="site" inert>
       <section class="hero" id="top">
         <div class="hero-main">
           <div class="hero-id reveal">
@@ -2454,8 +2515,9 @@
                 class="discord-status-badge"
                 id="discordStatusBadge"
                 data-status="offline"
-                aria-hidden="true"
-                title="Discord status"
+                role="img"
+                aria-label="Discord status: Offline"
+                title="Discord status: Offline"
               ></span>
             </div>
             <p class="eyebrow"><strong data-i18n="home.role">Fullstack developer</strong><br />C# · JavaScript · Web</p>
@@ -2677,6 +2739,12 @@
         if (!direct) playSFX('click');
         blurOverlay.setAttribute("aria-hidden", "true");
         blurOverlay.tabIndex = -1;
+        // Esmaecer um desfoque de tela cheia era o quadro mais caro da entrada:
+        // o blur sai no mesmo quadro, trocado por um fundo quase opaco, e so
+        // a opacidade desse fundo anima.
+        blurOverlay.style.backdropFilter = "none";
+        blurOverlay.style.webkitBackdropFilter = "none";
+        blurOverlay.style.backgroundColor = "rgba(10, 4, 7, 0.94)";
         blurOverlay.style.opacity = "0";
         blurOverlay.style.pointerEvents = "none";
 
@@ -2685,6 +2753,10 @@
         document.querySelectorAll(".reveal").forEach((el, i) => {
           el.style.setProperty("--i", String(i));
         });
+        // O portao cobre a pagina, mas sem `inert` o Tab caia nos links por
+        // tras do desfoque, invisiveis.
+        document.getElementById("nav").removeAttribute("inert");
+        document.querySelector("main.site").removeAttribute("inert");
         document.body.classList.add("is-entering", "has-entered");
         document.dispatchEvent(new Event("site:entered"));
         if (window.daeeseLite) {
@@ -3155,10 +3227,12 @@
           offline: "Offline"
         };
 
-        discordStatusBadgeEl.title = `${homeT("live.discordStatus", "Discord status")}: ${homeT(
+        const label = `${homeT("live.discordStatus", "Discord status")}: ${homeT(
           `live.status.${normalizedStatus}`,
           statusLabelMap[normalizedStatus] || "Offline"
         )}`;
+        discordStatusBadgeEl.title = label;
+        discordStatusBadgeEl.setAttribute("aria-label", label);
       }
 
       const linksEl = document.getElementById("mainLinks");
@@ -3193,6 +3267,12 @@
         titleEl.classList.remove("is-scrolling");
         titleEl.style.removeProperty("--marquee-distance");
         titleEl.style.removeProperty("--marquee-duration");
+
+        // Letreiro em loop infinito nao combina com menos movimento: o titulo
+        // fica com reticencias, e o nome inteiro aparece no player.
+        if (reduceMotionQuery.matches) {
+          return;
+        }
 
         const overflowAmount = Math.ceil(innerEl.scrollWidth - titleEl.clientWidth);
         if (overflowAmount <= 4) {

@@ -952,6 +952,9 @@
 					button.dataset.name = (guild.n || "").toLowerCase();
 					button.href = inviteUrl(guild.i);
 					button.rel = "noreferrer noopener";
+					// O nome longo e cortado com reticencias na grade; o title mostra
+					// o nome inteiro antes do clique.
+					button.title = guild.n || guild.i;
 
 					const name = document.createElement("span");
 					name.className = "name";
