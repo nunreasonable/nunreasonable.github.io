@@ -573,6 +573,69 @@
 			}
 
 			/*
+			 * Troca de etapa: a etapa que sai sobe 12px e some em 150ms: so
+			 * depois disso o show() troca as classes hidden (a altura do
+			 * cartao muda na hora, sem animar - mais simples que um FLIP de
+			 * altura e nao treme) e a etapa que entra nasce 12px abaixo e
+			 * sobe ao lugar em 300ms. So opacity e transform, como todo o
+			 * resto da pagina. O boot() despacha show() direto na primeira
+			 * pintura (volta do login ou do convite): animar ali criaria um
+			 * flash da etapa errada antes da pagina sequer aparecer, entao o
+			 * script so entra nessa danca depois que a pagina ja pintou.
+			 *
+			 * Estas regras precisam vir depois de ".card > *" (mesma
+			 * especificidade - uma classe so) para ganhar a cascata por
+			 * ordem de declaracao, senao o "animation" (shorthand, nao
+			 * aditivo) da entrada em escada e que prevaleceria.
+			 *
+			 * .step-settled existe por um motivo mais sutil: quando o JS
+			 * tira a classe step-entering/fade-in de um elemento que
+			 * tambem e filho direto de .card (para a proxima troca poder
+			 * reaplicar a classe e reiniciar a animacao), o "rise" de
+			 * ".card > *" fica descoberto de novo e reinicia sozinho -
+			 * mais uma troca de nome de animacao, mais um "both" que
+			 * ninguem pediu. .step-settled fica para sempre no elemento
+			 * depois da primeira troca e bloqueia o "rise" para ele, sem
+			 * tocar na entrada inicial dos outros (que nunca ganham esta
+			 * classe antes de passar por show()/revealWithFade() pelo
+			 * menos uma vez).
+			 */
+			.step-settled { animation: none; }
+
+			@keyframes step-leave {
+				from { opacity: 1; transform: translateY(0); }
+				to { opacity: 0; transform: translateY(-12px); }
+			}
+
+			@keyframes step-enter {
+				from { opacity: 0; transform: translateY(12px); }
+				to { opacity: 1; transform: translateY(0); }
+			}
+
+			.step-leaving { animation: step-leave 150ms var(--ease) both; }
+			.step-entering { animation: step-enter 300ms var(--ease) both; }
+
+			/* Foco programatico no titulo da etapa nova, depois da troca -
+			   so visivel quando o navegador decide mostrar (:focus-visible),
+			   mesmo anel que os outros controles ja usam. */
+			.card h2:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 4px;
+			}
+
+			/* Mesma ideia para um aviso ou estado vazio que aparece dentro
+			   de uma etapa (o alerta de erro, "nenhum servidor") - so a
+			   entrada anima, a saida nunca acontece para estes. Mesmo
+			   motivo de ordem acima: #alert tambem e filho direto de
+			   .card. */
+			@keyframes fade-in {
+				from { opacity: 0; }
+				to { opacity: 1; }
+			}
+
+			.fade-in { animation: fade-in 150ms var(--ease) both; }
+
+			/*
 			 * Mesma regra da home, e pelo mesmo motivo: estas declaracoes tem a
 			 * especificidade das que anulam, entao precisam vir por ultimo e com
 			 * !important para nao perderem para a transition declarada depois.
@@ -584,7 +647,10 @@
 				.hero,
 				.card,
 				.card > *,
-				footer {
+				footer,
+				.step-leaving,
+				.step-entering,
+				.fade-in {
 					animation: none !important;
 				}
 
@@ -598,7 +664,10 @@
 			 */
 			:root[data-lite] .corona,
 			:root[data-lite] .orbit,
-			:root[data-lite] .rays {
+			:root[data-lite] .rays,
+			:root[data-lite] .step-leaving,
+			:root[data-lite] .step-entering,
+			:root[data-lite] .fade-in {
 				animation: none !important;
 			}
 		</style>
@@ -711,7 +780,9 @@
 
 				<!-- 1. Nao logado -->
 				<section id="step-start">
-					<h2 class="eyebrow" data-i18n="sol_invite.add_to_a_server">Add to a server</h2>
+					<!-- tabindex="-1": nao entra no Tab, so recebe foco do
+					     show() depois de uma troca de etapa. -->
+					<h2 class="eyebrow" tabindex="-1" data-i18n="sol_invite.add_to_a_server">Add to a server</h2>
 					<p data-i18n="sol_invite.sign_in_intro">
 						Sign in with Discord and this page will list the servers where
 						you are allowed to add a bot, so you can pick one instead of
@@ -764,7 +835,7 @@
 
 				<!-- 2. Logado, escolhendo o servidor -->
 				<section id="step-pick" class="hidden">
-					<h2 class="eyebrow" data-i18n="sol_invite.choose_a_server">Choose a server</h2>
+					<h2 class="eyebrow" tabindex="-1" data-i18n="sol_invite.choose_a_server">Choose a server</h2>
 					<div class="who">
 						<span id="user-avatar"></span>
 						<div>
@@ -800,7 +871,7 @@
 
 				<!-- 3. Adicionado -->
 				<section id="step-done" class="hidden">
-					<h2 class="eyebrow" data-i18n="sol_invite.done">Done</h2>
+					<h2 class="eyebrow" tabindex="-1" data-i18n="sol_invite.done">Done</h2>
 					<div class="note good">
 						<p>
 							<strong data-i18n="sol_invite.done_p1">Sollarety is in.</strong>
@@ -907,10 +978,80 @@
 			let lastErrorId = null;
 			let lastUser = undefined;
 
-			function show(stepId) {
-				for (const id of ["step-start", "step-pick", "step-done"]) {
+			const STEP_IDS = ["step-start", "step-pick", "step-done"];
+
+			// So false durante o boot(): a troca inicial de etapa (volta do
+			// login ou do convite) acontece antes da pagina pintar, entao
+			// animar ali so criaria o flash da etapa errada (ver o
+			// comentario em @keyframes step-leave no <style>).
+			let booted = false;
+
+			function motionOff() {
+				return window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+					document.documentElement.hasAttribute("data-lite");
+			}
+
+			// Foco pousa no titulo da etapa nova (o primeiro h2 de cada
+			// section e sempre o eyebrow, com tabindex="-1" no HTML) - da
+			// pra teclado e leitor de tela, que anuncia o texto ao focar.
+			function focusStep(stepEl) {
+				const heading = stepEl.querySelector("h2");
+				if (heading) {
+					heading.focus({ preventScroll: true });
+				}
+			}
+
+			function swapStep(stepId, animateEnter) {
+				for (const id of STEP_IDS) {
 					el(id).classList.toggle("hidden", id !== stepId);
 				}
+
+				const next = el(stepId);
+				// step-settled entra sempre, mesmo na troca instantanea: sem
+				// ela, a primeira vez que uma etapa escondida aparece (sob
+				// reduced-motion/lite, sem step-entering) ainda cai no
+				// "rise" generico de ".card > *" (520ms) em vez de aparecer
+				// na hora - ver o comentario em @keyframes step-leave.
+				next.classList.add("step-settled");
+				focusStep(next);
+
+				if (animateEnter) {
+					next.classList.add("step-entering");
+					next.addEventListener("animationend", () => next.classList.remove("step-entering"), { once: true });
+				}
+			}
+
+			function show(stepId) {
+				const current = STEP_IDS.map(el).find((node) => node.id !== stepId && !node.classList.contains("hidden"));
+
+				if (!booted || !current || motionOff()) {
+					swapStep(stepId, false);
+					return;
+				}
+
+				current.classList.add("step-leaving", "step-settled");
+				current.addEventListener("animationend", () => {
+					current.classList.remove("step-leaving");
+					swapStep(stepId, true);
+				}, { once: true });
+			}
+
+			// Mostra um elemento que estava hidden com um fade de entrada;
+			// a saida (virar hidden de novo) nunca anima. Reseta a classe
+			// antes de reaplicar para a animacao reiniciar se o elemento
+			// for escondido e mostrado de novo rapido. step-settled junto
+			// pelo mesmo motivo do swapStep/show acima.
+			function revealWithFade(node) {
+				node.classList.add("step-settled");
+
+				if (motionOff()) {
+					node.classList.remove("hidden");
+					return;
+				}
+
+				node.classList.remove("hidden", "fade-in");
+				void node.offsetWidth;
+				node.classList.add("fade-in");
 			}
 
 			function showAlert(code) {
@@ -920,7 +1061,7 @@
 				// chaves proprias.
 				lastErrorId = Object.hasOwn(ERROR_IDS, code) ? ERROR_IDS[code] : ERROR_IDS.oauth;
 				el("alert-text").textContent = str(lastErrorId);
-				el("alert").classList.remove("hidden");
+				revealWithFade(el("alert"));
 			}
 
 			function currentPreset() {
@@ -1028,7 +1169,14 @@
 				}
 
 				container.append(batch);
-				el("no-guilds").classList.toggle("hidden", guilds.length > 0);
+
+				const noGuilds = el("no-guilds");
+				if (guilds.length > 0) {
+					noGuilds.classList.add("hidden");
+				} else {
+					revealWithFade(noGuilds);
+				}
+
 				el("filter").classList.toggle("hidden", guilds.length <= FILTER_THRESHOLD);
 			}
 
@@ -1171,6 +1319,10 @@
 			}
 
 			boot();
+			// So depois do boot() sincrono (e de qualquer show() que ele
+			// tenha disparado) a pagina ja pintou a etapa inicial; dai em
+			// diante toda troca e uma interacao real e pode animar.
+			booted = true;
 		</script>
 			<!--
 		  Seletor de idioma. O ingles fica no proprio HTML; o modulo carrega so o
