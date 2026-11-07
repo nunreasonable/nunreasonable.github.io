@@ -340,8 +340,10 @@
 	transform: scaleY(0.5);
 }
 
-.demo[data-live] .demo-eq i,
-.demo[data-live] .dw-viz i {
+/* O visualizador so anima com o ponteiro ou o foco no demo: animando sem
+   parar ele custava ~3 ms por quadro (126 fps contra 200 no Brave a 200 Hz). */
+.demo[data-live]:is(:hover, :focus-within) .demo-eq i,
+.demo[data-live]:is(:hover, :focus-within) .dw-viz i {
 	animation: demo-viz 0.9s ease-in-out infinite alternate;
 }
 

@@ -2621,22 +2621,23 @@
       }
 
       /*
-       * Revelar ao rolar, sem JS: cabecalhos de secao e cards fechados sobem
-       * 16px e aparecem conforme entram na tela, presos a rolagem (nao ao
-       * tempo). Usa `translate`, e nao `transform`: o transform do card ja e
-       * do hover e do deslize de layout (FLIP), e as duas propriedades somam
-       * em vez de brigar. O card aberto fica de fora: ele e alto, e a faixa
-       * "cover 25%" dele deixava o conteudo meio transparente.
+       * Revelar ao rolar: cabecalhos de secao e cards sobem 16px e aparecem
+       * uma vez, quando entram na tela (initReveal). Ja foi uma animacao
+       * presa a rolagem (animation-timeline: view()), mas ela seguia custando
+       * quadro mesmo com a pagina parada: medido no Brave a 200 Hz, 143 fps
+       * com os cards na tela contra 195 sem. Agora a transicao roda uma vez e
+       * as classes saem. Usa `translate`, que soma com o transform do hover e
+       * do FLIP em vez de brigar com ele.
        */
-      @supports (animation-timeline: view()) {
-        @media (prefers-reduced-motion: no-preference) {
-          :root:not([data-lite]) .section-head,
-          :root:not([data-lite]) .project-card:not(.is-open) {
-            animation: rise linear both;
-            animation-timeline: view();
-            animation-range: entry 5% cover 25%;
-          }
-        }
+      .rv-pending {
+        opacity: 0;
+        translate: 0 16px;
+      }
+
+      .rv-pending.rv-in {
+        opacity: 1;
+        translate: none;
+        transition: opacity 500ms ease, translate 500ms cubic-bezier(0.2, 0, 0, 1);
       }
 
       @keyframes rise {
@@ -5174,6 +5175,65 @@
           if (still()) stopStill();
         });
         timer = setTimeout(step, TYPE_MS);
+      })();
+    </script>
+    <script>
+      (function initReveal() {
+        if (reduceMotionQuery.matches || (window.daeeseLite && window.daeeseLite.on) || !("IntersectionObserver" in window)) {
+          return;
+        }
+        const items = document.querySelectorAll(".section-head, .project-card");
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const el = entry.target;
+            io.unobserve(el);
+            el.classList.add("rv-in");
+            // Terminada a entrada, as classes saem e nada fica animando.
+            setTimeout(() => el.classList.remove("rv-pending", "rv-in"), 600);
+          });
+        }, { rootMargin: "0px 0px -8% 0px" });
+        // Pulo grande (ancora do menu, Home/End) passa por cima de cards sem
+        // que eles cheguem a cruzar a tela: o que ja ficou acima aparece.
+        let raf = 0;
+        function catchUp() {
+          raf = 0;
+          const pending = document.querySelectorAll(".rv-pending:not(.rv-in)");
+          if (!pending.length) {
+            window.removeEventListener("scroll", onScroll);
+            return;
+          }
+          pending.forEach((el) => {
+            if (el.getBoundingClientRect().top < innerHeight) {
+              io.unobserve(el);
+              el.classList.remove("rv-pending");
+            }
+          });
+        }
+        function onScroll() {
+          if (!raf) raf = requestAnimationFrame(catchUp);
+        }
+        window.addEventListener("scroll", onScroll, { passive: true });
+        items.forEach((el) => {
+          // O que ja esta na tela no carregamento nao anima.
+          const r = el.getBoundingClientRect();
+          if (r.top < innerHeight && r.bottom > 0) return;
+          el.classList.add("rv-pending");
+          io.observe(el);
+        });
+        // Card aberto por link direto ou pelo usuario aparece na hora.
+        document.addEventListener("click", (e) => {
+          const card = e.target.closest && e.target.closest(".project-card.rv-pending");
+          if (card) {
+            io.unobserve(card);
+            card.classList.remove("rv-pending", "rv-in");
+          }
+        });
+        document.addEventListener("lite:change", () => {
+          if (!window.daeeseLite.on) return;
+          io.disconnect();
+          document.querySelectorAll(".rv-pending").forEach((el) => el.classList.remove("rv-pending", "rv-in"));
+        });
       })();
     </script>
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
