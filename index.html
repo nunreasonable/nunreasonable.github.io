@@ -1275,10 +1275,12 @@
         border-bottom-color: var(--line);
       }
 
+      /* Minusculo de proposito: "daeese" nunca vai em caixa alta. */
       .nav-brand {
-        font-family: "Bebas Neue", sans-serif;
-        font-size: 1.6rem;
-        letter-spacing: 0.04em;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 700;
+        font-size: 1.4rem;
+        letter-spacing: -0.04em;
         color: var(--text);
         text-decoration: none;
         line-height: 1;
@@ -1380,12 +1382,27 @@
       .name-wrap {
         margin-top: 22px;
         min-width: 0;
+        container-type: inline-size;
       }
 
+      /*
+       * O nome troca entre os nicknames (initTypewriter). "daeese" e sempre
+       * minusculo, e a Bebas Neue so tem maiusculas: por isso o nome usa a
+       * Space Grotesk. O tamanho sai do comprimento do nick (--name-len) para
+       * "nunreasonable" caber na mesma linha que "daeese" ocupa.
+       */
       .hero .name {
-        font-size: clamp(4.6rem, 15vw, 11.5rem);
-        line-height: 0.82;
-        letter-spacing: 0.01em;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 700;
+        font-size: min(11.5rem, calc(100cqi / (var(--name-len, 6) * 0.6)));
+        line-height: 0.9;
+        letter-spacing: -0.055em;
+        white-space: nowrap;
+        /* Altura fixa na do nick mais curto (o maior em tamanho): o texto de
+           baixo nao pula quando o nick troca, o menor so senta na base. */
+        display: flex;
+        align-items: flex-end;
+        block-size: calc(min(11.5rem, calc(100cqi / 3.6)) * 0.96);
       }
 
       .hero .handle {
@@ -2526,7 +2543,7 @@
         .nav-brand { font-size: 1.35rem; flex-shrink: 0; }
         .nav-links a { font-size: .65rem; letter-spacing: .03em; }
         .nav .i18n-switcher__btn { padding: 5px 6px; }
-        .hero .name { font-size: clamp(4.6rem, 22vw, 8rem); }
+        .hero .name { font-size: min(8rem, calc(100cqi / (var(--name-len, 6) * 0.6))); block-size: calc(min(8rem, calc(100cqi / 3.6)) * 0.96); }
         .hero .bio { max-width: 38ch; }
         .hero-action { flex: 1; justify-content: center; padding-inline: 14px; font-size: .9rem; }
         .hero-side .link-btn:has(.now-playing-left) { grid-template-columns: minmax(0, 1fr); }
@@ -2687,7 +2704,7 @@
             <p class="eyebrow"><strong data-i18n="home.role">Fullstack developer</strong><br />C# · JavaScript · Web</p>
           </div>
           <div class="name-wrap reveal">
-            <h1 class="name" id="displayName">DAEESE</h1>
+            <h1 class="name" id="displayName">daeese</h1>
             <p class="handle" id="handle">@daeese</p>
           </div>
           <p class="bio reveal" id="bio" data-i18n="home.bio"></p>
@@ -4776,13 +4793,19 @@
           return;
         }
 
-        const texto = nameEl.textContent.trim();
+        // Os nicknames, sempre nessa grafia: "daeese" nunca em caixa alta.
+        const NICKS = ["daeese", "nunreasonable", "daeeseD"];
+        const TYPE_MS = 85;
+        const ERASE_MS = 40;
+        const HOLD_MS = 2600;
 
-        // O nome completo fica SEMPRE disponivel para leitor de tela. Sem isto,
-        // quem usa leitor ouviria "d", "da", "dae"... ou um nome pela metade.
-        nameEl.setAttribute("aria-label", texto);
+        // O leitor de tela ouve so o nome principal, uma vez. A troca e
+        // decoracao: anunciar cada letra seria ruido.
+        nameEl.setAttribute("aria-label", NICKS[0]);
+        nameEl.style.setProperty("--name-len", String(NICKS[0].length));
 
-        if (reduceMotionQuery.matches) {
+        const still = () => reduceMotionQuery.matches || (window.daeeseLite && window.daeeseLite.on);
+        if (still()) {
           return;
         }
 
@@ -4791,18 +4814,75 @@
         const caret = document.createElement("span");
         caret.className = "name-caret";
         caret.setAttribute("aria-hidden", "true");
-
         nameEl.textContent = "";
         nameEl.append(saida, caret);
 
-        let i = 0;
-        const timer = setInterval(() => {
-          saida.textContent = texto.slice(0, ++i);
-          if (i >= texto.length) {
-            clearInterval(timer);
-            wrap.classList.add("is-typed");
+        let nick = 0;
+        let shown = 0;
+        let erasing = false;
+        let timer = 0;
+        let visible = true;
+
+        function stopStill() {
+          clearTimeout(timer);
+          timer = 0;
+          nameEl.textContent = NICKS[0];
+          nameEl.style.setProperty("--name-len", String(NICKS[0].length));
+          wrap.classList.add("is-typed");
+        }
+
+        function step() {
+          timer = 0;
+          if (still()) {
+            stopStill();
+            return;
           }
-        }, 85);
+          // Fora da tela ou com a aba escondida o ciclo para, e retoma de onde
+          // estava quando o hero volta a aparecer.
+          if (!visible || document.hidden) {
+            return;
+          }
+          const text = NICKS[nick];
+          if (!erasing) {
+            if (shown === 0) {
+              nameEl.style.setProperty("--name-len", String(text.length));
+            }
+            shown += 1;
+            saida.textContent = text.slice(0, shown);
+            if (shown >= text.length) {
+              erasing = true;
+              timer = setTimeout(step, HOLD_MS);
+              return;
+            }
+            timer = setTimeout(step, TYPE_MS);
+          } else {
+            shown -= 1;
+            saida.textContent = text.slice(0, shown);
+            if (shown <= 0) {
+              erasing = false;
+              nick = (nick + 1) % NICKS.length;
+              timer = setTimeout(step, 320);
+              return;
+            }
+            timer = setTimeout(step, ERASE_MS);
+          }
+        }
+
+        function resume() {
+          if (!timer && visible && !document.hidden && !still()) {
+            timer = setTimeout(step, TYPE_MS);
+          }
+        }
+
+        new IntersectionObserver((entries) => {
+          visible = entries[0].isIntersecting;
+          resume();
+        }).observe(wrap);
+        document.addEventListener("visibilitychange", resume);
+        document.addEventListener("lite:change", () => {
+          if (still()) stopStill();
+        });
+        timer = setTimeout(step, TYPE_MS);
       })();
     </script>
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
