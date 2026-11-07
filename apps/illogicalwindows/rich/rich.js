@@ -16,7 +16,7 @@
  * Tudo que fica em loop para fora da tela ou com a aba escondida.
  */
 
-import { setupShowcase } from "./showcase.js?v=20261107-1";
+import { setupShowcase } from "./showcase.js?v=20261107-3";
 
 import { createDesktop } from "./desktop.js?v=20261107-2";
 import { PRESETS, wallpaperUrl, drawThumb, presetTones, demoScheme, pageScheme, PAGE_KEYS, tonesFromFile } from "./palette.js?v=20261013-1";
@@ -520,29 +520,120 @@ function setupChooser() {
 	sync();
 }
 
+// A captura da cena voa ate onde o recurso abre no demo (FLIP), enquanto a
+// pagina pula direto para la. Com rolagem suave junto, o fim da rolagem nao
+// tem hora certa e o clone chegava antes ou depois do demo; com o salto, o
+// olho segue o clone e so transform/opacity se mexem.
+const TRY_PANEL = { spot: ".demo-spot", side: ".demo-side" };
+
 function setupTry(palette) {
-    const timers = new Set();
-    cleanups.push(() => timers.forEach(clearTimeout));
+	const timers = new Set();
 	const demo = document.getElementById("demo-area");
+	const stage = demo.querySelector(".demo");
+	let ghost = null;
+	function dropGhost() {
+		if (ghost) ghost.remove();
+		ghost = null;
+	}
+	cleanups.push(() => {
+		timers.forEach(clearTimeout);
+		dropGhost();
+	});
+
+	// Centraliza o desktop do demo abaixo do cabecalho (56px), para o painel
+	// que vai abrir ficar inteiro na tela; se nao couber, encosta no topo.
+	function jump() {
+		const r = stage.getBoundingClientRect();
+		const room = innerHeight - 56;
+		scrollTo({ top: scrollY + r.top - 56 - Math.max(0, (room - r.height) / 2), behavior: "instant" });
+	}
+
+	function open(what) {
+		if (!desktop) return;
+		stage.focus({ preventScroll: true });
+		if (what === "spot") desktop.spotlight("");
+		else if (what === "overview") desktop.act("tab");
+		else if (what === "tile") desktop.tileDemo();
+		else if (what === "side") desktop.act("side");
+		else if (what === "cheat") desktop.act("cheat");
+		else if (what === "wall") palette.cycle();
+		else if (what === "taskbar") desktop.showTaskbar();
+	}
+
+	// Caixa final do painel que vai abrir. offset* ignora o transform de
+	// fechado; o Spotlight se centraliza com translate(-50%).
+	function target(what) {
+		const s = stage.getBoundingClientRect();
+		const el = TRY_PANEL[what] && stage.querySelector(TRY_PANEL[what]);
+		if (!el) return s;
+		let x = 0;
+		let y = 0;
+		for (let n = el; n && n !== stage; n = n.offsetParent) {
+			x += n.offsetLeft;
+			y += n.offsetTop;
+		}
+		if (what === "spot") x -= el.offsetWidth / 2;
+		return { left: s.left + x, top: s.top + y, width: el.offsetWidth, height: el.offsetHeight };
+	}
+
+	function fly(img, from, what) {
+		const to = target(what);
+		// A captura inteira cabe no alvo (contain), sem distorcer.
+		const k = Math.min(to.width / from.width, to.height / from.height);
+		const w = from.width * k;
+		const h = from.height * k;
+		const left = to.left + (to.width - w) / 2;
+		const top = to.top + (to.height - h) / 2;
+		dropGhost();
+		const g = img.cloneNode(false);
+		g.removeAttribute("loading");
+		g.removeAttribute("data-i18n-attr");
+		g.alt = "";
+		g.setAttribute("aria-hidden", "true");
+		g.className = "try-ghost";
+		// O raio encolhe junto com a escala: no comeco ele bate com o da cena.
+		g.style.cssText = `left:${left}px;top:${top}px;width:${w}px;height:${h}px;border-radius:${(18 * k).toFixed(1)}px`;
+		document.body.append(g);
+		ghost = g;
+		g.animate(
+			[
+				{ transform: `translate(${from.left - left}px, ${from.top - top}px) scale(${1 / k})`, opacity: 1 },
+				{ opacity: 1, offset: 0.5 },
+				{ transform: "none", opacity: 0 }
+			],
+			{ duration: 420, easing: "cubic-bezier(0.2, 0, 0, 1)" }
+		).finished.then(() => g === ghost && dropGhost(), () => {});
+	}
+
 	document.querySelectorAll("[data-try]").forEach((b) =>
 		on(b, "click", (event) => {
-            event.preventDefault();
-			demo.scrollIntoView({ behavior: reduce.matches ? "auto" : "smooth", block: "center" });
-			const stage = demo.querySelector(".demo");
+			event.preventDefault();
+			const what = b.dataset.try;
+			timers.forEach(clearTimeout);
+			timers.clear();
+			if (reduce.matches) {
+				jump();
+				open(what);
+				return;
+			}
+			const scene = b.closest(".journey-scene");
+			const img = scene && scene.querySelector(".journey-visual img");
+			// Mede antes do salto: depois dele a cena ja saiu da tela.
+			const from = img && img.complete && img.naturalWidth ? img.getBoundingClientRect() : null;
+			jump();
+			if (from && from.width && from.height) fly(img, from, what);
+			if (stage.animate) {
+				stage.animate([{ transform: "scale(0.96)", opacity: 0.6 }, { transform: "none", opacity: 1 }], {
+					duration: 300,
+					easing: "cubic-bezier(0.2, 0, 0, 1)"
+				});
+			}
+			// O painel comeca a aparecer quando o clone ja esta chegando.
 			const timer = setTimeout(() => {
-                timers.delete(timer);
-                if (!desktop) return;
-				stage.focus({ preventScroll: true });
-				const what = b.dataset.try;
-				if (what === "spot") desktop.spotlight("");
-				else if (what === "overview") desktop.act("tab");
-				else if (what === "tile") desktop.tileDemo();
-				else if (what === "side") desktop.act("side");
-				else if (what === "cheat") desktop.act("cheat");
-				else if (what === "wall") palette.cycle();
-				else if (what === "taskbar") desktop.showTaskbar();
-			}, reduce.matches ? 0 : 450);
-            timers.add(timer);
+				timers.delete(timer);
+				open(what);
+			}, 120);
+			timers.add(timer);
 		})
 	);
 }

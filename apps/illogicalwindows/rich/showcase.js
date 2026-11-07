@@ -11,6 +11,9 @@ export function setupShowcase() {
   const visible = new Set();
   const counter = journey.querySelector(".journey-counter");
   const styles = new WeakMap();
+  // Com scroll-driven animations (showcase.css), o compositor move o hero e
+  // as cenas; o JS so marca a cena atual, o contador e o progresso.
+  const sdt = !!(window.CSS && CSS.supports && CSS.supports("animation-timeline: view()"));
   let frame = 0;
   let previous = -1;
   const clamp = (n) => Math.max(0, Math.min(1, n));
@@ -33,7 +36,7 @@ export function setupShowcase() {
     frame = 0;
     if (document.hidden) return;
     // Mede tudo antes de escrever estilos, evitando recalculo entre leituras.
-    const bounds = visible.has(hero) && !reduce.matches ? hero.getBoundingClientRect() : null;
+    const bounds = !sdt && visible.has(hero) && !reduce.matches ? hero.getBoundingClientRect() : null;
     const r = motion.matches && visible.has(journey) ? journey.getBoundingClientRect() : null;
     if (bounds) {
       const progress = clamp(-bounds.top / Math.max(1, bounds.height * .6));
@@ -47,17 +50,15 @@ export function setupShowcase() {
     const progress = clamp((56 - r.top) / Math.max(1, r.height - innerHeight + 56));
     const position = progress * scenes.length;
     const current = Math.min(scenes.length - 1, Math.floor(position + .1));
-    scenes.forEach((scene, i) => {
+    if (!sdt) scenes.forEach((scene, i) => {
       const distance = position - i;
       const alpha = clamp((distance + .2) / .2) * clamp((1 - distance) / .22);
       // A ultima cena fica ate o fim, em vez de apagar na saida da secao.
       setStyle(scene, "--scene-alpha", (i === scenes.length - 1 && distance >= 0 ? 1 : clamp(alpha)).toFixed(3));
       setStyle(scene, "--scene-y", `${((1 - clamp((distance + .2) / .45)) * 65 - clamp((distance - .7) / .3) * 35).toFixed(2)}px`);
-      if (current !== previous) {
-        scene.classList.toggle("is-current", i === current);
-      }
     });
     if (current !== previous) {
+      scenes.forEach((scene, i) => scene.classList.toggle("is-current", i === current));
       marks.forEach((mark, i) => mark.classList.toggle("is-on", i <= current));
       counter.textContent = `0${current + 1} / 03`;
       previous = current;
@@ -65,8 +66,9 @@ export function setupShowcase() {
   }
   // Um quadro por quadro de tela, sem teto: o update custa ~0,14 ms, e um
   // teto de 60 fps fazia a cena andar em degraus num monitor de 200 Hz.
+  // No caminho CSS, so a jornada precisa do quadro (para a cena atual).
   function request() {
-    if (frame || document.hidden || !visible.size) return;
+    if (frame || document.hidden || !(sdt ? motion.matches && visible.has(journey) : visible.size)) return;
     frame = requestAnimationFrame(update);
   }
   // As cenas ficam empilhadas e so a atual aparece. Em vez de esconde-las do
@@ -82,6 +84,7 @@ export function setupShowcase() {
   }
   function changeMode() {
     document.documentElement.classList.toggle("showcase-motion", motion.matches);
+    document.documentElement.classList.toggle("showcase-sdt", sdt);
     previous = -1;
     resetScenes();
     scenes.forEach((scene, i) => {
@@ -119,7 +122,7 @@ export function setupShowcase() {
     document.removeEventListener("visibilitychange", request);
     motion.removeEventListener("change", changeMode);
     reduce.removeEventListener("change", request);
-    document.documentElement.classList.remove("showcase-motion");
+    document.documentElement.classList.remove("showcase-motion", "showcase-sdt");
     resetScenes();
     ["--launch-tilt", "--launch-turn", "--launch-scale", "--search-y", "--side-y"].forEach((name) => stage.style.removeProperty(name));
   };

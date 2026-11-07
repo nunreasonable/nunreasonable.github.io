@@ -1444,13 +1444,13 @@
 	opacity: 1;
 }
 
-/* Fundo: o desktop do mesmo tema, desfocado uma vez (estatico). */
+/* Fundo: o desktop do mesmo tema, ja desfocado e escurecido no arquivo
+   (*.blur.webp). Sem filter, a troca de aba so funde dois bitmaps. */
 .explore-frame .ex-bg {
 	position: absolute;
-	inset: -24px;
+	inset: 0;
 	background-position: center;
 	background-size: cover;
-	filter: blur(16px) brightness(0.72) saturate(1.1);
 }
 
 .explore-frame img {
@@ -1461,7 +1461,9 @@
 	height: auto;
 	max-width: 86%;
 	max-height: 74%;
-	filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
+	/* Os paineis sao retangulos opacos: box-shadow fixo da a mesma sombra
+	   do drop-shadow, sem filtro na camada que anima. */
+	box-shadow: 0 18px 30px rgba(0, 0, 0, 0.45);
 	transform: translate(-50%, -50%) scale(0.95);
 	transition: transform 0.7s var(--ease);
 }
@@ -1867,6 +1869,21 @@
 .rich-ready .rv.rv-in {
 	opacity: 1;
 	transform: none;
+}
+
+/* ---------- "Testar no demo": captura em voo (rich.js) ---------- */
+
+/* Fica no lugar final; o WAAPI parte da cena com transform e opacity. */
+.try-ghost {
+	position: fixed;
+	z-index: 100;
+	margin: 0;
+	max-width: none;
+	max-height: none;
+	border-radius: 18px;
+	box-shadow: 0 28px 80px rgba(0, 0, 0, 0.6);
+	transform-origin: 0 0;
+	pointer-events: none;
 }
 
 /* ---------- Menos movimento ---------- */

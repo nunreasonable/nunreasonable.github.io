@@ -132,5 +132,52 @@
   .rich-ready .journey-scene { opacity: 1; transform: none; transition: none; }
 }
 
+/* Rolagem pelo compositor (Chromium): as mesmas curvas do showcase.js, em
+   keyframes lineares presos a view-timeline. A classe showcase-sdt so entra
+   quando o navegador suporta; sem ela (Firefox), o JS continua desenhando.
+   Hero: progresso 0 com o topo do hero no topo da tela, 1 depois de rolar
+   60% da altura dele (exit-crossing 0% a 60%). */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .showcase-sdt .hero { view-timeline: --iw-hero block; view-timeline-inset: 0px; }
+    .showcase-sdt .launch-desktop, .showcase-sdt .launch-search, .showcase-sdt .launch-side {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --iw-hero;
+      animation-range: exit-crossing 0% exit-crossing 60%;
+    }
+    .showcase-sdt .launch-desktop { animation-name: iw-launch-desktop; }
+    .showcase-sdt .launch-search { animation-name: iw-launch-search; }
+    .showcase-sdt .launch-side { animation-name: iw-launch-side; }
+    /* Jornada: progresso 0 com o topo a 56px (abaixo do cabecalho), 1 com o
+       fim da secao no fim da tela. Cada cena i ocupa d = 3p - i: aparece em
+       d -0.2..0, some em 0.78..1; a imagem desce 65px -> 0 (d -0.2..0.25) e
+       sobe ate -35px (d 0.7..1). A ultima cena nao apaga. */
+    .showcase-sdt.showcase-motion .journey { view-timeline: --iw-journey block; view-timeline-inset: 56px 0px; }
+    .showcase-sdt.showcase-motion .journey-scene, .showcase-sdt.showcase-motion .journey-visual img {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --iw-journey;
+      animation-range: contain 0% contain 100%;
+    }
+    .showcase-sdt.showcase-motion .journey-scene:nth-child(1) { animation-name: iw-scene-a0; }
+    .showcase-sdt.showcase-motion .journey-scene:nth-child(2) { animation-name: iw-scene-a1; }
+    .showcase-sdt.showcase-motion .journey-scene:nth-child(3) { animation-name: iw-scene-a2; }
+    .showcase-sdt.showcase-motion .journey-scene:nth-child(1) .journey-visual img { animation-name: iw-scene-y0; }
+    .showcase-sdt.showcase-motion .journey-scene:nth-child(2) .journey-visual img { animation-name: iw-scene-y1; }
+    .showcase-sdt.showcase-motion .journey-scene:nth-child(3) .journey-visual img { animation-name: iw-scene-y2; }
+  }
+}
+@keyframes iw-launch-desktop { from { transform: rotateX(9deg) rotateY(-3deg) scale(.94); } to { transform: rotateX(0deg) rotateY(0deg) scale(1); } }
+@keyframes iw-launch-search { from { transform: translateY(28px) rotate(-5deg); } to { transform: translateY(-37px) rotate(-5deg); } }
+@keyframes iw-launch-side { from { transform: translateY(-18px) rotate(4deg); } to { transform: translateY(32px) rotate(4deg); } }
+/* A imagem anda pelo translate; o transform dela (giro da cena) fica parado. */
+@keyframes iw-scene-a0 { 0%, 26% { opacity: 1; } 33.333%, 100% { opacity: 0; } }
+@keyframes iw-scene-a1 { 0%, 26.667% { opacity: 0; } 33.333%, 59.333% { opacity: 1; } 66.667%, 100% { opacity: 0; } }
+@keyframes iw-scene-a2 { 0%, 60% { opacity: 0; } 66.667%, 100% { opacity: 1; } }
+@keyframes iw-scene-y0 { 0% { translate: 0 36.111px; } 8.333%, 23.333% { translate: 0 0; } 33.333%, 100% { translate: 0 -35px; } }
+@keyframes iw-scene-y1 { 0%, 26.667% { translate: 0 65px; } 41.667%, 56.667% { translate: 0 0; } 66.667%, 100% { translate: 0 -35px; } }
+@keyframes iw-scene-y2 { 0%, 60% { translate: 0 65px; } 75%, 90% { translate: 0 0; } 100% { translate: 0 -35px; } }
+
 /* Recolore somente as capturas rosas da apresentacao, sem animar o filtro. */
 img[data-showcase-src] { filter: hue-rotate(200deg); }
