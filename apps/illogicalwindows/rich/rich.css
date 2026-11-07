@@ -1179,15 +1179,11 @@
 	font: inherit;
 	font-size: 0.85rem;
 	cursor: pointer;
-	transition: transform 120ms var(--ease), border-color 120ms ease;
+	transition: transform 150ms ease-out, border-color 120ms ease;
 }
 
 .demo-keys button:hover {
 	border-color: var(--accent-ink);
-}
-
-.demo-keys button:active {
-	transform: translateY(1px);
 }
 
 .demo-keys kbd {
@@ -1271,11 +1267,13 @@
 	border-radius: 10px;
 	background: none;
 	cursor: pointer;
-	transition: transform 140ms var(--ease), border-color 140ms ease;
+	transition: transform 150ms ease-out, border-color 140ms ease;
 }
 
-.demo-swatches button:hover {
-	transform: translateY(-2px);
+@media (hover: hover) {
+	.demo-swatches button:hover {
+		transform: translateY(-2px);
+	}
 }
 
 .demo-swatches button[aria-checked="true"] {
@@ -1334,6 +1332,7 @@
 }
 
 .explore-tabs {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	gap: 4px;
@@ -1353,7 +1352,27 @@
 	transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.explore-tabs [role="tab"]::before {
+.explore-tabs [role="tab"]:hover {
+	color: var(--text);
+}
+
+.explore-tabs [aria-selected="true"] {
+	color: var(--text);
+	font-weight: 600;
+}
+
+/* Um indicador so (rich.js), que desliza ate a aba escolhida. A largura e a
+   altura trocam na hora; so o transform anda. */
+.ex-ind {
+	position: absolute;
+	top: 0;
+	left: 0;
+	border-radius: 10px;
+	background: var(--accent-soft);
+	pointer-events: none;
+}
+
+.ex-ind::before {
 	content: "";
 	position: absolute;
 	left: 6px;
@@ -1362,22 +1381,43 @@
 	width: 3px;
 	border-radius: 2px;
 	background: var(--accent);
-	transform: scaleY(0);
-	transition: transform 0.25s var(--ease);
 }
 
-.explore-tabs [role="tab"]:hover {
-	color: var(--text);
+/* Progresso do passe automatico: enche em 5,2 s (o mesmo tempo do rich.js)
+   e congela quando o explorador pausa. */
+.explore-tabs [role="tab"]::after {
+	content: "";
+	position: absolute;
+	left: 18px;
+	right: 14px;
+	bottom: 4px;
+	height: 2px;
+	border-radius: 1px;
+	background: var(--accent);
+	opacity: 0;
+	transform: scaleX(0);
+	transform-origin: left;
 }
 
-.explore-tabs [aria-selected="true"] {
-	background: var(--accent-soft);
-	color: var(--text);
-	font-weight: 600;
+@media (prefers-reduced-motion: no-preference) {
+	.ex-ind {
+		transition: transform 220ms cubic-bezier(0.2, 0, 0, 1);
+	}
+
+	.explore-tabs [aria-selected="true"]::after {
+		opacity: 1;
+		animation: ex-progress 5200ms linear forwards;
+	}
+
+	.explore-tabs.is-paused [aria-selected="true"]::after {
+		animation-play-state: paused;
+	}
 }
 
-.explore-tabs [aria-selected="true"]::before {
-	transform: none;
+@keyframes ex-progress {
+	to {
+		transform: scaleX(1);
+	}
 }
 
 .explore-frame {
@@ -1462,6 +1502,15 @@
 	.explore-tabs [role="tab"] {
 		flex: none;
 		white-space: nowrap;
+	}
+
+	/* Abas na horizontal: sem indicador que desliza, cada aba pinta o proprio fundo. */
+	.ex-ind {
+		display: none;
+	}
+
+	.explore-tabs [aria-selected="true"] {
+		background: var(--accent-soft);
 	}
 
 	.explore-frame {
@@ -1612,7 +1661,7 @@
 	font-size: 0.9rem;
 	text-align: left;
 	cursor: pointer;
-	transition: transform 160ms var(--ease), border-color 160ms ease;
+	transition: transform 150ms ease-out, border-color 160ms ease;
 }
 
 .chooser-a button strong {
@@ -1621,8 +1670,13 @@
 }
 
 .chooser-a button:hover {
-	transform: translateY(-2px);
 	border-color: var(--accent-ink);
+}
+
+@media (hover: hover) {
+	.chooser-a button:hover {
+		transform: translateY(-2px);
+	}
 }
 
 .chooser-a button[aria-pressed="true"] {
@@ -1656,14 +1710,17 @@
 	background: var(--accent-soft);
 	color: var(--text);
 	font-family: var(--font-display);
-	font-size: clamp(1.25rem, 2.8vw, 1.7rem);
+	font-size: var(--d3);
 	font-weight: 650;
-	letter-spacing: -0.015em;
+	letter-spacing: -0.02em;
+	line-height: 1.15;
 	transform-origin: 0 100%;
 }
 
+/* .panel-head p (index.html) pintava o balao de cinza; aqui ele volta ao texto. */
 .rich .reply {
 	display: inline-flex !important;
+	color: var(--text);
 }
 
 .reply-dots {
@@ -1720,7 +1777,7 @@
 	font-size: 0.82rem;
 	font-weight: 600;
 	cursor: pointer;
-	transition: border-color 140ms ease, background-color 140ms ease;
+	transition: transform 150ms ease-out, border-color 140ms ease, background-color 140ms ease;
 }
 
 .try::before {
@@ -1736,6 +1793,17 @@
 .try:hover {
 	border-color: var(--accent-ink);
 	background: var(--accent-soft);
+}
+
+/* Resposta ao apertar: encolhe um pouco e volta (so transform, seco). */
+.rich .btn {
+	transition: transform 150ms ease-out, background-color 140ms ease, border-color 140ms ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.rich :is(.btn, .try, .demo-keys button, .demo-swatches button, .chooser-a button):not(:disabled):active {
+		transform: scale(0.96);
+	}
 }
 
 /* ---------- Linha do tempo das versoes ---------- */

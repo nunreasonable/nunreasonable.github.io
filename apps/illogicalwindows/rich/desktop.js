@@ -8,8 +8,11 @@
  *
  * Teclas, com o demo em foco (o navegador no Windows nunca recebe a tecla
  * Win, o sistema fica com ela): Espaco = Win (Spotlight), Enter = Win+Enter,
- * Q = Win+Q, Tab = Win+Tab, / = Win+/, 1-3 = Win+1-3, Esc fecha ou sai. Onde
- * o navegador entrega a tecla Meta, Meta+tecla funciona igual.
+ * Q = Win+Q, Tab = Win+Tab, / = Win+/, 1-3 = Win+1-3, Esc fecha ou sai.
+ * Shift + setas troca a janela em foco com a vizinha (o mesmo que arrastar
+ * pelo titulo) e T mostra a barra de tarefas, que no mouse so aparece na
+ * borda de baixo. Onde o navegador entrega a tecla Meta, Meta+tecla funciona
+ * igual.
  *
  * O "coach" fala com o visitante: reage ao que ele faz e conta o que falta
  * descobrir. As frases moram no bloco #iw-strings (data-i18n), entao trocam
@@ -290,6 +293,27 @@ export function createDesktop(root, opts) {
 		}
 	}
 
+	// Troca duas janelas de lugar na ordem do dwindle (arrastar ou Shift + setas).
+	function swap(a, b) {
+		const list = workspaces[ws];
+		const i = list.indexOf(a);
+		const j = list.indexOf(b);
+		if (i < 0 || j < 0 || i === j) return;
+		list[i] = b;
+		list[j] = a;
+		say("coach.swapped");
+	}
+
+	// Pelo teclado: a janela em foco troca com a vizinha e continua em foco,
+	// entao repetir a tecla leva ela adiante.
+	function swapFocused(step) {
+		const list = workspaces[ws];
+		const i = list.indexOf(focused);
+		if (i < 0 || !list[i + step]) return;
+		swap(focused, list[i + step]);
+		layout();
+	}
+
 	// Arrastar pelo titulo troca a janela de lugar com a que estiver embaixo
 	// (o Win + arrastar do ii, em versao de bolso).
 	let drag = null;
@@ -323,14 +347,7 @@ export function createDesktop(root, opts) {
 		const under = document.elementFromPoint(e.clientX, e.clientY);
 		win.style.visibility = "";
 		const other = under && under.closest(".dw");
-		const list = workspaces[ws];
-		if (other && other !== win && list.includes(other)) {
-			const a = list.indexOf(win);
-			const b = list.indexOf(other);
-			list[a] = other;
-			list[b] = win;
-			say("coach.swapped");
-		}
+		if (other && other !== win) swap(win, other);
 		layout();
 	};
 	on(winLayer, "pointerup", endDrag);
@@ -545,6 +562,12 @@ export function createDesktop(root, opts) {
 		clearTimeout(tbTimer);
 		tbTimer = setTimeout(() => taskbar.classList.remove("show"), 500);
 	}
+	// Teclado, trilho e "Testar no demo": mostra por um instante e esconde.
+	function peekTaskbar() {
+		showTaskbar();
+		clearTimeout(tbTimer);
+		tbTimer = setTimeout(() => taskbar.classList.remove("show"), 2200);
+	}
 	on(edge, "pointerenter", showTaskbar);
 	on(edge, "click", showTaskbar);
 	on(taskbar, "pointerenter", () => clearTimeout(tbTimer));
@@ -588,6 +611,12 @@ export function createDesktop(root, opts) {
 				toggle("side");
 				if (open === "side" && discover("side")) say("coach.side");
 				break;
+			case "taskbar":
+				if (taskbar.classList.contains("show")) {
+					clearTimeout(tbTimer);
+					taskbar.classList.remove("show");
+				} else peekTaskbar();
+				break;
 		}
 	}
 
@@ -622,7 +651,7 @@ export function createDesktop(root, opts) {
 		}
 		metaAlone = false;
 		if (e.ctrlKey || e.altKey) return;
-		const map = { " ": "win", Enter: "enter", q: "q", Q: "q", Tab: "tab", "/": "cheat", s: "side", S: "side" };
+		const map = { " ": "win", Enter: "enter", q: "q", Q: "q", Tab: "tab", "/": "cheat", s: "side", S: "side", t: "taskbar", T: "taskbar" };
 		if (open === "overview") {
 			if (k === "ArrowRight" || k === "ArrowLeft") {
 				e.preventDefault();
@@ -637,6 +666,11 @@ export function createDesktop(root, opts) {
 			}
 		}
 		if (k === "Tab" && e.shiftKey) return;
+		if (e.shiftKey && (k === "ArrowLeft" || k === "ArrowRight") && (!open || open === "side")) {
+			e.preventDefault();
+			swapFocused(k === "ArrowRight" ? 1 : -1);
+			return;
+		}
 		if (k === "Escape") {
 			if (open) {
 				e.preventDefault();
@@ -731,12 +765,7 @@ export function createDesktop(root, opts) {
 				setTimeout(() => workspaces[ws].length < 3 && spawn(), 260);
 			} else spawn();
 		},
-		showTaskbar() {
-			showTaskbar();
-			hideTaskbarSoon();
-			clearTimeout(tbTimer);
-			tbTimer = setTimeout(() => taskbar.classList.remove("show"), 2200);
-		},
+		showTaskbar: peekTaskbar,
 		discover(goal, key) {
 			if (discover(goal) && key) say(key);
 			else if (key) say(key);

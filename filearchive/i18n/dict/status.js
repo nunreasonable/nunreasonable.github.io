@@ -3,6 +3,11 @@
  *
  * Os valores numericos (uptime, latencia, contagens) vem da API e nao passam
  * por aqui - o que este dicionario traduz sao os rotulos em volta deles.
+ *
+ * As chaves status.checking_the_bot e status.fetching_the_current_status_from
+ * nao tem data-i18n no HTML: a pagina reescreve esse texto sozinha a cada
+ * refresh (ver LIVE_STRINGS em status/index.html), que importa este modulo
+ * direto pra nao duplicar a traducao em dois lugares.
  */
 export const pt = {
   "status.refresh_now": "Atualizar agora",

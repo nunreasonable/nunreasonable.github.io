@@ -18,7 +18,7 @@
 
 import { setupShowcase } from "./showcase.js?v=20261107-1";
 
-import { createDesktop } from "./desktop.js?v=20261013-1";
+import { createDesktop } from "./desktop.js?v=20261107-2";
 import { PRESETS, wallpaperUrl, drawThumb, presetTones, demoScheme, pageScheme, PAGE_KEYS, tonesFromFile } from "./palette.js?v=20261013-1";
 
 const html = document.documentElement;
@@ -248,14 +248,39 @@ function setupExplorer() {
 	if (!box) return;
 	const tabs = [...box.querySelectorAll('[role="tab"]')];
 	const panels = [...box.querySelectorAll('[role="tabpanel"]')];
+	const list = box.querySelector('[role="tablist"]');
 	const frame = box.querySelector(".explore-frame");
+	const STEP = 5200;
 	let index = 0;
 	let timer = 0;
 	let paused = false;
 	let visible = false;
+	// Tempo que falta na aba atual: pausar e voltar continua de onde parou,
+	// junto com a barra de progresso (animation-play-state no CSS).
+	let left = STEP;
+	let since = 0;
+
+	// Um indicador so, que desliza ate a aba escolhida (so transform).
+	const ind = document.createElement("span");
+	ind.className = "ex-ind";
+	ind.setAttribute("aria-hidden", "true");
+	list.prepend(ind);
+	list.classList.add("is-paused");
+	function place() {
+		const t = tabs[index];
+		ind.style.width = t.offsetWidth + "px";
+		ind.style.height = t.offsetHeight + "px";
+		ind.style.transform = `translate(${t.offsetLeft}px, ${t.offsetTop}px)`;
+	}
+	const ro = new ResizeObserver(place);
+	ro.observe(list);
+	tabs.forEach((t) => ro.observe(t));
 
 	function select(i, focus) {
 		index = (i + tabs.length) % tabs.length;
+		clearTimeout(timer);
+		timer = 0;
+		left = STEP;
 		tabs.forEach((t, j) => {
 			t.setAttribute("aria-selected", String(j === index));
 			t.tabIndex = j === index ? 0 : -1;
@@ -270,6 +295,9 @@ function setupExplorer() {
 			p.setAttribute("aria-hidden", String(j !== index));
 		});
 		if (focus) tabs[index].focus();
+		place();
+		// Mesma aba de novo (clique nela): a barra tambem volta ao comeco.
+		if (list.getAnimations) list.getAnimations({ subtree: true }).forEach((a) => a.animationName === "ex-progress" && (a.currentTime = 0));
 		// Pre-carrega a proxima imagem.
 		const next = panels[(index + 1) % panels.length].querySelector("img[data-src]");
 		if (next) {
@@ -279,12 +307,20 @@ function setupExplorer() {
 	}
 
 	function schedule() {
-		clearTimeout(timer);
-		if (!visible || paused || reduce.matches || document.hidden) return;
+		if (timer) {
+			clearTimeout(timer);
+			timer = 0;
+			left = Math.max(0, left - (performance.now() - since));
+		}
+		const run = visible && !paused && !reduce.matches && !document.hidden;
+		list.classList.toggle("is-paused", !run);
+		if (!run) return;
+		since = performance.now();
 		timer = setTimeout(() => {
+			timer = 0;
 			select(index + 1, false);
 			schedule();
-		}, 5200);
+		}, left);
 	}
 
 	tabs.forEach((t, i) => on(t, "click", () => {
@@ -292,22 +328,23 @@ function setupExplorer() {
 		paused = true;
 		schedule();
 	}));
-	on(box.querySelector('[role="tablist"]'), "keydown", (e) => {
+	on(list, "keydown", (e) => {
 		const k = e.key;
 		if (k !== "ArrowDown" && k !== "ArrowUp" && k !== "ArrowRight" && k !== "ArrowLeft") return;
 		e.preventDefault();
 		paused = true;
 		select(index + (k === "ArrowDown" || k === "ArrowRight" ? 1 : -1), true);
+		schedule();
 	});
 	on(box, "pointerenter", () => {
 		paused = true;
-		clearTimeout(timer);
+		schedule();
 	});
 	// Teclado tambem pausa: antes so o ponteiro pausava, e a aba trocava
 	// sozinha debaixo de quem navegava com Tab.
 	on(box, "focusin", () => {
 		paused = true;
-		clearTimeout(timer);
+		schedule();
 	});
 	on(box, "focusout", (e) => {
 		if (box.contains(e.relatedTarget)) return;
@@ -347,9 +384,12 @@ function setupExplorer() {
 	select(0, false);
 	cleanups.push(() => {
 		io.disconnect();
+		ro.disconnect();
 		clearTimeout(timer);
 		cancelAnimationFrame(raf);
 		frame.style.transform = "";
+		ind.remove();
+		list.classList.remove("is-paused");
 	});
 }
 
@@ -463,8 +503,8 @@ function setupChooser() {
 		bubble.classList.add("is-typing");
 		if (bubble.animate) {
 			bubble.animate([{ transform: "scale(0.85)", opacity: 0 }, { transform: "none", opacity: 1 }], {
-				duration: 320,
-				easing: "cubic-bezier(0.34, 1.56, 0.64, 1)"
+				duration: 240,
+				easing: "cubic-bezier(0.2, 0, 0, 1)"
 			});
 		}
 		typing = setTimeout(() => bubble.classList.remove("is-typing"), 700);

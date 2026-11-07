@@ -81,6 +81,7 @@
 				--accent-2: #c3c8d1;
 				--ok: #cfe8da;
 				--warn: #e8dcc0;
+				--shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
 				--radius: 20px;
 				--ease: cubic-bezier(0.22, 1, 0.36, 1);
 			}
@@ -91,7 +92,7 @@
 				margin: 0;
 				min-height: 100vh;
 				font-family: "Space Grotesk", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
-				font-weight: 300;
+				font-weight: 400;
 				color: var(--text);
 				line-height: 1.65;
 				background: var(--bg);
@@ -188,7 +189,7 @@
 			/* Cabecalho: emblema, nome e uma linha. */
 			.hero {
 				text-align: center;
-				margin-bottom: 34px;
+				margin-bottom: 32px;
 			}
 
 			/*
@@ -258,6 +259,9 @@
 				background: var(--panel);
 				border: 1px solid var(--line);
 				border-radius: var(--radius);
+				/* Sombra de profundidade estatica, igual as outras paginas do
+				   Sollarety - nunca anima. */
+				box-shadow: var(--shadow);
 				padding: clamp(20px, 4vw, 38px);
 			}
 
@@ -276,6 +280,10 @@
 				text-transform: uppercase;
 				letter-spacing: 0.2em;
 				font-size: 0.72rem;
+				/* Fixo porque o eyebrow agora tambem marca os titulos de
+				   etapa (h2.eyebrow) - sem isto herdariam o font-weight: 500
+				   do h2 geral e ficariam mais pesados que os outros. */
+				font-weight: 400;
 				color: var(--muted);
 			}
 
@@ -287,7 +295,7 @@
 			}
 
 			h2 {
-				margin: 30px 0 8px;
+				margin: 32px 0 8px;
 				font-size: 1.05rem;
 				font-weight: 500;
 				letter-spacing: 0.06em;
@@ -319,7 +327,7 @@
 			.nav a:hover { border-color: var(--line-strong); background: var(--panel-hi); }
 
 			.note {
-				margin-top: 26px;
+				margin-top: 24px;
 				padding: 14px 16px;
 				border-left: 2px solid var(--line-strong);
 				border-radius: 0 12px 12px 0;
@@ -347,11 +355,19 @@
 				color: var(--text);
 				background: transparent;
 				cursor: pointer;
-				transition: transform 180ms var(--ease), background 180ms var(--ease), border-color 180ms var(--ease);
+				/* transform com timing proprio (150ms, ease-out): o alvo do
+				   toque precisa responder rapido, o fundo e a borda podem
+				   seguir no ritmo mais lento de sempre. */
+				transition: transform 150ms ease-out, background 180ms var(--ease), border-color 180ms var(--ease);
 			}
 
-			.button:hover { background: var(--panel-hi); transform: translateY(-1px); }
-			.button:active { transform: translateY(0); }
+			/* Hover-lift so em dispositivo com hover de verdade - num touch ele
+			   ficaria "colado" depois do toque. */
+			@media (hover: hover) {
+				.button:hover { background: var(--panel-hi); transform: translateY(-1px); }
+			}
+
+			.button:active { transform: scale(0.96); }
 
 			.button.primary {
 				border-color: transparent;
@@ -359,8 +375,10 @@
 				color: #08080a;
 			}
 
-			.button.primary:hover {
-				background: linear-gradient(180deg, #ffffff 0%, #dfe2e8 100%);
+			@media (hover: hover) {
+				.button.primary:hover {
+					background: linear-gradient(180deg, #ffffff 0%, #dfe2e8 100%);
+				}
 			}
 
 			.button svg { flex: none; }
@@ -391,7 +409,7 @@
 				border: 1px solid var(--line);
 				border-radius: 14px;
 				cursor: pointer;
-				transition: border-color 180ms var(--ease), background 180ms var(--ease);
+				transition: border-color 180ms var(--ease), background 180ms var(--ease), transform 150ms ease-out;
 			}
 
 			.preset input {
@@ -402,6 +420,7 @@
 			}
 
 			.preset:hover { background: var(--panel-hi); }
+			.preset:active { transform: scale(0.96); }
 
 			.preset:has(input:checked) {
 				border-color: var(--line-strong);
@@ -477,14 +496,18 @@
 				text-align: left;
 				text-decoration: none;
 				cursor: pointer;
-				transition: transform 180ms var(--ease), background 180ms var(--ease), border-color 180ms var(--ease);
+				transition: transform 150ms ease-out, background 180ms var(--ease), border-color 180ms var(--ease);
 			}
 
-			.guild:hover {
-				background: var(--panel-hi);
-				border-color: var(--line-strong);
-				transform: translateY(-2px);
+			@media (hover: hover) {
+				.guild:hover {
+					background: var(--panel-hi);
+					border-color: var(--line-strong);
+					transform: translateY(-2px);
+				}
 			}
+
+			.guild:active { transform: scale(0.96); }
 
 			.guild .icon, .guild .fallback {
 				width: 36px;
@@ -513,7 +536,7 @@
 			.hidden { display: none; }
 
 			footer {
-				margin-top: 26px;
+				margin-top: 24px;
 				color: var(--muted);
 				font-size: 0.82rem;
 				letter-spacing: 0.05em;
@@ -579,10 +602,28 @@
 				animation: none !important;
 			}
 		</style>
+			<link rel="stylesheet" href="../../../filearchive/i18n/i18n.css" />
 	</head>
 	<body>
+		<div data-i18n-switcher class="i18n-floating"></div>
 		<div class="stars" aria-hidden="true"></div>
 		<div class="corona" aria-hidden="true"></div>
+
+		<!--
+		  Textos AO VIVO (nao podem usar data-i18n direto porque sao escritos
+		  pelo JS): o ingles fica aqui, escondido, o i18n.js traduz este bloco
+		  como qualquer outro, e o script le o texto ja traduzido daqui na
+		  hora de montar a frase. Ver renderUser() e showAlert() mais abaixo.
+		-->
+		<div id="i18n-live-strings" hidden aria-hidden="true">
+			<span data-i18n="sol_invite.signed_in_as" id="str-signed-in-as">Signed in as</span>
+			<span data-i18n="sol_invite.signed_in" id="str-signed-in">Signed in</span>
+			<span data-i18n="sol_invite.err_denied" id="str-err-denied">The Discord sign-in was cancelled, so nothing happened. You can try again, or add the bot without signing in.</span>
+			<span data-i18n="sol_invite.err_config" id="str-err-config">This page is not finished being set up yet - its Discord application id is missing. Nothing is wrong on your end.</span>
+			<span data-i18n="sol_invite.err_oauth" id="str-err-oauth">Discord did not complete the sign-in. Try again in a moment, or add the bot without signing in.</span>
+			<span data-i18n="sol_invite.err_state" id="str-err-state">That sign-in did not match the one this page started, so it was ignored. Start again from this tab.</span>
+			<span data-i18n="sol_invite.err_busy" id="str-err-busy">Too many sign-in attempts from your network. Wait a minute and try again.</span>
+		</div>
 
 		<main class="shell">
 			<header class="hero">
@@ -659,8 +700,8 @@
 					</svg>
 				</div>
 
-				<h1 class="wordmark">SOLLARETY</h1>
-				<p class="tagline">Moderation, warnings, fun and utility - in one Discord bot.</p>
+				<h1 data-i18n="sol_invite.sollarety" class="wordmark">SOLLARETY</h1>
+				<p class="tagline" data-i18n="sol_invite.tagline">Moderation, warnings, fun and utility - in one Discord bot.</p>
 			</header>
 
 			<article class="card">
@@ -670,19 +711,19 @@
 
 				<!-- 1. Nao logado -->
 				<section id="step-start">
-					<p class="eyebrow">Add to a server</p>
-					<p>
+					<h2 class="eyebrow" data-i18n="sol_invite.add_to_a_server">Add to a server</h2>
+					<p data-i18n="sol_invite.sign_in_intro">
 						Sign in with Discord and this page will list the servers where
 						you are allowed to add a bot, so you can pick one instead of
 						hunting through a dropdown. Nothing you do here is stored.
 					</p>
 
-					<h2>Permissions to request</h2>
+					<h2 data-i18n="sol_invite.permissions_to_request">Permissions to request</h2>
 					<div class="presets">
 						<label class="preset">
 							<input type="radio" name="preset" value="full" checked />
-							<span class="title">Full</span>
-							<span class="detail">
+							<span class="title" data-i18n="sol_invite.preset_full_title">Full</span>
+							<span class="detail" data-i18n="sol_invite.preset_full_detail">
 								Everything the commands need: Ban, Kick, Timeout,
 								Manage Messages, Manage Channels, Manage Roles and
 								Manage Nicknames, plus reading and posting in channels
@@ -691,8 +732,8 @@
 						</label>
 						<label class="preset">
 							<input type="radio" name="preset" value="fun" />
-							<span class="title">Fun only</span>
-							<span class="detail">
+							<span class="title" data-i18n="sol_invite.preset_fun_title">Fun only</span>
+							<span class="detail" data-i18n="sol_invite.preset_fun_detail">
 								Reading and posting, plus Connect and Speak for music.
 								The moderation commands still
 								show up in the server, but they will refuse to run
@@ -707,12 +748,12 @@
 							<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
 								<path d="M19.54 5.34A16.1 16.1 0 0 0 15.5 4.1l-.2.4a15 15 0 0 1 3.6 1.5 12.7 12.7 0 0 0-9.8 0 15 15 0 0 1 3.6-1.5l-.2-.4a16.1 16.1 0 0 0-4.04 1.24C5 9.06 4.3 12.7 4.6 16.3a16.2 16.2 0 0 0 4.9 2.5l.6-1.1a10.5 10.5 0 0 1-1.7-.8l.4-.3a11.6 11.6 0 0 0 9.9 0l.4.3a10.5 10.5 0 0 1-1.7.8l.6 1.1a16.2 16.2 0 0 0 4.9-2.5c.36-4.2-.75-7.8-3.36-10.96ZM9.9 14.4c-.96 0-1.75-.9-1.75-2s.77-2 1.75-2 1.77.9 1.75 2c0 1.1-.78 2-1.75 2Zm4.2 0c-.96 0-1.75-.9-1.75-2s.77-2 1.75-2 1.77.9 1.75 2c0 1.1-.78 2-1.75 2Z" />
 							</svg>
-							Continue with Discord
+							<span data-i18n="sol_invite.continue_with_discord">Continue with Discord</span>
 						</button>
-						<a id="direct" class="button" href="#" rel="noreferrer noopener">Add without signing in</a>
+						<a id="direct" class="button" href="#" rel="noreferrer noopener" data-i18n="sol_invite.add_without_signing_in">Add without signing in</a>
 					</div>
 
-					<p class="subtle" style="margin-top: 14px">
+					<p class="subtle" style="margin-top: 14px" data-i18n="sol_invite.signin_privacy_note">
 						Signing in asks Discord for your username and the list of servers
 						you are in - nothing else, and never your messages. The list is
 						read once, shown to you, and thrown away; it is not saved on any
@@ -723,12 +764,12 @@
 
 				<!-- 2. Logado, escolhendo o servidor -->
 				<section id="step-pick" class="hidden">
-					<p class="eyebrow">Choose a server</p>
+					<h2 class="eyebrow" data-i18n="sol_invite.choose_a_server">Choose a server</h2>
 					<div class="who">
 						<span id="user-avatar"></span>
 						<div>
 							<strong id="user-name">&nbsp;</strong>
-							<div class="subtle">Pick a server to add Sollarety to.</div>
+							<div class="subtle" data-i18n="sol_invite.pick_server_subtitle">Pick a server to add Sollarety to.</div>
 						</div>
 					</div>
 
@@ -739,53 +780,57 @@
 						placeholder="Filter servers"
 						autocomplete="off"
 						aria-label="Filter servers"
+						data-i18n-attr="placeholder:sol_invite.filter_placeholder,aria-label:sol_invite.filter_aria_label"
 					/>
 
 					<div id="guilds" class="guilds"></div>
 
 					<div id="no-guilds" class="note bad hidden">
 						<p>
-							None of your servers can take a new bot. Adding one needs the
-							<strong>Manage Server</strong> permission, so only servers you
-							own or help run are listed here.
+							<span data-i18n="sol_invite.no_guilds_p1">None of your servers can take a new bot. Adding one needs the</span>
+							<strong data-i18n="sol_invite.manage_server">Manage Server</strong>
+							<span data-i18n="sol_invite.no_guilds_p2">permission, so only servers you own or help run are listed here.</span>
 						</p>
 					</div>
 
 					<div class="actions">
-						<button id="restart" type="button" class="button">Start over</button>
+						<button id="restart" type="button" class="button" data-i18n="sol_invite.start_over">Start over</button>
 					</div>
 				</section>
 
 				<!-- 3. Adicionado -->
 				<section id="step-done" class="hidden">
-					<p class="eyebrow">Done</p>
+					<h2 class="eyebrow" data-i18n="sol_invite.done">Done</h2>
 					<div class="note good">
 						<p>
-							<strong>Sollarety is in.</strong> Type <strong>/help</strong>
-							in the server to see every command. If the slash commands do
+							<strong data-i18n="sol_invite.done_p1">Sollarety is in.</strong>
+							<span data-i18n="sol_invite.done_p2">Type</span> <strong>/help</strong>
+							<span data-i18n="sol_invite.done_p3">in the server to see every command. If the slash commands do
 							not appear right away, give Discord up to an hour to propagate
-							them.
+							them.</span>
 						</p>
 					</div>
 					<div class="nav" style="margin-top: 20px">
-						<a href="../">Commands</a>
-						<a href="../termsofservice/">Terms of Service</a>
-						<a href="../privacypolicy/">Privacy Policy</a>
-						<a href="./">Add to another server</a>
+						<a href="../" data-i18n="sol_invite.nav_commands">Commands</a>
+						<a href="../termsofservice/" data-i18n="sol_invite.nav_tos">Terms of Service</a>
+						<a href="../privacypolicy/" data-i18n="sol_invite.nav_privacy">Privacy Policy</a>
+						<a href="./" data-i18n="sol_invite.nav_add_another">Add to another server</a>
 					</div>
 				</section>
 
-				<div class="note" style="margin-top: 26px">
+				<div class="note" style="margin-top: 24px">
 					<p>
-						<strong>The bot never reads your messages.</strong> It does not
+						<strong data-i18n="sol_invite.never_reads_strong">The bot never reads your messages.</strong>
+						<span data-i18n="sol_invite.never_reads_p1">It does not
 						request Discord's Message Content intent, so message text is not
-						received, read or stored. See the
-						<a href="../privacypolicy/">Privacy Policy</a> for the full picture.
+						received, read or stored. See the</span>
+						<a data-i18n="sol_invite.privacy_policy_link" href="../privacypolicy/">Privacy Policy</a>
+						<span data-i18n="sol_invite.never_reads_p2">for the full picture.</span>
 					</p>
 				</div>
 			</article>
 
-			<footer>Sollarety &middot; C# / .NET 10 &middot; hosted alongside <a href="https://ccore.daeese.me/">ccore</a> at daeese.me</footer>
+			<footer><span data-i18n="sol_invite.footer_p1">Sollarety · C# / .NET 10 · hosted alongside</span> <a data-i18n="sol_invite.ccore" href="https://ccore.daeese.me/">ccore</a> <span data-i18n="sol_invite.footer_p2">at daeese.me</span></footer>
 		</main>
 
 		<script>
@@ -836,15 +881,31 @@
 			// Acima disto o campo de filtro aparece. Abaixo ele so ocuparia espaco.
 			const FILTER_THRESHOLD = 12;
 
-			const ERRORS = {
-				denied: "The Discord sign-in was cancelled, so nothing happened. You can try again, or add the bot without signing in.",
-				config: "This page is not finished being set up yet - its Discord application id is missing. Nothing is wrong on your end.",
-				oauth: "Discord did not complete the sign-in. Try again in a moment, or add the bot without signing in.",
-				state: "That sign-in did not match the one this page started, so it was ignored. Start again from this tab.",
-				busy: "Too many sign-in attempts from your network. Wait a minute and try again."
+			// As mensagens de erro em ingles moram no #i18n-live-strings (no
+			// HTML), nao aqui - sao texto AO VIVO (escrito pelo JS), entao nao
+			// podem usar data-i18n direto: o i18n.js traduz aquele bloco
+			// escondido como qualquer outro, e str() le o resultado ja
+			// traduzido. ERROR_IDS so mapeia o codigo do fragmento da URL para
+			// o id do span correspondente.
+			const ERROR_IDS = {
+				denied: "str-err-denied",
+				config: "str-err-config",
+				oauth: "str-err-oauth",
+				state: "str-err-state",
+				busy: "str-err-busy"
 			};
 
 			const el = (id) => document.getElementById(id);
+			const str = (id) => {
+				const node = el(id);
+				return node ? node.textContent : "";
+			};
+
+			// Ultimo alerta/usuario mostrados, para reaplicar a traducao sem
+			// esperar a proxima troca de idioma (ver o listener de
+			// i18n:change mais abaixo).
+			let lastErrorId = null;
+			let lastUser = undefined;
 
 			function show(stepId) {
 				for (const id of ["step-start", "step-pick", "step-done"]) {
@@ -853,10 +914,12 @@
 			}
 
 			function showAlert(code) {
-				// Object.hasOwn e nao ERRORS[code]: o code vem do fragmento da URL,
-				// e "#e=constructor"/"#e=__proto__" alcancavam propriedades herdadas
-				// (renderizando "function Object()..." na tela). So chaves proprias.
-				el("alert-text").textContent = Object.hasOwn(ERRORS, code) ? ERRORS[code] : ERRORS.oauth;
+				// Object.hasOwn e nao ERROR_IDS[code]: o code vem do fragmento da
+				// URL, e "#e=constructor"/"#e=__proto__" alcancavam propriedades
+				// herdadas (renderizando "function Object()..." na tela). So
+				// chaves proprias.
+				lastErrorId = Object.hasOwn(ERROR_IDS, code) ? ERROR_IDS[code] : ERROR_IDS.oauth;
+				el("alert-text").textContent = str(lastErrorId);
 				el("alert").classList.remove("hidden");
 			}
 
@@ -970,7 +1033,8 @@
 			}
 
 			function renderUser(user) {
-				el("user-name").textContent = user && user.n ? "Signed in as " + user.n : "Signed in";
+				lastUser = user;
+				el("user-name").textContent = user && user.n ? str("str-signed-in-as") + " " + user.n : str("str-signed-in");
 
 				const slot = el("user-avatar");
 				slot.textContent = "";
@@ -1069,6 +1133,19 @@
 					}
 				});
 
+				// Texto AO VIVO na troca de idioma: o i18n.js ja traduziu o
+				// #i18n-live-strings escondido a essa altura, entao so falta
+				// reaplicar o que ja estava na tela (nome do usuario logado,
+				// alerta aberto) sem esperar a proxima renderizacao.
+				document.addEventListener("i18n:change", () => {
+					if (lastUser !== undefined) {
+						renderUser(lastUser);
+					}
+					if (lastErrorId && !el("alert").classList.contains("hidden")) {
+						el("alert-text").textContent = str(lastErrorId);
+					}
+				});
+
 				// O Discord volta do convite com ?guild_id=. O code que vem junto e
 				// inutil sem o client secret e e ignorado de proposito.
 				const query = new URLSearchParams(location.search);
@@ -1095,5 +1172,11 @@
 
 			boot();
 		</script>
+			<!--
+		  Seletor de idioma. O ingles fica no proprio HTML; o modulo carrega so o
+		  dicionario de portugues, entao a pagina continua completa e indexavel
+		  sem JavaScript.
+		-->
+		<script type="module" src="../../../filearchive/i18n/i18n.js" data-dict="dict/sol_invite.js?v=20261107-1"></script>
 	</body>
 </html>

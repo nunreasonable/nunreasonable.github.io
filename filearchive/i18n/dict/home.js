@@ -71,6 +71,7 @@ export const pt = {
   "home.gallery.open": "Abrir imagem em tamanho cheio",
   "home.gallery.group": "Imagens",
   "tag.Slash commands": "Comandos slash",
+  "tag.Web Development": "Desenvolvimento web",
 
   // --- Player e lightbox -----------------------------------------------------
   "home.player.close": "Fechar player",

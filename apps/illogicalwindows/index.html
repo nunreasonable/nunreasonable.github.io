@@ -9,9 +9,8 @@
 			content="Illogical Windows (codename Illogical Windows): an unofficial port of end-4's illogical-impulse Quickshell desktop to Windows 11 and Windows 10. Free and open source."
 		/>
 		<link rel="canonical" href="https://apps.daeese.me/illogicalwindows/" />
-		<meta name="color-scheme" content="light dark" />
-		<meta name="theme-color" content="#f7f8fa" media="(prefers-color-scheme: light)" />
-		<meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)" />
+		<meta name="color-scheme" content="dark" />
+		<meta name="theme-color" content="#08080b" />
 
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content="daeese.me" />
@@ -33,8 +32,8 @@
 		<link rel="apple-touch-icon" href="assets/icon-180.png?v=20261031" />
 
 		<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
-		<link rel="stylesheet" href="rich/rich.css?v=20261107-1" />
-        <link rel="stylesheet" href="rich/showcase.css?v=20261031-3" />
+		<link rel="stylesheet" href="rich/rich.css?v=20261107-2" />
+        <link rel="stylesheet" href="rich/showcase.css?v=20261107-2" />
 		<script src="../../filearchive/perf/lite.js"></script>
 
 		<script>
@@ -372,7 +371,12 @@
 
 			.btn:hover {
 				text-decoration: none;
-				transform: translateY(-1px);
+			}
+
+			@media (hover: hover) {
+				.btn:hover {
+					transform: translateY(-1px);
+				}
 			}
 
 			.btn:active {
@@ -1349,7 +1353,7 @@
 					<img class="hero-icon" src="assets/icon.webp?v=20261031" width="84" height="84" alt="" />
 					<p class="eyebrow" data-i18n="iw.hero.eyebrow">Unofficial port</p>
 					<h1 data-i18n="iw.hero.title">Illogical Windows</h1>
-                    <h2 class="launch-title rich-only"><span data-i18n="iw.show.hero.a">Your desktop.</span><span data-i18n="iw.show.hero.b">Entirely your own.</span></h2>
+                    <p class="launch-title rich-only"><span data-i18n="iw.show.hero.a">Your desktop.</span><span data-i18n="iw.show.hero.b">Entirely your own.</span></p>
 					<p class="codename" data-i18n="iw.hero.codename">Formerly ii-windows · Bureaucratic Hamster</p>
 					<p class="pitch" data-i18n="iw.hero.pitch">end-4's illogical-impulse desktop, running natively on Windows 11 and Windows 10.</p>
 
@@ -1364,7 +1368,7 @@
 						<a class="btn btn-secondary" href="https://github.com/nunreasonable/ii-windows" data-i18n="iw.hero.github">View on GitHub</a>
 					</div>
 
-                    <div class="launch-stage rich-only" aria-label="ii on Windows desktop" data-i18n-attr="aria-label:iw.show.desktopLabel">
+                    <div class="launch-stage rich-only">
                       <div class="launch-orbit" aria-hidden="true"></div>
                       <div class="launch-desktop"><img data-showcase-src="assets/showcase/desktop.webp" width="1000" height="563" fetchpriority="high" decoding="async" alt="ii desktop with clock, calendar, timers and resource widgets in a teal palette" data-i18n-attr="alt:iw.show.desktopAlt" /></div>
                       <img class="launch-panel launch-search" data-showcase-src="assets/showcase/spotlight.webp" width="896" height="574" decoding="async" alt="" aria-hidden="true" />
@@ -1421,15 +1425,15 @@
                 <h2 class="visually-hidden" id="journeyTitle" data-i18n="iw.show.journeyTitle">Discover the desktop</h2>
                 <div class="journey-scenes">
                   <article class="journey-scene is-current" data-scene="0">
-                    <div class="journey-copy"><span class="chapter-number" aria-hidden="true">01</span><h3><span data-i18n="iw.show.search.a">Less searching.</span><span data-i18n="iw.show.search.b">More doing.</span></h3><p data-i18n="iw.show.search.text">Apps, files, emoji and quick calculations. One place, one key, right when you need it.</p><a href="#demo-area" class="scene-try" data-try="spot" data-i18n="iw.show.search.try">Try Spotlight ↗</a><span class="scene-key"><kbd>Win</kbd><span data-i18n="iw.show.search.key">and start typing</span></span></div>
+                    <div class="journey-copy"><span class="chapter-number" aria-hidden="true">01</span><h3><span data-i18n="iw.show.search.a">Less searching.</span><span data-i18n="iw.show.search.b">More doing.</span></h3><p data-i18n="iw.show.search.text">Apps, files, emoji and quick calculations. One place, one key, right when you need it.</p><a href="#demo-area" class="scene-try" data-try="spot" data-i18n="iw.show.search.try">Try Spotlight ↓</a><span class="scene-key"><kbd>Win</kbd><span data-i18n="iw.show.search.key">and start typing</span></span></div>
                     <div class="journey-visual scene-search"><div class="scene-halo"></div><img data-showcase-src="assets/showcase/spotlight.webp" width="896" height="574" loading="lazy" decoding="async" alt="Spotlight finding apps on Windows" data-i18n-attr="alt:iw.show.search.alt" /><span class="scene-label" data-i18n="iw.show.search.label">Everything starts here.</span></div>
                   </article>
                   <article class="journey-scene" data-scene="1">
-                    <div class="journey-copy"><span class="chapter-number" aria-hidden="true">02</span><h3><span data-i18n="iw.show.controls.a">Small adjustments.</span><span data-i18n="iw.show.controls.b">Big difference.</span></h3><p data-i18n="iw.show.controls.text">Your music, notifications and everyday controls, together in a sidebar that feels like part of your desktop.</p><a href="#demo-area" class="scene-try" data-try="side" data-i18n="iw.show.controls.try">Open quick settings ↗</a></div>
+                    <div class="journey-copy"><span class="chapter-number" aria-hidden="true">02</span><h3><span data-i18n="iw.show.controls.a">Small adjustments.</span><span data-i18n="iw.show.controls.b">Big difference.</span></h3><p data-i18n="iw.show.controls.text">Your music, notifications and everyday controls, together in a sidebar that feels like part of your desktop.</p><a href="#demo-area" class="scene-try" data-try="side" data-i18n="iw.show.controls.try">Open quick settings ↓</a></div>
                     <div class="journey-visual scene-controls"><div class="scene-halo"></div><img data-showcase-src="assets/showcase/sidebar.webp" width="460" height="1040" loading="lazy" decoding="async" alt="Quick settings and notifications in the ii sidebar" data-i18n-attr="alt:iw.show.controls.alt" /><div class="control-word" aria-hidden="true">ii.</div></div>
                   </article>
                   <article class="journey-scene" data-scene="2">
-                    <div class="journey-copy"><span class="chapter-number" aria-hidden="true">03</span><h3><span data-i18n="iw.show.widgets.a">Make room.</span><span data-i18n="iw.show.widgets.b">For your day.</span></h3><p data-i18n="iw.show.widgets.text">A clock, your notes, the weather, a focus timer. Widgets sit beside your icons, with colors drawn from your wallpaper.</p><a href="#demo-area" class="scene-try" data-try="wall" data-i18n="iw.show.widgets.try">Play with the colors ↗</a></div>
+                    <div class="journey-copy"><span class="chapter-number" aria-hidden="true">03</span><h3><span data-i18n="iw.show.widgets.a">Make room.</span><span data-i18n="iw.show.widgets.b">For your day.</span></h3><p data-i18n="iw.show.widgets.text">A clock, your notes, the weather, a focus timer. Widgets sit beside your icons, with colors drawn from your wallpaper.</p><a href="#demo-area" class="scene-try" data-try="wall" data-i18n="iw.show.widgets.try">Play with the colors ↓</a></div>
                     <div class="journey-visual scene-widgets"><div class="scene-halo"></div><img data-showcase-src="assets/showcase/desktop.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Desktop widgets arranged around a glass wallpaper" data-i18n-attr="alt:iw.show.widgets.alt" /></div>
                   </article>
                 </div>
@@ -1448,7 +1452,7 @@
 						aria-roledescription="demo"
 						aria-label="Playable ii demo. Space works as the Windows key."
 						data-i18n-attr="aria-label:iw.demo.label"
-						aria-describedby="demo-coach"
+						aria-describedby="demo-coach demo-hint"
 					>
 						<div class="demo-wall" aria-hidden="true"></div>
 						<div class="demo-desk" aria-hidden="true">
@@ -1524,10 +1528,11 @@
 						<button type="button" data-act="q"><kbd>Win</kbd><span>+</span><kbd>Q</kbd></button>
 						<button type="button" data-act="tab"><kbd>Win</kbd><span>+</span><kbd>Tab</kbd></button>
 						<button type="button" data-act="cheat"><kbd>Win</kbd><span>+</span><kbd>/</kbd></button>
+						<button type="button" data-act="taskbar"><kbd>T</kbd><span data-i18n="iw.demo.taskbarKey">Taskbar</span></button>
 						</div>
 						<span class="demo-progress"><span class="demo-progress-track"><span class="demo-progress-bar"></span></span><span class="demo-progress-text"></span></span>
 					</div>
-					<p class="demo-hint" data-i18n="iw.demo.hint">Here, Space is Win. The rest works without it: Enter, Q, Tab, / and 1–3. Esc leaves the demo.</p>
+					<p class="demo-hint" id="demo-hint" data-i18n="iw.demo.hint">Here, Space is Win. The rest works without it: Enter, Q, Tab, / and 1–3. Shift + arrows swap windows, T shows the taskbar. Esc leaves the demo.</p>
 
 					<div class="demo-walls">
 						<span class="demo-walls-label" id="demo-walls-label" data-i18n="iw.demo.walls">Wallpaper</span>
@@ -2938,7 +2943,7 @@
 				if (rich) {
 					root.classList.add("rich");
 					try {
-						mod = mod || (await import("./rich/rich.js?v=20261107-1"));
+						mod = mod || (await import("./rich/rich.js?v=20261107-2"));
                         if (current !== revision || (lite && lite.on)) return;
 						mod.start();
 						// Mede o fps com os efeitos rodando (lite.js, data-lite-watch).
@@ -2959,7 +2964,7 @@
 			sync();
 		</script>
 
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261104-1"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261107-2"></script>
 	<script>
           document.getElementById("releaseHistoryToggle").addEventListener("click", function () {
             const expanded = this.getAttribute("aria-expanded") !== "true";

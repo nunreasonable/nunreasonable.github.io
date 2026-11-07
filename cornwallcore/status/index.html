@@ -57,6 +57,10 @@
 				--ok: #5fd39b;
 				--shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
 				--radius: 22px;
+				/* Tokens das superficies translucidas brancas repetidas (botao,
+				   metrica). Mesmos valores de antes, so com nome. */
+				--surface-1: rgba(255, 255, 255, 0.04);
+				--surface-2: rgba(255, 255, 255, 0.12);
 			}
 
 			* {
@@ -119,6 +123,7 @@
 			}
 
 			.button {
+				position: relative;
 				display: inline-flex;
 				align-items: center;
 				justify-content: center;
@@ -127,16 +132,43 @@
 				border-radius: 999px;
 				color: var(--text);
 				text-decoration: none;
-				background: rgba(255, 255, 255, 0.04);
-				transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+				background: var(--surface-1);
+				transition: transform 150ms ease-out, background 160ms ease, border-color 160ms ease;
 			}
 
 			.button:hover,
 			.button:focus-visible {
-				background: rgba(255, 255, 255, 0.12);
+				background: var(--surface-2);
 				border-color: var(--line-strong);
 				outline: none;
 				transform: translateY(-1px);
+			}
+
+			.button:active {
+				transform: scale(0.96);
+			}
+
+			/*
+			 * Mesma ideia do site vitrine: a sombra fica fixa num
+			 * pseudo-elemento, so a opacidade cross-fade no hover/foco - nunca
+			 * animar o box-shadow em si.
+			 */
+			.button::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+				border-radius: inherit;
+				box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 150ms ease;
+			}
+
+			@media (hover: hover) {
+				.button:hover::after,
+				.button:focus-visible::after {
+					opacity: 1;
+				}
 			}
 
 			.card {
@@ -155,22 +187,54 @@
 			}
 
 			.dot {
+				position: relative;
 				width: 16px;
 				height: 16px;
 				border-radius: 999px;
 				flex: 0 0 auto;
 				background: var(--dim);
 				box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.08);
+				transition: background-color 200ms ease;
+			}
+
+			/*
+			 * O anel muda de cor por estado. Em vez de trocar o box-shadow na
+			 * hora (flip seco) ou anima-lo (caro), cada cor mora num
+			 * pseudo-elemento proprio e so a opacidade cross-fade entre eles.
+			 */
+			.dot::before,
+			.dot::after {
+				content: "";
+				position: absolute;
+				inset: -5px;
+				border-radius: inherit;
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 200ms ease;
+			}
+
+			.dot::before {
+				box-shadow: 0 0 0 5px rgba(95, 211, 155, 0.18);
+			}
+
+			.dot::after {
+				box-shadow: 0 0 0 5px rgba(207, 20, 43, 0.2);
 			}
 
 			.state-online .dot {
 				background: var(--ok);
-				box-shadow: 0 0 0 5px rgba(95, 211, 155, 0.18);
+			}
+
+			.state-online .dot::before {
+				opacity: 1;
 			}
 
 			.state-offline .dot {
 				background: var(--accent);
-				box-shadow: 0 0 0 5px rgba(207, 20, 43, 0.2);
+			}
+
+			.state-offline .dot::after {
+				opacity: 1;
 			}
 
 			.headline h2 {
@@ -195,7 +259,7 @@
 				border: 1px solid var(--line);
 				border-radius: 14px;
 				padding: 14px;
-				background: rgba(255, 255, 255, 0.04);
+				background: var(--surface-1);
 			}
 
 			.metric dt {
@@ -296,7 +360,12 @@
 			</section>
 		</main>
 
-		<script>
+		<script type="module">
+			// Modulo (em vez de script classico) so pra poder importar o
+			// dicionario abaixo - mesmo arquivo que o i18n.js carrega pro
+			// seletor de idioma, fonte unica em vez de duplicar o texto.
+			import { pt as statusDict } from "../../filearchive/i18n/dict/status.js";
+
 			// O proxy da API mora no dominio raiz; em producao esta pagina e
 			// servida em ccore.daeese.me, entao a chamada sai cross-origin e
 			// depende de ccore.daeese.me estar na allowlist de CORS do Worker.
@@ -340,7 +409,10 @@
 					offlineError: (msg) => `Could not reach the bot's API: ${msg}`
 				},
 				pt: {
-					checking: "Consultando o bot…", checkingNote: "Buscando o estado atual na API do bot.",
+					// As duas vem do dicionario (status.checking_the_bot /
+					// status.fetching_the_current_status_from) em vez de
+					// repetir o texto aqui - uma fonte so pras duas.
+					checking: statusDict["status.checking_the_bot"], checkingNote: statusDict["status.fetching_the_current_status_from"],
                     online: "O bot está online",
 					onlineNote: "Conectado ao gateway do Discord e respondendo aos comandos.",
 					offline: "O bot está offline",
@@ -465,6 +537,6 @@
 		  dicionario de portugues, entao a pagina continua completa e indexavel
 		  sem JavaScript.
 		-->
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/status.js?v=20261014-2"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/status.js?v=20261107-1"></script>
 	</body>
 </html>

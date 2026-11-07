@@ -678,7 +678,7 @@
         box-sizing: border-box;
         line-height: 1;
         overflow: visible;
-        transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+        transition: transform 150ms ease-out, background 160ms ease, border-color 160ms ease;
         box-shadow:
           0 0 0 1px rgba(255, 255, 255, 0.03) inset,
           0 0 18px color-mix(in srgb, var(--accent-deep) 22%, transparent),
@@ -687,8 +687,15 @@
 
       .socials-inline a:hover {
         border-color: rgba(255, 255, 255, 0.28);
-        transform: translateY(-1px);
         background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Levantar no hover so onde ha hover de verdade: no toque o :hover
+         gruda depois do tap e o botao ficava suspenso. */
+      @media (hover: hover) {
+        .socials-inline a:hover {
+          transform: translateY(-1px);
+        }
       }
 
       .socials-inline svg {
@@ -776,17 +783,23 @@
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 12px;
         background: var(--button-bg);
-        transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
-        transform: translateY(14px);
-        opacity: 0;
-        animation: slide-up 0.45s ease forwards;
+        transition: transform 150ms ease-out, background 160ms ease, border-color 160ms ease;
+        /* Entrada com fill `backwards`, e nao `forwards`: com forwards o
+           quadro final (transform/opacity) ficava retido por cima de tudo, e
+           o levantar do hover e o aperto do clique nunca apareciam. */
+        animation: slide-up 0.45s ease backwards;
       }
 
       .link-btn:hover {
         background: var(--button-hover);
         border-color: var(--accent-line);
-        transform: translateY(-2px);
         box-shadow: 0 10px 26px -16px rgba(0, 0, 0, 0.9), 0 0 34px -20px var(--accent-glow);
+      }
+
+      @media (hover: hover) {
+        .link-btn:hover {
+          transform: translateY(-2px);
+        }
       }
 
       /* Anel de foco visivel: a pagina e navegavel so por teclado e ate agora
@@ -896,9 +909,9 @@
       }
 
       @keyframes slide-up {
-        to {
-          transform: translateY(0);
-          opacity: 1;
+        from {
+          transform: translateY(14px);
+          opacity: 0;
         }
       }
 
@@ -912,10 +925,20 @@
         }
       }
 
+      /* <dialog> modal (showModal): o navegador prende o foco dentro e poe a
+         camada no topo. Aqui ele so desfaz o visual padrao de caixa. */
       .player-modal {
         display: none;
         position: fixed;
         inset: 0;
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        max-height: none;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        color: var(--text);
         background: radial-gradient(
             circle at 16% 14%,
             color-mix(in srgb, var(--accent-deep) 24%, transparent) 0,
@@ -932,8 +955,13 @@
         animation: fade-in 0.3s ease both;
       }
 
-      .player-modal.active {
+      .player-modal[open] {
         display: grid;
+      }
+
+      /* O proprio dialog ja cobre a tela com o fundo opaco. */
+      .player-modal::backdrop {
+        background: transparent;
       }
 
       .player-modal-content {
@@ -1088,7 +1116,12 @@
 
       .player-listen-btn:hover {
         background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 86%, #fff), var(--accent-2));
-        transform: translateY(-1px);
+      }
+
+      @media (hover: hover) {
+        .player-listen-btn:hover {
+          transform: translateY(-1px);
+        }
       }
 
       .player-listen-btn.is-idle,
@@ -1236,8 +1269,9 @@
       .nav.is-scrolled {
         /* Quase opaca e sem backdrop-filter: embaixo da barra ficam as
            particulas, que mudam a cada quadro, e um blur ali era refeito a
-           cada quadro enquanto a pagina estivesse rolada. */
-        background: color-mix(in srgb, var(--bg-start) 92%, transparent);
+           cada quadro enquanto a pagina estivesse rolada. A 92% os
+           titulos grandes ainda vazavam por baixo; 97% esconde. */
+        background: color-mix(in srgb, var(--bg-start) 97%, transparent);
         border-bottom-color: var(--line);
       }
 
@@ -1297,16 +1331,19 @@
         background: var(--accent-lit);
         transform: scaleX(0);
         transform-origin: left;
-        transition: transform 220ms ease;
+        transition: transform 220ms cubic-bezier(0.2, 0, 0, 1);
       }
 
       .nav-links a:hover,
-      .nav-links a:focus-visible {
+      .nav-links a:focus-visible,
+      .nav-links a[aria-current="true"] {
         color: var(--text);
       }
 
+      /* aria-current e posto pelo JS na secao que esta na tela. */
       .nav-links a:hover::after,
-      .nav-links a:focus-visible::after {
+      .nav-links a:focus-visible::after,
+      .nav-links a[aria-current="true"]::after {
         transform: scaleX(1);
       }
 
@@ -1390,7 +1427,7 @@
         gap: 10px;
         color: var(--muted);
         text-decoration: none;
-        font-size: 0.74rem;
+        font-size: 0.75rem;
         letter-spacing: 0.18em;
         text-transform: uppercase;
       }
@@ -1470,6 +1507,9 @@
         /* Mudanca dentro de um card nao faz o navegador recalcular o resto da
            pagina. Sem `paint`: a sombra (::before) precisa vazar do card. */
         contain: layout style;
+        /* Profundidade parada: um fio de luz na borda de cima e uma sombra
+           curta embaixo. Pintada uma vez, nunca animada. */
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 24px 48px -32px rgba(0, 0, 0, 0.9);
       }
 
       /*
@@ -1491,13 +1531,44 @@
       }
 
       .project-card:not(.is-open):hover {
-        transform: translateY(-4px);
         border-color: var(--accent-line);
       }
 
       .project-card:not(.is-open):hover::before,
       .project-card.is-open::before {
         opacity: 1;
+      }
+
+      /*
+       * Brilho do hover: um degrade do accent vindo de baixo, atras do
+       * conteudo, que acende a area do titulo. Le --accent-soft, entao segue o
+       * tema do Sollarety sozinho. O card e contexto de empilhamento (contain:
+       * layout), entao z-index -1 fica entre o fundo do card e o conteudo. So
+       * a opacidade anima.
+       */
+      .project-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: inherit;
+        background: radial-gradient(120% 80% at 50% 100%, var(--accent-soft), transparent 60%);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      @media (hover: hover) {
+        .project-card:not(.is-open):hover {
+          transform: translateY(-4px);
+        }
+
+        .project-card::after {
+          transition: opacity 240ms ease;
+        }
+
+        .project-card:not(.is-open):hover::after {
+          opacity: 1;
+        }
       }
 
       .project-card.is-open {
@@ -1581,8 +1652,10 @@
         filter: none;
       }
 
-      .project-card:not(.is-open):hover .project-cover img {
-        transform: scale(1.04);
+      @media (hover: hover) {
+        .project-card:not(.is-open):hover .project-cover img {
+          transform: scale(1.04);
+        }
       }
 
       .project-card.is-open .project-cover {
@@ -1596,7 +1669,7 @@
         z-index: 1;
         padding: 5px 10px;
         border-radius: 999px;
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--text);
@@ -1684,7 +1757,7 @@
       }
 
       .project-tags li {
-        font-size: 0.72rem;
+        font-size: 0.75rem;
         letter-spacing: 0.04em;
         color: var(--soft-text);
         padding: 4px 9px;
@@ -1711,19 +1784,33 @@
         grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
         gap: 28px clamp(24px, 4vw, 48px);
         padding: 22px 24px 26px;
-        /* So opacidade, e curta: o deslize do card (FLIP) ja da o movimento, e
-           um translateY aqui obrigava a mover uma camada do tamanho do card
-           aberto - medido: tirar o movimento daqui rendia ~15 fps na abertura. */
-        animation: details-in 220ms ease-out both;
       }
 
       .project-details[hidden] {
         display: none;
       }
 
+      /*
+       * Entrada do card aberto em etapas: texto, galeria, logo. Cada bloco
+       * sobe 12px e aparece, com 50ms entre um e outro, depois de 120ms -
+       * quando o deslize do card (FLIP, transform no proprio card) ja andou.
+       * O translateY fica nos blocos, e nao em .project-details inteiro: uma
+       * camada do tamanho do card aberto se movendo custava ~15 fps na
+       * abertura. Fechar nao anima: o conteudo some na hora.
+       */
+      @media (prefers-reduced-motion: no-preference) {
+        :root:not([data-lite]) .project-details > * {
+          animation: details-in 300ms cubic-bezier(0.2, 0, 0, 1) both;
+          animation-delay: calc(120ms + var(--n, 0) * 50ms);
+        }
+
+        .project-details > .gallery { --n: 1; }
+        .project-details > .project-logo { --n: 2; }
+      }
+
       @keyframes details-in {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: none; }
       }
 
       .project-body p {
@@ -1768,7 +1855,7 @@
         text-decoration: none;
         font-size: 0.88rem;
         font-weight: 500;
-        transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+        transition: background 160ms ease, border-color 160ms ease, transform 150ms ease-out;
       }
 
       .project-action::after {
@@ -1780,7 +1867,16 @@
       .project-action:focus-visible {
         background: var(--accent-soft);
         border-color: var(--accent-line);
+      }
+
+      .project-action:focus-visible {
         transform: translateY(-1px);
+      }
+
+      @media (hover: hover) {
+        .project-action:hover {
+          transform: translateY(-1px);
+        }
       }
 
       .project-action.is-primary {
@@ -1890,7 +1986,7 @@
         cursor: pointer;
         border: 1px solid var(--line);
         opacity: 0.55;
-        transition: opacity 160ms ease, border-color 160ms ease;
+        transition: opacity 160ms ease, border-color 160ms ease, transform 150ms ease-out;
       }
 
       .gallery-thumb img {
@@ -1974,7 +2070,7 @@
         color: var(--text);
         border: 1px solid var(--line-strong);
         background: rgba(255, 255, 255, 0.05);
-        transition: background 160ms ease, border-color 160ms ease;
+        transition: background 160ms ease, border-color 160ms ease, transform 150ms ease-out;
       }
 
       .lightbox-btn:hover,
@@ -2011,8 +2107,13 @@
       .link-index .link-btn:hover {
         background: transparent;
         box-shadow: none;
-        transform: translateX(6px);
         border-bottom-color: var(--accent-line);
+      }
+
+      @media (hover: hover) {
+        .link-index .link-btn:hover {
+          transform: translateX(6px);
+        }
       }
 
       .link-index .link-btn .left {
@@ -2142,6 +2243,10 @@
           order: -1;
         }
 
+        /* E entra primeiro tambem, na ordem em que aparece. */
+        .project-details > .gallery { --n: 0; }
+        .project-details > .project-body { --n: 1; }
+
         .link-index {
           grid-template-columns: minmax(0, 1fr);
         }
@@ -2219,6 +2324,17 @@
 
         .project-details {
           padding: 16px 16px 20px;
+        }
+
+        /* Aberto, o titulo cresce: com a miniatura (ate 84px) do lado, a
+           linha de apoio ficava espremida. A miniatura sobe para uma linha
+           propria e titulo + botao dividem a de baixo. */
+        .project-card.is-open .project-head {
+          grid-template-columns: minmax(0, 1fr) auto;
+        }
+
+        .project-card.is-open .project-thumb {
+          grid-column: 1 / -1;
         }
 
         .lightbox[open] {
@@ -2313,6 +2429,8 @@
       :root[data-lite] .sol-emblem,
       :root[data-lite] .project-card,
       :root[data-lite] .project-card::before,
+      :root[data-lite] .project-card::after,
+      :root[data-lite] .nav-links a::after,
       :root[data-lite] .project-cover img,
       :root[data-lite] .project-plus,
       :root[data-lite] .nav {
@@ -2363,6 +2481,8 @@
         }
 
         .project-card,
+        .project-card::after,
+        .nav-links a::after,
         .project-cover img,
         .project-plus,
         .link-btn,
@@ -2379,7 +2499,7 @@
       /* Refinamento da vitrine: previews e acesso direto, mantendo os cards. */
       .hero { min-height: min(820px, 92svh); align-items: center; padding-bottom: 86px; }
       .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
-      .hero-action { min-height: 46px; display: inline-flex; align-items: center; padding: 11px 20px; border: 1px solid var(--accent-line); border-radius: 999px; color: var(--text); text-decoration: none; font-weight: 600; }
+      .hero-action { min-height: 46px; display: inline-flex; align-items: center; padding: 11px 20px; border: 1px solid var(--accent-line); border-radius: 999px; color: var(--text); text-decoration: none; font-weight: 600; transition: transform 150ms ease-out; }
       .hero-action.is-primary { background: var(--accent-lit); color: var(--bg-start); }
       .hero-action:hover { border-color: var(--text); }
       .hero-action:focus-visible, .blur-overlay:focus-visible .blur-message { outline: 2px solid var(--text); outline-offset: 4px; }
@@ -2413,6 +2533,50 @@
         .hero-side .link-btn:has(.now-playing-left) > .right { display: none; }
         .section { padding-top: 40px; }
         .project-preview-actions { margin-inline: 16px; }
+      }
+
+      /*
+       * Aperto no clique: o controle encolhe um pouco enquanto esta pressionado,
+       * para o toque ter resposta antes de a pagina reagir. As linhas de link
+       * (.link-btn) sao largas, entao encolhem menos - 4% numa linha de 600px
+       * ja seria um salto. Fica no fim da folha para vencer os :hover.
+       */
+      @media (prefers-reduced-motion: no-preference) {
+        :root:not([data-lite]) :is(.hero-action, .project-action, .lightbox-btn, .socials-inline a, .gallery-thumb):active {
+          transform: scale(0.96);
+        }
+
+        :root:not([data-lite]) .link-btn:active {
+          transform: scale(0.98);
+        }
+
+        :root:not([data-lite]) .link-index .link-btn:active {
+          transform: translateX(6px) scale(0.98);
+        }
+      }
+
+      /*
+       * Revelar ao rolar, sem JS: cabecalhos de secao e cards fechados sobem
+       * 16px e aparecem conforme entram na tela, presos a rolagem (nao ao
+       * tempo). Usa `translate`, e nao `transform`: o transform do card ja e
+       * do hover e do deslize de layout (FLIP), e as duas propriedades somam
+       * em vez de brigar. O card aberto fica de fora: ele e alto, e a faixa
+       * "cover 25%" dele deixava o conteudo meio transparente.
+       */
+      @supports (animation-timeline: view()) {
+        @media (prefers-reduced-motion: no-preference) {
+          :root:not([data-lite]) .section-head,
+          :root:not([data-lite]) .project-card:not(.is-open) {
+            animation: rise linear both;
+            animation-timeline: view();
+            animation-range: entry 5% cover 25%;
+          }
+        }
+      }
+
+      @keyframes rise {
+        from { opacity: 0; translate: 0 16px; }
+        to { opacity: 1; translate: none; }
       }
     </style>
   </head>
@@ -2564,13 +2728,7 @@
       </footer>
     </main>
 
-    <div
-      class="player-modal"
-      id="playerModal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="playerTrackTitle"
-    >
+    <dialog class="player-modal" id="playerModal" aria-labelledby="playerTrackTitle">
       <div class="player-modal-content">
         <button class="player-close-btn" id="playerCloseBtn" type="button" aria-label="Close player" data-i18n-attr="aria-label:home.player.close">
           ✕
@@ -2590,7 +2748,7 @@
         </div>
         <a class="player-listen-btn" id="playerListenBtn" href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" data-i18n="home.player.listen">Listen too!</a>
       </div>
-    </div>
+    </dialog>
 
     <dialog class="lightbox" id="lightbox" aria-label="Image viewer" data-i18n-attr="aria-label:home.lightbox.label">
       <button class="lightbox-btn lightbox-close" id="lightboxClose" type="button" aria-label="Close image" data-i18n-attr="aria-label:home.lightbox.close">✕</button>
@@ -2715,7 +2873,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261106-3")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261107-1")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -3196,8 +3354,11 @@
       }
 
       const badgesEl = document.getElementById("badges");
+      // Mesma chave das tags dos projetos (tag.<texto>): "Web Development"
+      // traduz igual nos dois lugares, e nome de tecnologia fica sem chave.
       profileData.badges.forEach((badge) => {
         const item = document.createElement("li");
+        item.dataset.i18n = `tag.${badge}`;
         item.textContent = badge;
         badgesEl.appendChild(item);
       });
@@ -3552,24 +3713,34 @@
         playerProgressTimer = setInterval(updatePlayerProgress, 1000);
       }
 
+      /*
+       * O player e um <dialog> aberto com showModal(), como o lightbox: o
+       * navegador prende o Tab dentro dele e deixa o resto da pagina inerte.
+       * A limpeza mora no evento "close", que vem de qualquer caminho de
+       * fechar (botao, clique no fundo, Esc).
+       */
       function isPlayerModalOpen() {
-        return playerModal.classList.contains("active");
+        return playerModal.open;
       }
 
       function openPlayerModal() {
+        if (playerModal.open) {
+          return;
+        }
         lastFocusedBeforeModal = document.activeElement;
-        playerModal.classList.add("active");
         document.body.classList.add("modal-open");
         updatePlayerDisplay();
+        playerModal.showModal();
         playerCloseBtn.focus();
       }
 
       function closePlayerModal() {
-        if (!isPlayerModalOpen()) {
-          return;
+        if (playerModal.open) {
+          playerModal.close();
         }
+      }
 
-        playerModal.classList.remove("active");
+      playerModal.addEventListener("close", () => {
         document.body.classList.remove("modal-open");
         stopPlayerProgressTimer();
         playSFX('close');
@@ -3578,7 +3749,7 @@
           lastFocusedBeforeModal.focus();
         }
         lastFocusedBeforeModal = null;
-      }
+      });
 
       function updatePlayerDisplay() {
         if (!currentNowPlayingState || !currentNowPlayingState.isPlaying) {
@@ -3620,6 +3791,8 @@
           return;
         }
 
+        // Os dois <dialog> fecham aqui, e nao pelo Esc nativo, que nao e
+        // garantido (ver o lightbox logo abaixo).
         if (isPlayerModalOpen()) {
           event.preventDefault();
           closePlayerModal();
@@ -3797,9 +3970,14 @@
         // Chaves do dicionario de portugues (filearchive/i18n/dict/home.js):
         // p.<slug>.tagline, .status, .d0..dN (paragrafos), .link0..linkN.
         const key = (suffix) => `p.${project.slug}.${suffix}`;
+        // O nome do botao e so o titulo; linha de apoio e status viram
+        // descricao. Sem isso o nome comecava pelo chip ("In development
+        // Blood Oath ..."), que vem antes no HTML.
+        const slug = escapeHtml(project.slug);
         const status = project.status
-          ? `<span class="project-status"${i18nAttr(key("status"))}>${escapeHtml(project.status)}</span>`
+          ? `<span class="project-status" id="status-${slug}"${i18nAttr(key("status"))}>${escapeHtml(project.status)}</span>`
           : "";
+        const describedBy = `tagline-${slug}${project.status ? ` status-${slug}` : ""}`;
         const tags = (project.tags || [])
           .map((tag) => `<li${i18nAttr(`tag.${tag}`)}>${escapeHtml(tag)}</li>`)
           .join("");
@@ -3822,7 +4000,7 @@
         card.innerHTML = `
           <div class="project-clip">
           <h3 class="project-h">
-            <button class="project-toggle" type="button" aria-expanded="false" aria-controls="details-${escapeHtml(project.slug)}">
+            <button class="project-toggle" type="button" aria-expanded="false" aria-controls="details-${slug}" aria-labelledby="title-${slug}" aria-describedby="${describedBy}">
               <span class="project-cover${usesLogoCover ? " is-logo" : ""}">
                 ${status}
                 <img ${imageAttrs(cover)} alt="" loading="lazy" decoding="async" />
@@ -3830,8 +4008,8 @@
               <span class="project-head">
                 <img class="project-thumb${project.thumbWide ? " is-wide" : ""}" src="${escapeHtml(project.image)}" alt="" loading="lazy" decoding="async" />
                 <span class="project-heading">
-                  <span class="project-title"${i18nAttr(key("title"))}>${escapeHtml(project.title)}</span>
-                  <span class="project-tagline"${i18nAttr(key("tagline"))}>${escapeHtml(project.tagline)}</span>
+                  <span class="project-title" id="title-${slug}"${i18nAttr(key("title"))}>${escapeHtml(project.title)}</span>
+                  <span class="project-tagline" id="tagline-${slug}"${i18nAttr(key("tagline"))}>${escapeHtml(project.tagline)}</span>
                 </span>
                 <span class="project-plus" aria-hidden="true">+</span>
               </span>
@@ -4255,6 +4433,55 @@
       window.addEventListener("scroll", syncNav, { passive: true });
       syncNav();
 
+      /*
+       * Secao atual na nav: o link da secao que cruza uma faixa fina no meio
+       * da tela ganha aria-current (o CSS acende o sublinhado). Faixa, e nao
+       * "qualquer pedaco visivel": duas secoes aparecem juntas o tempo todo,
+       * e so uma pode estar marcada.
+       */
+      (function initNavCurrent() {
+        if (typeof IntersectionObserver !== "function") {
+          return;
+        }
+        const links = [...document.querySelectorAll(".nav-links a[href^='#']")];
+        const bySection = new Map();
+        links.forEach((link) => {
+          const section = document.getElementById(link.getAttribute("href").slice(1));
+          if (section) {
+            bySection.set(section, link);
+          }
+        });
+        const visible = new Set();
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                visible.add(entry.target);
+              } else {
+                visible.delete(entry.target);
+              }
+            });
+            // Com duas na faixa (borda entre secoes), vale a de baixo.
+            let current = null;
+            bySection.forEach((link, section) => {
+              if (visible.has(section)) {
+                current = link;
+              }
+            });
+            links.forEach((link) => {
+              if (link === current) {
+                link.setAttribute("aria-current", "true");
+              } else {
+                link.removeAttribute("aria-current");
+              }
+            });
+          },
+          { rootMargin: "-45% 0px -50% 0px" }
+        );
+        bySection.forEach((link, section) => observer.observe(section));
+      })();
+
       // --- Link direto para um projeto (#work/<slug>) ------------------------
       function openProjectFromHash() {
         const match = /^#work\/([\w-]+)$/.exec(location.hash);
@@ -4581,6 +4808,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261106-3"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261107-1"></script>
   </body>
 </html>

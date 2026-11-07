@@ -247,17 +247,21 @@
 				color: #08080a;
 				font-weight: 500;
 				text-decoration: none;
-				transition: transform 180ms var(--ease), background 180ms var(--ease);
+				transition: transform 150ms ease-out, background 180ms var(--ease);
 			}
 
-			.cta:hover {
-				background: linear-gradient(180deg, #ffffff 0%, #dfe2e8 100%);
-				transform: translateY(-1px);
+			@media (hover: hover) {
+				.cta:hover {
+					background: linear-gradient(180deg, #ffffff 0%, #dfe2e8 100%);
+					transform: translateY(-1px);
+				}
 			}
+
+			.cta:active { transform: scale(0.96); }
 
 			.hero {
 				text-align: center;
-				margin-bottom: 30px;
+				margin-bottom: 32px;
 			}
 
 			/*
@@ -315,7 +319,7 @@
 			}
 
 			.note {
-				margin-top: 26px;
+				margin-top: 24px;
 				padding: 14px 16px;
 				border-left: 2px solid var(--line-strong);
 				border-radius: 0 12px 12px 0;
@@ -323,7 +327,7 @@
 			}
 
 			footer {
-				margin-top: 26px;
+				margin-top: 24px;
 				color: var(--muted);
 				font-size: 0.86rem;
 				text-align: center;
@@ -365,8 +369,23 @@
             .demo-choices { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 24px; }
             .demo-choices button { font: inherit; font-size: .85rem; color: var(--muted); border: 1px solid var(--line); background: transparent; padding: 8px 12px; border-radius: 999px; cursor: pointer; }
             .demo-choices button[aria-pressed="true"] { color: var(--text); border-color: var(--accent-2); background: var(--panel-hi); }
-            .example-panel { min-height: 232px; }
-            .example-panel[hidden] { display: none; }
+            /*
+             * Troca entre exemplos: as tres .example-panel ocupam a mesma
+             * celula de grid (uma pilha), e so a opacidade/pointer-events
+             * mudam - um crossfade curto em vez da troca instantanea de
+             * antes. min-height fica no wrapper, que e quem agora reserva o
+             * espaco (os filhos sao abalroados pela grade, nao pelo fluxo
+             * normal).
+             */
+            .example-panels { display: grid; min-height: 232px; }
+            .example-panel {
+              grid-area: 1 / 1;
+              min-width: 0;
+              opacity: 0;
+              pointer-events: none;
+              transition: opacity 150ms ease-out;
+            }
+            .example-panel.is-active { opacity: 1; pointer-events: auto; }
             .example-panel code { font-size: .95rem; color: var(--text); }
             .example-reply { border-left: 2px solid var(--accent-2); padding: 16px 18px; margin-top: 14px; background: var(--panel); border-radius: 0 12px 12px 0; }
             .bot-name { font-size: .7rem; letter-spacing: .12em; color: var(--accent-2); }
@@ -382,7 +401,7 @@
             .command-content { max-width: 78ch; padding: 0 4px 20px; }
             .command-content p:first-child { margin-top: 0; }
             a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
-            @media (max-width: 760px) { .overview { grid-template-columns: minmax(0, 1fr); } .hero { margin-bottom: 28px; } .command-demo { padding: 20px; } .shell, .site-top { width: calc(100% - 32px); } .example-panel { min-height: 220px; } }
+            @media (max-width: 760px) { .overview { grid-template-columns: minmax(0, 1fr); } .hero { margin-bottom: 28px; } .command-demo { padding: 20px; } .shell, .site-top { width: calc(100% - 32px); } .example-panels { min-height: 220px; } }
             @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 		</style>
 			<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
@@ -477,9 +496,11 @@
                       <button type="button" aria-pressed="false" aria-controls="example-roblox" data-example="roblox">Roblox</button>
                       <button type="button" aria-pressed="false" aria-controls="example-music" data-example="music" data-i18n="sollarety.music">Music</button>
                     </div>
-                    <div class="example-panel" id="example-moderation"><code>/warnings</code><div class="example-reply"><span class="bot-name">SOLLARETY</span><h3 data-i18n="sollarety.warning_title">A history, not an isolated warning.</h3><p data-i18n="sollarety.warning_example">Review a member's warnings in one place before deciding what comes next.</p></div></div>
-                    <div class="example-panel" id="example-roblox" hidden><code>/verify</code><div class="example-reply"><span class="bot-name">SOLLARETY</span><h3 data-i18n="sollarety.verify_title">One account. Your server's roles.</h3><p data-i18n="sollarety.verify_example">Members sign in with Roblox. Your server decides which roles and nickname they receive.</p></div></div>
-                    <div class="example-panel" id="example-music" hidden><code>/play</code><div class="example-reply"><span class="bot-name">SOLLARETY</span><h3 data-i18n="sollarety.music_title">Bring the next song.</h3><p data-i18n="sollarety.music_example">Search by name or share a YouTube, SoundCloud or Spotify link. Manage the queue together.</p></div></div>
+                    <div class="example-panels">
+                      <div class="example-panel is-active" id="example-moderation"><code>/warnings</code><div class="example-reply"><span class="bot-name">SOLLARETY</span><h3 data-i18n="sollarety.warning_title">A history, not an isolated warning.</h3><p data-i18n="sollarety.warning_example">Review a member's warnings in one place before deciding what comes next.</p></div></div>
+                      <div class="example-panel" id="example-roblox" aria-hidden="true"><code>/verify</code><div class="example-reply"><span class="bot-name">SOLLARETY</span><h3 data-i18n="sollarety.verify_title">One account. Your server's roles.</h3><p data-i18n="sollarety.verify_example">Members sign in with Roblox. Your server decides which roles and nickname they receive.</p></div></div>
+                      <div class="example-panel" id="example-music" aria-hidden="true"><code>/play</code><div class="example-reply"><span class="bot-name">SOLLARETY</span><h3 data-i18n="sollarety.music_title">Bring the next song.</h3><p data-i18n="sollarety.music_example">Search by name or share a YouTube, SoundCloud or Spotify link. Manage the queue together.</p></div></div>
+                    </div>
                     <p class="demo-caption" data-i18n="sollarety.illustration">Illustrative examples. No Discord account is connected here.</p>
                   </div>
                 </section>
@@ -609,7 +630,12 @@
               document.querySelectorAll("[data-example]").forEach((choice) => {
                 const active = choice === button;
                 choice.setAttribute("aria-pressed", String(active));
-                document.getElementById(choice.getAttribute("aria-controls")).hidden = !active;
+                // Crossfade: os tres paineis ficam sempre no DOM, empilhados
+                // na mesma celula de grid (CSS), e so a opacidade/pointer-events
+                // mudam - nada de "hidden" para trocar de instante.
+                const panel = document.getElementById(choice.getAttribute("aria-controls"));
+                panel.classList.toggle("is-active", active);
+                panel.setAttribute("aria-hidden", String(!active));
               });
             });
           });
