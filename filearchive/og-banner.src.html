@@ -121,11 +121,12 @@
 
       h1 {
         margin: 34px 0 0;
-        font-family: "Bebas Neue", sans-serif;
-        font-weight: 400;
-        font-size: 196px;
-        line-height: 0.8;
-        letter-spacing: 2px;
+        /* "daeese" e sempre minusculo, e a Bebas Neue so tem maiusculas. */
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 700;
+        font-size: 164px;
+        line-height: 0.9;
+        letter-spacing: -0.055em;
         background: linear-gradient(180deg, #ffffff 0%, #ffd9e2 50%, var(--accent-lit) 100%);
         -webkit-background-clip: text;
         background-clip: text;
@@ -150,6 +151,12 @@
         letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--muted);
+      }
+
+      .foot b {
+        /* O dominio e o nome: nunca em caixa alta, mesmo no rodape em versalete. */
+        text-transform: none;
+        letter-spacing: 0.04em;
       }
 
       .foot::before {
@@ -235,8 +242,8 @@
         <img src="./projects/sollarety/poster.webp" alt="" />
       </figure>
       <figure class="shot shot-ii">
-        <img src="./projects/ii-windows/desktop.webp" alt="" />
-        <figcaption>ii on Windows</figcaption>
+        <img src="./projects/ii-windows/shots/frieren-desktop.webp" alt="" />
+        <figcaption>Illogical Windows</figcaption>
       </figure>
 
       <div class="copy">
@@ -244,9 +251,9 @@
           <img class="mono" src="./brand/monogram-bold.svg" alt="" />
           <p class="eyebrow"><strong>Fullstack developer</strong><br />Portfolio</p>
         </div>
-        <h1>DAEESE</h1>
+        <h1>daeese</h1>
         <p class="tagline">Roblox games, Discord bots and desktop shells, from C# and Luau to <span style="white-space: nowrap">C++</span>.</p>
-        <p class="foot"><b>daeese.me</b>&nbsp;· 6 projects</p>
+        <p class="foot"><b>daeese.me</b>&nbsp;· 9 projects</p>
       </div>
     </div>
   </body>
