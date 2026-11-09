@@ -18,12 +18,12 @@
  */
 export const pt = {
   "p.ginrose.tagline": "Um launcher comunitário de código aberto para o cliente oficial do Roblox para macOS no Linux.",
-  "p.ginrose.status": "v0.3.4 · Flatpak e pacotes nativos · Rosemary 0.5.0",
+  "p.ginrose.status": "v0.3.5 · Flatpak e pacotes nativos · Rosemary 0.5.0",
   "p.ginrose.d0": "O Ginrose é um launcher independente da comunidade, sem vínculo nem endosso da Roblox Corporation. Baixa o cliente oficial do Roblox para macOS diretamente da Roblox e o executa no Linux pelo Rosemary. Inclui perfis gráficos por jogo, limite de quadros e Discord Rich Presence.",
-  "p.ginrose.d1": "A versão 0.3.4 informa o erro quando não consegue salvar a escolha do Rosemary e preserva o app já associado aos links do Roblox. Atualizações anteriores melhoraram o ritmo dos quadros, reduziram a CPU por desenho e corrigiram a posição do cursor no Wayland. Tem pacotes nativos para Arch, Debian, Ubuntu, Fedora e openSUSE, além de um flake do Nix e um ebuild do Gentoo, no Rosemary 0.5.0 com vídeo e som nas experiências. Vem junto com o Ginrose Studio, o irmão dele para o Roblox Studio. O Ginrose é livre e de código aberto sob GPL-3.0 ou posterior, com builds oficiais publicadas pelo projeto Ginrose para Linux x86_64. O site reúne download, instalação e links do fonte.",
+  "p.ginrose.d1": "A versão 0.3.5 deixa o download do Roblox terminar em conexões mais lentas. Atualizações anteriores passaram a avisar quando a escolha do Rosemary não é salva, preservaram o app já associado aos links do Roblox, melhoraram o ritmo dos quadros, reduziram a CPU por desenho e corrigiram a posição do cursor no Wayland. Tem pacotes nativos para Arch, Debian, Ubuntu, Fedora e openSUSE, além de um flake do Nix e um ebuild do Gentoo, no Rosemary 0.5.0 com vídeo e som nas experiências. Vem junto com o Ginrose Studio, o irmão dele para o Roblox Studio. O Ginrose é livre e de código aberto sob GPL-3.0 ou posterior, com builds oficiais publicadas pelo projeto Ginrose para Linux x86_64. O site reúne download, instalação e links do fonte.",
   "p.ginrose.link0": "Site e download",
   "p.ginrose-studio.tagline": "Um launcher comunitário de código aberto para o Roblox Studio oficial para macOS no Linux.",
-  "p.ginrose-studio.status": "v0.3.4 · Flatpak e pacotes nativos · Rosemary 0.5.0",
+  "p.ginrose-studio.status": "v0.3.5 · Flatpak e pacotes nativos · Rosemary 0.5.0",
   "p.ginrose-studio.d0": "O Ginrose Studio é um launcher independente da comunidade, sem vínculo nem endosso da Roblox Corporation. Compilado do mesmo código do Ginrose, ele baixa o Roblox Studio oficial para macOS direto da Roblox e o executa no Linux pelo Rosemary.",
   "p.ginrose-studio.d1": "É uma ferramenta de desenvolvimento, então é permissivo: qualquer FastFlag, qualquer variável de ambiente para o Rosemary, argumentos extras e o binário do Rosemary que você quiser. Login, abrir places, Team Create e arrastar modelos funcionam; ainda é experimental.",
   "p.ginrose-studio.link0": "Site e download",
