@@ -1005,8 +1005,7 @@
 						<li class="pill">NW</li>
 						<li class="pill" data-i18n="ccore.regimental_administration_utility">Regimental Administration Utility</li>
 						<li class="pill" data-i18n="ccore.slash_commands">Slash commands</li>
-						<li class="pill">C#</li>
-						<li class="pill">.NET 10</li>
+						<li class="pill">Rust</li>
 					</ul>
 
 					<div class="hero-actions">
@@ -1088,10 +1087,11 @@
 								</ul>
 							</li>
 							<li class="cmd">
-								<div class="cmd-head"><span class="cmd-name">/alistar-se</span> <span class="cmd-desc" data-i18n="ccore.self_enlistment_with_interactive_form">Self-enlistment with interactive form</span></div>
+								<div class="cmd-head"><span class="cmd-name">/alistar-se</span> <span class="cmd-desc" data-i18n="ccore.self_enlistment_with_popup_form">Self-enlistment with a pop-up form</span></div>
 								<ul class="cmd-meta">
 									<li data-i18n="ccore.specific_channel_required">Specific channel required</li>
 									<li data-i18n="ccore.function_complete_form_automatic_roblox">Function: Complete form + automatic ROBLOX verification</li>
+									<li data-i18n="ccore.alistar_no_dm">Doesn't use DMs: people with closed DMs can enlist too</li>
 								</ul>
 							</li>
 						</ul>
@@ -1114,6 +1114,7 @@
 									<li data-i18n="ccore.requires_permission_role_configured">Requires: Permission role configured</li>
 									<li data-i18n="ccore.parameters_role_user_code_message">Parameters: role/user, code, message</li>
 									<li data-i18n="ccore.limit_500_members_per_execution">Limit: 500 members per execution</li>
+									<li data-i18n="ccore.dm_abort_partial">If Discord signals a rate limit or too many sends fail in a row, it stops and shows how many went out</li>
 								</ul>
 							</li>
 							<li class="cmd">
@@ -1122,6 +1123,7 @@
 									<li data-i18n="ccore.requires_permission_role_configured">Requires: Permission role configured</li>
 									<li data-i18n="ccore.parameters_role_user_message">Parameters: role/user, message</li>
 									<li data-i18n="ccore.limit_500_members_per_execution">Limit: 500 members per execution</li>
+									<li data-i18n="ccore.dm_abort_partial">If Discord signals a rate limit or too many sends fail in a row, it stops and shows how many went out</li>
 								</ul>
 							</li>
 						</ul>
@@ -1135,6 +1137,68 @@
 								<ul class="cmd-meta">
 									<li data-i18n="ccore.parameter_username_in_spreadsheet">Parameter: username in spreadsheet</li>
 									<li data-i18n="ccore.function_searches_data_in_spreadsheet">Function: Searches data in spreadsheet Roster tab</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+
+					<div class="cmd-group">
+						<h3 data-i18n="ccore.audit_system">Audit System</h3>
+						<ul class="cmd-list">
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/audit-add</span> <span class="cmd-desc" data-i18n="ccore.audit_add_desc">Records the audit of a battle</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_staff_role">Requires: Staff role</li>
+									<li data-i18n="ccore.audit_add_meta">Function: paste one line per player (name k d a), check a preview and queue it; each run counts +1 battle</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/audit-push</span> <span class="cmd-desc" data-i18n="ccore.audit_push_desc">Publishes the queue</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_staff_role">Requires: Staff role</li>
+									<li data-i18n="ccore.audit_push_meta">Function: adds up the totals and publishes them to GitHub; an error keeps the queue, and publishing again never counts twice</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/audit-check</span> <span class="cmd-desc" data-i18n="ccore.audit_check_desc">Looks up the audit</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_staff_role">Requires: Staff role</li>
+									<li data-i18n="ccore.audit_check_meta">Function: paged roster, or one player's sheet with K/D</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/audit-edit</span> <span class="cmd-desc" data-i18n="ccore.audit_edit_desc">Fixes, renames or removes a player</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_staff_role">Requires: Staff role</li>
+									<li data-i18n="ccore.audit_edit_meta">Function: a pre-filled window with a before/after summary</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/audit-setranks</span> <span class="cmd-desc" data-i18n="ccore.audit_setranks_desc">Sets ranks by hand</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_staff_role">Requires: Staff role</li>
+									<li data-i18n="ccore.audit_setranks_meta">Function: search, gather up to 10 players and set their ranks at once</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/audit-import</span> <span class="cmd-desc" data-i18n="ccore.audit_import_desc">Imports the current roster from the spreadsheet</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_staff_role">Requires: Staff role</li>
+									<li data-i18n="ccore.audit_import_meta">Function: seeds name, rank and battles; never touches kills, deaths or assists</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/audit-logs</span> <span class="cmd-desc" data-i18n="ccore.audit_logs_desc">Shows who changed the audit and what they did</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_staff_role">Requires: Staff role</li>
+									<li data-i18n="ccore.audit_logs_meta">Function: paged history, newest first</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/promocoes</span> <span class="cmd-desc" data-i18n="ccore.promocoes_desc">Shows who is eligible for promotion</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_staff_role">Requires: Staff role</li>
+									<li data-i18n="ccore.promocoes_meta">Function: applies the regiment's promotion ladder to the audit, for everyone or one player</li>
 								</ul>
 							</li>
 						</ul>
@@ -1175,12 +1239,26 @@
 									<li data-i18n="ccore.optional_logs_parameters">Optional parameters: amount, level, text filter, private</li>
 								</ul>
 							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/dashboardlink</span> <span class="cmd-desc" data-i18n="ccore.dashboardlink_desc">Makes a one-time login code for the dashboard</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.dashboardlink_meta1">Requires: a dashboard level</li>
+									<li data-i18n="ccore.dashboardlink_meta2">Function: only you see the reply</li>
+								</ul>
+							</li>
 						</ul>
 					</div>
 
 					<div class="cmd-group">
 						<h3 data-i18n="ccore.administration_commands">Administration Commands</h3>
 						<ul class="cmd-list">
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">-osinfo</span> <span class="cmd-desc" data-i18n="ccore.osinfo_desc">Shows system, process, language and Discord connection info</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_staff_role">Requires: Staff role</li>
+									<li data-i18n="ccore.osinfo_meta">Prefix command, not a slash command</li>
+								</ul>
+							</li>
 							<li class="cmd">
 								<div class="cmd-head"><span class="cmd-name">vsfdliliane</span> <span class="cmd-desc" data-i18n="ccore.special_restricted_command">Special restricted command</span></div>
 								<ul class="cmd-meta">
@@ -1210,8 +1288,8 @@
 					<article class="block prose">
 						<h3 data-i18n="ccore.requirements">Requirements</h3>
 						<ul>
-							<li>.NET 10 (LTS)</li>
-							<li>DisCatSharp</li>
+							<li><span data-i18n="ccore.req_rust">Rust, edition 2024</span></li>
+							<li>poise + serenity, tokio, axum</li>
 							<li><span data-i18n="ccore.proper_configuration_in">Proper configuration in</span> <code>config.jsonc</code></li>
 							<li data-i18n="ccore.bot_permissions_in_the_discord">Bot permissions in the Discord server</li>
 						</ul>
@@ -1283,7 +1361,7 @@
 		  dicionario de portugues, entao a pagina continua completa e indexavel
 		  sem JavaScript.
 		-->
-		<script type="module" src="../filearchive/i18n/i18n.js" data-dict="dict/ccore.js?v=20261014-2"></script>
+		<script type="module" src="../filearchive/i18n/i18n.js" data-dict="dict/ccore.js?v=20261110-1"></script>
 	<script>
           (() => {
             const search = document.getElementById("commandSearch");

@@ -2,7 +2,7 @@
  * Portugues da vitrine do ccore (cornwallcore/index.html).
  *
  * Chave ausente = fica em ingles. Nome proprio e termo tecnico (ccore,
- * CONSTANTES, chebob, @daeese, NW, C#, .NET, DisCatSharp, Sollarety e os
+ * CONSTANTES, chebob, @daeese, NW, Rust, poise, serenity, Sollarety e os
  * nomes dos comandos) nem levam data-i18n na pagina: sao iguais em qualquer
  * idioma. Toda chave usada na pagina existe aqui, e vice-versa.
  *
@@ -65,7 +65,6 @@ export const pt = {
   "ccore.parameters_user_roblox_username": "Parâmetros: usuário, nome no ROBLOX",
   "ccore.function_anti_alt_verification_role":
     "Função: verificação anti-ALT + atribuição de cargos + apelido + log",
-  "ccore.self_enlistment_with_interactive_form": "Auto-alistamento com formulário interativo",
   "ccore.specific_channel_required": "Exige um canal específico",
   "ccore.function_complete_form_automatic_roblox":
     "Função: formulário completo + verificação automática no ROBLOX",
@@ -82,6 +81,33 @@ export const pt = {
   "ccore.queries_regimental_spreadsheet_information": "Consulta informações da planilha regimental",
   "ccore.parameter_username_in_spreadsheet": "Parâmetro: nome de usuário na planilha",
   "ccore.function_searches_data_in_spreadsheet": "Função: busca dados na aba Roster da planilha",
+  // Auditoria, alistamento sem DM, corte da DM em massa e /dashboardlink (2026-11-09)
+  "ccore.self_enlistment_with_popup_form": "Auto-alistamento com formulário em pop-up",
+  "ccore.alistar_no_dm": "Não usa DM: quem está com a DM fechada também consegue se alistar",
+  "ccore.dm_abort_partial": "Se o Discord sinalizar rate limit ou falharem envios demais em seguida, ele para e mostra quantas mensagens foram",
+  "ccore.audit_system": "Sistema de auditoria",
+  "ccore.audit_add_desc": "Registra a auditoria de uma batalha",
+  "ccore.audit_add_meta": "Função: cola uma linha por jogador (nome k d a), confere a prévia e guarda na fila; cada execução vale +1 batalha",
+  "ccore.audit_push_desc": "Publica a fila",
+  "ccore.audit_push_meta": "Função: soma os totais e publica no GitHub; em caso de erro a fila fica, e publicar de novo nunca conta em dobro",
+  "ccore.audit_check_desc": "Consulta a auditoria",
+  "ccore.audit_check_meta": "Função: efetivo paginado ou a ficha de um jogador com K/D",
+  "ccore.audit_edit_desc": "Corrige, renomeia ou remove um jogador",
+  "ccore.audit_edit_meta": "Função: janela já preenchida, com resumo de antes e depois",
+  "ccore.audit_setranks_desc": "Define os cargos manualmente",
+  "ccore.audit_setranks_meta": "Função: busca, junta até 10 jogadores e define os cargos de uma vez",
+  "ccore.audit_import_desc": "Importa o efetivo atual da planilha",
+  "ccore.audit_import_meta": "Função: semeia nome, patente e batalhas; nunca mexe em kills, deaths ou assists",
+  "ccore.audit_logs_desc": "Mostra quem mexeu na auditoria e o que foi feito",
+  "ccore.audit_logs_meta": "Função: histórico paginado, do mais recente para o mais antigo",
+  "ccore.promocoes_desc": "Mostra quem está elegível a promoção",
+  "ccore.promocoes_meta": "Função: aplica a escada de promoções do regimento sobre a auditoria, para todos ou um jogador",
+  "ccore.dashboardlink_desc": "Gera um código de login único para o painel",
+  "ccore.dashboardlink_meta1": "Requer: algum nível no painel",
+  "ccore.dashboardlink_meta2": "Função: a resposta aparece só para você",
+  "ccore.req_rust": "Rust, edição 2024",
+  "ccore.osinfo_desc": "Mostra informações do sistema, do processo, das linguagens e da conexão com o Discord",
+  "ccore.osinfo_meta": "Comando de prefixo, não de barra",
   "ccore.repost_system": "Sistema de repostagem",
   "ccore.checks_message_storage_status": "Verifica o estado do armazenamento de mensagens",
   "ccore.function_system_statistics_and_progress": "Função: estatísticas e progresso do sistema",
