@@ -1108,6 +1108,16 @@ async function runPush(dryRun) {
     if (Array.isArray(result.newPlayers) && result.newPlayers.length > 0) {
       lines.push(`Novos jogadores: ${result.newPlayers.join(", ")}`);
     }
+    // A planilha so entra quando o bot tem o app da web configurado e havia
+    // lote pendente: sem isso o push vai so ao GitHub.
+    if (result.sheetEnabled && result.hasPending) {
+      lines.push(dryRun
+        ? `Planilha: ${result.sheetRows ?? 0} linha(s) iriam para a EventLogs`
+        : `Planilha: ${result.sheetRows ?? 0} linha(s) gravada(s) na EventLogs`);
+      if (Array.isArray(result.sheetAddedToRoster) && result.sheetAddedToRoster.length > 0) {
+        lines.push(`Novos na Roster: ${result.sheetAddedToRoster.join(", ")}`);
+      }
+    }
     if (result.auditCommitUrl) {
       lines.push(`Commit: ${result.auditCommitUrl}`);
     }
@@ -1128,7 +1138,7 @@ async function runPush(dryRun) {
 els.pushDryBtn.addEventListener("click", () => runPush(true));
 
 els.pushBtn.addEventListener("click", () => {
-  if (window.confirm("Publicar a auditoria no GitHub? A fila pendente será consolidada.")) {
+  if (window.confirm("Publicar a auditoria? A fila pendente será consolidada, gravada na planilha e enviada ao GitHub.")) {
     runPush(false);
   }
 });
