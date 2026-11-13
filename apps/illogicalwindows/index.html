@@ -1354,16 +1354,16 @@
 					<p class="eyebrow" data-i18n="iw.hero.eyebrow">Unofficial port</p>
 					<h1 data-i18n="iw.hero.title">Illogical Windows</h1>
                     <p class="launch-title rich-only"><span data-i18n="iw.show.hero.a">Your desktop.</span><span data-i18n="iw.show.hero.b">Entirely your own.</span></p>
-					<p class="codename" data-i18n="iw.hero.codename">Formerly ii-windows · Bureaucratic Hamster</p>
+					<p class="codename" data-i18n="iw.hero.codename">Formerly ii-windows · Pogo-Sticking Walrus</p>
 					<p class="pitch" data-i18n="iw.hero.pitch">end-4's illogical-impulse desktop, running natively on Windows 11 and Windows 10.</p>
 
 					<div class="cta">
 						<a
 							class="btn btn-primary"
-							href="https://github.com/nunreasonable/ii-windows/releases/tag/v26.1.1.0"
+							href="https://github.com/nunreasonable/ii-windows/releases/download/v26.1.2.0/ii-windows-setup.exe"
 							aria-describedby="hero-note"
 							data-i18n="iw.hero.download"
-							>Download 26.1.1.0</a
+							>Download 26.1.2.0</a
 						>
 						<a class="btn btn-secondary" href="https://github.com/nunreasonable/ii-windows" data-i18n="iw.hero.github">View on GitHub</a>
 					</div>
@@ -1378,11 +1378,11 @@
 
 					<!-- Versao atual: atualizar junto com cada release (VERSION do ii-windows). -->
 					<ul class="facts">
-						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>26.1.1.0</strong> <span class="rel-name">— Bureaucratic Hamster</span></li>
+						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>26.1.2.0</strong> <span class="rel-name">— Pogo-Sticking Walrus</span></li>
 						<li data-i18n="iw.hero.requirements">Windows 11, or Windows 10 version 2004+ (22H2 recommended)</li>
 						<li data-i18n="iw.hero.free">Free and open source, GPL-3.0</li>
 					</ul>
-					<p class="hero-note" id="hero-note" data-i18n="iw.hero.note">ii isn't signed yet, so Microsoft Defender may flag or remove it. Until it is, add ii's folders as exclusions in Windows Security: the setup shows how, and so does the code signing section below.</p>
+					<p class="hero-note" id="hero-note" data-i18n="iw.hero.note">ii isn't signed yet, so Microsoft Defender may flag or remove it. Until it is, add ii's folders as exclusions in Windows Security: the setup shows how, and so does the Defender section below.</p>
 				</div>
 
 				<figure class="wrap hero-shot lite-only">
@@ -1563,8 +1563,8 @@
 
 					<ul class="features">
 						<li>
-							<h3 data-i18n="iw.features.styles.title">Two looks</h3>
-							<p data-i18n="iw.features.styles.text">ii's original style or the one from pctrade's end4-pC fork, with nearly the same features in both now: dashboard-style Settings, presets you can save and apply, and the fork's own floating settings card.</p>
+							<h3 data-i18n="iw.features.styles.title">Four looks</h3>
+							<p data-i18n="iw.features.styles.text">Choose ii, pctrade’s end4-pC, NabyScape inspired by BillyNabil, or SekaiPop based on Blapples’ work, used with permission. SekaiPop combines outlined blocks, hard shadows and springy controls, with mint, indigo, lime, rose, amber, violet, mono or wallpaper colors in light and dark modes.</p><p><a href="https://github.com/Blapples/SekaiPop" data-i18n="iw.styles.credit">SekaiPop by Blapples ↗</a></p><img src="assets/style-sekaipop.webp?v=20261113-1" width="1280" height="720" loading="lazy" style="width:100%;height:auto;border-radius:12px" alt="SekaiPop desktop with outlined blocks, a keycap clock and a phone-shaped sidebar" data-i18n-attr="alt:iw.styles.alt"/>
 						</li>
 						<li>
 							<h3 data-i18n="iw.features.bar.title">Bar and system tray</h3>
@@ -2251,7 +2251,7 @@
 								<li data-i18n="iw.install.step3">Install. Everything goes into your Windows user, with no administrator rights needed.</li>
 							</ol>
 							<div class="cta">
-								<a class="btn btn-primary" href="https://github.com/nunreasonable/ii-windows/releases/tag/v26.1.1.0" data-i18n="iw.install.download">Download for Windows</a>
+								<a class="btn btn-primary" href="https://github.com/nunreasonable/ii-windows/releases/download/v26.1.2.0/ii-windows-setup.exe" data-i18n="iw.install.download">Download for Windows</a>
 								<a class="btn btn-secondary" href="https://github.com/nunreasonable/ii-windows/releases" data-i18n="iw.install.release">All releases and downloads</a>
 							</div>
 							<p class="fine" data-i18n="iw.install.update">
@@ -2278,9 +2278,9 @@
 			</section>
 
 			<!-- ================= O que muda no PC ================= -->
-			<section class="section" id="code-signing">
+			<section class="section" id="defender">
 <div class="wrap">
-<header class="section-head"><h2 data-i18n="iw.signing.title">Code signing policy</h2></header>
+<header class="section-head"><h2 data-i18n="iw.signing.title">Microsoft Defender and unsigned builds</h2></header>
 <div class="card">
 <p data-i18n="iw.signing.scope">ii isn't signed yet. I've applied for free code signing from the SignPath Foundation and I'm still trying to get it. Until then, Microsoft Defender sometimes takes a new build for a threat and removes qsw.exe, so add ii's folders as exclusions:</p>
 <ol>
@@ -2292,14 +2292,7 @@
 <p><code>%LOCALAPPDATA%\ii-windows</code> · <code>%LOCALAPPDATA%\quickshell</code> · <code>%LOCALAPPDATA%\illogical-impulse</code> · <code>%TEMP%\quickshell</code></p>
 <p data-i18n="iw.signing.ps">Or in PowerShell as administrator, signed in to the Windows user that uses ii:</p>
 <pre><code>Add-MpPreference -ExclusionPath "$env:LOCALAPPDATA\ii-windows", "$env:LOCALAPPDATA\quickshell", "$env:LOCALAPPDATA\illogical-impulse", "$env:TEMP\quickshell"</code></pre>
-<p><span data-i18n="iw.signing.creditBefore">Once it's approved, free code signing will be provided by</span> <a href="https://about.signpath.io">SignPath.io</a>, <span data-i18n="iw.signing.creditAfter">with a certificate by</span> <a href="https://signpath.org">SignPath Foundation</a>.</p>
-<p data-i18n="iw.signing.build">GitHub Actions builds these binaries from the source revisions pinned in sources.lock. Every signing request will be approved manually. Third-party components retain their own signatures or remain unsigned.</p>
-<ul>
-<li><span data-i18n="iw.signing.reviewers">Committers and reviewers:</span> <a href="https://github.com/nunreasonable">nunreasonable</a></li>
-<li><span data-i18n="iw.signing.approvers">Approvers:</span> <a href="https://github.com/nunreasonable">nunreasonable</a></li>
-<li><a href="https://github.com/nunreasonable/ii-windows/blob/main/PRIVACY.md" data-i18n="iw.signing.privacy">Privacy policy</a></li>
-<li><a href="https://github.com/nunreasonable/ii-windows#-code-signing-policy-" data-i18n="iw.signing.repo">Code signing policy on GitHub</a></li>
-</ul>
+
 </div>
 </div>
 </section>
@@ -2358,7 +2351,7 @@
 						<p class="hero-note" data-i18n="iw.releases.namingNote">From now on every release gets a name. Earlier ones are Unnamed.</p>
 					</header>
 
-					<ol class="releases" id="release-history"><li><div class="rel-head"><span class="rel-ver">26.1.1.0</span><span class="rel-name">Bureaucratic Hamster</span><time datetime="2026-10-31">2026-10-31</time><span class="rel-latest" data-i18n="iw.releases.latest">Stable</span></div><p data-i18n="iw.releases.v26110final">The first release named Illogical Windows and numbered year.major.feature.fix. Everything from the preview (Scrolling tiling, the NabyScape style inspired by BillyNabil’s work, automatic light/dark mode, panel animations, a wallpaper per virtual desktop, calendar events and birthdays, an app-list context menu and experimental native ARM64), plus dock reordering, previews of minimized windows in the dock, colors that follow each desktop’s wallpaper, the battery in the end4-pC bar, Super + wheel in the Scrolling layout and many fixes. It isn’t signed yet: the setup shows how to add Defender exclusions.</p><a href="https://github.com/nunreasonable/ii-windows/releases/tag/v26.1.1.0" data-i18n="iw.releases.finalLink">Full release notes and downloads ↗</a></li>
+					<p><a href="https://github.com/nunreasonable/ii-windows/releases/download/v26.1.2.0/ii-windows-26.1.2.0.zip" data-i18n="iw.download.x64">Portable x64 ZIP</a> · <a href="https://github.com/nunreasonable/ii-windows/releases/download/v26.1.2.0/ii-windows-26.1.2.0-arm64.zip" data-i18n="iw.download.arm64">Experimental ARM64 ZIP</a></p><ol class="releases" id="release-history"><li><div class="rel-head"><span class="rel-ver">26.1.2.0</span><span class="rel-name">Pogo-Sticking Walrus</span><time datetime="2026-11-13">2026-11-13</time><span class="rel-latest" data-i18n="iw.releases.latest">Stable</span></div><p data-i18n="iw.releases.v26120">SekaiPop, the fourth visual style, brings thick outlines, hard shadows and pressable blocks, a bouncing phone-shaped sidebar, keycap clock and calendar-poster lock screen. Eight color themes work in light and dark modes, with ring, iris, star and block wallpaper transitions. Also new: the Colonies pixel-spread transition, setup without opening PowerShell, optional winget removal, presets that save current settings reliably (thanks to @rubenmarcus), digital-clock color and Scrolling width options. Includes the dock-click, Insider preview blur, draggable-widget, instant Settings and dock-switch fixes planned for the unreleased 26.1.1.1. ARM64 remains experimental and builds remain unsigned; the Defender guidance still applies.</p><a href="https://github.com/nunreasonable/ii-windows/releases/tag/v26.1.2.0" data-i18n="iw.releases.finalLink">Full release notes and downloads ↗</a></li><li><div class="rel-head"><span class="rel-ver">26.1.1.0</span><span class="rel-name">Bureaucratic Hamster</span><time datetime="2026-10-31">2026-10-31</time></div><p data-i18n="iw.releases.v26110final">The first release named Illogical Windows and numbered year.major.feature.fix. Everything from the preview (Scrolling tiling, the NabyScape style inspired by BillyNabil’s work, automatic light/dark mode, panel animations, a wallpaper per virtual desktop, calendar events and birthdays, an app-list context menu and experimental native ARM64), plus dock reordering, previews of minimized windows in the dock, colors that follow each desktop’s wallpaper, the battery in the end4-pC bar, Super + wheel in the Scrolling layout and many fixes. It isn’t signed yet: the setup shows how to add Defender exclusions.</p><a href="https://github.com/nunreasonable/ii-windows/releases/tag/v26.1.1.0" data-i18n="iw.releases.finalLink">Full release notes and downloads ↗</a></li>
 <li><div class="rel-head"><span class="rel-ver">26.1.1.0-unstable</span><span class="rel-name">Bureaucratic Hamster</span><time datetime="2026-10-24">2026-10-24</time><span class="rel-latest" data-i18n="iw.releases.preview">Preview · Unstable</span></div><p data-i18n="iw.releases.v26110">Preview of 26.1.1.0 Bureaucratic Hamster, now named Illogical Windows with year.major.feature.fix version numbers. Adds Scrolling tiling, a NabyScape style inspired by BillyNabil’s work, automatic light/dark mode, panel animations, wallpaper per virtual desktop, Google Calendar or iCalendar events and birthdays, an app-list context menu, volume shortcuts and fixes. Built on Quickshell 0.3.2. Unsigned and less tested; Defender may flag or remove it. 1.0.8 remains stable.</p><p data-i18n="iw.releases.arm64">Experimental ARM64: the setup selects the native package on ARM PCs. Requires Windows 11 24H2 (build 26100.2605) or newer; Windows 10 ARM is unsupported. Existing x64 installations on ARM need Reinstall to migrate. Tested on virtual ARM64 runners, not yet on real Snapdragon laptops, Adreno GPUs, touch or battery hardware.</p><a href="https://github.com/nunreasonable/ii-windows/releases/tag/v26.1.1.0-unstable" data-i18n="iw.releases.previewLink">Full preview notes and downloads ↗</a></li>
 <li><div class="rel-head"><span class="rel-ver">1.0.8</span><span class="rel-name">Jazz-Handed Octopus</span><time datetime="2026-10-15">2026-10-15</time></div><p data-i18n="iw.releases.v108">Microsoft reviewed 1.0.7 and removed its malware detection. Microsoft could not reproduce a detection on the 1.0.8 qsw.exe. The submission remains in progress; if a detection persists, Microsoft requests support logs from the affected PC to continue investigating. If Defender removed ii, download the setup and choose Update to restore it while keeping your settings. Spotlight now uses a window sized to its search box and results, so live wallpaper apps no longer mistake it for a fullscreen app.</p></li>
 <li><div class="rel-head"><span class="rel-ver">1.0.7</span><span class="rel-name">Jazz-Handed Octopus</span><time datetime="2026-10-15">2026-10-15</time></div><p data-i18n="iw.releases.v107">Fixes wallpaper transitions showing the old picture zoomed, shifted or split, and Report a problem selecting an empty helper log. Uninstall now keeps settings and data by default; deletion requires Also delete my settings and data. The setup only updates itself on its first page and never during uninstall. Repair and update on Windows 10 no longer install winget unless selected.</p></li>
@@ -2964,7 +2957,7 @@
 			sync();
 		</script>
 
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261107-2"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261113-1"></script>
 	<script>
           document.getElementById("releaseHistoryToggle").addEventListener("click", function () {
             const expanded = this.getAttribute("aria-expanded") !== "true";
