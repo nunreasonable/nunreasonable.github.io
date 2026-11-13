@@ -2939,7 +2939,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261110-1")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261113-1")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -3185,12 +3185,12 @@
             slug: "ginrose",
             title: "Ginrose",
             tagline: "A community open-source launcher for the official Roblox macOS client on Linux.",
-            status: "v0.3.6 · Flatpak and native packages · Rosemary main",
+            status: "v0.3.7 · Flatpak and native packages · Rosemary main",
             tags: ["Rust", "Linux", "Flatpak"],
             image: "./apps/ginrose/assets/ginrose.webp",
             details: [
               "Ginrose is an independent community launcher, not affiliated with or endorsed by Roblox Corporation. It downloads the official Roblox macOS client directly from Roblox and runs it on Linux through Rosemary. It includes per-game graphics profiles, frame caps and Discord Rich Presence.",
-              "Version 0.3.6 can show where the Roblox server you join is and moves Rosemary onto upstream main. Earlier updates let the Roblox download finish on slower connections, reported Rosemary selections that could not be saved, kept the app already assigned to Roblox links, improved frame pacing, reduced CPU per draw and corrected cursor positioning on Wayland. It has native packages for Arch, Debian, Ubuntu, Fedora and openSUSE, plus a Nix flake and a Gentoo ebuild, on Rosemary with video and sound in experiences. It comes with Ginrose Studio, its sibling for Roblox Studio. Ginrose is free and open source under GPL-3.0-or-later, with official builds published by the Ginrose project for x86_64 Linux. The website has downloads, installation instructions and source links."
+              "Version 0.3.7 updates Rosemary with newer rendering, shader and input fixes. Its first launch upgrades the prefix to MiniDarwin 17; version 0.3.6 and older cannot reuse it. The optional Roblox server-location notice remains available. Earlier updates let the Roblox download finish on slower connections, reported Rosemary selections that could not be saved, kept the app already assigned to Roblox links, improved frame pacing, reduced CPU per draw and corrected cursor positioning on Wayland. It has native packages for Arch, Debian, Ubuntu, Fedora and openSUSE, plus a Nix flake and a Gentoo ebuild, on Rosemary with video and sound in experiences. It comes with Ginrose Studio, its sibling for Roblox Studio. Ginrose is free and open source under GPL-3.0-or-later, with official builds published by the Ginrose project for x86_64 Linux. The website has downloads, installation instructions and source links."
             ],
             links: [
               { label: "Website & download", href: "https://apps.daeese.me/ginrose/", primary: true }
@@ -3200,12 +3200,12 @@
             slug: "ginrose-studio",
             title: "Ginrose Studio",
             tagline: "A community open-source launcher for the official Roblox Studio macOS app on Linux.",
-            status: "v0.3.6 · Flatpak and native packages · Rosemary main",
+            status: "v0.3.7 · Flatpak and native packages · Rosemary main",
             tags: ["Rust", "Linux", "Flatpak"],
             image: "./apps/ginrose-studio/assets/ginrose-studio.webp?v=20261031-1",
             details: [
               "Ginrose Studio is an independent community launcher, not affiliated with or endorsed by Roblox Corporation. Built from the same source as Ginrose, it downloads the official Roblox Studio for macOS directly from Roblox and runs it on Linux through Rosemary.",
-              "It is a development tool, so it is permissive: any FastFlag, any environment variable for Rosemary, extra launch arguments and a Rosemary binary of your choice. Logging in, opening places, Team Create and dragging models work; it is still experimental."
+              "It is a development tool, so it is permissive: any FastFlag, any environment variable for Rosemary, extra launch arguments and a Rosemary binary of your choice. Version 0.3.7 fixes dragging in selection boxes and transform handles, and maps Control to Command in all shortcuts by default. Its MiniDarwin 17 prefix cannot be reused by 0.3.6 or older. Logging in, opening places and Team Create work; it is still experimental."
             ],
             links: [
               { label: "Website & download", href: "https://apps.daeese.me/ginrose-studio/", primary: true }
@@ -3320,7 +3320,7 @@
             { label: "VLTRA INVITE", href: "https://discord.gg/3qdvhkNSS8", tag: "Vltra", i18n: "home.policy.vltra" },
             { label: "BLOOD OATH INVITE", href: "https://discord.com/invite/fdD6Mc6CAw", tag: "Blood Oath", i18n: "home.policy.bloodOath" }
         ],
-        footer: "Last updated November 6, 2026"
+        footer: "Last updated November 13, 2026"
       };
 
       // Capa local: a URL do Spotify que estava aqui passou a devolver 404.
@@ -5239,6 +5239,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261110-1"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261113-1"></script>
   </body>
 </html>

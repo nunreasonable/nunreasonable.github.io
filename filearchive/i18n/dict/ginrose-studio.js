@@ -1,4 +1,5 @@
 export const pt = {
+  "studio.release037": "0.3.7 · 13 de novembro de 2026 — Arrastar funciona na seleção por caixa e nas alças de mover, redimensionar e girar. Por padrão, Control funciona como Command em todos os atalhos: Ctrl+S salva, Ctrl+D duplica e Ctrl+1–4 seleciona ferramentas. Usa o mesmo Rosemary do Ginrose 0.3.7; a primeira execução atualiza o prefixo para MiniDarwin 17, que o Studio 0.3.6 e anteriores não podem reutilizar.",
   "studio.docs": "Documentação",
   "studio.player": "Ginrose ↗",
   "studio.source": "Código-fonte ↗",
@@ -7,7 +8,7 @@ export const pt = {
   "studio.intro": "O Ginrose Studio é um projeto independente da comunidade, não uma ferramenta oficial da Roblox. Feito em cima do Rosemary e com o código compartilhado com o Ginrose, ele baixa o Roblox Studio oficial para macOS e o executa no Linux. Não tem vínculo nem endosso da Roblox Corporation.",
   "studio.download": "Baixar Flatpak ↗",
   "studio.readDocs": "Ler a documentação ↓",
-  "studio.platform": "Linux x86_64 · Flatpak e pacotes nativos v0.3.6 · GPL-3.0 ou posterior",
+  "studio.platform": "Linux x86_64 · Flatpak e pacotes nativos v0.3.7 · GPL-3.0 ou posterior",
   "studio.license": "O Ginrose Studio é software livre e de código aberto sob GPL-3.0 ou posterior, compilado do mesmo código do Ginrose. Versões modificadas precisam usar outro nome; o nome, a logo e o ID de aplicativo do Ginrose Studio estão cobertos pela política de marca do projeto.",
   "studio.experimental": "Experimental. Leia antes.",
   "studio.warning": "O Ginrose Studio só foi testado no Fedora com Hyprland e GPU NVIDIA. O Roblox Studio no Rosemary é mais novo que o cliente do Roblox e menos testado: login, abrir places, Team Create e arrastar modelos funcionam, mas algumas ferramentas podem se comportar mal. Suporte e correções não são garantidos.",

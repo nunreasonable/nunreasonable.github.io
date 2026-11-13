@@ -18,14 +18,14 @@
  */
 export const pt = {
   "p.ginrose.tagline": "Um launcher comunitário de código aberto para o cliente oficial do Roblox para macOS no Linux.",
-  "p.ginrose.status": "v0.3.6 · Flatpak e pacotes nativos · Rosemary main",
+  "p.ginrose.status": "v0.3.7 · Flatpak e pacotes nativos · Rosemary main",
   "p.ginrose.d0": "O Ginrose é um launcher independente da comunidade, sem vínculo nem endosso da Roblox Corporation. Baixa o cliente oficial do Roblox para macOS diretamente da Roblox e o executa no Linux pelo Rosemary. Inclui perfis gráficos por jogo, limite de quadros e Discord Rich Presence.",
-  "p.ginrose.d1": "A versão 0.3.6 pode mostrar onde fica o servidor do Roblox em que você entra e passa o Rosemary para o main do upstream. Atualizações anteriores deixaram o download do Roblox terminar em conexões mais lentas, passaram a avisar quando a escolha do Rosemary não é salva, preservaram o app já associado aos links do Roblox, melhoraram o ritmo dos quadros, reduziram a CPU por desenho e corrigiram a posição do cursor no Wayland. Tem pacotes nativos para Arch, Debian, Ubuntu, Fedora e openSUSE, além de um flake do Nix e um ebuild do Gentoo, no Rosemary com vídeo e som nas experiências. Vem junto com o Ginrose Studio, o irmão dele para o Roblox Studio. O Ginrose é livre e de código aberto sob GPL-3.0 ou posterior, com builds oficiais publicadas pelo projeto Ginrose para Linux x86_64. O site reúne download, instalação e links do fonte.",
+  "p.ginrose.d1": "A versão 0.3.7 atualiza o Rosemary com melhorias de renderização, shaders e entrada. Na primeira execução, o prefixo passa para MiniDarwin 17; a 0.3.6 e anteriores não podem reutilizá-lo. O aviso opcional da localização do servidor do Roblox continua disponível. Atualizações anteriores deixaram o download do Roblox terminar em conexões mais lentas, passaram a avisar quando a escolha do Rosemary não é salva, preservaram o app já associado aos links do Roblox, melhoraram o ritmo dos quadros, reduziram a CPU por desenho e corrigiram a posição do cursor no Wayland. Tem pacotes nativos para Arch, Debian, Ubuntu, Fedora e openSUSE, além de um flake do Nix e um ebuild do Gentoo, no Rosemary com vídeo e som nas experiências. Vem junto com o Ginrose Studio, o irmão dele para o Roblox Studio. O Ginrose é livre e de código aberto sob GPL-3.0 ou posterior, com builds oficiais publicadas pelo projeto Ginrose para Linux x86_64. O site reúne download, instalação e links do fonte.",
   "p.ginrose.link0": "Site e download",
   "p.ginrose-studio.tagline": "Um launcher comunitário de código aberto para o Roblox Studio oficial para macOS no Linux.",
-  "p.ginrose-studio.status": "v0.3.6 · Flatpak e pacotes nativos · Rosemary main",
+  "p.ginrose-studio.status": "v0.3.7 · Flatpak e pacotes nativos · Rosemary main",
   "p.ginrose-studio.d0": "O Ginrose Studio é um launcher independente da comunidade, sem vínculo nem endosso da Roblox Corporation. Compilado do mesmo código do Ginrose, ele baixa o Roblox Studio oficial para macOS direto da Roblox e o executa no Linux pelo Rosemary.",
-  "p.ginrose-studio.d1": "É uma ferramenta de desenvolvimento, então é permissivo: qualquer FastFlag, qualquer variável de ambiente para o Rosemary, argumentos extras e o binário do Rosemary que você quiser. Login, abrir places, Team Create e arrastar modelos funcionam; ainda é experimental.",
+  "p.ginrose-studio.d1": "É uma ferramenta de desenvolvimento, então é permissivo: qualquer FastFlag, qualquer variável de ambiente para o Rosemary, argumentos extras e o binário do Rosemary que você quiser. A 0.3.7 corrige arrastar na seleção por caixa e nas alças de transformação, e mapeia Control para Command em todos os atalhos por padrão. Seu prefixo MiniDarwin 17 não pode ser reutilizado pela 0.3.6 ou anteriores. Login, abrir places e Team Create funcionam; ainda é experimental.",
   "p.ginrose-studio.link0": "Site e download",
   "home.enter": "Entrar no site",
   "home.viewProjects": "Explorar projetos",
@@ -62,7 +62,7 @@ export const pt = {
   "home.policy.privacy": "Política de Privacidade",
   "home.policy.vltra": "CONVITE VLTRA",
   "home.policy.bloodOath": "CONVITE BLOOD OATH",
-  "home.footer": "Atualizado em 6 de novembro de 2026",
+  "home.footer": "Atualizado em 13 de novembro de 2026",
   "home.backToTop": "Voltar ao topo ↑",
 
   // --- Cards (partes comuns) ------------------------------------------------

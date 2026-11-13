@@ -1,4 +1,5 @@
 export const pt = {
+  "ginrose.release037": "0.3.7 · 13 de novembro de 2026 — O Rosemary passa para um main mais recente do upstream, com melhorias no Metal e nos shaders, compilação de pipelines fora da thread principal e gesto de pinça no touchpad. Arrastar mantém o destino onde o clique começou, views ocultas não recebem cliques e trazer uma janela para frente preserva o foco do teclado. A primeira execução atualiza o prefixo para MiniDarwin 17; o Ginrose 0.3.6 e anteriores não podem reutilizá-lo.",
   "ginrose.devDownload": "Build dev ↓",
   "ginrose.dev": "Build dev do Rosemary",
   "ginrose.devText": "A build dev é o Rosemary com correções que já foram testadas em jogos, mas ainda não estão numa release. Não é uma release oficial, muda sem aviso e pode quebrar. É só para instalações nativas: o Flatpak sempre roda o Rosemary que vem com ele. Baixe rosemary-ginrose-x86_64 e SHA256SUMS da release dev-production e rode estes comandos na pasta do download:",
@@ -29,7 +30,7 @@ export const pt = {
   "ginrose.lead": "Um launcher comunitário de código aberto para o cliente oficial do Roblox para macOS.",
   "ginrose.intro": "O Ginrose é um projeto independente da comunidade, não um launcher oficial da Roblox. Feito sobre o Rosemary, baixa o cliente oficial do Roblox para macOS e o executa no Linux. Não tem vínculo nem endosso da Roblox Corporation.",
   "ginrose.readDocs": "Ler a documentação ↓",
-  "ginrose.platform": "Linux x86_64 · Flatpak e pacotes nativos v0.3.6 · GPL-3.0 ou posterior",
+  "ginrose.platform": "Linux x86_64 · Flatpak e pacotes nativos v0.3.7 · GPL-3.0 ou posterior",
   "ginrose.experimental": "Experimental. Leia antes de instalar.",
   "ginrose.warning": "O Ginrose só foi testado no Fedora com Hyprland e GPU NVIDIA. Outras distribuições, desktops e GPUs não foram testados. O Rosemary e o Roblox rodando por ele também são experimentais. Não há garantia de suporte ou correções.",
   "ginrose.native": "Pacotes nativos",
