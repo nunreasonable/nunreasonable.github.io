@@ -13,6 +13,15 @@
  * Quickshell, Tauri...) ficam em ingles, como no original.
  */
 export const pt = {
+  "iw.gallery.n.sekaipop_desktop_26120.caption": "SekaiPop na 26.1.2.0: barra em blocos contornados, relógio em teclas e widgets no desktop.",
+  "iw.gallery.n.sekaipop_desktop_26120.alt": "SekaiPop na 26.1.2.0: barra em blocos contornados, relógio em teclas e widgets no desktop.",
+  "iw.gallery.n.sekaipop_phone_26120.caption": "A barra lateral em formato de celular do SekaiPop reúne atalhos rápidos, notificações e calendário.",
+  "iw.gallery.n.sekaipop_phone_26120.alt": "A barra lateral em formato de celular do SekaiPop reúne atalhos rápidos, notificações e calendário.",
+  "iw.gallery.n.nabyscape_media_26120.caption": "NabyScape, inspirado em BillyNabil: uma ilha de mídia acima do desktop e a barra de tarefas do Windows embaixo.",
+  "iw.gallery.n.nabyscape_media_26120.alt": "NabyScape, inspirado em BillyNabil: uma ilha de mídia acima do desktop e a barra de tarefas do Windows embaixo.",
+  "iw.gallery.n.scrolling_layout_26120.caption": "O layout Scrolling organiza as janelas em colunas e mantém a coluna em foco à vista.",
+  "iw.gallery.n.scrolling_layout_26120.alt": "O layout Scrolling organiza as janelas em colunas e mantém a coluna em foco à vista.",
+
   "iw.download.arm64": "ZIP ARM64 experimental",
   "iw.download.x64": "ZIP portátil x64",
   "iw.styles.alt": "Desktop SekaiPop com blocos contornados, relógio em teclas e barra lateral em forma de celular",
