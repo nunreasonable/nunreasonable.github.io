@@ -2939,7 +2939,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261113-2")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261114-1")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -3150,7 +3150,7 @@
             defenderResponse: "ii isn't signed yet, so Microsoft Defender may flag it. The setup and the product site show how to add exclusions for ii's folders.",
             title: "Illogical Windows",
             tagline: "end-4's illogical-impulse Quickshell desktop, ported from Hyprland to Windows 11 and 10.",
-            status: "Stable · v26.1.2.0 — Pogo-Sticking Walrus",
+            status: "Stable · v26.1.2.1 — Trampolining Teapot",
             tags: ["C++", "C++/WinRT", "Qt 6 / QML", "Quickshell"],
             image: "./filearchive/projects/ii-windows/thumb.webp?v=20261031",
             cover: { src: "./apps/illogicalwindows/assets/showcase/desktop.webp", w: 1600, h: 900 },
@@ -3160,7 +3160,7 @@
               "end-4’s illogical-impulse desktop, running natively on Windows 10 and 11. Your apps and files stay where they are; ii brings a different bar, sidebars and widgets around them.",
               "Search with the Windows key, control music and notifications from the sidebar, and arrange widgets and windows your way. Colors follow your wallpaper, with four looks to choose from.",
               "I ported Quickshell to Windows with C++/WinRT, Qt and Direct3D 11, then adapted ii to native Windows services: virtual desktops, audio, notifications, screen capture and global shortcuts. The desktop design is end-4’s; the Windows backend and integration are my work.",
-              "Free and open source. One per-user setup installs, updates and removes it. Explore the interactive demo on the product site, or read the release notes on GitHub. Support for this fork is also available in a dedicated thread in the original ii Discord server. 26.1.2.0 adds the SekaiPop style based on Blapples’ work, the Colonies wallpaper transition, setup without PowerShell, reliable preset saving and dock and Settings fixes. ARM64 remains experimental. It isn't signed yet: I've applied for free code signing from the SignPath Foundation and I'm still trying to get it."
+              "Free and open source. One per-user setup installs, updates and removes it. Explore the interactive demo on the product site, or read the release notes on GitHub. Support for this fork is also available in a dedicated thread in the original ii Discord server. 26.1.2.1 adds focused and unfocused window opacity, small interface fixes without a new setup, SekaiPop across the remaining panels, and preset and security fixes. ARM64 remains experimental. It isn't signed yet: I've applied for free code signing from the SignPath Foundation and I'm still trying to get it."
 ],
             detailHeadings: ["Your everyday desktop", "The Windows port", "Try it yourself"],
             images: [
@@ -3173,7 +3173,7 @@
             ],
             links: [
               { label: "Website", href: "https://apps.daeese.me/illogicalwindows/", primary: true },
-              { label: "Download 26.1.2.0", href: "https://github.com/nunreasonable/ii-windows/releases/tag/v26.1.2.0" },
+              { label: "Download 26.1.2.1", href: "https://github.com/nunreasonable/ii-windows/releases/tag/v26.1.2.1" },
               { label: "ii-windows on GitHub", href: "https://github.com/nunreasonable/ii-windows" },
               { label: "Quickshell fork", href: "https://github.com/nunreasonable/quickshell/tree/windows" },
               { label: "ii fork", href: "https://github.com/nunreasonable/dots-hyprland/tree/ii-windows" },
@@ -5239,6 +5239,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261113-2"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261114-1"></script>
   </body>
 </html>

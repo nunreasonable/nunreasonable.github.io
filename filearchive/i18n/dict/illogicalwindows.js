@@ -13,6 +13,7 @@
  * Quickshell, Tauri...) ficam em ingles, como no original.
  */
 export const pt = {
+  "iw.releases.v26121": "A opacidade das janelas agora tem valores separados para apps em foco e os demais em Configurações → System → Windows; tela cheia e apps com transparência própria ficam como estão. Pequenas correções da interface podem chegar sem um setup novo: Aplicar correção em Configurações → Sobre troca os arquivos da interface e reinicia o shell por um instante, com retorno automático se falhar. Os blocos com contorno e sombra dura do SekaiPop agora cobrem os demais painéis, widgets, menus e Configurações. Presets restauram wallpaper e estilo, mantêm a descrição no Update e informam o resultado de exportar, importar e instalar. As correções preservam outras chaves de API ao salvar uma, conferem o SHA-256 do setup na atualização automática, restringem links de notificações a web e e-mail, removem o contorno ao parar de gravar e melhoram Spotlight, dock, Waffle e as Configurações em dashboard. Relatórios agora ficam em Documents\\ii-windows\\reports e copiam os campos da issue. Continua sem assinatura; ARM64 segue experimental.",
   "iw.gallery.n.sekaipop_desktop_26120.caption": "SekaiPop na 26.1.2.0: barra em blocos contornados, relógio em teclas e widgets no desktop.",
   "iw.gallery.n.sekaipop_desktop_26120.alt": "SekaiPop na 26.1.2.0: barra em blocos contornados, relógio em teclas e widgets no desktop.",
   "iw.gallery.n.sekaipop_phone_26120.caption": "A barra lateral em formato de celular do SekaiPop reúne atalhos rápidos, notificações e calendário.",
@@ -26,7 +27,7 @@ export const pt = {
   "iw.download.x64": "ZIP portátil x64",
   "iw.styles.alt": "Desktop SekaiPop com blocos contornados, relógio em teclas e barra lateral em forma de celular",
   "iw.styles.credit": "SekaiPop de Blapples ↗",
-  "iw.releases.v26120": "SekaiPop, o quarto estilo visual, traz contornos grossos, sombras duras e blocos que afundam ao clicar, uma barra lateral em forma de celular que sobe quicando, relógio em teclas e tela de bloqueio com pôster de calendário. Oito temas de cor funcionam no claro e escuro, com transições de wallpaper em anel, íris, estrela e blocos. Também chegam a transição Colonies, que espalha pixels em colônias, setup sem abrir o PowerShell, remoção opcional do winget, presets que salvam as configurações atuais de forma confiável (obrigado a @rubenmarcus), cor do relógio digital e larguras do Scrolling. Inclui as correções de clique no dock, prévias borradas no Insider, widgets arrastáveis, Configurações instantâneas e switch do dock previstas para a 26.1.1.1, que não saiu separadamente. ARM64 continua experimental e as builds continuam sem assinatura; as orientações do Defender permanecem válidas.",
+  "iw.releases.v26120": "SekaiPop, o quarto estilo visual, traz contornos grossos, sombras duras e blocos que afundam ao clicar, uma barra lateral em forma de celular que sobe quicando e relógio em teclas. Oito temas de cor funcionam no claro e escuro, com transições de wallpaper em anel, íris, estrela e blocos. Também chegam a transição Colonies, que espalha pixels em colônias, setup sem abrir o PowerShell, remoção opcional do winget, presets que salvam as configurações atuais de forma confiável (obrigado a @rubenmarcus), cor do relógio digital e larguras do Scrolling. Inclui as correções de clique no dock, prévias borradas no Insider, widgets arrastáveis, Configurações instantâneas e switch do dock previstas para a 26.1.1.1, que não saiu separadamente. ARM64 continua experimental e as builds continuam sem assinatura; as orientações do Defender permanecem válidas.",
   "iw.releases.finalLink": "Notas completas e downloads ↗",
   "iw.releases.v26110final": "A primeira release com o nome Illogical Windows e versões no formato ano.major.feature.fix. Tudo da preview (layout Scrolling para tiling, estilo NabyScape inspirado no trabalho de BillyNabil, claro/escuro automático, animações dos painéis, um wallpaper por área de trabalho, eventos e aniversários da agenda, menu de contexto na lista de apps e ARM64 nativo experimental), mais reordenar o dock arrastando, prévias de janelas minimizadas no dock, cores que seguem o wallpaper de cada área, a bateria na barra do end4-pC, Super + roda no layout Scrolling e muitas correções. Ainda não é assinada: o setup mostra como adicionar as exclusões do Defender.",
   "iw.signing.ps": "Ou no PowerShell como administrador, conectado ao usuário do Windows que usa o ii:",
@@ -85,9 +86,9 @@ export const pt = {
   "iw.nav.source": "Código-fonte",
   "iw.hero.eyebrow": "Port não oficial",
   "iw.hero.title": "Illogical Windows",
-  "iw.hero.codename": "Antes ii-windows · Pogo-Sticking Walrus",
+  "iw.hero.codename": "Trampolining Teapot",
   "iw.hero.pitch": "O desktop illogical-impulse do end-4, rodando nativamente no Windows 11 e no Windows 10.",
-  "iw.hero.download": "Baixar a 26.1.2.0",
+  "iw.hero.download": "Baixar a 26.1.2.1",
   "iw.hero.github": "Ver no GitHub",
   "iw.hero.versionLabel": "Versão",
   "iw.hero.requirements": "Windows 11, ou Windows 10 versão 2004 ou mais recente (22H2 recomendado)",
