@@ -1,4 +1,5 @@
 export const pt = {
+  "ginrose.release038": "0.3.8 · 18 de novembro de 2026 — O Rosemary passa para um upstream mais recente, com o estado de desenho do Metal refeito só quando muda, menos alocações no envio e um contorno para um bug dos drivers Mesa. O Ginrose segue a conta que a Roblox colocou num canal de deploy fora do LIVE, e compilá-lo do código-fonte no FreeBSD funciona melhor. Na primeira execução, o prefixo passa para MiniDarwin 21; o Ginrose 0.3.7 e anteriores não podem reutilizá-lo.",
   "ginrose.release037": "0.3.7 · 13 de novembro de 2026 — O Rosemary passa para um main mais recente do upstream, com melhorias no Metal e nos shaders, compilação de pipelines fora da thread principal e gesto de pinça no touchpad. Arrastar mantém o destino onde o clique começou, views ocultas não recebem cliques e trazer uma janela para frente preserva o foco do teclado. A primeira execução atualiza o prefixo para MiniDarwin 17; o Ginrose 0.3.6 e anteriores não podem reutilizá-lo.",
   "ginrose.devDownload": "Build dev ↓",
   "ginrose.dev": "Build dev do Rosemary",
@@ -30,7 +31,7 @@ export const pt = {
   "ginrose.lead": "Um launcher comunitário de código aberto para o cliente oficial do Roblox para macOS.",
   "ginrose.intro": "O Ginrose é um projeto independente da comunidade, não um launcher oficial da Roblox. Feito sobre o Rosemary, baixa o cliente oficial do Roblox para macOS e o executa no Linux. Não tem vínculo nem endosso da Roblox Corporation.",
   "ginrose.readDocs": "Ler a documentação ↓",
-  "ginrose.platform": "Linux x86_64 · Flatpak e pacotes nativos v0.3.7 · GPL-3.0 ou posterior",
+  "ginrose.platform": "Linux x86_64 · Flatpak e pacotes nativos v0.3.8 · GPL-3.0 ou posterior",
   "ginrose.experimental": "Experimental. Leia antes de instalar.",
   "ginrose.warning": "O Ginrose só foi testado no Fedora com Hyprland e GPU NVIDIA. Outras distribuições, desktops e GPUs não foram testados. O Rosemary e o Roblox rodando por ele também são experimentais. Não há garantia de suporte ou correções.",
   "ginrose.native": "Pacotes nativos",
