@@ -38,7 +38,7 @@ export const pt = {
   "ginrose.native": "Pacotes nativos",
   "ginrose.freebsd": "FreeBSD",
   "ginrose.freebsdText": "O Flatpak não roda no FreeBSD, então lá o Ginrose é instalado direto no sistema, para o seu usuário. Cada release traz builds de FreeBSD do Ginrose e do Rosemary do Ginrose, compiladas no FreeBSD 14.5 para o 14.5 e posteriores:",
-  "ginrose.freebsdNote": "O Vulkan precisa do driver da GPU: nvidia-driver com placa NVIDIA, ou mesa-dri com AMD ou Intel. O suporte ao FreeBSD é novo tanto no Rosemary quanto no Ginrose, então espere arestas. O Ginrose Studio ainda não tem build de FreeBSD.",
+  "ginrose.freebsdNote": "O Vulkan precisa do driver da GPU: nvidia-driver com placa NVIDIA, ou mesa-dri com AMD ou Intel. O GTK precisa de pelo menos uma fonte, que o pacote gtk4 do FreeBSD não instala: sem ela, a janela do Ginrose fica sem nenhum texto, e a dejavu basta. O suporte ao FreeBSD é novo tanto no Rosemary quanto no Ginrose, então espere arestas. O Ginrose Studio ainda não tem build de FreeBSD.",
   "ginrose.nativeText": "Cada release também traz a mesma build como pacote de distribuição, para quem prefere não usar Flatpak. Eles precisam de glibc 2.39, GTK 4.14 e libadwaita 1.6 ou mais novos: Debian 13, Ubuntu 25.04, Fedora 42 ou posterior, openSUSE Tumbleweed e Arch têm. Baixe o da sua distribuição na release mais recente e rode:",
   "ginrose.nativeRosemary": "O Rosemary não faz parte desses pacotes: o Ginrose usa um rosemary do seu PATH, como o do AUR, ou baixa um na configuração, que então precisa de SDL 3.4 e OpenAL. O NixOS tem um flake que compila o Ginrose já com o Rosemary, e o Gentoo tem um ebuild no rosemary-gentoo-overlay; os dois compilam do código-fonte.",
   "ginrose.packaging": "Receitas de empacotamento ↗",
