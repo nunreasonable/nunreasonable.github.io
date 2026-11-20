@@ -5,9 +5,9 @@ const DEFAULT_LOCAL_API_BASE = "http://127.0.0.1:5056";
 const PROXY_API_ORIGIN = "https://daeese.me";
 const PERMISSION_LABELS = {
   4: "Developer",
-  3: "General Staff",
-  2: "Regimental Command",
-  1: "NCO/Officer"
+  3: "Superior",
+  2: "Oficial",
+  1: "NCO"
 };
 
 function isLocalHost(hostname) {
@@ -116,7 +116,9 @@ const els = {
   removeRoleBtn: document.getElementById("removeRoleBtn"),
   roleMsg: document.getElementById("roleMsg"),
   msgChannelId: document.getElementById("msgChannelId"),
-  msgChannelPick: document.getElementById("msgChannelPick"),
+  channelOptions: document.getElementById("channelOptions"),
+  discordLoginBtn: document.getElementById("discordLoginBtn"),
+  loginDivider: document.getElementById("loginDivider"),
   msgContent: document.getElementById("msgContent"),
   sendMsgBtn: document.getElementById("sendMsgBtn"),
   msgSendStatus: document.getElementById("msgSendStatus"),
@@ -157,6 +159,7 @@ const els = {
   pushPending: document.getElementById("pushPending"),
   pushDryBtn: document.getElementById("pushDryBtn"),
   pushBtn: document.getElementById("pushBtn"),
+  pushToSheet: document.getElementById("pushToSheet"),
   pushResult: document.getElementById("pushResult"),
   pushMsg: document.getElementById("pushMsg"),
 
@@ -168,7 +171,7 @@ const els = {
   deployMsg: document.getElementById("deployMsg"),
 
   dmRoleId: document.getElementById("dmRoleId"),
-  dmRolePick: document.getElementById("dmRolePick"),
+  roleOptions: document.getElementById("roleOptions"),
   dmUserId: document.getElementById("dmUserId"),
   dmCode: document.getElementById("dmCode"),
   dmMessage: document.getElementById("dmMessage"),
@@ -363,8 +366,9 @@ function applyUser(user) {
   state.user = user;
   els.profileAvatar.src = safeAvatarUrl(user.avatarUrl);
   els.profileName.textContent = user.username;
-  els.profilePermission.textContent =
-    `${getPermissionLabel(user.permissionLevel, user.permissionName)} (nível ${user.permissionLevel})`;
+  // "Patente - Permissão"; quem entra por ID (Developer) nao tem patente.
+  const permission = getPermissionLabel(user.permissionLevel, user.permissionName);
+  els.profilePermission.textContent = user.rank ? `${user.rank} - ${permission}` : permission;
 
   const level = Number(user.permissionLevel) || 0;
 
@@ -388,6 +392,8 @@ function applyUser(user) {
    */
   const canBasic = level >= 1;
   const canCommand = level >= 2;
+  // Superior (Captain ou acima): o que tira gente ou da privilegio.
+  const canFull = level >= 3;
 
   // Sempre reatribuido (nao so desabilitado) para que trocar de conta sem
   // recarregar a pagina reflita a permissao do usuario atual.
@@ -414,11 +420,12 @@ function applyUser(user) {
     "Sua permissão não permite enviar deployments.");
 
   // --- Nivel 2: remove gente, API externa, ou volume -----------------------
-  gate([els.addRoleBtn, els.removeRoleBtn], canCommand, els.roleMsg,
-    "Gerenciar cargos exige permissão 2+.");
+  gate([els.addRoleBtn, els.removeRoleBtn], canFull, els.roleMsg,
+    "Gerenciar cargos exige Captain ou acima.");
 
-  gate([els.timeoutBtn, els.removeRegimentBtn], canCommand, els.punishMsg,
-    "Punições administrativas exigem permissão 2+.");
+  gate([els.timeoutBtn], canCommand, els.punishMsg,
+    "Punições administrativas exigem oficial (Serjeant Major ou acima).");
+  gate([els.removeRegimentBtn], canFull, null, "");
 
   gate([els.pushBtn, els.pushDryBtn], canCommand, els.pushMsg,
     "Publicar a auditoria no GitHub exige permissão 2+.");
@@ -436,11 +443,11 @@ function applyUser(user) {
    * a tela contar a mesma historia.
    */
   gate([els.editSaveBtn], canBasic, null, "");
-  gate([els.editRemoveBtn], canCommand, null, "");
+  gate([els.editRemoveBtn], canFull, null, "");
   setMessage(
     els.editMsg,
     canBasic
-      ? (canCommand ? "" : "Você pode editar; remover registros exige permissão 2+.")
+      ? (canFull ? "" : "Você pode editar; remover registros exige Captain ou acima.")
       : "Sua permissão não permite editar a auditoria.",
     !canBasic
   );
@@ -669,11 +676,55 @@ async function loadMe() {
 }
 
 /*
- * Menus de canal e cargo. O <select> so preenche o campo de ID que ja existia,
- * entao o envio e a validacao continuam os mesmos. "Outro ID..." mostra o
- * campo para quem precisar de algo fora da lista.
+ * Canal da mensagem e cargo da DM: campos em que da para digitar o nome ou o
+ * ID, com a lista do servidor como sugestao (datalist). Na hora de enviar o
+ * nome vira ID. A gestao de cargos fica com um <select>: ali so vale o que o
+ * bot aceita mexer.
  */
 const CUSTOM_ID = "__custom";
+const pickMaps = { channel: new Map(), role: new Map() };
+
+function normalizeName(value) {
+  return String(value || "").trim().replace(/^[#@]/, "").toLowerCase();
+}
+
+function fillSuggestions(datalist, map, items) {
+  datalist.replaceChildren();
+  map.clear();
+  const counts = new Map();
+  for (const item of items) {
+    const key = normalizeName(item.name);
+    counts.set(key, (counts.get(key) || 0) + 1);
+  }
+  for (const item of items) {
+    const unique = counts.get(normalizeName(item.name)) === 1;
+    // Nome repetido (canal homonimo em outra categoria) leva a categoria junto.
+    const text = unique || !item.group ? `${item.prefix}${item.name}` : `${item.prefix}${item.name} (${item.group})`;
+    const option = document.createElement("option");
+    option.value = text;
+    if (item.group) {
+      option.label = item.group;
+    }
+    datalist.appendChild(option);
+    map.set(normalizeName(text), item.id);
+    if (unique) {
+      map.set(normalizeName(item.name), item.id);
+    }
+  }
+}
+
+// Nome da lista, ID cru, ou erro dizendo o que faltou.
+function resolvePick(value, map, label) {
+  const raw = String(value || "").trim();
+  if (/^\d{10,20}$/.test(raw)) {
+    return raw;
+  }
+  const id = map.get(normalizeName(raw));
+  if (id) {
+    return id;
+  }
+  throw new Error(`${label} "${raw}" não encontrado. Escolha da lista ou informe o ID.`);
+}
 
 function fillPicker(select, input, items, placeholder) {
   select.replaceChildren();
@@ -688,23 +739,12 @@ function fillPicker(select, input, items, placeholder) {
   first.textContent = placeholder;
   select.appendChild(first);
 
-  // Nomes de canal e cargo vem do Discord: textContent, nunca innerHTML.
-  const groups = new Map();
+  // Nomes de cargo vem do Discord: textContent, nunca innerHTML.
   for (const item of items) {
     const option = document.createElement("option");
     option.value = item.id;
     option.textContent = `${item.label} (${item.id})`;
-    if (!item.group) {
-      select.appendChild(option);
-      continue;
-    }
-    if (!groups.has(item.group)) {
-      const optgroup = document.createElement("optgroup");
-      optgroup.label = item.group;
-      groups.set(item.group, optgroup);
-      select.appendChild(optgroup);
-    }
-    groups.get(item.group).appendChild(option);
+    select.appendChild(option);
   }
 
   const custom = document.createElement("option");
@@ -731,22 +771,21 @@ function wirePicker(select, input) {
   });
 }
 
-wirePicker(els.msgChannelPick, els.msgChannelId);
-wirePicker(els.dmRolePick, els.dmRoleId);
 wirePicker(els.rolePick, els.roleId);
 
 async function loadGuildOptions() {
   const { channels = [], roles = [] } = await apiRequest("/api/guild/options");
 
-  fillPicker(
-    els.msgChannelPick,
-    els.msgChannelId,
-    channels.map((c) => ({ id: c.id, label: `#${c.name}`, group: c.category || "Sem categoria" })),
-    "Escolha um canal"
+  fillSuggestions(
+    els.channelOptions,
+    pickMaps.channel,
+    channels.map((c) => ({ id: c.id, name: c.name, prefix: "#", group: c.category || "" }))
   );
-
-  const roleItems = roles.map((r) => ({ id: r.id, label: `@${r.name}` }));
-  fillPicker(els.dmRolePick, els.dmRoleId, roleItems, "Nenhum cargo (usar ID de usuário)");
+  fillSuggestions(
+    els.roleOptions,
+    pickMaps.role,
+    roles.map((r) => ({ id: r.id, name: r.name, prefix: "@", group: "" }))
+  );
 
   // Gestao de cargos so oferece o que o bot aceita conceder ou tirar.
   fillPicker(
@@ -840,6 +879,88 @@ async function submitLogin() {
 
 els.loginBtn.addEventListener("click", submitLogin);
 
+/*
+ * Login com o Discord. O botao so aparece se o bot tiver o client secret
+ * configurado. O `state` aleatorio fica no sessionStorage e precisa voltar
+ * igual: sem isso, um link forjado logaria a pessoa na sessao de outro.
+ */
+const OAUTH_STATE_KEY = "dashboardOauthState";
+
+async function setupDiscordLogin() {
+  try {
+    const config = await apiRequest("/api/auth/discord");
+    if (!config.enabled) {
+      return;
+    }
+    state.discordOauth = config;
+    els.discordLoginBtn.classList.remove("hidden");
+    els.loginDivider.classList.remove("hidden");
+  } catch {
+    // Sem o botao, o login por codigo continua ali.
+  }
+}
+
+function startDiscordLogin() {
+  const config = state.discordOauth;
+  if (!config) {
+    return;
+  }
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  const oauthState = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+  sessionStorage.setItem(OAUTH_STATE_KEY, oauthState);
+  const url = new URL("https://discord.com/oauth2/authorize");
+  url.search = new URLSearchParams({
+    client_id: config.clientId,
+    response_type: "code",
+    redirect_uri: config.redirectUri,
+    scope: "identify",
+    state: oauthState,
+    prompt: "none"
+  }).toString();
+  window.location.assign(url.toString());
+}
+
+els.discordLoginBtn.addEventListener("click", startDiscordLogin);
+
+// Volta do discord.com com ?code=...&state=... (ou ?error=...).
+async function finishDiscordLogin() {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
+  const error = params.get("error");
+  if (!code && !error) {
+    return false;
+  }
+
+  // Tira o code da barra: nao vai para o historico nem para um print.
+  history.replaceState(null, "", window.location.pathname + window.location.hash);
+  const expected = sessionStorage.getItem(OAUTH_STATE_KEY);
+  sessionStorage.removeItem(OAUTH_STATE_KEY);
+
+  if (error) {
+    setMessage(els.loginMessage, "Login com o Discord cancelado.", true);
+    return true;
+  }
+  if (!expected || params.get("state") !== expected) {
+    setMessage(els.loginMessage, "O retorno do Discord não confere. Tente entrar de novo.", true);
+    return true;
+  }
+
+  setMessage(els.loginMessage, "Autenticando com o Discord...");
+  try {
+    const data = await apiRequest("/api/auth/discord", {
+      method: "POST",
+      body: JSON.stringify({ code })
+    });
+    state.token = data.token;
+    sessionStorage.setItem("dashboardToken", state.token);
+    setMessage(els.loginMessage, "Login realizado com sucesso.", "success");
+    await loadMe();
+  } catch (err) {
+    setMessage(els.loginMessage, err.message, true);
+  }
+  return true;
+}
+
 // Enter em qualquer um dos campos envia o login.
 [els.apiBase, els.linkCode].forEach((input) => {
   input.addEventListener("keydown", (event) => {
@@ -888,7 +1009,7 @@ els.sendMsgBtn.addEventListener("click", async () => {
     await apiRequest("/api/messages/send", {
       method: "POST",
       body: JSON.stringify({
-        channelId: parseDiscordSnowflake(els.msgChannelId.value, "Canal"),
+        channelId: resolvePick(els.msgChannelId.value, pickMaps.channel, "Canal"),
         message: els.msgContent.value
       })
     });
@@ -1185,7 +1306,7 @@ async function runPush(dryRun) {
   try {
     const result = await apiRequest("/api/audit/push", {
       method: "POST",
-      body: JSON.stringify({ dryRun })
+      body: JSON.stringify({ dryRun, sheet: els.pushToSheet.checked })
     });
 
     const lines = [
@@ -1323,7 +1444,7 @@ els.dmBtn.addEventListener("click", async () => {
     const userRaw = (els.dmUserId.value || "").trim();
 
     if (!roleRaw && !userRaw) {
-      throw new Error("Informe o ID de um cargo ou de um usuário.");
+      throw new Error("Escolha um cargo ou informe o ID de um usuário.");
     }
 
     const payload = {
@@ -1332,7 +1453,7 @@ els.dmBtn.addEventListener("click", async () => {
     };
 
     if (roleRaw) {
-      payload.roleId = parseDiscordSnowflake(roleRaw, "Cargo");
+      payload.roleId = resolvePick(roleRaw, pickMaps.role, "Cargo");
     }
     if (userRaw) {
       payload.userId = parseDiscordSnowflake(userRaw, "Usuario");
@@ -1535,6 +1656,10 @@ els.logAuto.addEventListener("change", () => {
   selectTab(activeTabName());
 
   showLogin();
+  setupDiscordLogin();
+  if (await finishDiscordLogin()) {
+    return;
+  }
   if (!state.token) {
     return;
   }

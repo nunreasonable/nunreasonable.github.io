@@ -23,7 +23,7 @@ import sys
 
 BASE = pathlib.Path(__file__).resolve().parent
 HTML = BASE / "index.html"
-ASSETS = ("style.css", "app.js")
+ASSETS = ("style.css", "app.js", "theme.js")
 
 
 def main() -> int:

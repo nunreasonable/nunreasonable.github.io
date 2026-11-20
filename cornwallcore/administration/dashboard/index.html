@@ -37,63 +37,74 @@
     object-src 'none'" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=7d57485f" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <!--
+    theme.js vem antes do CSS e sem defer: ele marca data-theme no <html>
+    antes da primeira pintura, senao quem escolheu o tema oposto ao do sistema
+    veria a pagina piscar. Nao da para ser inline por causa da CSP.
+  -->
+  <script src="theme.js?v=7bc02fb4"></script>
+  <link rel="stylesheet" href="style.css?v=18456fca" />
   <link rel="icon" type="image/png" href="../../../filearchive/newpfp.png" />
 </head>
 <body>
-  <div class="bg-shape shape-a"></div>
-  <div class="bg-shape shape-b"></div>
+  <button id="themeToggle" class="theme-toggle" type="button" aria-label="Tema: sistema. Trocar tema">Tema: sistema</button>
   <main class="shell">
-    <section id="loginView" class="card login-card">
-      <h1>ccore</h1>
-      <p class="subtitle">Painel de administração do 12° Regimento de Infantaria &quot;Chaves&quot;</p>
-      <ol class="steps">
-        <li>No Discord, execute <strong>/dashboardlink</strong> no bot.</li>
-        <li>Insira o código abaixo para autenticar.</li>
-      </ol>
-      <label for="apiBase">URL da API do bot</label>
-      <input id="apiBase" placeholder="https://daeese.me/api (producao) ou http://127.0.0.1:5056 (local)" />
-      <label for="linkCode">Código de login</label>
-      <input id="linkCode" placeholder="CORN-XXXXX-XXXXX" />
-      <button id="loginBtn">Entrar no Dashboard</button>
-      <p id="loginMessage" class="message"></p>
-      <p class="dev-note">Painel em desenvolvimento — beta 0.2.0</p>
+    <section id="loginView" class="login">
+      <div class="login-intro">
+        <img class="login-emblem" src="../../../filearchive/icons/ccore-emblem.webp" alt="Emblema do 12° Regimento de Infantaria &quot;Chaves&quot;" width="394" height="394" />
+        <h1 class="wordmark">ccore</h1>
+        <p class="subtitle">Painel do 12° Regimento de Infantaria &quot;Chaves&quot;. Acesso restrito ao 12º Staff.</p>
+      </div>
+
+      <div class="login-form">
+        <h2>Entrar</h2>
+        <button id="discordLoginBtn" class="discord-login hidden" type="button">Entrar com Discord</button>
+        <p id="loginDivider" class="login-divider hidden">ou use um código do bot</p>
+        <ol class="steps">
+          <li>No Discord, rode <strong>/dashboardlink</strong> no bot.</li>
+          <li>Cole o código abaixo.</li>
+        </ol>
+        <label for="linkCode">Código de login</label>
+        <input id="linkCode" placeholder="CORN-XXXXX-XXXXX" autocomplete="one-time-code" />
+        <button id="loginBtn">Entrar com o código</button>
+        <p id="loginMessage" class="message" role="status"></p>
+        <details class="api-settings">
+          <summary>Conexão com o bot</summary>
+          <label for="apiBase">URL da API</label>
+          <input id="apiBase" placeholder="https://daeese.me/api ou http://127.0.0.1:5056" />
+        </details>
+        <p class="dev-note">Beta 0.3.0</p>
+      </div>
     </section>
 
     <section id="dashboardView" class="dashboard hidden">
-      <!--
-        Barra do topo em duas faixas: quem esta logado em cima, para onde ir
-        embaixo. As abas moravam soltas entre o header e os paineis, sem nada
-        que as ligasse ao que controlam; dentro do card elas formam uma unica
-        barra de navegacao.
-      -->
-      <header class="topbar card">
-        <div class="topbar-top">
-          <div class="profile">
-            <!--
-              src inicial de propósito: sem ele o navegador desenha o ícone de
-              imagem quebrada até o applyUser() rodar. É o mesmo fallback que o
-              app.js usa quando o usuário não tem avatar.
-            -->
-            <img id="profileAvatar" alt="Avatar do usuário"
-                 src="https://cdn.discordapp.com/embed/avatars/0.png" />
-            <div>
-              <h2 id="profileName"></h2>
-              <p id="profilePermission"></p>
-            </div>
+      <header class="site-header">
+        <div class="header-row">
+          <div class="brand">
+            <img src="../../../filearchive/icons/ccore-96.webp" alt="" width="36" height="36" />
+            <span class="wordmark small">ccore</span>
           </div>
-          <div class="topbar-actions">
-            <button id="refreshAuditBtn" class="ghost">Atualizar audit log</button>
-            <button id="logoutBtn" class="ghost">Sair</button>
+          <div class="header-end">
+            <div class="profile">
+              <!--
+                src inicial de propósito: sem ele o navegador desenha o ícone de
+                imagem quebrada até o applyUser() rodar.
+              -->
+              <img id="profileAvatar" alt="Avatar do usuário"
+                   src="https://cdn.discordapp.com/embed/avatars/0.png" />
+              <div>
+                <h2 id="profileName"></h2>
+                <p id="profilePermission"></p>
+              </div>
+            </div>
+            <div class="header-actions">
+              <button id="refreshAuditBtn" class="ghost">Atualizar audit log</button>
+              <button id="logoutBtn" class="ghost">Sair</button>
+            </div>
           </div>
         </div>
 
-        <!--
-          Abas em vez de uma grade unica: com onze paineis, empilhar tudo numa
-          coluna so tornaria a pagina impossivel de varrer. Cada aba aponta para
-          o painel que comanda por aria-controls, e o app.js esconde os outros.
-        -->
         <nav class="tabs" role="tablist" aria-label="Seções do painel">
           <button class="tab is-active" id="tab-moderacao" role="tab" data-tab="moderacao" aria-controls="panel-moderacao" aria-selected="true" tabindex="0">Moderação</button>
           <button class="tab" id="tab-auditoria" role="tab" data-tab="auditoria" aria-controls="panel-auditoria" aria-selected="false" tabindex="-1">Auditoria</button>
@@ -103,41 +114,42 @@
         </nav>
       </header>
 
+      <div class="content">
       <!-- ================= MODERAÇÃO ================= -->
       <section class="grid tab-panel" id="panel-moderacao" data-panel="moderacao" role="tabpanel" aria-labelledby="tab-moderacao" tabindex="0">
-        <article class="card panel">
-          <h3>Gestão de Cargos</h3>
-          <p class="hint">Permissão 2+ — conceder cargo também pode escalar privilégio.</p>
+        <article class="panel">
+          <h3>Cargos</h3>
+          <p class="hint">Superior (Captain ou acima). Só os cargos que o bot aceita mexer.</p>
           <input id="roleUserId" placeholder="ID do usuário" />
           <select id="rolePick" class="hidden" aria-label="Cargo"></select>
           <input id="roleId" placeholder="ID do cargo" />
           <input id="roleReason" placeholder="Motivo (opcional)" />
           <div class="row">
-            <button id="addRoleBtn">Adicionar Cargo</button>
-            <button id="removeRoleBtn" class="ghost">Remover Cargo</button>
+            <button id="addRoleBtn">Dar cargo</button>
+            <button id="removeRoleBtn" class="ghost">Tirar cargo</button>
           </div>
           <p id="roleMsg" class="message"></p>
         </article>
 
-        <article class="card panel">
-          <h3>Mensagens no Canal</h3>
-          <p class="hint">Escolha o canal e escreva a mensagem para envio via bot.</p>
-          <select id="msgChannelPick" class="hidden" aria-label="Canal"></select>
-          <input id="msgChannelId" placeholder="ID do canal" />
+        <article class="panel">
+          <h3>Mensagem no canal</h3>
+          <p class="hint">O bot escreve no canal que você escolher.</p>
+          <input id="msgChannelId" list="channelOptions" autocomplete="off" placeholder="Digite o canal ou o ID" aria-label="Canal" />
+          <datalist id="channelOptions"></datalist>
           <textarea id="msgContent" placeholder="Mensagem para enviar"></textarea>
-          <button id="sendMsgBtn">Enviar Mensagem</button>
+          <button id="sendMsgBtn">Enviar mensagem</button>
           <p id="msgSendStatus" class="message"></p>
         </article>
 
-        <article class="card panel is-destructive">
+        <article class="panel is-destructive">
           <h3>Punições</h3>
-          <p class="hint">Permissão 2+. Remoção do regimento é irreversível pelo painel.</p>
+          <p class="hint">Timeout é para oficiais (Serjeant Major ou acima). Remover do regimento é Superior e não se desfaz pelo painel.</p>
           <input id="punishUserId" placeholder="ID do usuário" />
           <input id="punishReason" placeholder="Motivo (opcional)" />
           <input id="timeoutMinutes" placeholder="Timeout em minutos" />
           <div class="row">
-            <button id="timeoutBtn">Aplicar Timeout</button>
-            <button id="removeRegimentBtn" class="danger">Remover do Regimento</button>
+            <button id="timeoutBtn">Aplicar timeout</button>
+            <button id="removeRegimentBtn" class="danger">Remover do regimento</button>
           </div>
           <p id="punishMsg" class="message"></p>
         </article>
@@ -145,7 +157,7 @@
 
       <!-- ================= AUDITORIA ================= -->
       <section class="grid tab-panel hidden" id="panel-auditoria" data-panel="auditoria" role="tabpanel" aria-labelledby="tab-auditoria" tabindex="0" hidden>
-        <article class="card panel wide">
+        <article class="panel wide">
           <h3>Efetivo</h3>
           <p class="hint">Kills, deaths, assists e batalhas consolidados. Clique numa linha para editar.</p>
           <div class="row with-input">
@@ -164,9 +176,9 @@
           <p id="rosterMsg" class="message"></p>
         </article>
 
-        <article class="card panel">
+        <article class="panel">
           <h3>Editar jogador</h3>
-          <p class="hint">Editar é permissão 1+; <strong>remover</strong> exige 2+. Renomear para um nome já existente é recusado.</p>
+          <p class="hint">Qualquer nível edita; remover é Superior. A planilha ganha na próxima sincronização.</p>
           <label for="editUsername">Jogador</label>
           <input id="editUsername" placeholder="Nome atual" />
           <label for="editNewUsername">Novo nome (opcional)</label>
@@ -191,19 +203,20 @@
           <p id="editMsg" class="message"></p>
         </article>
 
-        <article class="card panel">
+        <article class="panel">
           <h3>Patente</h3>
-          <p class="hint">Permissão 1+. Texto livre; campo em branco remove a patente.</p>
+          <p class="hint">Texto livre; em branco remove. A planilha ganha na próxima sincronização.</p>
           <input id="rankUsername" placeholder="Jogador" />
           <input id="rankValue" placeholder="Patente (vazio remove)" />
           <button id="rankSaveBtn">Definir patente</button>
           <p id="rankMsg" class="message"></p>
         </article>
 
-        <article class="card panel">
+        <article class="panel">
           <h3>Publicar no GitHub e na planilha</h3>
-          <p class="hint">Permissão 2+. Consolida a fila, grava os lotes na EventLogs da planilha do regimento e publica no GitHub. Rode a prévia antes.</p>
+          <p class="hint">Oficiais. Consolida a fila e publica no GitHub; gravar na planilha do regimento é opcional. Rode a prévia antes.</p>
           <p id="pushPending" class="hint"></p>
+          <label class="checkbox"><input type="checkbox" id="pushToSheet" checked /> Gravar os lotes também na planilha</label>
           <div class="row">
             <button id="pushDryBtn" class="ghost">Prévia (dry run)</button>
             <button id="pushBtn">Publicar</button>
@@ -212,7 +225,7 @@
           <p id="pushMsg" class="message"></p>
         </article>
 
-        <article class="card panel wide">
+        <article class="panel wide">
           <h3>Histórico da auditoria</h3>
           <p class="hint">O mesmo que <code>/audit-logs</code> mostra no Discord.</p>
           <ul id="auditHistoryList" class="audit-list"></ul>
@@ -222,22 +235,22 @@
 
       <!-- ================= COMUNICAÇÕES ================= -->
       <section class="grid tab-panel hidden" id="panel-comunicacoes" data-panel="comunicacoes" role="tabpanel" aria-labelledby="tab-comunicacoes" tabindex="0" hidden>
-        <article class="card panel">
+        <article class="panel">
           <h3>Deployment</h3>
-          <p class="hint">Permissão 1+. Vai para o canal configurado no bot.</p>
+          <p class="hint">Vai para o canal configurado no bot.</p>
           <label for="deployCode">Código do jogo</label>
           <input id="deployCode" placeholder="Ex.: CORN1" />
           <button id="deployBtn">Enviar deployment</button>
           <p id="deployMsg" class="message"></p>
         </article>
 
-        <article class="card panel">
+        <article class="panel">
           <h3>DM em massa</h3>
-          <p class="hint">Permissão 2+. Máximo 500 destinatários por envio.</p>
+          <p class="hint">Oficiais. Até 500 pessoas por envio.</p>
           <p class="hint">Escolha um cargo <em>ou</em> informe o ID de um usuário.</p>
           <label for="dmRoleId">Cargo</label>
-          <select id="dmRolePick" class="hidden" aria-label="Cargo"></select>
-          <input id="dmRoleId" placeholder="ID do cargo" />
+          <input id="dmRoleId" list="roleOptions" autocomplete="off" placeholder="Digite o cargo ou o ID" />
+          <datalist id="roleOptions"></datalist>
           <label for="dmUserId">ID do usuário</label>
           <input id="dmUserId" placeholder="ID do usuário (alternativa ao cargo)" />
           <label for="dmCode">Código (opcional)</label>
@@ -260,9 +273,9 @@
 
       <!-- ================= ALISTAMENTO ================= -->
       <section class="grid tab-panel hidden" id="panel-alistamento" data-panel="alistamento" role="tabpanel" aria-labelledby="tab-alistamento" tabindex="0" hidden>
-        <article class="card panel">
+        <article class="panel">
           <h3>Alistar usuário</h3>
-          <p class="hint">Permissão 2+. Verificação anti-ALT no ROBLOX é automática.</p>
+          <p class="hint">Oficiais. A verificação anti-ALT no ROBLOX é automática.</p>
           <label for="enlistUserId">ID do usuário no Discord</label>
           <input id="enlistUserId" placeholder="ID do usuário" />
           <label for="enlistRoblox">Username do ROBLOX</label>
@@ -273,7 +286,7 @@
           <p id="enlistMsg" class="message"></p>
         </article>
 
-        <article class="card panel wide">
+        <article class="panel wide">
           <h3>Promoções</h3>
           <p class="hint">Elegibilidade pela escada do regimento. A decisão continua sendo do comando.</p>
           <button id="promotionsRefreshBtn" class="ghost">Carregar promoções</button>
@@ -291,9 +304,9 @@
 
       <!-- ================= LOGS ================= -->
       <section class="grid tab-panel hidden" id="panel-logs" data-panel="logs" role="tabpanel" aria-labelledby="tab-logs" tabindex="0" hidden>
-        <article class="card panel wide">
+        <article class="panel wide">
           <h3>Logs do bot</h3>
-          <p class="hint">Permissão 2+. Mesmo buffer que o comando <code>/logs</code> lê. Zera a cada reinício do bot.</p>
+          <p class="hint">Oficiais. O mesmo que o <code>/logs</code> mostra; zera quando o bot reinicia.</p>
           <div class="row with-input">
             <select id="logLevel">
               <option value="">Todos os níveis</option>
@@ -310,15 +323,16 @@
           <p id="logMsg" class="message"></p>
         </article>
 
-        <article class="card panel wide audit-panel">
-          <h3>Audit Log do painel</h3>
+        <article class="panel wide audit-panel">
+          <h3>Audit log do painel</h3>
           <p class="hint">Alterações no dashboard com ator e horário.</p>
           <ul id="auditList" class="audit-list"></ul>
           <p id="auditEmpty" class="audit-empty hidden">Nenhuma alteração registrada ainda.</p>
         </article>
       </section>
+      </div>
     </section>
   </main>
-  <script src="app.js?v=b6b90396"></script>
+  <script src="app.js?v=7d15cf9c"></script>
 </body>
 </html>

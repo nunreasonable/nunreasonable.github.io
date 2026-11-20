@@ -1,52 +1,106 @@
 /*
  * Painel administrativo do ccore.
  *
- * A paleta e ancorada na do site irmao (ccore.daeese.me): azul-marinho, o
- * vermelho do regimento e branco. Antes o painel era preto com dourado, sem
- * relacao nenhuma com a vitrine ao lado.
+ * Dois temas tirados do mundo do regimento, sem o azul de antes:
+ * - claro, "livro de ordens": papel cinza de registro, tinta preta e o
+ *   vermelho de lacre;
+ * - escuro, "casaca escarlate": vinho de casaca de linha com o dourado do
+ *   galao.
+ * O tema segue o sistema ate a pessoa escolher outro (theme.js).
  *
- * A regra que organiza as cores: o vermelho do regimento (--danger) e
- * RESERVADO para acao destrutiva e erro. Antes ele era gasto em manchas
- * decorativas de fundo enquanto o botao primario era dourado - ou seja, a cor
- * mais forte da tela nao queria dizer nada. Num painel que aplica timeout e
- * remove gente do regimento, a cor precisa carregar significado.
+ * A regra das cores continua: --danger e so para acao destrutiva e erro. A
+ * acao principal usa --primary (tinta no claro, dourado no escuro).
  *
- * Todos os pares de texto/fundo daqui passam em WCAG AA (>= 4.5:1 para texto
- * normal, >= 3:1 para auxiliar).
+ * Sem cartoes: e uma pagina, com cabecalho de site e blocos separados por
+ * filete, como os outros sites do daeese.
  */
 
 :root {
+  color-scheme: light;
+
+  --bg: #e7e5df;
+  --field: #f2f1ec;
+  --raised: #dedbd3;
+  --line: #c9c6bd;
+  --line-strong: #a9a59a;
+
+  --text: #1f2024;
+  --muted: #5d5f66;
+
+  --primary: #1f2024;
+  --primary-hover: #34363c;
+  --on-primary: #f2f1ec;
+
+  /* Marca de selecao e foco: o vermelho de lacre, em linha fina. */
+  --mark: #8f1d21;
+  --mark-soft: rgba(143, 29, 33, 0.12);
+
+  --danger: #8f1d21;
+  --danger-hover: #a52328;
+  --on-danger: #f7e8e8;
+
+  --ok: #2f6b3a;
+  --error-text: #8f1d21;
+
+  --radius: 6px;
+}
+
+/* Escuro pelo sistema, a menos que a pessoa tenha escolhido o claro. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg: #1e0e10;
+    --field: #2a1517;
+    --raised: #33191c;
+    --line: #4a2a2c;
+    --line-strong: #6b4245;
+
+    --text: #f1e6da;
+    --muted: #b39a8e;
+
+    --primary: #d7b56d;
+    --primary-hover: #e3c788;
+    --on-primary: #2a1517;
+
+    --mark: #d7b56d;
+    --mark-soft: rgba(215, 181, 109, 0.14);
+
+    --danger: #e0533f;
+    --danger-hover: #ea6b59;
+    --on-danger: #2a1517;
+
+    --ok: #8fc79a;
+    --error-text: #f09a8c;
+  }
+}
+
+/* O mesmo escuro, escolhido no botao. */
+:root[data-theme="dark"] {
   color-scheme: dark;
 
-  /* Superficies, do mais fundo ao mais proximo */
-  --bg: #071733;
-  --bg-2: #0b1f44;          /* o mesmo do site irmao: a ponte visual */
-  --surface: rgba(11, 31, 68, 0.82);
-  --surface-2: #12294f;     /* campos de formulario */
-  --surface-3: rgba(255, 255, 255, 0.04);
+  --bg: #1e0e10;
+  --field: #2a1517;
+  --raised: #33191c;
+  --line: #4a2a2c;
+  --line-strong: #6b4245;
 
-  --line: rgba(255, 255, 255, 0.14);
-  --line-strong: rgba(255, 255, 255, 0.3);
+  --text: #f1e6da;
+  --muted: #b39a8e;
 
-  --text: #f6f8fc;
-  --muted: #a8bad6;
-  --dim: #8fa3c2;
+  --primary: #d7b56d;
+  --primary-hover: #e3c788;
+  --on-primary: #2a1517;
 
-  /* Acao primaria: o azul do regimento */
-  --accent: #1f4aa8;
-  --accent-hover: #2a5cc4;
-  --accent-soft: rgba(31, 74, 168, 0.22);
+  --mark: #d7b56d;
+  --mark-soft: rgba(215, 181, 109, 0.14);
 
-  /* Destrutivo e erro: o vermelho do regimento, e so isso */
-  --danger: #cf142b;
-  --danger-hover: #e01f38;
-  --danger-soft: rgba(207, 20, 43, 0.16);
+  --danger: #e0533f;
+  --danger-hover: #ea6b59;
+  --on-danger: #2a1517;
 
-  --ok: #5fd39b;
-  --error-text: #ff9aa6;
-
-  --shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
-  --radius: 18px;
+  --ok: #8fc79a;
+  --error-text: #f09a8c;
 }
 
 * {
@@ -56,92 +110,33 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 8% 6%, rgba(31, 74, 168, 0.3), transparent 42%),
-    radial-gradient(circle at 92% 12%, rgba(207, 20, 43, 0.14), transparent 44%),
-    linear-gradient(165deg, var(--bg) 0%, var(--bg-2) 55%, #061530 100%);
-  background-attachment: fixed;
+  background: var(--bg);
   color: var(--text);
   font-family: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
-.bg-shape {
-  position: fixed;
-  border-radius: 999px;
-  filter: blur(80px);
-  pointer-events: none;
-  opacity: 0.3;
-}
-
-.shape-a {
-  width: 380px;
-  height: 380px;
-  background: #1f4aa8;
-  top: -130px;
-  right: -70px;
-  animation: floatA 10s ease-in-out infinite;
-}
-
-.shape-b {
-  width: 280px;
-  height: 280px;
-  background: #7a0c1c;
-  bottom: -90px;
-  left: -60px;
-  animation: floatB 12s ease-in-out infinite;
+/*
+ * Utilitario de visibilidade - precisa ganhar de qualquer regra de display,
+ * inclusive `.grid { display: grid }` nos paineis de aba.
+ */
+.hidden {
+  display: none !important;
 }
 
 .shell {
-  width: min(1200px, 94vw);
-  margin: 30px auto;
-  position: relative;
-  z-index: 1;
+  min-height: 100vh;
 }
 
-.card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-}
-
-.login-card {
-  max-width: 560px;
-  margin: 8vh auto;
-  padding: 28px;
-  transform: translateY(10px);
-  animation: rise 650ms ease forwards;
-}
-
-h1 {
-  margin: 0;
-  font-size: clamp(2.2rem, 6vw, 3rem);
-  font-family: "Bebas Neue", sans-serif;
-  letter-spacing: 1.2px;
-  line-height: 1;
-}
-
-.subtitle {
-  margin-top: 6px;
-  color: var(--muted);
-}
-
-.steps {
-  color: var(--muted);
-  margin-bottom: 18px;
-  line-height: 1.6;
-}
-
-.steps strong {
-  color: var(--text);
-}
+/* ------------------------------------------------------------------ */
+/* Formularios e botoes                                                */
+/* ------------------------------------------------------------------ */
 
 label {
   display: block;
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
 }
 
 input,
@@ -149,17 +144,18 @@ textarea,
 select,
 button {
   width: 100%;
-  border-radius: 11px;
+  border-radius: var(--radius);
   border: 1px solid var(--line);
-  background: var(--surface-2);
+  background: var(--field);
   color: var(--text);
-  padding: 11px 12px;
+  padding: 10px 12px;
   font: inherit;
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: var(--dim);
+  color: var(--muted);
+  opacity: 0.8;
 }
 
 input:hover,
@@ -172,47 +168,42 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: var(--accent-hover);
-  box-shadow: 0 0 0 3px var(--accent-soft);
+  border-color: var(--mark);
+  box-shadow: 0 0 0 3px var(--mark-soft);
 }
 
 textarea {
-  min-height: 92px;
+  min-height: 96px;
   resize: vertical;
 }
 
 button {
   cursor: pointer;
-  background: var(--accent);
-  color: #ffffff;
-  border: 1px solid transparent;
-  font-weight: 700;
-  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease, opacity 140ms ease;
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: transparent;
+  font-weight: 500;
+  transition: background 120ms ease, border-color 120ms ease;
 }
 
 button:hover:not(:disabled) {
-  background: var(--accent-hover);
-  transform: translateY(-1px);
-}
-
-button:active:not(:disabled) {
-  transform: translateY(0);
+  background: var(--primary-hover);
 }
 
 button.ghost {
   background: transparent;
   color: var(--text);
-  border: 1px solid var(--line);
+  border-color: var(--line);
 }
 
 button.ghost:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.07);
+  background: var(--raised);
   border-color: var(--line-strong);
 }
 
 button.danger {
   background: var(--danger);
-  color: #ffffff;
+  color: var(--on-danger);
 }
 
 button.danger:hover:not(:disabled) {
@@ -220,359 +211,23 @@ button.danger:hover:not(:disabled) {
 }
 
 /*
- * O modelo de permissao do painel funciona DESABILITANDO botoes conforme o
- * nivel do usuario. Sem estilo de :disabled, um botao proibido ficava
- * indistinguivel de um permitido e so falhava ao ser clicado.
+ * As permissoes desabilitam botoes. Um botao proibido precisa parecer inerte,
+ * nao so desbotado.
  */
 button:disabled {
   cursor: not-allowed;
-  /* Fica com cara de campo inerte, nao de botao azul desbotado: so baixar a
-     opacidade dava 1.08:1 contra o habilitado, diferenca fraca demais para uma
-     regra de permissao. */
-  background: var(--surface-2);
-  color: var(--dim);
-  border-color: var(--line);
-  opacity: 0.75;
-  transform: none;
+  background: transparent;
+  color: var(--muted);
+  border: 1px dashed var(--line-strong);
 }
 
-/* Foco visivel por teclado: a pagina e toda formulario e nao tinha nenhum. */
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
-select:focus-visible {
-  outline: 2px solid #ffffff;
+select:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--text);
   outline-offset: 2px;
-}
-
-.message {
-  min-height: 20px;
-  color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.45;
-}
-
-/* Antes essas duas cores eram atribuidas inline pelo app.js, fora do CSS. */
-.message.is-error {
-  color: var(--error-text);
-}
-
-.message.is-success {
-  color: var(--ok);
-}
-
-.dev-note {
-  margin: 0;
-  padding-top: 14px;
-  border-top: 1px solid var(--line);
-  color: var(--dim);
-  font-size: 0.85rem;
-  text-align: center;
-}
-
-/*
- * Utilitario de visibilidade - precisa ganhar de qualquer regra de display.
- *
- * Sem o !important isto perdia para `.grid { display: grid }`, que vem depois
- * no arquivo e tem a mesma especificidade: os paineis de aba, que sao
- * `class="grid tab-panel hidden"`, apareciam todos ao mesmo tempo e as abas
- * pareciam nao fazer nada. Numa classe cuja unica funcao e esconder, o
- * !important e o comportamento correto, nao uma escapatoria.
- */
-.hidden {
-  display: none !important;
-}
-
-.dashboard {
-  animation: rise 450ms ease forwards;
-}
-
-/*
- * A barra do topo passou a ter duas faixas: quem esta logado em cima, as abas
- * embaixo. As abas ficavam soltas entre o header e os paineis, sem nada que as
- * ligasse ao conteudo que comandam.
- */
-.topbar {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 14px;
-}
-
-.topbar-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.profile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-
-.profile img {
-  width: 48px;
-  height: 48px;
-  border-radius: 999px;
-  object-fit: cover;
-  border: 2px solid var(--accent-hover);
-  flex: 0 0 auto;
-  background: var(--surface-2);
-}
-
-.profile h2,
-.profile p {
-  margin: 0;
-}
-
-.profile h2 {
-  font-size: 1.15rem;
-}
-
-.profile p {
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-.topbar-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.topbar-actions button {
-  width: auto;
-  white-space: nowrap;
-}
-
-.grid {
-  display: grid;
-  /* auto-fit em vez de 2 colunas fixas: com tres paineis, duas colunas deixam
-     uma celula vazia e a tela fica torta. Assim eles ocupam a linha inteira
-     quando ha largura, e quebram sozinhos quando nao ha. */
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  /* stretch, nao start: com start, tres cards de alturas diferentes na mesma
-     linha deixavam a borda de baixo em degraus. */
-  align-items: stretch;
-  gap: 14px;
-  margin-top: 14px;
-}
-
-.panel {
-  padding: 18px;
-  min-width: 0;
-}
-
-/*
- * Ritmo vertical dos cards.
- *
- * Antes cada elemento carregava a propria margem: label tinha 12px, botao
- * tinha 12px, input nao tinha nenhuma. Onde dois campos se seguiam sem rotulo
- * entre eles - Gestao de Cargos, Punicoes, DM em massa - eles simplesmente
- * encostavam e viravam um bloco unico. E onde havia rotulo, a soma das margens
- * dava um espacamento diferente do vizinho.
- *
- * Uma regra so passa a mandar no espaco entre irmaos, e as duas excecoes abaixo
- * apenas aproximam o que forma um par: rotulo do seu campo, titulo da sua
- * legenda.
- */
-.panel > * + *,
-.login-card > * + * {
-  margin-top: 12px;
-}
-
-.panel > label + input,
-.panel > label + select,
-.panel > label + textarea,
-.login-card > label + input {
-  margin-top: 6px;
-}
-
-.panel > h3 + .hint {
-  margin-top: 6px;
-}
-
-/*
- * Num painel que ocupa a linha inteira, um campo de texto com width: 100%
- * chegaria a 1200px - largura em que ninguem le nem digita nada. O limite so
- * age nesses paineis; nos normais a coluna ja e mais estreita que isto.
- */
-.panel > label,
-.panel > input,
-.panel > select,
-.panel > textarea,
-.panel > button {
-  max-width: 520px;
-}
-
-.panel h3 {
-  margin: 0;
-  font-size: 1.15rem;
-}
-
-/* Uma faixa de cor por painel, para distinguir o destrutivo a distancia. */
-.panel {
-  border-top: 3px solid var(--accent);
-}
-
-.panel.is-destructive {
-  border-top-color: var(--danger);
-  /* Tinta de fundo levissima: o painel que remove gente do regimento
-     precisa ser reconhecivel antes de o clique acontecer. */
-  background:
-    linear-gradient(180deg, var(--danger-soft), transparent 120px),
-    var(--surface);
-}
-
-.panel.audit-panel {
-  border-top-color: var(--line-strong);
-}
-
-.hint {
-  color: var(--muted);
-  margin: 0;
-  font-size: 0.9rem;
-}
-
-.row {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-/*
- * Linha que mistura campo e botao.
- *
- * Campos e botoes compartilham `width: 100%`, e como itens flex isso os fazia
- * dividir a linha em partes iguais: um "Atualizar" ficava tao largo quanto o
- * campo de filtro ao lado. Numa linha so de botoes a divisao igual e o que se
- * quer, entao a correcao e por modificador em vez de mexer na .row.
- *
- * Aqui o campo de texto cresce e o resto fica do tamanho do proprio conteudo.
- */
-.row.with-input > input,
-.row.with-input > textarea {
-  flex: 1 1 0;
-  min-width: 0;
-}
-
-.row.with-input > button,
-.row.with-input > select {
-  flex: 0 0 auto;
-  width: auto;
-}
-
-.audit-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 10px;
-  max-height: 350px;
-  overflow: auto;
-  scrollbar-gutter: stable;
-}
-
-.audit-list li {
-  background: var(--surface-3);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.audit-list img {
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  object-fit: cover;
-  flex: 0 0 auto;
-  background: var(--surface-2);
-}
-
-.audit-main {
-  font-size: 0.92rem;
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.audit-main strong {
-  color: var(--text);
-}
-
-.audit-time {
-  display: block;
-  color: var(--dim);
-  font-size: 0.82rem;
-  margin-top: 4px;
-}
-
-.audit-empty {
-  color: var(--muted);
-  margin: 0;
-}
-
-/*
- * Abas.
- *
- * Onze paineis nao cabem numa grade unica sem virar um rolo vertical
- * ilegivel. As abas apenas trocam a classe .hidden - mesma mecanica que ja
- * alterna login/dashboard, sem router nem framework.
- */
-.tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  /* Filete separando as abas do perfil: dentro do mesmo card, e o que diz onde
-     uma faixa acaba e a outra comeca. */
-  border-top: 1px solid var(--line);
-  padding-top: 14px;
-}
-
-.tab {
-  width: auto;
-  max-width: none;
-  background: transparent;
-  color: var(--muted);
-  border: 1px solid var(--line);
-  font-weight: 500;
-  padding: 9px 16px;
-}
-
-.tab:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.07);
-  color: var(--text);
-}
-
-.tab.is-active {
-  background: var(--accent);
-  border-color: transparent;
-  color: #ffffff;
-  font-weight: 700;
-}
-
-/* Paineis que carregam tabela ocupam a linha inteira: uma tabela de sete
-   colunas espremida em 320px nao se le. */
-.panel.wide {
-  grid-column: 1 / -1;
-}
-
-/*
- * Um .wide ocupa todas as colunas, entao o auto-fit nao consegue recolher as
- * vazias como faz quando a aba so tem cards normais. O card comum que abre uma
- * aba terminada em tabela ficava sozinho num terco da linha, com dois tercos de
- * buraco ao lado - o caso da aba Alistamento. Ocupando a linha inteira ele fica
- * alinhado com a tabela de baixo, e o limite de largura acima impede que os
- * campos estiquem junto.
- */
-.grid > .panel:not(.wide):first-child:has(+ .panel.wide) {
-  grid-column: 1 / -1;
 }
 
 .checkbox {
@@ -586,29 +241,445 @@ select:focus-visible {
 .checkbox input {
   width: auto;
   margin: 0;
-  accent-color: var(--accent-hover);
+  accent-color: var(--mark);
 }
 
-/* A tabela rola dentro do proprio container; a pagina nunca rola na
-   horizontal. */
-.table-wrap {
+.message {
+  min-height: 20px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.message.is-error {
+  color: var(--error-text);
+}
+
+.message.is-success {
+  color: var(--ok);
+}
+
+.hint {
+  color: var(--muted);
+  margin: 0;
+  font-size: 0.92rem;
+  max-width: 62ch;
+}
+
+/* Botao de tema, sempre no canto. */
+.theme-toggle {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 20;
+  width: auto;
+  padding: 7px 12px;
+  font-size: 0.85rem;
+  background: var(--bg);
+  color: var(--muted);
+  border: 1px solid var(--line);
+}
+
+.theme-toggle:hover:not(:disabled) {
+  background: var(--raised);
+  color: var(--text);
+}
+
+/* ------------------------------------------------------------------ */
+/* Login                                                               */
+/* ------------------------------------------------------------------ */
+
+.login {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+}
+
+/* Lado do regimento: o emblema e a unica peca de destaque da pagina. */
+.login-intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+  padding: 64px clamp(24px, 6vw, 96px);
+  border-right: 1px solid var(--line);
+  background: var(--raised);
+}
+
+.login-emblem {
+  width: clamp(160px, 22vw, 260px);
+  height: auto;
+}
+
+.wordmark {
+  margin: 0;
+  font-size: clamp(3.4rem, 9vw, 6rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+}
+
+.wordmark.small {
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.1rem;
+  max-width: 34ch;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 64px clamp(24px, 6vw, 96px);
+  max-width: 560px;
+  width: 100%;
+}
+
+.login-form h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+.login-form > * + * {
+  margin-top: 14px;
+}
+
+.login-form > label + input {
+  margin-top: 6px;
+}
+
+.steps {
+  color: var(--muted);
+  margin-bottom: 0;
+  padding-left: 1.2em;
+}
+
+.steps strong {
+  color: var(--text);
+}
+
+/* Login com o Discord: a cor da marca do Discord, so neste botao. */
+button.discord-login {
+  background: #5865f2;
+  color: #ffffff;
+}
+
+button.discord-login:hover:not(:disabled) {
+  background: #4752c4;
+}
+
+.login-divider {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.api-settings {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.api-settings summary {
+  cursor: pointer;
+  width: fit-content;
+}
+
+.api-settings[open] > summary {
+  margin-bottom: 10px;
+}
+
+.api-settings label + input {
+  margin-top: 6px;
+}
+
+.dev-note {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Cabecalho do painel                                                 */
+/* ------------------------------------------------------------------ */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  padding: 0 clamp(16px, 4vw, 48px);
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 14px 0 10px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand img {
+  width: 36px;
+  height: 36px;
+}
+
+.header-end {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.profile img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 auto;
+  background: var(--field);
+}
+
+.profile h2,
+.profile p {
+  margin: 0;
+}
+
+.profile h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* "Patente - Permissão": a patente e o que identifica a pessoa aqui. */
+.profile p {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.header-actions button {
+  width: auto;
+  white-space: nowrap;
+  padding: 7px 12px;
+  font-size: 0.9rem;
+}
+
+/* Abas como navegacao de site: texto com sublinhado na secao atual. */
+.tabs {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  width: auto;
+  flex: 0 0 auto;
+  background: transparent;
+  color: var(--muted);
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  padding: 10px 0 12px;
+  font-weight: 500;
+}
+
+.tab:hover:not(:disabled) {
+  background: transparent;
+  color: var(--text);
+}
+
+.tab.is-active {
+  color: var(--text);
+  border-bottom-color: var(--mark);
+}
+
+/* ------------------------------------------------------------------ */
+/* Conteudo                                                            */
+/* ------------------------------------------------------------------ */
+
+.content {
+  padding: 8px clamp(16px, 4vw, 48px) 96px;
+  max-width: 1280px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  column-gap: 48px;
+}
+
+/* Cada bloco e uma secao da pagina, aberta por um filete. */
+.panel {
+  min-width: 0;
+  padding: 28px 0 32px;
+  border-top: 1px solid var(--line);
+}
+
+.panel h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.panel > * + * {
+  margin-top: 12px;
+}
+
+.panel > label + input,
+.panel > label + select,
+.panel > label + textarea {
+  margin-top: 6px;
+}
+
+.panel > h3 + .hint {
+  margin-top: 6px;
+}
+
+.panel > label,
+.panel > input,
+.panel > select,
+.panel > textarea,
+.panel > button,
+.panel > .row {
+  max-width: 520px;
+}
+
+/* O bloco que remove gente se reconhece pelo filete de perigo. */
+.panel.is-destructive {
+  border-top: 2px solid var(--danger);
+}
+
+.panel.wide {
+  grid-column: 1 / -1;
+}
+
+.panel.wide > .row {
+  max-width: 720px;
+}
+
+.grid > .panel:not(.wide):first-child:has(+ .panel.wide) {
+  grid-column: 1 / -1;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.row.with-input > input,
+.row.with-input > textarea {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.row.with-input > button,
+.row.with-input > select {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+code {
+  font-size: 0.9em;
+  background: var(--raised);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* Listas de historico: linhas com filete, nao caixinhas. */
+.audit-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   max-height: 420px;
   overflow: auto;
-  border: 1px solid var(--line);
-  border-radius: 12px;
+  scrollbar-gutter: stable;
+}
+
+.audit-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.audit-list img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 auto;
+  background: var(--field);
+}
+
+.audit-main {
+  font-size: 0.92rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.audit-time {
+  display: block;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-top: 2px;
+}
+
+.audit-empty {
+  color: var(--muted);
+  margin: 0;
+}
+
+/* Tabelas: a pagina nunca rola na horizontal, a tabela sim. */
+.table-wrap {
+  max-height: 480px;
+  overflow: auto;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
   scrollbar-gutter: stable;
 }
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .data-table th,
 .data-table td {
   text-align: left;
-  padding: 8px 10px;
+  padding: 9px 12px 9px 0;
   border-bottom: 1px solid var(--line);
   white-space: nowrap;
 }
@@ -616,7 +687,7 @@ select:focus-visible {
 .data-table th {
   position: sticky;
   top: 0;
-  background: var(--surface-2);
+  background: var(--bg);
   color: var(--muted);
   font-weight: 500;
   z-index: 1;
@@ -632,63 +703,61 @@ select:focus-visible {
 
 .data-table tr.clickable:hover td,
 .data-table tr.clickable:focus-visible td {
-  background: var(--accent-soft);
+  background: var(--mark-soft);
 }
 
 .data-table tr.clickable:focus-visible {
-  outline: 2px solid #ffffff;
+  outline: 2px solid var(--text);
   outline-offset: -2px;
 }
 
 .data-table td.empty-cell {
   color: var(--muted);
-  text-align: center;
-  padding: 18px 10px;
+  padding: 18px 0;
   white-space: normal;
 }
 
 .data-table td.is-eligible {
   color: var(--ok);
+  font-weight: 500;
 }
 
 /* Saida bruta (logs, relatorio de push, resultado do alistamento). */
 .output {
   margin: 0;
   padding: 12px;
-  background: var(--surface-2);
+  background: var(--field);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius);
   font-family: ui-monospace, "SFMono-Regular", "Consolas", monospace;
   font-size: 0.82rem;
   line-height: 1.5;
   color: var(--text);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  max-height: 420px;
+  max-height: 460px;
   overflow: auto;
 }
 
 .log-output {
-  /* Log e a unica saida em que a coluna importa: quebrar linha desalinharia
-     o carimbo de hora do texto. */
   white-space: pre;
   overflow-wrap: normal;
   overflow-x: auto;
 }
 
 /*
- * Progresso do envio em massa. Existe porque o envio leva ~4,2s por pessoa
- * (limitador global de DM do bot): sem barra, um envio para 300 pessoas
- * pareceria travado por vinte minutos.
+ * Progresso do envio em massa: ~4,2s por pessoa, entao sem barra um envio
+ * para 300 pessoas pareceria travado por vinte minutos.
  */
 .progress-wrap {
   margin: 0;
+  max-width: 520px;
 }
 
 .progress {
-  height: 8px;
+  height: 6px;
   border-radius: 999px;
-  background: var(--surface-2);
+  background: var(--field);
   border: 1px solid var(--line);
   overflow: hidden;
 }
@@ -696,43 +765,50 @@ select:focus-visible {
 .progress-bar {
   height: 100%;
   width: 0;
-  background: var(--accent);
+  background: var(--primary);
   transition: width 300ms ease;
 }
 
-@keyframes rise {
+/* Uma entrada so, na troca entre login e painel. */
+.dashboard,
+.login {
+  animation: settle 320ms ease-out;
+}
+
+@keyframes settle {
   from {
-    transform: translateY(12px);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
     opacity: 1;
   }
 }
 
-@keyframes floatA {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(15px); }
-}
-
-@keyframes floatB {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-16px); }
-}
-
-/* Respeita quem pediu menos movimento no sistema. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
 }
 
 @media (max-width: 900px) {
+  .login {
+    grid-template-columns: 1fr;
+  }
+
+  .login-intro {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding-top: 40px;
+    padding-bottom: 32px;
+  }
+
+  .login-form {
+    padding-top: 32px;
+  }
+
   .grid {
     grid-template-columns: 1fr;
   }
@@ -742,29 +818,13 @@ select:focus-visible {
     grid-column: auto;
   }
 
-  /* A .topbar ja e coluna; quem precisa quebrar aqui e a faixa de cima. */
-  .topbar-top {
-    flex-direction: column;
-    align-items: stretch;
+  .header-end {
+    width: 100%;
+    justify-content: space-between;
   }
 
-  .topbar-actions button {
-    flex: 1 1 0;
-  }
-
-  .tabs {
-    /* Rolagem horizontal em vez de quebra: cinco abas empilhadas empurram o
-       conteudo para fora da primeira tela. */
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .tabs::-webkit-scrollbar {
-    display: none;
-  }
-
-  .tab {
-    flex: 0 0 auto;
+  /* O cabecalho fixo come metade da tela num celular. */
+  .site-header {
+    position: static;
   }
 }
