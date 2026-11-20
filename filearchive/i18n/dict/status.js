@@ -31,7 +31,12 @@ export const pt = {
     ". Dados sobre a máquina que hospeda o bot não aparecem aqui — eles ficam na aba",
   "status.tab_of_the": "do",
   "status.which_requires_a_login": ", que exige login.",
-  "status.admin_dashboard": "painel administrativo"
+  "status.admin_dashboard": "painel administrativo",
+  "status.status_word": "status",
+  "status.roster_title": "O regimento",
+  "status.roster_total": "soldados no efetivo",
+  "status.roster_ready": "prontos pra subir de patente",
+  "status.roster_note": "Contado pela auditoria do regimento, com a escada de promoção. Aqui aparecem só os totais.",
 };
 
 export default pt;

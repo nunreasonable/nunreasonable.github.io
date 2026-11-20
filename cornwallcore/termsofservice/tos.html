@@ -14,331 +14,226 @@
 			content="Terms of Service for the ccore used by the 12° Regimento de Infantaria 'Chaves' community."
 		/>
 		<link rel="canonical" href="https://ccore.daeese.me/termsofservice/" />
+		<meta name="theme-color" content="#1e0e10" />
+		<link rel="icon" type="image/png" href="../../filearchive/icons/ccore-badge-32.png" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
+			rel="stylesheet"
+		/>
+		<!--
+		  theme.js antes do CSS e sem defer: marca data-theme no <html> antes da
+		  primeira pintura, senao quem escolheu o tema oposto ao do sistema veria a
+		  pagina piscar.
+		-->
+		<script src="../assets/theme.js?v=2"></script>
+		<link rel="stylesheet" href="../assets/theme.css?v=2" />
 		<style>
-			:root {
-				--bg: #0d1117;
-				--bg-2: #131926;
-				--panel: rgba(17, 24, 39, 0.88);
-				--panel-strong: rgba(15, 23, 42, 0.97);
-				--line: rgba(148, 163, 184, 0.18);
-				--line-strong: rgba(148, 163, 184, 0.3);
-				--text: #e5eef8;
-				--muted: #a8b3c5;
-				--accent: #c084fc;
-				--accent-2: #7dd3fc;
-				--accent-3: #f59e0b;
-				--shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
-				--radius: 22px;
-			}
-
-			* {
-				box-sizing: border-box;
-			}
-
-			html {
-				scroll-behavior: smooth;
-			}
-
-			body {
-				margin: 0;
-				min-height: 100vh;
-				color: var(--text);
-				font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-				background:
-					radial-gradient(circle at top left, rgba(192, 132, 252, 0.18), transparent 30%),
-					radial-gradient(circle at 85% 15%, rgba(125, 211, 252, 0.14), transparent 26%),
-					linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
-			}
-
-			body::before {
-				content: "";
-				position: fixed;
-				inset: 0;
-				pointer-events: none;
-				opacity: 0.07;
-				background-image: radial-gradient(rgba(255, 255, 255, 0.7) 0.5px, transparent 0.5px);
-				background-size: 18px 18px;
-			}
-
-			a {
-				color: inherit;
-			}
-
-			.shell {
-				width: min(1120px, calc(100% - 32px));
+			/*
+			 * Pagina de leitura: uma coluna de texto (max ~68ch), indice fixo a
+			 * esquerda em tela larga, filetes entre secoes - sem cartao, sem
+			 * sombra, sem gradiente. Os tokens vem do theme.css compartilhado.
+			 */
+			main.shell {
+				width: min(1200px, calc(100% - 32px));
 				margin: 0 auto;
-				padding: 24px 0 56px;
+				padding: 48px 0 72px;
 			}
 
-			.hero {
-				position: relative;
-				overflow: clip;
-				border: 1px solid var(--line);
-				border-radius: calc(var(--radius) + 8px);
-				background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.86));
-				box-shadow: var(--shadow);
-			}
-
-			.hero-inner {
-				display: grid;
-				gap: 20px;
-				padding: 28px;
-			}
-
-			.eyebrow {
-				display: inline-flex;
+			.brand {
+				display: flex;
 				align-items: center;
-				gap: 8px;
-				width: fit-content;
-				padding: 7px 12px;
-				border: 1px solid var(--line);
-				border-radius: 999px;
-				background: rgba(255, 255, 255, 0.04);
-				color: var(--muted);
-				font-size: 0.85rem;
-				letter-spacing: 0.04em;
-				text-transform: uppercase;
+				gap: 10px;
+				margin-bottom: 22px;
 			}
 
-			.eyebrow::before {
-				content: "";
-				width: 8px;
-				height: 8px;
-				border-radius: 999px;
-				background: linear-gradient(135deg, var(--accent), var(--accent-2));
-				box-shadow: 0 0 0 4px rgba(192, 132, 252, 0.12);
+			.brand img {
+				width: 28px;
+				height: 28px;
+				display: block;
 			}
 
-			h1,
-			h2,
-			h3,
-			p,
-			ul,
-			ol {
-				margin: 0;
+			.brand-word {
+				font-weight: 700;
+				font-size: 1.05rem;
+				letter-spacing: -0.01em;
 			}
 
-			h1 {
-				font-size: clamp(2.3rem, 6vw, 4.2rem);
-				line-height: 0.95;
-				letter-spacing: -0.04em;
-				max-width: 11ch;
+			.doc-header h1 {
+				margin: 0 0 14px;
+				font-size: clamp(2rem, 5vw, 2.8rem);
+				font-weight: 700;
+				letter-spacing: -0.02em;
+				line-height: 1.1;
 			}
 
 			.lede {
-				max-width: 72ch;
+				margin: 0 0 22px;
+				max-width: 68ch;
 				color: var(--muted);
 				font-size: 1.02rem;
-				line-height: 1.7;
+				line-height: 1.65;
 			}
 
-			.meta-row {
+			.doc-meta-row,
+			.doc-shortcuts {
 				display: flex;
 				flex-wrap: wrap;
-				gap: 10px;
 				align-items: center;
+				gap: 10px;
+				margin: 0 0 14px;
 			}
 
-			.pill,
-			.button {
-				border: 1px solid var(--line);
-				border-radius: 999px;
-				background: rgba(255, 255, 255, 0.04);
-			}
-
-			.pill {
-				padding: 8px 12px;
+			.doc-meta-text {
 				color: var(--muted);
 				font-size: 0.9rem;
+				margin-right: 6px;
 			}
 
-			.button {
-				padding: 10px 14px;
-				color: var(--text);
-				cursor: pointer;
-				font: inherit;
-				transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-			}
-
-			.button:hover,
-			.button:focus-visible {
-				transform: translateY(-1px);
-				border-color: var(--line-strong);
-				background: rgba(255, 255, 255, 0.08);
-				outline: none;
-			}
-
-			.toolbar {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 10px;
+			.doc-shortcuts {
+				margin-bottom: 36px;
+				padding-bottom: 28px;
+				border-bottom: 1px solid var(--line);
 			}
 
 			.layout {
 				display: grid;
-				grid-template-columns: 280px minmax(0, 1fr);
-				gap: 18px;
-				margin-top: 18px;
+				grid-template-columns: 220px minmax(0, 1fr);
+				gap: 24px clamp(24px, 4vw, 56px);
 				align-items: start;
-			}
-
-			.toc,
-			.content {
-				border: 1px solid var(--line);
-				border-radius: var(--radius);
-				background: var(--panel);
-				box-shadow: var(--shadow);
-				backdrop-filter: blur(14px);
 			}
 
 			.toc {
 				position: sticky;
-				top: 18px;
-				padding: 18px;
+				top: 24px;
 			}
 
 			.toc h2 {
-				font-size: 1rem;
-				margin-bottom: 12px;
-				letter-spacing: 0.01em;
+				margin: 0 0 14px;
+				font-size: 0.95rem;
+				font-weight: 700;
 			}
 
 			.toc nav {
-				display: grid;
-				gap: 8px;
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
 			}
 
 			.toc a {
-				text-decoration: none;
+				padding: 7px 0 7px 10px;
+				border-left: 2px solid transparent;
 				color: var(--muted);
-				border: 1px solid transparent;
-				border-radius: 14px;
-				padding: 10px 12px;
-				transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+				text-decoration: none;
+				font-size: 0.92rem;
 			}
 
 			.toc a:hover,
-			.toc a:focus-visible,
+			.toc a:focus-visible {
+				color: var(--text);
+			}
+
 			.toc a.active {
 				color: var(--text);
-				background: rgba(255, 255, 255, 0.06);
-				border-color: var(--line);
-				outline: none;
+				border-left-color: var(--mark);
+				font-weight: 500;
 			}
 
 			.content {
-				padding: 8px;
+				min-width: 0;
+				max-width: 68ch;
 			}
 
 			.section {
-				padding: 18px;
-				border-radius: 18px;
-				border: 1px solid transparent;
+				padding: 28px 0;
+				border-top: 1px solid var(--line);
 			}
 
-			.section + .section {
-				margin-top: 6px;
-			}
-
-			.section:target {
-				border-color: rgba(125, 211, 252, 0.36);
-				background: rgba(125, 211, 252, 0.05);
+			.content > .section:first-child {
+				padding-top: 0;
+				border-top: 0;
 			}
 
 			.section h2 {
+				margin: 0 0 14px;
 				font-size: 1.3rem;
-				margin-bottom: 12px;
+				font-weight: 700;
+				letter-spacing: -0.01em;
 			}
 
 			.section h3 {
-				margin: 18px 0 8px;
+				margin: 22px 0 8px;
 				font-size: 1.02rem;
-				color: #f2f6fb;
+				font-weight: 600;
 			}
 
 			.section p,
 			.section li {
-				color: var(--muted);
+				color: var(--text);
 				line-height: 1.7;
 			}
 
 			.section ul,
 			.section ol {
+				margin: 0;
 				padding-left: 20px;
 				display: grid;
 				gap: 8px;
 			}
 
-			.callout {
-				margin-top: 14px;
-				padding: 14px 16px;
-				border-radius: 16px;
-				border: 1px solid rgba(125, 211, 252, 0.22);
-				background: rgba(125, 211, 252, 0.06);
-				color: #dbeafe;
-			}
-
-			.cards {
+			.service-list {
+				margin: 16px 0 0;
 				display: grid;
-				grid-template-columns: repeat(2, minmax(0, 1fr));
-				gap: 12px;
-				margin-top: 14px;
+				gap: 14px;
 			}
 
-			.card {
-				padding: 14px 15px;
-				border-radius: 16px;
-				border: 1px solid var(--line);
-				background: rgba(255, 255, 255, 0.04);
-			}
-
-			.card strong {
-				display: block;
-				margin-bottom: 6px;
-				color: var(--text);
-			}
-
-			details {
-				margin-top: 14px;
-				border: 1px solid var(--line);
-				border-radius: 16px;
-				background: rgba(255, 255, 255, 0.03);
-				overflow: clip;
-			}
-
-			summary {
-				list-style: none;
-				cursor: pointer;
-				padding: 14px 16px;
+			.service-list dt {
 				font-weight: 600;
 				color: var(--text);
 			}
 
-			summary::-webkit-details-marker {
-				display: none;
+			.service-list dd {
+				margin: 4px 0 0;
+				color: var(--muted);
+			}
+
+			details {
+				margin-top: 6px;
+				border-top: 1px solid var(--line);
+			}
+
+			summary {
+				cursor: pointer;
+				padding: 12px 0;
+				font-weight: 600;
+				color: var(--text);
 			}
 
 			details .details-body {
-				padding: 0 16px 16px;
+				padding: 0 0 14px;
+			}
+
+			.callout {
+				margin-top: 16px;
+				padding-left: 14px;
+				border-left: 2px solid var(--line-strong);
+				color: var(--text);
 			}
 
 			.footer {
-				margin-top: 18px;
-				padding: 18px 4px 0;
+				margin-top: 48px;
+				padding-top: 20px;
+				border-top: 1px solid var(--line);
 				color: var(--muted);
-				font-size: 0.95rem;
+				font-size: 0.92rem;
 			}
 
 			.footer a {
 				color: var(--text);
-				text-decoration: none;
 			}
 
-			.footer a:hover {
-				text-decoration: underline;
-			}
-
-			@media (max-width: 920px) {
+			@media (max-width: 999px) {
 				.layout {
 					grid-template-columns: 1fr;
 				}
@@ -347,64 +242,86 @@
 					position: relative;
 					top: 0;
 				}
+
+				.toc nav {
+					flex-direction: row;
+					flex-wrap: wrap;
+					gap: 4px 18px;
+				}
+
+				.toc a {
+					border-left: 0;
+					border-bottom: 2px solid transparent;
+					padding: 0 0 6px;
+				}
+
+				.toc a.active {
+					border-left: 0;
+					border-bottom-color: var(--mark);
+				}
 			}
 
 			@media (max-width: 640px) {
-				.shell {
-					width: min(100% - 20px, 1120px);
-					padding-top: 12px;
-				}
-
-				.hero-inner,
-				.section,
-				.toc {
-					padding: 16px;
-				}
-
-				.cards {
-					grid-template-columns: 1fr;
-				}
-
-				h1 {
-					max-width: 100%;
+				main.shell {
+					padding-top: 28px;
 				}
 			}
 
-            :root[data-embedded] [data-i18n-switcher].i18n-floating { display: none; }
-            :root[data-embedded] .shell { width: calc(100% - 24px); padding-top: 12px; }
-            :root[data-embedded] .hero { border-radius: 14px; box-shadow: none; }
-            :root[data-embedded] .hero-inner { padding: 22px; gap: 16px; }
-            :root[data-embedded] h1 { font-size: clamp(1.8rem, 4vw, 2.5rem); max-width: none; line-height: 1.1; }
-            @media (max-width: 640px) { :root[data-embedded] .hero-inner { padding: 16px; } }
+			/*
+			 * i18n.css fixa um fundo escuro no seletor flutuante (pensado para
+			 * paginas sempre escuras); aqui o tema troca, entao sobrescreve com
+			 * os tokens do theme.css em vez de editar o arquivo compartilhado.
+			 */
+			.i18n-switcher.i18n-floating {
+				background: var(--raised);
+				border-color: var(--line);
+			}
+
+			:root[data-embedded] [data-i18n-switcher].i18n-floating {
+				display: none;
+			}
+
+			:root[data-embedded] main.shell {
+				padding-top: 20px;
+			}
+
+			/* Dentro da pagina de fora, que ja mostra marca, titulo e tema. */
+			:root[data-embedded] .theme-toggle,
+			:root[data-embedded] .doc-header .brand,
+			:root[data-embedded] .doc-header h1,
+			:root[data-embedded] .doc-header .lede {
+				display: none;
+			}
 		</style>
 			<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
 	</head>
 	<body>
+		<button id="themeToggle" class="theme-toggle" type="button">Theme: system</button>
 		<div data-i18n-switcher class="i18n-floating"></div>
 		<main class="shell">
-			<section class="hero" aria-labelledby="page-title">
-				<div class="hero-inner">
-					<div data-i18n="ccore_tos.ccore" class="eyebrow">ccore</div>
-					<div>
-						<h1 data-i18n="ccore_tos.terms_of_service" id="page-title">Terms of Service</h1>
-						<p data-i18n="ccore_tos.these_terms_explain_how_the" class="lede">
-							These terms explain how the ccore may be used within the 12° Regt. "Chaves"
-							community. The page keeps the original policy content intact, but presents it in a
-							cleaner format with quick navigation and a few small interactions.
-						</p>
-					</div>
-					<div data-i18n-attr="aria-label:ccore_tos.policy_metadata" class="meta-row" aria-label="Policy metadata">
-						<span data-i18n="ccore_tos.last_updated_june_16_2026" class="pill">Last updated: June 16, 2026</span>
-						<button data-i18n="ccore_tos.copy_page_link" class="button" id="copy-link" type="button">Copy page link</button>
-						<button data-i18n="ccore_tos.collapse_all" class="button" id="toggle-sections" type="button">Collapse all</button>
-					</div>
-					<div data-i18n-attr="aria-label:ccore_tos.quick_actions" class="toolbar" aria-label="Quick actions">
-						<a data-i18n="ccore_tos.start_reading" class="button" href="#agreement">Start reading</a>
-						<a data-i18n="ccore_tos.contact_info" class="button" href="#contact">Contact info</a>
-						<a data-i18n="ccore_tos.updates" class="button" href="#changes">Updates</a>
-					</div>
+			<header class="doc-header">
+				<div class="brand">
+					<img src="../../filearchive/icons/ccore-badge-96.webp" width="28" height="28" alt="" />
+					<span data-i18n="ccore_tos.ccore" class="brand-word">ccore</span>
 				</div>
-			</section>
+				<h1 data-i18n="ccore_tos.terms_of_service" id="page-title">Terms of Service</h1>
+				<p data-i18n="ccore_tos.these_terms_explain_how_the" class="lede">
+					These terms explain how the ccore may be used within the 12° Regt. "Chaves"
+					community. The page keeps the original policy content intact, but presents it in a
+					cleaner format with quick navigation and a few small interactions.
+				</p>
+
+				<div data-i18n-attr="aria-label:ccore_tos.policy_metadata" class="doc-meta-row" aria-label="Policy metadata">
+					<span data-i18n="ccore_tos.last_updated_june_16_2026" class="doc-meta-text">Last updated: June 16, 2026</span>
+					<button data-i18n="ccore_tos.copy_page_link" class="button" id="copy-link" type="button">Copy page link</button>
+					<button data-i18n="ccore_tos.collapse_all" class="button" id="toggle-sections" type="button">Collapse all</button>
+				</div>
+				<nav data-i18n-attr="aria-label:ccore_tos.quick_actions" class="doc-shortcuts" aria-label="Quick actions">
+					<a data-i18n="ccore_tos.start_reading" class="button" href="#agreement">Start reading</a>
+					<a data-i18n="ccore_tos.contact_info" class="button" href="#contact">Contact info</a>
+					<a data-i18n="ccore_tos.updates" class="button" href="#changes">Updates</a>
+				</nav>
+			</header>
 
 			<section data-i18n-attr="aria-label:ccore_tos.terms_of_service_content" class="layout" aria-label="Terms of service content">
 				<aside data-i18n-attr="aria-label:ccore_tos.table_of_contents" class="toc" aria-label="Table of contents">
@@ -443,12 +360,16 @@
 							The ccore is designed for the 12° Regt. de Infantaria community and provides
 							tools for communication, enlistment, and regimental management.
 						</p>
-						<div class="cards">
-							<div class="card"><strong data-i18n="ccore_tos.user_enlistment">User enlistment</strong><span data-i18n="ccore_tos.roblox_verification_and_onboarding_flows">ROBLOX verification and onboarding flows.</span></div>
-							<div class="card"><strong data-i18n="ccore_tos.deployment_messaging">Deployment messaging</strong><span data-i18n="ccore_tos.direct_notices_for_regiment_activity">Direct notices for regiment activity and events.</span></div>
-							<div class="card"><strong data-i18n="ccore_tos.direct_messaging">Direct messaging</strong><span data-i18n="ccore_tos.targeted_messaging_to_roles_or">Targeted messaging to roles or users when authorized.</span></div>
-							<div class="card"><strong data-i18n="ccore_tos.message_reposting">Message reposting</strong><span data-i18n="ccore_tos.temporary_storage_and_reposting_of">Temporary storage and reposting of eligible messages.</span></div>
-						</div>
+						<dl class="service-list">
+							<dt data-i18n="ccore_tos.user_enlistment">User enlistment</dt>
+							<dd data-i18n="ccore_tos.roblox_verification_and_onboarding_flows">ROBLOX verification and onboarding flows.</dd>
+							<dt data-i18n="ccore_tos.deployment_messaging">Deployment messaging</dt>
+							<dd data-i18n="ccore_tos.direct_notices_for_regiment_activity">Direct notices for regiment activity and events.</dd>
+							<dt data-i18n="ccore_tos.direct_messaging">Direct messaging</dt>
+							<dd data-i18n="ccore_tos.targeted_messaging_to_roles_or">Targeted messaging to roles or users when authorized.</dd>
+							<dt data-i18n="ccore_tos.message_reposting">Message reposting</dt>
+							<dd data-i18n="ccore_tos.temporary_storage_and_reposting_of">Temporary storage and reposting of eligible messages.</dd>
+						</dl>
 					</section>
 
 					<section class="section" id="use">
@@ -611,10 +532,10 @@
 							These Terms of Service are governed by applicable laws, and disputes will be resolved through the
 							appropriate legal channels.
 						</p>
-						<div data-i18n="ccore_tos.by_using_the_ccore_you" class="callout">
+						<p data-i18n="ccore_tos.by_using_the_ccore_you" class="callout">
 							By using the ccore, you acknowledge that you have read, understood, and agree to be bound
 							by these Terms of Service.
-						</div>
+						</p>
 					</section>
 				</article>
 			</section>

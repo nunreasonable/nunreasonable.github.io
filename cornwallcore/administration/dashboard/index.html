@@ -44,15 +44,15 @@
     veria a pagina piscar. Nao da para ser inline por causa da CSP.
   -->
   <script src="theme.js?v=7bc02fb4"></script>
-  <link rel="stylesheet" href="style.css?v=18456fca" />
-  <link rel="icon" type="image/png" href="../../../filearchive/newpfp.png" />
+  <link rel="stylesheet" href="style.css?v=e2b1bc17" />
+  <link rel="icon" type="image/png" href="../../../filearchive/icons/ccore-badge-32.png" />
 </head>
 <body>
   <button id="themeToggle" class="theme-toggle" type="button" aria-label="Tema: sistema. Trocar tema">Tema: sistema</button>
   <main class="shell">
     <section id="loginView" class="login">
       <div class="login-intro">
-        <img class="login-emblem" src="../../../filearchive/icons/ccore-emblem.webp" alt="Emblema do 12° Regimento de Infantaria &quot;Chaves&quot;" width="394" height="394" />
+        <img class="login-emblem" src="../../../filearchive/icons/ccore-badge.webp" alt="Brasão do 12° Regimento de Infantaria &quot;Chaves&quot;" width="238" height="238" />
         <h1 class="wordmark">ccore</h1>
         <p class="subtitle">Painel do 12° Regimento de Infantaria &quot;Chaves&quot;. Acesso restrito ao 12º Staff.</p>
       </div>
@@ -82,7 +82,7 @@
       <header class="site-header">
         <div class="header-row">
           <div class="brand">
-            <img src="../../../filearchive/icons/ccore-96.webp" alt="" width="36" height="36" />
+            <img src="../../../filearchive/icons/ccore-badge-96.webp" alt="" width="36" height="36" />
             <span class="wordmark small">ccore</span>
           </div>
           <div class="header-end">
@@ -291,10 +291,14 @@
           <h3>Promoções</h3>
           <p class="hint">Elegibilidade pela escada do regimento. A decisão continua sendo do comando.</p>
           <button id="promotionsRefreshBtn" class="ghost">Carregar promoções</button>
+          <dl class="ladder-summary hidden" id="promoSummary">
+            <div><dt>no efetivo</dt><dd id="promoTotal">—</dd></div>
+            <div><dt>prontos pra subir</dt><dd id="promoReady">—</dd></div>
+          </dl>
           <div class="table-wrap">
             <table class="data-table">
               <thead>
-                <tr><th>Jogador</th><th>Patente</th><th>Batalhas</th><th>Alvo</th><th>Falta</th><th>Situação</th></tr>
+                <tr><th>Jogador</th><th>Patente</th><th>Batalhas</th><th>Alvo</th><th>Escada</th><th>Situação</th></tr>
               </thead>
               <tbody id="promotionsBody"></tbody>
             </table>
@@ -334,6 +338,6 @@
       </div>
     </section>
   </main>
-  <script src="app.js?v=7ea1d7e7"></script>
+  <script src="app.js?v=734d3fb3"></script>
 </body>
 </html>

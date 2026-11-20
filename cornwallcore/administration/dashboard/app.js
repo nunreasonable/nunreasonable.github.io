@@ -191,6 +191,9 @@ const els = {
 
   promotionsRefreshBtn: document.getElementById("promotionsRefreshBtn"),
   promotionsBody: document.getElementById("promotionsBody"),
+  promoSummary: document.getElementById("promoSummary"),
+  promoTotal: document.getElementById("promoTotal"),
+  promoReady: document.getElementById("promoReady"),
   promotionsMsg: document.getElementById("promotionsMsg"),
 
   logLevel: document.getElementById("logLevel"),
@@ -1562,7 +1565,7 @@ async function loadPromotions() {
     tr.appendChild(cell(p.currentRank || "—"));
     tr.appendChild(cell(p.battles));
     tr.appendChild(cell(p.targetRank || p.nextRank || "—"));
-    tr.appendChild(cell(p.battlesToNext > 0 ? `${p.battlesToNext} bat.` : "—"));
+    tr.appendChild(ladderCell(p));
 
     const situacao = p.promotable
       ? (p.needsApproval ? "Elegível (exige avaliação)" : "Elegível")
@@ -1572,7 +1575,39 @@ async function loadPromotions() {
     els.promotionsBody.appendChild(tr);
   }
 
+  els.promoTotal.textContent = String(data.total ?? 0);
+  els.promoReady.textContent = String(data.promotable ?? 0);
+  els.promoSummary.classList.remove("hidden");
+  // Um quadro depois, para a transicao enxergar o 0 antes do valor real.
+  requestAnimationFrame(() => {
+    for (const bar of els.promotionsBody.querySelectorAll(".ladder-fill")) {
+      bar.style.setProperty("--share", bar.dataset.share);
+    }
+  });
   setMessage(els.promotionsMsg, `${data.promotable ?? 0} elegível(is) de ${data.total ?? 0} jogador(es).`, "success");
+}
+
+// Barra de batalhas ate a proxima patente. Quem ja pode subir fica cheio.
+function ladderCell(p) {
+  const td = document.createElement("td");
+  const battles = Number(p.battles) || 0;
+  const missing = Number(p.battlesToNext) || 0;
+  const outside = p.status === "OutsideLadder";
+  const share = p.promotable ? 1 : missing > 0 ? battles / (battles + missing) : 0;
+
+  const wrap = document.createElement("div");
+  wrap.className = "ladder-cell";
+  const bar = document.createElement("div");
+  bar.className = "ladder-bar";
+  const fill = document.createElement("div");
+  fill.className = p.promotable ? "ladder-fill is-ready" : "ladder-fill";
+  fill.dataset.share = String(Math.min(1, share));
+  bar.appendChild(fill);
+  const label = document.createElement("span");
+  label.textContent = outside ? "—" : p.promotable ? "pronto" : missing > 0 ? `faltam ${missing}` : "—";
+  wrap.append(bar, label);
+  td.appendChild(wrap);
+  return td;
 }
 
 els.promotionsRefreshBtn.addEventListener("click", async () => {

@@ -1,0 +1,203 @@
+/*
+ * Tema compartilhado das paginas do ccore (vitrine, status, termos,
+ * privacidade, planilha). O painel tem a mesma paleta no proprio style.css.
+ *
+ * Claro, "livro de ordens": papel cinza de registro, tinta e lacre.
+ * Escuro, "casaca escarlate": vinho de casaca de linha com dourado de galao.
+ * Segue o sistema ate a pessoa escolher outro no botao do canto (theme.js).
+ *
+ * --danger e so para erro e coisa destrutiva; --mark e a marca de selecao
+ * (sublinhado da secao atual, foco, a rota da vitrine).
+ */
+
+:root {
+  color-scheme: light;
+  --bg: #e7e5df;
+  --raised: #dedbd3;
+  --field: #f2f1ec;
+  --line: #c9c6bd;
+  --line-strong: #a9a59a;
+  --text: #1f2024;
+  --muted: #5d5f66;
+  --primary: #1f2024;
+  --primary-hover: #34363c;
+  --on-primary: #f2f1ec;
+  --mark: #8f1d21;
+  --mark-soft: rgba(143, 29, 33, 0.12);
+  --danger: #8f1d21;
+  --ok: #2f6b3a;
+  --radius: 6px;
+  --font: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SFMono-Regular", "Consolas", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #1e0e10;
+    --raised: #2a1517;
+    --field: #2a1517;
+    --line: #4a2a2c;
+    --line-strong: #6b4245;
+    --text: #f1e6da;
+    --muted: #b39a8e;
+    --primary: #d7b56d;
+    --primary-hover: #e3c788;
+    --on-primary: #2a1517;
+    --mark: #d7b56d;
+    --mark-soft: rgba(215, 181, 109, 0.14);
+    --danger: #e0533f;
+    --ok: #8fc79a;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #1e0e10;
+  --raised: #2a1517;
+  --field: #2a1517;
+  --line: #4a2a2c;
+  --line-strong: #6b4245;
+  --text: #f1e6da;
+  --muted: #b39a8e;
+  --primary: #d7b56d;
+  --primary-hover: #e3c788;
+  --on-primary: #2a1517;
+  --mark: #d7b56d;
+  --mark-soft: rgba(215, 181, 109, 0.14);
+  --danger: #e0533f;
+  --ok: #8fc79a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--mark);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--mark);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.9em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -60px;
+  z-index: 40;
+  padding: 8px 12px;
+  background: var(--primary);
+  color: var(--on-primary);
+  border-radius: var(--radius);
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+/* Botao de tema, sempre no canto. */
+.theme-toggle {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 30;
+  padding: 7px 12px;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--muted);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  color: var(--text);
+  background: var(--raised);
+}
+
+/* Botoes e links com cara de botao, iguais em todas as paginas. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  font: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.button:hover {
+  color: var(--text);
+  background: var(--raised);
+}
+
+.button.primary {
+  color: var(--on-primary);
+  background: var(--primary);
+  border-color: transparent;
+}
+
+.button.primary:hover {
+  color: var(--on-primary);
+  background: var(--primary-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* So para leitor de tela. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

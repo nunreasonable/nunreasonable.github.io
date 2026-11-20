@@ -1,6 +1,6 @@
 /* Portugues da casca da Politica de Privacidade do ccore (a pagina com o iframe). */
 export const pt = {
-  "ccore_pp_shell.back": "← Voltar para o ccore",
+  "ccore_pp_shell.back": "Voltar para o ccore",
 
   "ccore_pp_shell.ccore_privacy_policy": "ccore — Política de Privacidade",
   "ccore_pp_shell.this_privacy_policy_explains_what":

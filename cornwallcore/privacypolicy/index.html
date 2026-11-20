@@ -23,104 +23,129 @@
     <meta name="twitter:description" content="What ccore collects, why, how long it is kept and how to request its deletion." />
     <meta name="twitter:image" content="https://daeese.me/filearchive/cornwallCOREpfp.png" />
     <meta name="description" content="Direct entry point for the ccore APP Privacy Policy." />
-    <link rel="icon" type="image/png" href="../../filearchive/newpfp.png" />
+    <meta name="theme-color" content="#1e0e10" />
+    <link rel="icon" type="image/png" href="../../filearchive/icons/ccore-badge-32.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <!--
+      theme.js antes do CSS e sem defer: marca data-theme no <html> antes da
+      primeira pintura, senao quem escolheu o tema oposto ao do sistema veria a
+      pagina piscar.
+    -->
+    <script src="../assets/theme.js?v=2"></script>
+    <link rel="stylesheet" href="../assets/theme.css?v=2" />
     <style>
-      :root {
-        color-scheme: dark;
-        --bg: #0d1117;
-        --panel: rgba(17, 24, 39, 0.94);
-        --line: rgba(148, 163, 184, 0.18);
-        --text: #e5eef8;
-        --muted: #a8b3c5;
-        --accent: #34d399;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        min-height: 100vh;
-        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color: var(--text);
-        background:
-          radial-gradient(circle at top left, rgba(52, 211, 153, 0.16), transparent 30%),
-          linear-gradient(160deg, var(--bg) 0%, #131926 100%);
-      }
-
-      .shell {
-        width: min(1200px, calc(100% - 24px));
+      /*
+       * Casca simples: cabecalho com a marca e o link de volta, intro em uma
+       * coluna de leitura, iframe sem moldura com o documento completo.
+       */
+      main.shell {
+        width: min(1200px, calc(100% - 32px));
         margin: 0 auto;
-        padding: 18px 0 24px;
+        padding: 32px 0 56px;
+      }
+
+      .page-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 32px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .brand img {
+        width: 28px;
+        height: 28px;
+        display: block;
+      }
+
+      .brand-word {
+        font-weight: 700;
+        font-size: 1.05rem;
+        letter-spacing: -0.01em;
+      }
+
+      .header-links {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 18px;
+      }
+
+      .header-links a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.92rem;
+      }
+
+      .header-links a:hover,
+      .header-links a:focus-visible {
+        color: var(--text);
       }
 
       .intro {
-        margin: 0 0 14px;
+        max-width: 68ch;
+        margin-bottom: 28px;
       }
 
       .intro h1 {
-        font-size: clamp(1.4rem, 3vw, 2rem);
-        margin: 0 0 6px;
-        color: var(--text);
+        font-size: clamp(1.7rem, 4vw, 2.4rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0 0 12px;
       }
 
       .intro p {
-        margin: 0 0 8px;
+        margin: 0 0 14px;
         color: var(--muted);
-        line-height: 1.5;
-        max-width: 70ch;
-      }
-
-      .intro a {
-        color: var(--accent);
+        line-height: 1.65;
       }
 
       .frame {
-        width: 100%;
-        height: calc(100vh - 190px);
-        border: 1px solid var(--line);
-        border-radius: 22px;
-        background: rgba(17, 24, 39, 0.72);
-        box-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
-        overflow: hidden;
+        border: 0;
       }
 
       iframe {
         width: 100%;
-        height: 100%;
+        height: 80vh;
+        min-height: 600px;
         border: 0;
         display: block;
         background: transparent;
       }
 
-      @media (max-width: 720px) {
-        .shell {
-          width: min(100% - 14px, 1200px);
-          padding-top: 8px;
-        }
-
-        .frame {
-          height: calc(100vh - 210px);
+      @media (max-width: 640px) {
+        main.shell {
+          padding-top: 20px;
         }
       }
-
-      .shell { padding-top: 24px; }
-      .policy-nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 24px; }
-      .policy-nav a { color: var(--muted); text-decoration: none; font-size: .9rem; }
-      .policy-nav a:hover { color: var(--text); }
-      .policy-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
-      .intro { margin-bottom: 24px; }
-      .intro h1 { font-size: clamp(1.5rem, 3vw, 2.2rem); margin-bottom: 12px; }
-      .intro p { line-height: 1.65; }
-      .frame { height: max(520px, 70svh); border-radius: 16px; }
-      @media (max-width: 720px) { .shell { width: calc(100% - 24px); } .frame { height: max(480px, 70svh); } }
     </style>
       <link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
   </head>
   <body>
-
-    <main class="shell"><nav class="policy-nav" aria-label="Navigation"><a href="../" data-i18n="ccore_pp_shell.back">← Back to ccore</a><div data-i18n-switcher></div></nav>
+    <button id="themeToggle" class="theme-toggle" type="button">Theme: system</button>
+    <main class="shell">
+      <header class="page-header">
+        <div class="brand">
+          <img src="../../filearchive/icons/ccore-badge-96.webp" width="28" height="28" alt="" />
+          <span class="brand-word">ccore</span>
+        </div>
+        <nav class="header-links" aria-label="Navigation">
+          <a href="../" data-i18n="ccore_pp_shell.back">Back to ccore</a>
+          <div data-i18n-switcher></div>
+        </nav>
+      </header>
       <!--
         Este resumo nao e enfeite. A pagina era so o iframe, entao a URL que
         esta no sitemap E registrada no portal do Discord nao tinha texto
@@ -130,10 +155,10 @@
       <div class="intro">
         <h1 data-i18n="ccore_pp_shell.ccore_privacy_policy">ccore — Privacy Policy</h1>
         <p data-i18n="ccore_pp_shell.this_privacy_policy_explains_what">This Privacy Policy explains what data ccore collects, why it is collected, how long it is kept, who it is shared with, and how to request its deletion.</p>
-        <p><a data-i18n="ccore_pp_shell.read_the_full_privacy_policy" href="./pp.html">Read the full Privacy Policy</a></p>
+        <p><a class="button" data-i18n="ccore_pp_shell.read_the_full_privacy_policy" href="./pp.html">Read the full Privacy Policy</a></p>
       </div>
       <section data-i18n-attr="aria-label:ccore_pp_shell.privacy_policy_content" class="frame" aria-label="Privacy Policy content">
-        <iframe title="ccore Privacy Policy" src="./pp.html?embedded=1&amp;v=20261014-2"></iframe>
+        <iframe title="ccore Privacy Policy" src="./pp.html?embedded=1&amp;v=20261120-1"></iframe>
       </section>
     </main>
       <!--
@@ -141,6 +166,6 @@
       dicionario de portugues, entao a pagina continua completa e indexavel
       sem JavaScript.
     -->
-    <script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/ccore_pp_shell.js?v=20261014-2"></script>
+    <script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/ccore_pp_shell.js?v=20261120-1"></script>
   </body>
 </html>

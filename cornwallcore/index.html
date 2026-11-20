@@ -29,943 +29,603 @@
 			name="description"
 			content="ccore is a Discord bot for the 12° Regt. de Infantaria community. It gets fewer updates from now on, but it is not disabled."
 		/>
-		<meta name="theme-color" content="#0b1f44" />
-		<link rel="icon" type="image/png" href="../filearchive/newpfp.png" />
-		<!--
-		  O emblema do hero e a primeira coisa pintada acima da dobra: pedir cedo
-		  evita que ele apareca depois do texto.
-		-->
-		<link rel="preload" as="image" href="../filearchive/icons/ccore-256.webp" type="image/webp" />
+		<meta name="theme-color" content="#1e0e10" />
+		<link rel="icon" type="image/png" href="../filearchive/icons/ccore-badge-32.png" />
+		<!-- Tema antes de tudo: marca data-theme antes da primeira pintura. -->
+		<script src="./assets/theme.js?v=2"></script>
+		<!-- O brasao e a primeira coisa pintada acima da dobra. -->
+		<link rel="preload" as="image" href="../filearchive/icons/ccore-badge.webp" type="image/webp" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-			rel="stylesheet"
-		/>
+		<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+		<link rel="stylesheet" href="./assets/theme.css?v=2" />
 		<style>
 			/*
-			 * Vitrine do ccore, refeita como site: nada de card gigante no meio da
-			 * tela - o conteudo mora direto sobre o fundo, em secoes, no mesmo
-			 * espirito do portfolio da raiz. A identidade continua a do ccore: azul e
-			 * vermelho, Inter e o emblema do regimento.
+			 * Vitrine do ccore. Pagina, nao cartoes: secoes direto sobre o fundo,
+			 * separadas por espaco e filete. Paleta e tema em assets/theme.css.
 			 *
-			 * Regras de desempenho seguidas aqui (medidas no monitor de 200 Hz com GPU
-			 * integrada do dono):
-			 *  - o fundo e uma camada position: fixed ESTATICA (sem animacao, sem
-			 *    background-attachment: fixed, sem blur);
-			 *  - a barra de navegacao e quase opaca e nao usa backdrop-filter;
-			 *  - transicoes so mexem em color, opacity e transform - nunca em
-			 *    box-shadow ou filter;
-			 *  - prefers-reduced-motion desliga o que se mexe.
+			 * Dois movimentos so, cada um uma vez:
+			 *  - ao abrir, o brasao desce como carimbo de lacre ("ordem do dia");
+			 *  - a rota do soldado se desenha quando a secao entra na tela.
+			 * Fora isso, so o que responde a quem usa. Modo leve e
+			 * prefers-reduced-motion mostram tudo parado.
 			 */
-			:root {
-				color-scheme: dark;
-				--bg: #0b1f44;
-				--bg-2: #142f63;
-				--bg-deep: #08172f;
-				--line: rgba(255, 255, 255, 0.14);
-				--line-strong: rgba(255, 255, 255, 0.3);
-				--text: #f6f8fc;
-				--muted: #c9d3e8;
-				--faint: #95a4c4;
-				--accent: #cf142b;
-				--accent-lit: #ff4d61;
-				--accent-3: #1f4aa8;
-				--blue-lit: #7aa2ff;
-				--paused: #f5b942;
-				--nav-h: 64px;
-				--gutter: clamp(16px, 4vw, 40px);
-				--mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
-				/* Tokens das superficies translucidas brancas repetidas (pill,
-				   botao, codigo). Mesmos valores de antes, so com nome. */
-				--surface-1: rgba(255, 255, 255, 0.04);
-				--surface-2: rgba(255, 255, 255, 0.07);
-				--surface-3: rgba(255, 255, 255, 0.1);
-			}
-
-			* {
-				box-sizing: border-box;
-			}
-
-			html {
-				scroll-behavior: smooth;
-			}
-
-			body {
-				margin: 0;
-				min-height: 100vh;
-				color: var(--text);
-				background: var(--bg);
-				font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-				line-height: 1.55;
-				-webkit-font-smoothing: antialiased;
-				overflow-x: hidden;
-			}
-
-			/*
-			 * Fundo numa camada fixa propria, e nao em background-attachment: fixed
-			 * (que obriga o navegador a repintar a tela inteira a cada rolagem). Os
-			 * gradientes sao estaticos: pintados uma vez, depois so compostos.
-			 */
-			.backdrop {
-				position: fixed;
-				inset: 0;
-				z-index: 0;
-				pointer-events: none;
-				background:
-					radial-gradient(ellipse 60% 50% at 0% 0%, rgba(207, 20, 43, 0.2), transparent 70%),
-					radial-gradient(ellipse 50% 45% at 100% 100%, rgba(122, 162, 255, 0.12), transparent 70%),
-					linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
-			}
-
-			a {
-				color: inherit;
-			}
-
-			code {
-				font-family: var(--mono);
-				font-size: 0.88em;
-				padding: 1px 6px;
-				border-radius: 6px;
-				background: var(--surface-2);
-				border: 1px solid var(--line);
-			}
-
-			:focus-visible {
-				outline: 2px solid var(--blue-lit);
-				outline-offset: 3px;
-			}
-
-			.skip-link {
-				position: absolute;
-				left: 12px;
-				top: -60px;
-				z-index: 100;
-				padding: 8px 14px;
-				border-radius: 8px;
-				background: var(--text);
-				color: var(--bg);
-				font-weight: 600;
-				text-decoration: none;
-			}
-
-			.skip-link:focus {
-				top: 12px;
-			}
-
-			/* --- Barra de navegacao ------------------------------------------ */
 			.nav {
-				position: fixed;
-				inset: 0 0 auto 0;
-				z-index: 50;
-				height: var(--nav-h);
+				position: sticky;
+				top: 0;
+				z-index: 20;
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
 				gap: 16px;
-				padding: 0 var(--gutter);
-				/* Quase opaca e sem backdrop-filter: blur aqui seria refeito a cada
-				   quadro de rolagem. */
-				background: rgba(8, 23, 47, 0.94);
+				padding: 12px clamp(16px, 4vw, 48px);
+				background: var(--bg);
 				border-bottom: 1px solid var(--line);
 			}
-
 			.nav-brand {
-				display: inline-flex;
+				display: flex;
 				align-items: center;
 				gap: 10px;
-				font-weight: 800;
-				font-size: 1.08rem;
-				letter-spacing: 0.01em;
+				font-weight: 700;
+				font-size: 1.25rem;
+				letter-spacing: -0.03em;
 				text-decoration: none;
 			}
-
 			.nav-brand img {
-				width: 30px;
-				height: 30px;
-				border-radius: 50%;
-				display: block;
+				width: 32px;
+				height: 32px;
+				object-fit: contain;
 			}
-
 			.nav-end {
 				display: flex;
 				align-items: center;
-				gap: clamp(14px, 3vw, 28px);
+				gap: 24px;
 			}
-
 			.nav-links {
 				display: flex;
-				gap: clamp(14px, 2.6vw, 26px);
+				gap: 20px;
 			}
-
 			.nav-links a {
-				position: relative;
 				color: var(--muted);
 				text-decoration: none;
-				font-size: 0.8rem;
-				font-weight: 500;
-				letter-spacing: 0.12em;
-				text-transform: uppercase;
 				padding: 6px 0;
-				transition: color 160ms ease;
+				border-bottom: 2px solid transparent;
 			}
-
-			/* Sublinhado animado por transform de um pseudo-elemento, nao por
-			   largura nem sombra. */
-			.nav-links a::after {
-				content: "";
-				position: absolute;
-				left: 0;
-				right: 0;
-				bottom: 0;
-				height: 2px;
-				background: var(--accent-lit);
-				transform: scaleX(0);
-				transform-origin: left;
-				transition: transform 220ms ease;
-			}
-
 			.nav-links a:hover,
-			.nav-links a:focus-visible {
-				color: var(--text);
-			}
-
-			.nav-links a:hover::after,
-			.nav-links a:focus-visible::after {
-				transform: scaleX(1);
-			}
-
-			/* Secao em foco na rolagem (ver o IntersectionObserver no fim da
-			   pagina): reaproveita o mesmo sublinhado do hover/foco. */
 			.nav-links a[aria-current="true"] {
 				color: var(--text);
+				border-bottom-color: var(--mark);
 			}
 
-			.nav-links a[aria-current="true"]::after {
-				transform: scaleX(1);
-			}
-
-			.nav .i18n-switcher {
-				font-size: 0.74rem;
-				color: var(--text);
-			}
-
-			.nav .i18n-switcher__btn {
-				padding: 5px 10px;
-			}
-
-			/* --- Estrutura ----------------------------------------------------- */
 			.site {
-				position: relative;
-				z-index: 1;
-				width: min(1180px, 100%);
+				max-width: 1180px;
 				margin: 0 auto;
-				padding: 0 var(--gutter);
+				padding: 0 clamp(16px, 4vw, 48px);
 			}
 
-			/* --- Hero ---------------------------------------------------------- */
+			/* Topo: o brasao carimba a pagina, o nome vem logo depois. */
 			.hero {
-				min-height: min(88svh, 820px);
-				padding: calc(var(--nav-h) + 56px) 0 72px;
 				display: grid;
-				grid-template-columns: minmax(0, 1.55fr) minmax(220px, 1fr);
+				grid-template-columns: minmax(180px, 300px) minmax(0, 1fr);
 				align-items: center;
-				gap: 48px clamp(32px, 6vw, 88px);
+				gap: clamp(28px, 6vw, 80px);
+				padding: clamp(48px, 9vh, 104px) 0 clamp(48px, 8vh, 88px);
 			}
-
-			.status-pill {
+			.seal {
+				position: relative;
+				justify-self: center;
+				width: 100%;
+				max-width: 300px;
+			}
+			.seal img {
+				display: block;
+				width: 100%;
+				height: auto;
+			}
+			/* O anel do lacre: aparece no impacto e some. */
+			.seal::after {
+				content: "";
+				position: absolute;
+				inset: 4%;
+				border: 2px solid var(--mark);
+				border-radius: 50%;
+				opacity: 0;
+				pointer-events: none;
+			}
+			.hero-main > * + * {
+				margin-top: 16px;
+			}
+			.status-note {
 				display: inline-flex;
 				align-items: center;
-				gap: 10px;
-				margin: 0 0 26px;
-				padding: 7px 14px 7px 12px;
-				border-radius: 999px;
-				border: 1px solid rgba(245, 185, 66, 0.45);
-				background: rgba(245, 185, 66, 0.1);
-				color: #ffe2a6;
-				font-size: 0.82rem;
-				font-weight: 600;
-				letter-spacing: 0.02em;
+				gap: 8px;
+				color: var(--muted);
+				font-size: 0.92rem;
 				text-decoration: none;
 			}
-
-			/*
-			 * Bolinha de estado. O "respiro" e um pseudo-elemento que so muda
-			 * opacity/transform - nada de animar box-shadow - e tem 8px: barato
-			 * mesmo rodando para sempre.
-			 */
-			.status-dot {
-				position: relative;
+			.status-note::before {
+				content: "";
 				width: 8px;
 				height: 8px;
 				border-radius: 50%;
-				background: var(--paused);
-				flex: 0 0 auto;
+				background: var(--mark);
 			}
-
-			.status-dot::after {
-				content: "";
-				position: absolute;
-				inset: -4px;
-				border-radius: 50%;
-				border: 2px solid var(--paused);
-				opacity: 0;
-				animation: breathe 2.8s ease-out infinite;
-			}
-
-			@keyframes breathe {
-				0% { opacity: 0.6; transform: scale(0.6); }
-				80%, 100% { opacity: 0; transform: scale(1.4); }
-			}
-
 			.eyebrow {
-				margin: 0 0 10px;
-				text-transform: uppercase;
-				letter-spacing: 0.18em;
-				font-size: 0.76rem;
-				font-weight: 600;
-				color: var(--faint);
+				margin: 24px 0 0;
+				color: var(--muted);
 			}
-
 			.title-row {
 				display: flex;
-				align-items: center;
-				flex-wrap: wrap;
-				gap: 6px 18px;
+				align-items: flex-start;
+				gap: 14px;
+				margin-top: 2px !important;
 			}
-
-			.hero h1 {
+			.title-row h1 {
 				margin: 0;
-				font-size: clamp(4.2rem, 13vw, 8.6rem);
-				font-weight: 800;
-				line-height: 0.9;
+				font-size: clamp(4.2rem, 13vw, 8.5rem);
+				font-weight: 700;
 				letter-spacing: -0.055em;
+				line-height: 0.82;
 			}
-
-			.hero h1 .dot {
-				color: var(--accent);
-			}
-
 			.app-badge {
-				width: 51px;
-				height: 19px;
-				display: block;
+				width: 58px;
+				height: auto;
+				margin-top: 0.6em;
 				flex: 0 0 auto;
 			}
-
 			.tagline {
-				margin: 18px 0 0;
-				color: var(--faint);
-				font-size: 0.95rem;
-				font-style: italic;
+				margin-top: 22px !important;
+				font-size: 1.15rem;
+				max-width: 44ch;
 			}
-
-			.managed-by {
-				margin: 14px 0 0;
-				font-size: clamp(1.35rem, 2.6vw, 1.9rem);
-				line-height: 1.2;
-				letter-spacing: -0.02em;
-				font-weight: 700;
-				max-width: 30ch;
-			}
-
-			.managed-by a,
-			.subtitle a,
-			.prose a {
-				color: var(--text);
-				text-decoration-color: var(--accent-lit);
-				text-decoration-thickness: 2px;
-				text-underline-offset: 4px;
-			}
-
+			.managed-by,
 			.subtitle {
-				margin: 16px 0 0;
+				margin-bottom: 0;
 				color: var(--muted);
-				font-size: 1.04rem;
-				max-width: 58ch;
+				max-width: 56ch;
 			}
-
-			.pill-row {
+			.facts {
 				display: flex;
 				flex-wrap: wrap;
-				gap: 8px;
-				margin: 26px 0 0;
+				gap: 6px 0;
+				margin: 20px 0 0;
 				padding: 0;
 				list-style: none;
+				color: var(--muted);
+				font-size: 0.92rem;
 			}
-
-			.pill {
-				padding: 6px 12px;
-				border-radius: 999px;
-				border: 1px solid var(--line);
-				background: var(--surface-1);
-				color: #dce5f5;
-				font-size: 0.84rem;
+			.facts li + li::before {
+				content: "";
+				display: inline-block;
+				width: 1px;
+				height: 0.9em;
+				margin: 0 12px;
+				vertical-align: -0.1em;
+				background: var(--line-strong);
 			}
-
 			.hero-actions {
 				display: flex;
 				flex-wrap: wrap;
-				gap: 12px;
-				margin-top: 32px;
+				gap: 10px;
+				margin-top: 28px !important;
 			}
 
-			.button {
-				position: relative;
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				gap: 8px;
-				padding: 11px 20px;
-				border-radius: 999px;
-				border: 1px solid var(--line-strong);
-				color: var(--text);
-				font-weight: 600;
-				font-size: 0.94rem;
-				text-decoration: none;
-				background: var(--surface-1);
-				transition: transform 150ms ease-out, background-color 160ms ease, border-color 160ms ease;
+			.js-motion .seal img {
+				animation: seal-press 620ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
 			}
-
-			.button:hover,
-			.button:focus-visible {
-				background: var(--surface-3);
-				border-color: rgba(255, 255, 255, 0.5);
-				transform: translateY(-1px);
+			.js-motion .seal::after {
+				animation: seal-ring 900ms ease-out 360ms both;
 			}
-
-			.button:active {
-				transform: scale(0.96);
+			.js-motion .hero-main {
+				animation: settle 520ms ease-out 300ms both;
 			}
-
-			/*
-			 * "Elevacao" no hover/foco: em vez de animar box-shadow (caro),
-			 * o shadow fica fixo num pseudo-elemento e so a opacidade dele
-			 * muda - cross-fade barato, mesmo efeito visual.
-			 */
-			.button::after {
-				content: "";
-				position: absolute;
-				inset: 0;
-				border-radius: inherit;
-				box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
-				opacity: 0;
-				pointer-events: none;
-				transition: opacity 150ms ease;
-			}
-
-			@media (hover: hover) {
-				.button:hover::after,
-				.button:focus-visible::after {
+			@keyframes seal-press {
+				0% {
+					opacity: 0;
+					transform: translateY(-18px) scale(1.32) rotate(-9deg);
+				}
+				62% {
 					opacity: 1;
+					transform: translateY(0) scale(0.95) rotate(1.5deg);
+				}
+				100% {
+					opacity: 1;
+					transform: none;
+				}
+			}
+			@keyframes seal-ring {
+				0% {
+					opacity: 0.55;
+					transform: scale(0.9);
+				}
+				100% {
+					opacity: 0;
+					transform: scale(1.18);
+				}
+			}
+			@keyframes settle {
+				from {
+					opacity: 0;
+					transform: translateY(8px);
+				}
+				to {
+					opacity: 1;
+					transform: none;
 				}
 			}
 
-			.button.primary {
-				background: var(--accent);
-				border-color: var(--accent);
-			}
-
-			.button.primary:hover,
-			.button.primary:focus-visible {
-				background: #e01a33;
-				border-color: #e01a33;
-			}
-
-			.hero-emblem {
-				justify-self: center;
-				position: relative;
-				width: min(100%, 300px);
-				aspect-ratio: 1;
-				display: grid;
-				place-items: center;
-			}
-
-			/* Anel estatico atras do emblema, em vez de sombra difusa grande. */
-			.hero-emblem::before {
-				content: "";
-				position: absolute;
-				inset: 0;
-				border-radius: 50%;
-				border: 1px solid var(--line);
-				background: radial-gradient(circle, rgba(31, 74, 168, 0.35) 0%, transparent 70%);
-			}
-
-			.hero-emblem img {
-				position: relative;
-				width: 82%;
-				height: auto;
-				border-radius: 50%;
-				display: block;
-			}
-
-			/* --- Secoes -------------------------------------------------------- */
+			/* Secoes */
 			.section {
-				padding: 72px 0 32px;
-				scroll-margin-top: var(--nav-h);
+				padding: 72px 0;
+				border-top: 1px solid var(--line);
+				scroll-margin-top: 72px;
 			}
-
 			.section-head {
-				display: grid;
-				grid-template-columns: auto minmax(0, 1fr) auto;
-				align-items: baseline;
-				gap: 18px;
-				padding-bottom: 18px;
 				margin-bottom: 36px;
-				border-bottom: 1px solid var(--line);
 			}
-
-			.section-num {
-				font-family: var(--mono);
-				font-size: 0.85rem;
-				color: var(--accent-lit);
-			}
-
 			.section-head h2 {
 				margin: 0;
-				font-size: clamp(2rem, 4.6vw, 3.2rem);
-				font-weight: 800;
-				line-height: 1;
-				letter-spacing: -0.04em;
+				font-size: clamp(1.8rem, 4vw, 2.6rem);
+				font-weight: 500;
+				letter-spacing: -0.02em;
+				line-height: 1.1;
 			}
-
 			.section-lede {
-				margin: 0;
-				color: var(--faint);
-				font-size: 0.9rem;
-				text-align: right;
+				margin: 10px 0 0;
+				color: var(--muted);
+				max-width: 60ch;
 			}
-
 			.split {
 				display: grid;
 				grid-template-columns: repeat(2, minmax(0, 1fr));
-				gap: 40px clamp(32px, 6vw, 80px);
+				gap: 40px clamp(32px, 5vw, 72px);
 			}
-
-			.block h3 {
+			.block h3,
+			.prose h3 {
 				margin: 0 0 10px;
 				font-size: 1.2rem;
-				font-weight: 700;
-				letter-spacing: -0.01em;
+				font-weight: 500;
 			}
-
 			.block p,
 			.prose p {
+				margin: 0 0 12px;
+				max-width: 62ch;
+			}
+			.block ul,
+			.prose ul {
 				margin: 0;
+				padding-left: 1.2em;
 				color: var(--muted);
 			}
+			.note {
+				margin-top: 16px;
+				padding-left: 14px;
+				border-left: 2px solid var(--mark);
+				color: var(--muted);
+			}
+			.note p {
+				margin: 0;
+			}
 
-			.block ul {
-				margin: 14px 0 0;
+			/* Rota do soldado: uma sequencia de verdade, dai os numeros. */
+			.route {
+				position: relative;
+			}
+			.route-stops {
+				position: relative;
+				margin: 0;
 				padding: 0;
 				list-style: none;
+				display: grid;
+				grid-template-columns: repeat(5, minmax(0, 1fr));
+				gap: 24px;
+				counter-reset: stop;
 			}
-
-			.block li {
+			.route-line {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				width: 100%;
+				height: 60px;
+				overflow: visible;
+				pointer-events: none;
+			}
+			.route-line path {
+				fill: none;
+				stroke: var(--mark);
+				stroke-width: 2;
+				stroke-dasharray: 6 6;
+				vector-effect: non-scaling-stroke;
+			}
+			.stop {
 				position: relative;
-				padding: 10px 0 10px 22px;
-				border-top: 1px solid var(--line);
+				padding-top: 76px;
+				counter-increment: stop;
+			}
+			.stop::before {
+				content: counter(stop);
+				position: absolute;
+				left: 50%;
+				top: var(--y, 20px);
+				transform: translate(-50%, -50%);
+				display: grid;
+				place-items: center;
+				width: 30px;
+				height: 30px;
+				border-radius: 50%;
+				background: var(--bg);
+				border: 2px solid var(--mark);
+				font-size: 0.85rem;
+				font-weight: 700;
+			}
+			.stop:nth-child(even) {
+				--y: 40px;
+			}
+			.stop h3 {
+				margin: 0 0 6px;
+				font-size: 1.1rem;
+				font-weight: 500;
+			}
+			.stop p {
+				margin: 0;
+				color: var(--muted);
+				font-size: 0.95rem;
+			}
+			.stop code {
 				color: var(--text);
 			}
-
-			.block li::before {
-				content: "";
-				position: absolute;
-				left: 2px;
-				top: 1.15em;
-				width: 8px;
-				height: 2px;
-				background: var(--accent-lit);
+			.js-motion .route .route-line {
+				clip-path: inset(0 100% 0 0);
+			}
+			.js-motion .route.is-drawn .route-line {
+				animation: route-reveal 1500ms ease-in-out both;
+			}
+			.js-motion .route .stop::before,
+			.js-motion .route .stop > * {
+				opacity: 0;
+			}
+			.js-motion .route.is-drawn .stop::before,
+			.js-motion .route.is-drawn .stop > * {
+				animation: settle 420ms ease-out both;
+				animation-delay: calc(var(--i) * 260ms + 120ms);
+			}
+			@keyframes route-reveal {
+				from {
+					clip-path: inset(0 100% 0 0);
+				}
+				to {
+					clip-path: inset(0 0 0 0);
+				}
 			}
 
-			/* --- Comandos ------------------------------------------------------ */
+			/* Livro de ordens: os comandos */
+			.command-tools {
+				display: grid;
+				gap: 10px;
+				margin-bottom: 28px;
+				max-width: 720px;
+			}
+			.command-tools label {
+				color: var(--muted);
+				font-size: 0.92rem;
+			}
+			.command-search-row {
+				display: flex;
+				gap: 10px;
+			}
+			.command-search-row input {
+				flex: 1;
+				min-width: 0;
+				padding: 10px 12px;
+				font: inherit;
+				color: var(--text);
+				background: var(--field);
+				border: 1px solid var(--line);
+				border-radius: var(--radius);
+			}
+			.command-search-row input:focus {
+				outline: none;
+				border-color: var(--mark);
+				box-shadow: 0 0 0 3px var(--mark-soft);
+			}
+			.command-search-row button {
+				padding: 10px 14px;
+				font: inherit;
+				color: var(--text);
+				background: transparent;
+				border: 1px solid var(--line-strong);
+				border-radius: var(--radius);
+				cursor: pointer;
+			}
+			.command-jumps {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 6px 18px;
+				font-size: 0.92rem;
+			}
+			.command-jumps a {
+				color: var(--muted);
+				text-decoration: none;
+			}
+			.command-jumps a:hover {
+				color: var(--text);
+			}
+			.command-empty {
+				color: var(--muted);
+			}
 			.cmd-groups {
 				display: grid;
 				grid-template-columns: repeat(2, minmax(0, 1fr));
-				gap: 44px clamp(32px, 6vw, 80px);
+				gap: 8px clamp(32px, 5vw, 72px);
+				align-items: start;
 			}
-
+			.cmd-group {
+				scroll-margin-top: 80px;
+				padding-top: 18px;
+			}
+			.cmd-group[hidden],
+			.cmd[hidden],
+			.command-jumps a[hidden] {
+				display: none;
+			}
 			.cmd-group h3 {
-				margin: 0 0 6px;
-				font-size: 0.78rem;
-				font-weight: 600;
-				letter-spacing: 0.16em;
-				text-transform: uppercase;
-				color: var(--blue-lit);
+				margin: 0 0 4px;
+				font-size: 1.15rem;
+				font-weight: 500;
 			}
-
 			.cmd-list {
 				margin: 0;
 				padding: 0;
 				list-style: none;
 			}
-
 			.cmd {
-				position: relative;
-				padding: 16px 0;
-				border-top: 1px solid var(--line);
+				padding: 12px 0;
+				border-bottom: 1px solid var(--line);
 			}
-
-			.cmd::after {
-				content: "";
-				position: absolute;
-				inset: 0;
-				box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
-				opacity: 0;
-				pointer-events: none;
-				transition: opacity 150ms ease;
-			}
-
-			@media (hover: hover) {
-				.cmd:hover::after {
-					opacity: 1;
-				}
-			}
-
 			.cmd-head {
 				display: flex;
 				flex-wrap: wrap;
 				align-items: baseline;
-				gap: 4px 14px;
+				gap: 4px 12px;
 			}
-
 			.cmd-name {
 				font-family: var(--mono);
-				font-size: 0.98rem;
-				font-weight: 600;
-				color: var(--text);
+				font-weight: 700;
+				font-size: 0.95rem;
 			}
-
-			.cmd-desc {
-				color: var(--muted);
-			}
-
 			.cmd-meta {
-				margin: 8px 0 0;
+				margin: 4px 0 0;
 				padding: 0;
 				list-style: none;
-				display: flex;
-				flex-direction: column;
-				gap: 2px;
-			}
-
-			.cmd-meta li {
-				color: var(--faint);
+				color: var(--muted);
 				font-size: 0.88rem;
-				padding-left: 14px;
-				position: relative;
 			}
-
-			.cmd-meta li::before {
-				content: "\203A";
-				position: absolute;
-				left: 0;
-				color: var(--accent-lit);
-			}
-
 			.hood {
-				margin-top: 64px;
+				margin-top: 56px;
 			}
 
-			.prose p + p,
-			.prose p + ul {
-				margin-top: 12px;
-			}
-
-			.note {
-				margin-top: 18px;
-				padding: 14px 16px;
-				border-left: 2px solid var(--blue-lit);
-				background: rgba(122, 162, 255, 0.06);
-				border-radius: 0 10px 10px 0;
-			}
-
-			.note p {
-				margin: 0;
-			}
-
-			.note strong {
-				color: var(--text);
-			}
-
-			/* --- Estado e links ------------------------------------------------ */
+			/* Status e links */
 			.paused-title {
 				margin: 0 0 14px;
-				font-size: clamp(1.5rem, 3vw, 2.1rem);
-				font-weight: 800;
-				letter-spacing: -0.03em;
-				line-height: 1.1;
+				font-size: 1.5rem;
+				font-weight: 500;
+				line-height: 1.25;
 			}
-
-			.paused-title .hl {
-				color: var(--paused);
-			}
-
 			.link-index {
 				margin: 0;
 				padding: 0;
 				list-style: none;
+				border-top: 1px solid var(--line);
+			}
+			.link-row {
+				display: block;
+				padding: 14px 0;
+				text-decoration: none;
 				border-bottom: 1px solid var(--line);
 			}
-
-			.link-row {
-				position: relative;
-				display: grid;
-				grid-template-columns: minmax(0, 1fr) auto;
-				align-items: center;
-				gap: 14px;
-				padding: 16px 4px;
-				border-top: 1px solid var(--line);
-				text-decoration: none;
-				transition: transform 150ms ease-out;
-			}
-
-			.link-row::after {
-				content: "";
-				position: absolute;
-				inset: 0;
-				box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
-				opacity: 0;
-				pointer-events: none;
-				transition: opacity 150ms ease;
-			}
-
-			@media (hover: hover) {
-				.link-row:hover::after,
-				.link-row:focus-visible::after {
-					opacity: 1;
-				}
-			}
-
-			.link-row:active {
-				transform: scale(0.98);
-			}
-
 			.link-row strong {
 				display: block;
-				font-weight: 600;
-				font-size: 1.02rem;
+				font-weight: 500;
 			}
-
 			.link-row small {
-				display: block;
-				color: var(--faint);
-				font-size: 0.86rem;
+				color: var(--muted);
+				font-size: 0.9rem;
+			}
+			.link-row:hover strong {
+				color: var(--mark);
 			}
 
-			.link-row .arrow {
-				color: var(--faint);
-				transition: transform 180ms ease, color 180ms ease;
-			}
-
-			.link-row:hover .arrow,
-			.link-row:focus-visible .arrow {
-				color: var(--accent-lit);
-				transform: translateX(4px);
-			}
-
-			.link-row:hover strong,
-			.link-row:focus-visible strong {
-				color: #fff;
-			}
-
-			/* --- Rodape -------------------------------------------------------- */
 			.footer {
-				margin-top: 72px;
-				padding: 28px 0 40px;
-				border-top: 1px solid var(--line);
 				display: flex;
 				flex-wrap: wrap;
 				justify-content: space-between;
-				gap: 12px 24px;
-				color: var(--faint);
-				font-size: 0.86rem;
+				gap: 12px;
+				padding: 28px 0 80px;
+				border-top: 1px solid var(--line);
+				color: var(--muted);
+				font-size: 0.9rem;
 			}
-
 			.footer p {
 				margin: 0;
 			}
-
 			.footer-links {
 				display: flex;
-				flex-wrap: wrap;
-				gap: 8px 20px;
+				gap: 18px;
 			}
 
-			.footer a {
-				color: var(--muted);
-				text-decoration: none;
-			}
-
-			.footer a:hover,
-			.footer a:focus-visible {
-				color: var(--text);
-				text-decoration: underline;
-			}
-
-			/* --- Responsivo ---------------------------------------------------- */
 			@media (max-width: 900px) {
 				.hero {
 					grid-template-columns: 1fr;
-					min-height: 0;
-					padding-top: calc(var(--nav-h) + 36px);
 				}
-
-				.hero-emblem {
-					order: -1;
+				.seal {
+					max-width: 200px;
 					justify-self: start;
-					width: 132px;
 				}
-
-				.hero-emblem::before {
-					display: none;
-				}
-
-				.hero-emblem img {
-					width: 100%;
-				}
-
 				.split,
 				.cmd-groups {
 					grid-template-columns: 1fr;
 				}
-			}
-
-			@media (max-width: 640px) {
+				/* A rota vira vertical: a linha corre na esquerda. */
+				.route-stops {
+					grid-template-columns: 1fr;
+					gap: 26px;
+					padding-left: 48px;
+				}
+				.route-line {
+					display: none;
+				}
+				.route-stops::before {
+					content: "";
+					position: absolute;
+					left: 14px;
+					top: 8px;
+					bottom: 8px;
+					border-left: 2px dashed var(--mark);
+					transform-origin: top;
+				}
+				.js-motion .route-stops::before {
+					transform: scaleY(0);
+				}
+				.js-motion .route.is-drawn .route-stops::before {
+					animation: route-grow 1200ms ease-in-out both;
+				}
+				.stop {
+					padding-top: 0;
+				}
+				.stop::before,
+				.stop:nth-child(even)::before {
+					left: -34px;
+					top: 12px;
+				}
 				.nav-links {
 					display: none;
 				}
-
-				.section {
-					padding-top: 56px;
+			}
+			@keyframes route-grow {
+				from {
+					transform: scaleY(0);
 				}
-
-				.section-head {
-					grid-template-columns: auto minmax(0, 1fr);
-				}
-
-				.section-lede {
-					grid-column: 1 / -1;
-					text-align: left;
-				}
-
-				.hero-actions .button {
-					flex: 1 1 auto;
+				to {
+					transform: scaleY(1);
 				}
 			}
-
-			@media (prefers-reduced-motion: reduce) {
-				html {
-					scroll-behavior: auto;
-				}
-
-				*,
-				*::before,
-				*::after {
-					animation: none !important;
-					transition: none !important;
-				}
-			}
-
-			/*
-			 * Modo leve (html[data-lite], ligado por filearchive/perf/lite.js em
-			 * maquina fraca ou com frame rate abaixo de ~40 fps): o mesmo visual,
-			 * parado. As animacoes infinitas sao o que custa quadro aqui.
-			 */
-			:root[data-lite] .status-dot::after {
-				animation: none !important;
-			}
-
-			/*
-			 * Entrada das secoes na rolagem (IntersectionObserver no fim da
-			 * pagina). O estado escondido so existe com a classe js-reveal no
-			 * <html> - sem JS, ou antes dele rodar, tudo fica visivel (ver o
-			 * comentario do script). Anima so opacity/transform.
-			 */
-			:root.js-reveal .section.reveal .section-head h2,
-			:root.js-reveal .section.reveal .section-lede,
-			:root.js-reveal .section.reveal > .split,
-			:root.js-reveal .section.reveal > .command-tools {
-				opacity: 0;
-				transform: translateY(12px);
-				transition: opacity 300ms cubic-bezier(0.2, 0, 0, 1), transform 300ms cubic-bezier(0.2, 0, 0, 1);
-			}
-
-			:root.js-reveal .section.reveal .section-head h2 { transition-delay: 0ms; }
-			:root.js-reveal .section.reveal .section-lede { transition-delay: 100ms; }
-			:root.js-reveal .section.reveal > .split,
-			:root.js-reveal .section.reveal > .command-tools { transition-delay: 200ms; }
-
-			:root.js-reveal .section.reveal.is-visible .section-head h2,
-			:root.js-reveal .section.reveal.is-visible .section-lede,
-			:root.js-reveal .section.reveal.is-visible > .split,
-			:root.js-reveal .section.reveal.is-visible > .command-tools {
-				opacity: 1;
-				transform: none;
-			}
-
-			/* Cinto e suspensorio: alem do script nao ligar js-reveal nesses
-			   casos, garante que nada fique escondido se algo rodar fora de
-			   ordem. */
-			@media (prefers-reduced-motion: reduce) {
-				.section.reveal .section-head h2,
-				.section.reveal .section-lede,
-				.section.reveal > .split,
-				.section.reveal > .command-tools {
-					opacity: 1 !important;
-					transform: none !important;
-				}
-			}
-
-			:root[data-lite] .section.reveal .section-head h2,
-			:root[data-lite] .section.reveal .section-lede,
-			:root[data-lite] .section.reveal > .split,
-			:root[data-lite] .section.reveal > .command-tools {
-				opacity: 1 !important;
-				transform: none !important;
-			}
-
-            .hero { padding-top: calc(var(--nav-h) + 40px); padding-bottom: 64px; }
-            .command-tools { padding: 20px 0 28px; }
-            .command-tools label { display: block; font-size: .88rem; color: var(--muted); margin-bottom: 10px; }
-            .command-search-row { display: flex; gap: 10px; max-width: 680px; }
-            .command-search-row input { flex: 1; min-width: 0; font: inherit; padding: 13px 16px; color: var(--text); background: #0b1f44; border: 1px solid var(--line); border-radius: 12px; }
-            .command-search-row input::placeholder { color: var(--faint); }
-            .command-search-row button { font: inherit; padding: 12px 16px; color: var(--text); border: 1px solid var(--line); border-radius: 12px; background: transparent; cursor: pointer; }
-            .command-search-row :focus-visible { outline: 2px solid var(--blue-lit); outline-offset: 3px; }
-            .command-jumps { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-            .command-jumps a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); padding: 8px 0; margin-right: 16px; font-size: .8rem; }
-            .command-jumps a:hover, .command-jumps a:focus-visible { color: var(--text); border-color: var(--blue-lit); }
-            .cmd-group { scroll-margin-top: calc(var(--nav-h) + 24px); }
-            .cmd-group[hidden], .cmd[hidden], .command-empty[hidden], .command-jumps a[hidden] { display: none; }
-            .command-empty { padding: 24px; border: 1px solid var(--line); border-radius: 12px; color: var(--muted); }
-            @media (max-width: 640px) {
-              :root { --nav-h: 100px; }
-              .nav { display: grid; grid-template-columns: 1fr auto; grid-template-rows: 52px 40px; gap: 0 12px; align-content: center; }
-              .nav-brand { grid-row: 1; grid-column: 1; }
-              .nav-end { display: contents; }
-              .nav-end > [data-i18n-switcher] { grid-row: 1; grid-column: 2; }
-              .nav-links { display: flex; grid-row: 2; grid-column: 1 / -1; gap: 24px; }
-              .nav-links a { font-size: .72rem; padding-block: 10px; }
-              .hero { padding-bottom: 32px; }
-              .hero-emblem { width: 88px; }
-              .command-jumps { gap: 4px; }
-            }
 		</style>
 		<link rel="stylesheet" href="../filearchive/i18n/i18n.css" />
 	</head>
 	<body>
+		<button id="themeToggle" class="theme-toggle" type="button">Theme: system</button>
 		<a class="skip-link" href="#main" data-i18n="ccore.skip_to_content">Skip to content</a>
-		<div class="backdrop" aria-hidden="true"></div>
 
 		<header class="nav">
 			<a class="nav-brand" href="#top">
-				<img src="../filearchive/icons/ccore-96.webp" width="30" height="30" alt="" />
+				<img src="../filearchive/icons/ccore-badge-96.webp" width="32" height="32" alt="" />
 				<span>ccore</span>
 			</a>
 			<div class="nav-end">
 				<nav class="nav-links" aria-label="Sections" data-i18n-attr="aria-label:ccore.sections">
 					<a href="#about" data-i18n="ccore.nav_about">About</a>
+					<a href="#route" data-i18n="ccore.nav_route">How it works</a>
 					<a href="#commands" data-i18n="ccore.nav_commands">Commands</a>
 					<a href="#status" data-i18n="ccore.status">Status</a>
 				</nav>
@@ -975,37 +635,44 @@
 
 		<main class="site" id="main">
 			<section class="hero" id="top" aria-label="Bot overview" data-i18n-attr="aria-label:ccore.bot_overview">
+				<!-- Ordem do dia: o brasao do 12 carimba a pagina ao abrir. -->
+				<div class="seal">
+					<img
+						src="../filearchive/icons/ccore-badge.webp"
+						width="238"
+						height="238"
+						fetchpriority="high"
+						decoding="async"
+						alt="Coat of arms of the 12° Regimento de Infantaria"
+						data-i18n-attr="alt:ccore.crest_alt"
+					/>
+				</div>
+
 				<div class="hero-main">
 					<!--
 					  ccore recebe menos atualizacoes daqui em diante, mas nao esta
-					  desativado: o codigo, os dados e a aplicacao no Discord continuam
-					  existindo, so nao ha convite. Foi o pontape do Sollarety e deve
-					  virar um "engine" (template de bot/app do daeese). O selo leva para a secao que
-					  explica isso.
+					  desativado. O aviso leva para a secao que explica isso.
 					-->
-					<a class="status-pill" href="#status">
-						<span class="status-dot" aria-hidden="true"></span>
-						<span data-i18n="ccore.paused_pill">Fewer updates — not disabled</span>
-					</a>
+					<a class="status-note" href="#status" data-i18n="ccore.paused_pill">Fewer updates — not disabled</a>
 					<p class="eyebrow" data-i18n="ccore.this_shit_is">This shit is:</p>
 					<div class="title-row">
-						<h1>ccore<span class="dot">.</span></h1>
+						<h1>ccore</h1>
 						<svg class="app-badge" viewBox="0 0 51 19" role="img" aria-label="Discord app" data-i18n-attr="aria-label:ccore.discord_app">
 							<rect x="0" y="0" width="51" height="19" rx="5" fill="#5865F2"/>
 							<path fill="#ffffff" d="M10.8 13.9 5.9 9l1.5-1.5 3.4 3.4 4.9-4.9 1.5 1.5z"/>
-							<text x="21.9" y="13.4" fill="#ffffff" font-size="10" font-family="Inter, Segoe UI, Arial, sans-serif" font-weight="800" letter-spacing="0.03em">APP</text>
+							<text x="21.9" y="13.4" fill="#ffffff" font-size="10" font-family="Space Grotesk, Segoe UI, Arial, sans-serif" font-weight="700" letter-spacing="0.03em">APP</text>
 						</svg>
 					</div>
 					<p class="tagline" data-i18n="ccore.the_lovely_clanker_of_12">The lovely CLANKER of 12° Regimento de Infantaria "Chaves" in NW Rulecy's British Army!</p>
 					<p class="managed-by"><span data-i18n="ccore.the_12_version_of_ba">The 12° version of BA CORE Family bots, managed by</span> <a href="https://daeese.me" target="_blank" rel="noreferrer noopener">@daeese</a>.</p>
 					<p class="subtitle"><span data-i18n="ccore.ccore_is_server_locked">ccore is server-locked and only meant to work for the</span> <a href="https://discord.gg/constantes" target="_blank" rel="noreferrer noopener">CONSTANTES</a> <span data-i18n="ccore.server_it_s_not_a">server. It's not a public multi-server bot.</span></p>
 
-					<ul class="pill-row" aria-label="Highlights" data-i18n-attr="aria-label:ccore.highlights">
-						<li class="pill" data-i18n="ccore.single_server">Single-Server</li>
-						<li class="pill">NW</li>
-						<li class="pill" data-i18n="ccore.regimental_administration_utility">Regimental Administration Utility</li>
-						<li class="pill" data-i18n="ccore.slash_commands">Slash commands</li>
-						<li class="pill">Rust</li>
+					<ul class="facts" aria-label="Highlights" data-i18n-attr="aria-label:ccore.highlights">
+						<li data-i18n="ccore.single_server">Single-Server</li>
+						<li>NW</li>
+						<li data-i18n="ccore.regimental_administration_utility">Regimental Administration Utility</li>
+						<li data-i18n="ccore.slash_commands">Slash commands</li>
+						<li>Rust</li>
 					</ul>
 
 					<div class="hero-actions">
@@ -1013,23 +680,10 @@
 						<a class="button" href="#commands" data-i18n="ccore.read_the_docs">Read the commands</a>
 					</div>
 				</div>
-
-				<div class="hero-emblem">
-					<img
-						src="../filearchive/icons/ccore-256.webp"
-						width="256"
-						height="256"
-						fetchpriority="high"
-						decoding="async"
-						alt="cornwallCORE profile picture"
-						data-i18n-attr="alt:ccore.cornwallcore_profile_picture"
-					/>
-				</div>
 			</section>
 
 			<section class="section reveal" id="about" aria-labelledby="aboutTitle">
 				<header class="section-head">
-					<span class="section-num">01</span>
 					<h2 id="aboutTitle" data-i18n="ccore.what_it_does">What it does</h2>
 					<p class="section-lede" data-i18n="ccore.about_lede">The short version.</p>
 				</header>
@@ -1055,9 +709,47 @@
 				</div>
 			</section>
 
+			<!--
+			  Mapa de campanha: o caminho de um soldado pelo bot. E uma sequencia
+			  de verdade (alistar, ir a batalha, registrar, publicar, subir), por
+			  isso os numeros. A rota se desenha uma vez quando entra na tela.
+			-->
+			<section class="section reveal" id="route" aria-labelledby="routeTitle">
+				<header class="section-head">
+					<h2 id="routeTitle" data-i18n="ccore.route_title">A soldier's way through ccore</h2>
+					<p class="section-lede" data-i18n="ccore.route_lede">From the first day in the regiment to the next rank, these are the commands that carry each step.</p>
+				</header>
+				<div class="route">
+					<svg class="route-line" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">
+						<path d="M100 20 C 200 20, 200 40, 300 40 S 400 20, 500 20 S 600 40, 700 40 S 800 20, 900 20" />
+					</svg>
+					<ol class="route-stops">
+					<li class="stop" style="--i: 0">
+						<h3 data-i18n="ccore.route_1_title">Enlists</h3>
+						<p><code>/alistar-se</code> <span data-i18n="ccore.route_1_body">opens the form in a pop-up and checks the ROBLOX account for ALTs. Staff can use /enlistuser instead.</span></p>
+					</li>
+					<li class="stop" style="--i: 1">
+						<h3 data-i18n="ccore.route_2_title">Gets called up</h3>
+						<p><code>/deployment</code> <span data-i18n="ccore.route_2_body">posts the game code and pings the regiment; /dmdeployment sends it by DM.</span></p>
+					</li>
+					<li class="stop" style="--i: 2">
+						<h3 data-i18n="ccore.route_3_title">Fights, on the record</h3>
+						<p><code>/audit-add</code> <span data-i18n="ccore.route_3_body">takes each player's kills, deaths and assists after the battle. Every run counts one battle.</span></p>
+					</li>
+					<li class="stop" style="--i: 3">
+						<h3 data-i18n="ccore.route_4_title">The record goes out</h3>
+						<p><code>/audit-push</code> <span data-i18n="ccore.route_4_body">publishes the batch to GitHub and, if you want, to the regiment's spreadsheet.</span></p>
+					</li>
+					<li class="stop" style="--i: 4">
+						<h3 data-i18n="ccore.route_5_title">Moves up</h3>
+						<p><code>/promocoes</code> <span data-i18n="ccore.route_5_body">shows who has the battles for the next rank. The promotion is still command's call.</span></p>
+					</li>
+					</ol>
+				</div>
+			</section>
+
 			<section class="section reveal" id="commands" aria-labelledby="commandsTitle">
 				<header class="section-head">
-					<span class="section-num">02</span>
 					<h2 id="commandsTitle" data-i18n="ccore.nav_commands">Commands</h2>
 					<p class="section-lede" data-i18n="ccore.useful_info_yezz">Useful info? Yezz.</p>
 				</header>
@@ -1299,13 +991,12 @@
 
 			<section class="section reveal" id="status" aria-labelledby="statusTitle">
 				<header class="section-head">
-					<span class="section-num">03</span>
 					<h2 id="statusTitle" data-i18n="ccore.status_links">Status & links</h2>
 					<p class="section-lede" data-i18n="ccore.status_lede">Where it stands right now.</p>
 				</header>
 				<div class="split">
 					<article class="prose">
-						<p class="paused-title"><span class="hl" data-i18n="ccore.paused_title_a">Slowing down.</span> <span data-i18n="ccore.paused_title_b">Not disabled.</span></p>
+						<p class="paused-title"><span data-i18n="ccore.paused_title_a">Slowing down.</span> <span data-i18n="ccore.paused_title_b">Not disabled.</span></p>
 						<p data-i18n="ccore.paused_body">ccore for the 12° won't get as many updates from here on. Nothing was deleted: the code, the data and the Discord application are all still there, and the clanker still answers when the regiment needs it.</p>
 						<p><span data-i18n="ccore.kickstart_a">ccore was the kickstart for</span> <a href="https://apps.daeese.me/sollarety/" data-i18n="ccore.kickstart_link">Sollarety</a><span data-i18n="ccore.kickstart_b">: Sollarety grew out of it, runs on the same infrastructure and got to shine because ccore came first. They are separate apps and share no data - if you want a bot for your own server, Sollarety is the one.</span></p>
 						<p><span data-i18n="ccore.engine_a">What&#39;s next: ccore will probably be rebranded into an</span> <strong data-i18n="ccore.engine_word">engine</strong> <span data-i18n="ccore.engine_b">- daeese&#39;s own Discord bot/app template, the base for building new apps in the near future.</span></p>
@@ -1316,32 +1007,27 @@
 						<li>
 							<a class="link-row" href="./status/">
 								<span><strong data-i18n="ccore.status_page">Status page</strong><small data-i18n="ccore.status_page_desc">Uptime, latency, servers and members. Public.</small></span>
-								<span class="arrow" aria-hidden="true">&rarr;</span>
 							</a>
 						</li>
 						<li>
 							<a class="link-row" href="https://dashboard.daeese.me/">
 								<span><strong data-i18n="ccore.dashboard">Dashboard</strong><small data-i18n="ccore.dashboard_desc">Regiment staff only.</small></span>
-								<span class="arrow" aria-hidden="true">&rarr;</span>
 							</a>
 						</li>
 						<li>
 							<a class="link-row" href="./termsofservice/">
 								<span><strong data-i18n="ccore.terms_of_service">Terms of Service</strong><small data-i18n="ccore.terms_desc">The rules of the clanker.</small></span>
-								<span class="arrow" aria-hidden="true">&rarr;</span>
 							</a>
 						</li>
 						<li>
 							<a class="link-row" href="./privacypolicy/">
 								<span><strong data-i18n="ccore.privacy_policy">Privacy Policy</strong><small data-i18n="ccore.privacy_desc">What it stores, and why.</small></span>
-								<span class="arrow" aria-hidden="true">&rarr;</span>
 							</a>
 						</li>
 						<li>
 							<!-- O Sollarety saiu de cornwallcore/fun/ e agora mora em apps.daeese.me. -->
 							<a class="link-row" href="https://apps.daeese.me/sollarety/">
 								<span><strong>Sollarety</strong><small data-i18n="ccore.sollarety_desc">The other bot, now living at apps.daeese.me.</small></span>
-								<span class="arrow" aria-hidden="true">&rarr;</span>
 							</a>
 						</li>
 					</ul>
@@ -1361,7 +1047,7 @@
 		  dicionario de portugues, entao a pagina continua completa e indexavel
 		  sem JavaScript.
 		-->
-		<script type="module" src="../filearchive/i18n/i18n.js" data-dict="dict/ccore.js?v=20261110-1"></script>
+		<script type="module" src="../filearchive/i18n/i18n.js" data-dict="dict/ccore.js?v=20261120-1"></script>
 	<script>
           (() => {
             const search = document.getElementById("commandSearch");
@@ -1399,47 +1085,43 @@
         </script>
 	<script>
           (() => {
-            // Entrada das secoes na rolagem + link ativo na nav. Uma coisa so
-            // faz as duas: cada secao que cruza o observer ganha "is-visible"
-            // (o CSS so escuta isso com a classe js-reveal no html, ligada
-            // so aqui embaixo) e marca o link correspondente com aria-current.
+            // Link ativo na nav e a rota que se desenha uma vez ao aparecer.
+            // O movimento (carimbo do brasao e rota) so liga fora do modo leve
+            // e sem prefers-reduced-motion; sem a classe, tudo aparece parado.
+            const root = document.documentElement;
+            const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            if (!reducedMotion && !root.hasAttribute("data-lite")) {
+              root.classList.add("js-motion");
+            }
+
+            const route = document.querySelector(".route");
             const sections = [...document.querySelectorAll(".section.reveal")];
             const navLinks = [...document.querySelectorAll(".nav-links a")];
-            if (!sections.length || !("IntersectionObserver" in window)) return;
-
-            // Sem motion novo em prefers-reduced-motion nem no modo leve: a
-            // classe que esconde o conteudo so entra fora desses casos, mas o
-            // CSS tambem tem uma trava por conta propria (ver o <style>).
-            const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-            const lite = document.documentElement.hasAttribute("data-lite");
-            if (!reducedMotion && !lite) {
-              document.documentElement.classList.add("js-reveal");
+            if (!("IntersectionObserver" in window)) {
+              route?.classList.add("is-drawn");
+              return;
             }
 
-            function setActiveLink(section) {
-              const href = "#" + section.id;
-              navLinks.forEach((a) => {
-                if (a.getAttribute("href") === href) a.setAttribute("aria-current", "true");
-                else a.removeAttribute("aria-current");
-              });
-            }
-
-            const observer = new IntersectionObserver((entries) => {
+            const nav = new IntersectionObserver((entries) => {
               entries.forEach((entry) => {
                 if (!entry.isIntersecting) return;
-                entry.target.classList.add("is-visible");
-                setActiveLink(entry.target);
+                const href = "#" + entry.target.id;
+                navLinks.forEach((a) => {
+                  if (a.getAttribute("href") === href) a.setAttribute("aria-current", "true");
+                  else a.removeAttribute("aria-current");
+                });
               });
-            }, { threshold: 0.35 });
+            }, { rootMargin: "-40% 0px -55% 0px" });
+            sections.forEach((section) => nav.observe(section));
 
-            sections.forEach((section) => {
-              // Secao que ja esta visivel na primeira pintura (viewport alto)
-              // nao anima: entra direto com "is-visible", sem passar pelo
-              // estado escondido.
-              const rect = section.getBoundingClientRect();
-              if (rect.top < window.innerHeight * 0.75) section.classList.add("is-visible");
-              observer.observe(section);
-            });
+            if (route) {
+              const draw = new IntersectionObserver((entries) => {
+                if (!entries.some((entry) => entry.isIntersecting)) return;
+                route.classList.add("is-drawn");
+                draw.disconnect();
+              }, { threshold: 0.35 });
+              draw.observe(route);
+            }
           })();
         </script>
 	</body>

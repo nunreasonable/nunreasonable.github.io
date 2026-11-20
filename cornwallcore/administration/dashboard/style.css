@@ -828,3 +828,63 @@ code {
     position: static;
   }
 }
+
+/* Escada de promocao: resumo e uma barra por jogador ate a proxima patente. */
+.ladder-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 48px;
+  margin: 0;
+}
+
+.ladder-summary div {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.ladder-summary dd {
+  margin: 0;
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.ladder-summary dt {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.ladder-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 170px;
+}
+
+.ladder-cell span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.ladder-bar {
+  flex: 0 0 96px;
+  height: 6px;
+  background: var(--raised);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.ladder-fill {
+  height: 100%;
+  background: var(--line-strong);
+  transform-origin: left;
+  transform: scaleX(var(--share, 0));
+  transition: transform 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.ladder-fill.is-ready {
+  background: var(--mark);
+}

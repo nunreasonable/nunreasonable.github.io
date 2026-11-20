@@ -26,338 +26,264 @@
 			name="description"
 			content="Live status of ccore, the bot of the 12° Regimento de Infantaria &quot;Chaves&quot;."
 		/>
-		<link rel="icon" type="image/png" href="../../filearchive/newpfp.png" />
+		<meta name="theme-color" content="#1e0e10" />
+		<link rel="icon" type="image/png" href="../../filearchive/icons/ccore-badge-32.png" />
+		<script src="../assets/theme.js?v=2"></script>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-			rel="stylesheet"
-		/>
+		<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+		<link rel="stylesheet" href="../assets/theme.css?v=2" />
 		<style>
 			/*
-			 * Paleta copiada do site vitrine ao lado (ccore.daeese.me): esta
-			 * pagina mora no mesmo host e precisa parecer a mesma coisa.
-			 *
-			 * O vermelho (--accent) e reservado a "fora do ar", e nada mais -
-			 * mesma regra do painel administrativo. Numa pagina de status, a
-			 * cor mais forte da tela tem que querer dizer alguma coisa.
+			 * Status do ccore. Uma frase grande diz se o bot esta no ar; os
+			 * numeros ficam numa lista com filetes, sem cartoes. O unico movimento
+			 * e o ponto pulsando enquanto o bot responde, e a barra do efetivo
+			 * enchendo quando os numeros chegam.
 			 */
-			:root {
-				color-scheme: dark;
-				--bg: #0b1f44;
-				--bg-2: #142f63;
-				--panel: rgba(12, 28, 61, 0.9);
-				--line: rgba(255, 255, 255, 0.16);
-				--line-strong: rgba(255, 255, 255, 0.28);
-				--text: #f6f8fc;
-				--muted: #d5ddee;
-				--dim: #a8bad6;
-				--accent: #cf142b;
-				--accent-3: #1f4aa8;
-				--ok: #5fd39b;
-				--shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
-				--radius: 22px;
-				/* Tokens das superficies translucidas brancas repetidas (botao,
-				   metrica). Mesmos valores de antes, so com nome. */
-				--surface-1: rgba(255, 255, 255, 0.04);
-				--surface-2: rgba(255, 255, 255, 0.12);
-			}
-
-			* {
-				box-sizing: border-box;
-			}
-
-			body {
-				margin: 0;
-				min-height: 100vh;
-				color: var(--text);
-				font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-				background:
-					radial-gradient(circle at top left, rgba(207, 20, 43, 0.22), transparent 28%),
-					radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.12), transparent 34%),
-					linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
-			}
-
-			.shell {
-				width: min(1080px, calc(100% - 24px));
-				margin: 0 auto;
-				padding: 18px 0 28px;
-			}
-
-			.topbar {
+			.top {
 				display: flex;
-				flex-wrap: wrap;
-				gap: 12px;
-				justify-content: space-between;
 				align-items: center;
-				border: 1px solid rgba(255, 255, 255, 0.2);
-				border-radius: 18px;
-				padding: 14px 16px;
-				background: var(--panel);
-				box-shadow: var(--shadow);
-				margin-bottom: 16px;
+				justify-content: space-between;
+				flex-wrap: wrap;
+				gap: 12px 20px;
+				padding: 12px clamp(16px, 4vw, 48px);
+				border-bottom: 1px solid var(--line);
 			}
-
 			.brand {
 				display: flex;
-				flex-direction: column;
-				gap: 3px;
-			}
-
-			.brand-title {
-				margin: 0;
-				font-size: 1rem;
-				letter-spacing: 0.02em;
-			}
-
-			.brand-meta {
-				margin: 0;
-				color: var(--muted);
-				font-size: 0.92rem;
-			}
-
-			.actions {
-				display: flex;
-				flex-wrap: wrap;
+				align-items: center;
 				gap: 10px;
-			}
-
-			.button {
-				position: relative;
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				padding: 10px 14px;
-				border: 1px solid var(--line);
-				border-radius: 999px;
-				color: var(--text);
+				font-weight: 700;
+				font-size: 1.25rem;
+				letter-spacing: -0.03em;
 				text-decoration: none;
-				background: var(--surface-1);
-				transition: transform 150ms ease-out, background 160ms ease, border-color 160ms ease;
 			}
-
-			.button:hover,
-			.button:focus-visible {
-				background: var(--surface-2);
-				border-color: var(--line-strong);
-				outline: none;
-				transform: translateY(-1px);
+			.brand img {
+				width: 32px;
+				height: 32px;
 			}
-
-			.button:active {
-				transform: scale(0.96);
+			.brand small {
+				font-weight: 400;
+				font-size: 1rem;
+				letter-spacing: 0;
+				color: var(--muted);
 			}
-
-			/*
-			 * Mesma ideia do site vitrine: a sombra fica fixa num
-			 * pseudo-elemento, so a opacidade cross-fade no hover/foco - nunca
-			 * animar o box-shadow em si.
-			 */
-			.button::after {
-				content: "";
-				position: absolute;
-				inset: 0;
-				border-radius: inherit;
-				box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
-				opacity: 0;
-				pointer-events: none;
-				transition: opacity 150ms ease;
-			}
-
-			@media (hover: hover) {
-				.button:hover::after,
-				.button:focus-visible::after {
-					opacity: 1;
-				}
-			}
-
-			.card {
-				border: 1px solid rgba(255, 255, 255, 0.2);
-				border-radius: var(--radius);
-				background: var(--panel);
-				box-shadow: var(--shadow);
-				padding: 22px;
-			}
-
-			.headline {
+			.top-end {
 				display: flex;
 				align-items: center;
-				gap: 14px;
-				flex-wrap: wrap;
+				gap: 18px;
 			}
-
+			.top-end a {
+				color: var(--muted);
+				text-decoration: none;
+			}
+			.top-end a:hover {
+				color: var(--text);
+			}
+			.page {
+				max-width: 1080px;
+				margin: 0 auto;
+				padding: clamp(40px, 8vh, 88px) clamp(16px, 4vw, 48px) 96px;
+			}
+			.state {
+				display: grid;
+				grid-template-columns: auto minmax(0, 1fr);
+				align-items: center;
+				column-gap: 18px;
+			}
 			.dot {
 				position: relative;
 				width: 16px;
 				height: 16px;
-				border-radius: 999px;
-				flex: 0 0 auto;
-				background: var(--dim);
-				box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.08);
-				transition: background-color 200ms ease;
+				border-radius: 50%;
+				background: var(--muted);
 			}
-
-			/*
-			 * O anel muda de cor por estado. Em vez de trocar o box-shadow na
-			 * hora (flip seco) ou anima-lo (caro), cada cor mora num
-			 * pseudo-elemento proprio e so a opacidade cross-fade entre eles.
-			 */
-			.dot::before,
-			.dot::after {
-				content: "";
-				position: absolute;
-				inset: -5px;
-				border-radius: inherit;
-				opacity: 0;
-				pointer-events: none;
-				transition: opacity 200ms ease;
-			}
-
-			.dot::before {
-				box-shadow: 0 0 0 5px rgba(95, 211, 155, 0.18);
-			}
-
-			.dot::after {
-				box-shadow: 0 0 0 5px rgba(207, 20, 43, 0.2);
-			}
-
 			.state-online .dot {
 				background: var(--ok);
 			}
-
-			.state-online .dot::before {
-				opacity: 1;
-			}
-
 			.state-offline .dot {
-				background: var(--accent);
+				background: var(--danger);
 			}
-
-			.state-offline .dot::after {
-				opacity: 1;
+			/* Pulso so com o bot no ar: e a prova de vida da pagina. */
+			.state-online .dot::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+				border-radius: 50%;
+				border: 2px solid var(--ok);
+				animation: pulse 2.4s ease-out infinite;
 			}
-
-			.headline h2 {
-				margin: 0;
-				font-size: clamp(1.4rem, 4vw, 2rem);
-			}
-
-			.headline-note {
-				margin: 10px 0 0;
-				color: var(--muted);
-				line-height: 1.55;
-			}
-
-			.metrics {
-				display: grid;
-				grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-				gap: 12px;
-				margin-top: 20px;
-			}
-
-			.metric {
-				border: 1px solid var(--line);
-				border-radius: 14px;
-				padding: 14px;
-				background: var(--surface-1);
-			}
-
-			.metric dt {
-				margin: 0;
-				color: var(--dim);
-				font-size: 0.82rem;
-				text-transform: uppercase;
-				letter-spacing: 0.06em;
-			}
-
-			.metric dd {
-				margin: 6px 0 0;
-				font-size: 1.35rem;
-				font-weight: 700;
-				overflow-wrap: anywhere;
-			}
-
-			.footnote {
-				margin: 18px 0 0;
-				color: var(--dim);
-				font-size: 0.86rem;
-				line-height: 1.5;
-			}
-
-			.footnote a {
-				color: var(--muted);
-			}
-
-			@media (prefers-reduced-motion: reduce) {
-				*,
-				*::before,
-				*::after {
-					transition-duration: 0.001ms !important;
+			@keyframes pulse {
+				from {
+					opacity: 0.8;
+					transform: scale(1);
+				}
+				to {
+					opacity: 0;
+					transform: scale(2.6);
 				}
 			}
-
-            .shell { padding-top: 28px; }
-            .topbar { gap: 20px; box-shadow: none; }
-            .actions { align-items: center; }
-            .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-            .metric { padding: 20px; }
-            .metric dd { font-variant-numeric: tabular-nums; }
-            #statusCard { position: relative; }
-            .headline { padding-right: 150px; }
-            .refresh-button { position: absolute; top: 22px; right: 22px; font: inherit; cursor: pointer; }
-            .refresh-button:disabled { opacity: .55; cursor: wait; }
-            .button:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
-            @media (max-width: 640px) {
-              .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-              .metric { padding: 14px; }
-              .metric dt { font-size: .72rem; }
-              .metric dd { font-size: 1.1rem; }
-              .headline { padding-right: 0; }
-              .refresh-button { position: static; margin-top: 16px; }
-              .card { padding: 18px; }
-              .topbar .actions { width: 100%; }
-              .topbar [data-i18n-switcher] { flex-basis: 100%; }
-            }
+			.state h1 {
+				margin: 0;
+				font-size: clamp(2.2rem, 6vw, 4rem);
+				font-weight: 500;
+				letter-spacing: -0.03em;
+				line-height: 1.05;
+			}
+			.state-note {
+				grid-column: 2;
+				margin: 10px 0 0;
+				color: var(--muted);
+				max-width: 60ch;
+			}
+			.state-actions {
+				grid-column: 2;
+				margin-top: 18px;
+			}
+			.metrics {
+				display: grid;
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+				column-gap: 32px;
+				margin: 56px 0 0;
+			}
+			.metric {
+				padding: 14px 0;
+				border-top: 1px solid var(--line);
+			}
+			.metric dt {
+				color: var(--muted);
+				font-size: 0.9rem;
+			}
+			.metric dd {
+				margin: 4px 0 0;
+				font-size: 1.6rem;
+				font-weight: 500;
+				font-variant-numeric: tabular-nums;
+			}
+			/* Efetivo: so totais, sem nomes. */
+			.roster {
+				margin-top: 72px;
+				padding-top: 28px;
+				border-top: 1px solid var(--line);
+			}
+			.roster h2 {
+				margin: 0;
+				font-size: 1.4rem;
+				font-weight: 500;
+			}
+			.roster-figures {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 12px 56px;
+				margin: 20px 0 0;
+			}
+			.roster-figures dd {
+				margin: 0;
+				font-size: clamp(2.6rem, 7vw, 4rem);
+				font-weight: 700;
+				letter-spacing: -0.03em;
+				line-height: 1;
+				font-variant-numeric: tabular-nums;
+			}
+			.roster-figures dt {
+				margin-top: 6px;
+				color: var(--muted);
+			}
+			.roster-figures div {
+				display: flex;
+				flex-direction: column-reverse;
+			}
+			.ladder {
+				height: 10px;
+				margin-top: 24px;
+				max-width: 640px;
+				background: var(--raised);
+				border-radius: 999px;
+				overflow: hidden;
+			}
+			.ladder-fill {
+				height: 100%;
+				width: 100%;
+				background: var(--mark);
+				transform-origin: left;
+				transform: scaleX(var(--share, 0));
+				transition: transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1);
+			}
+			.roster-note {
+				margin: 12px 0 0;
+				color: var(--muted);
+				font-size: 0.92rem;
+				max-width: 62ch;
+			}
+			.footnote {
+				margin: 56px 0 0;
+				padding-top: 18px;
+				border-top: 1px solid var(--line);
+				color: var(--muted);
+				font-size: 0.9rem;
+				max-width: 80ch;
+			}
+			@media (max-width: 760px) {
+				.metrics {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+				}
+				.state {
+					grid-template-columns: auto minmax(0, 1fr);
+				}
+			}
 		</style>
 			<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
 	</head>
 	<body>
 
-		<main class="shell">
-			<header class="topbar">
-				<div class="brand">
-					<h1 data-i18n="status.ccore_status" class="brand-title">ccore — Status</h1>
-					<p data-i18n="status.status_of_the_12_regimento" class="brand-meta">Status of the 12° Regimento de Infantaria "Chaves" bot.</p>
-				</div>
-				<div class="actions"><div data-i18n-switcher></div>
-					<a data-i18n="status.back_to_ccore" class="button" href="../">Back to ccore</a>
-					<a data-i18n="status.dashboard" class="button" href="https://dashboard.daeese.me/">Dashboard</a>
-				</div>
-			</header>
+		<button id="themeToggle" class="theme-toggle" type="button">Theme: system</button>
+		<header class="top">
+			<a class="brand" href="../">
+				<img src="../../filearchive/icons/ccore-badge-96.webp" width="32" height="32" alt="" />
+				<span>ccore <small data-i18n="status.status_word">status</small></span>
+			</a>
+			<div class="top-end">
+				<a data-i18n="status.back_to_ccore" href="../">Back to ccore</a>
+				<a data-i18n="status.dashboard" href="https://dashboard.daeese.me/">Dashboard</a>
+				<div data-i18n-switcher></div>
+			</div>
+		</header>
 
-			<section class="card" id="statusCard" aria-live="polite">
-				<div class="headline">
-					<span class="dot" aria-hidden="true"></span>
-					<h2 id="statusHeadline">Checking the bot…</h2>
+		<main class="page" id="statusCard" aria-live="polite">
+			<p class="sr-only" data-i18n="status.status_of_the_12_regimento">Status of the 12° Regimento de Infantaria "Chaves" bot.</p>
+			<section class="state">
+				<span class="dot" aria-hidden="true"></span>
+				<h1 id="statusHeadline">Checking the bot…</h1>
+				<p class="state-note" id="statusNote">Fetching the current status from the bot's API.</p>
+				<div class="state-actions">
+					<button class="button" type="button" id="refreshStatus" data-i18n="status.refresh_now">Refresh now</button>
 				</div>
-				<button class="button refresh-button" type="button" id="refreshStatus" data-i18n="status.refresh_now">Refresh now</button>
-				<p class="headline-note" id="statusNote">Fetching the current status from the bot's API.</p>
-
-				<dl class="metrics" id="metrics">
-					<div class="metric"><dt data-i18n="status.uptime">Uptime</dt><dd id="mUptime">—</dd></div>
-					<div class="metric"><dt data-i18n="status.latency">Latency</dt><dd id="mLatency">—</dd></div>
-					<div class="metric"><dt data-i18n="status.servers">Servers</dt><dd id="mGuilds">—</dd></div>
-					<div class="metric"><dt data-i18n="status.members">Members</dt><dd id="mMembers">—</dd></div>
-					<div class="metric"><dt data-i18n="status.version">Version</dt><dd id="mVersion">—</dd></div>
-					<div class="metric"><dt data-i18n="status.library">Library</dt><dd id="mLibrary">—</dd></div>
-				</dl>
-
-				<p class="footnote">
-					<span data-i18n="status.refreshes_on_its_own_every">Refreshes on its own every 15 seconds. Last measurement:</span> <span id="mMeasured">—</span><span data-i18n="status.data_about_the_machine_hosting">.
-					Data about the machine hosting the bot is not shown here — it lives in the</span>
-					<em data-i18n="status.logs">Logs</em> <span data-i18n="status.tab_of_the">tab of the</span> <a data-i18n="status.admin_dashboard" href="https://dashboard.daeese.me/">admin dashboard</a><span data-i18n="status.which_requires_a_login">, which requires a login.</span>
-				</p>
 			</section>
+
+			<dl class="metrics" id="metrics">
+				<div class="metric"><dt data-i18n="status.uptime">Uptime</dt><dd id="mUptime">—</dd></div>
+				<div class="metric"><dt data-i18n="status.latency">Latency</dt><dd id="mLatency">—</dd></div>
+				<div class="metric"><dt data-i18n="status.servers">Servers</dt><dd id="mGuilds">—</dd></div>
+				<div class="metric"><dt data-i18n="status.members">Members</dt><dd id="mMembers">—</dd></div>
+				<div class="metric"><dt data-i18n="status.version">Version</dt><dd id="mVersion">—</dd></div>
+				<div class="metric"><dt data-i18n="status.library">Library</dt><dd id="mLibrary">—</dd></div>
+			</dl>
+
+			<section class="roster" aria-labelledby="rosterTitle">
+				<h2 id="rosterTitle" data-i18n="status.roster_title">The regiment</h2>
+				<dl class="roster-figures">
+					<div><dt data-i18n="status.roster_total">soldiers on the roster</dt><dd id="rTotal">—</dd></div>
+					<div><dt data-i18n="status.roster_ready">ready for promotion</dt><dd id="rReady">—</dd></div>
+				</dl>
+				<div class="ladder" aria-hidden="true"><div class="ladder-fill" id="rLadder"></div></div>
+				<p class="roster-note" data-i18n="status.roster_note">Counted from the regiment's audit, using the promotion ladder. Only totals are shown here.</p>
+			</section>
+
+			<p class="footnote">
+				<span data-i18n="status.refreshes_on_its_own_every">Refreshes on its own every 15 seconds. Last measurement:</span> <span id="mMeasured">—</span><span data-i18n="status.data_about_the_machine_hosting">.
+				Data about the machine hosting the bot is not shown here — it lives in the</span>
+				<em data-i18n="status.logs">Logs</em> <span data-i18n="status.tab_of_the">tab of the</span> <a data-i18n="status.admin_dashboard" href="https://dashboard.daeese.me/">admin dashboard</a><span data-i18n="status.which_requires_a_login">, which requires a login.</span>
+			</p>
 		</main>
 
 		<script type="module">
@@ -396,8 +322,22 @@
 				members: document.getElementById("mMembers"),
 				version: document.getElementById("mVersion"),
 				library: document.getElementById("mLibrary"),
-				measured: document.getElementById("mMeasured")
+				measured: document.getElementById("mMeasured"),
+				rosterTotal: document.getElementById("rTotal"),
+				rosterReady: document.getElementById("rReady"),
+				ladder: document.getElementById("rLadder")
 			};
+
+			// Totais do efetivo. Sem dado (bot antigo ou auditoria ilegivel), os
+			// numeros ficam com traco e a barra vazia.
+			function setRoster(roster) {
+				const total = Number(roster?.total);
+				const ready = Number(roster?.promotable);
+				const known = Number.isFinite(total) && total > 0 && Number.isFinite(ready);
+				els.rosterTotal.textContent = known ? total.toLocaleString() : "—";
+				els.rosterReady.textContent = known ? ready.toLocaleString() : "—";
+				els.ladder.style.setProperty("--share", known ? String(Math.min(1, ready / total)) : "0");
+			}
 
 			const LIVE_STRINGS = {
 				en: {
@@ -501,6 +441,7 @@
 					els.version.textContent = bot.version ?? "—";
 					els.library.textContent = String(bot.library || "").split("+")[0] || "—";
 					els.measured.textContent = new Date(bot.measuredAtUtc).toLocaleString("en-US");
+					setRoster(data.roster);
 				} catch (err) {
 					// O fetch falhar E a informacao que esta pagina existe para
 					// dar. Mostrar isso explicitamente vale mais do que uma tela
@@ -516,6 +457,7 @@
 					applyLiveText();
 
 					clearMetrics();
+					setRoster(null);
 					els.measured.textContent = new Date().toLocaleString("en-US");
 				} finally {
                     refreshing = false;
@@ -537,6 +479,6 @@
 		  dicionario de portugues, entao a pagina continua completa e indexavel
 		  sem JavaScript.
 		-->
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/status.js?v=20261107-1"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/status.js?v=20261120-1"></script>
 	</body>
 </html>
