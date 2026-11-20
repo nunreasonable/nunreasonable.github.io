@@ -109,6 +109,7 @@
           <h3>Gestão de Cargos</h3>
           <p class="hint">Permissão 2+ — conceder cargo também pode escalar privilégio.</p>
           <input id="roleUserId" placeholder="ID do usuário" />
+          <select id="rolePick" class="hidden" aria-label="Cargo"></select>
           <input id="roleId" placeholder="ID do cargo" />
           <input id="roleReason" placeholder="Motivo (opcional)" />
           <div class="row">
@@ -120,7 +121,8 @@
 
         <article class="card panel">
           <h3>Mensagens no Canal</h3>
-          <p class="hint">Digite o canal e a mensagem para envio via bot.</p>
+          <p class="hint">Escolha o canal e escreva a mensagem para envio via bot.</p>
+          <select id="msgChannelPick" class="hidden" aria-label="Canal"></select>
           <input id="msgChannelId" placeholder="ID do canal" />
           <textarea id="msgContent" placeholder="Mensagem para enviar"></textarea>
           <button id="sendMsgBtn">Enviar Mensagem</button>
@@ -232,8 +234,9 @@
         <article class="card panel">
           <h3>DM em massa</h3>
           <p class="hint">Permissão 2+. Máximo 500 destinatários por envio.</p>
-          <p class="hint">Informe o ID do cargo <em>ou</em> o do usuário.</p>
-          <label for="dmRoleId">ID do cargo</label>
+          <p class="hint">Escolha um cargo <em>ou</em> informe o ID de um usuário.</p>
+          <label for="dmRoleId">Cargo</label>
+          <select id="dmRolePick" class="hidden" aria-label="Cargo"></select>
           <input id="dmRoleId" placeholder="ID do cargo" />
           <label for="dmUserId">ID do usuário</label>
           <input id="dmUserId" placeholder="ID do usuário (alternativa ao cargo)" />
@@ -316,6 +319,6 @@
       </section>
     </section>
   </main>
-  <script src="app.js?v=8db1aee2"></script>
+  <script src="app.js?v=b6b90396"></script>
 </body>
 </html>

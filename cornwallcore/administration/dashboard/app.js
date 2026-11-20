@@ -110,11 +110,13 @@ const els = {
   logoutBtn: document.getElementById("logoutBtn"),
   roleUserId: document.getElementById("roleUserId"),
   roleId: document.getElementById("roleId"),
+  rolePick: document.getElementById("rolePick"),
   roleReason: document.getElementById("roleReason"),
   addRoleBtn: document.getElementById("addRoleBtn"),
   removeRoleBtn: document.getElementById("removeRoleBtn"),
   roleMsg: document.getElementById("roleMsg"),
   msgChannelId: document.getElementById("msgChannelId"),
+  msgChannelPick: document.getElementById("msgChannelPick"),
   msgContent: document.getElementById("msgContent"),
   sendMsgBtn: document.getElementById("sendMsgBtn"),
   msgSendStatus: document.getElementById("msgSendStatus"),
@@ -166,6 +168,7 @@ const els = {
   deployMsg: document.getElementById("deployMsg"),
 
   dmRoleId: document.getElementById("dmRoleId"),
+  dmRolePick: document.getElementById("dmRolePick"),
   dmUserId: document.getElementById("dmUserId"),
   dmCode: document.getElementById("dmCode"),
   dmMessage: document.getElementById("dmMessage"),
@@ -661,6 +664,97 @@ async function loadMe() {
   const me = await apiRequest("/api/auth/me");
   applyUser(me.user);
   showDashboard();
+  // Os menus sao conforto: se a lista falhar, os campos de ID continuam la.
+  loadGuildOptions().catch(() => {});
+}
+
+/*
+ * Menus de canal e cargo. O <select> so preenche o campo de ID que ja existia,
+ * entao o envio e a validacao continuam os mesmos. "Outro ID..." mostra o
+ * campo para quem precisar de algo fora da lista.
+ */
+const CUSTOM_ID = "__custom";
+
+function fillPicker(select, input, items, placeholder) {
+  select.replaceChildren();
+  if (!items.length) {
+    select.classList.add("hidden");
+    input.classList.remove("hidden");
+    return;
+  }
+
+  const first = document.createElement("option");
+  first.value = "";
+  first.textContent = placeholder;
+  select.appendChild(first);
+
+  // Nomes de canal e cargo vem do Discord: textContent, nunca innerHTML.
+  const groups = new Map();
+  for (const item of items) {
+    const option = document.createElement("option");
+    option.value = item.id;
+    option.textContent = `${item.label} (${item.id})`;
+    if (!item.group) {
+      select.appendChild(option);
+      continue;
+    }
+    if (!groups.has(item.group)) {
+      const optgroup = document.createElement("optgroup");
+      optgroup.label = item.group;
+      groups.set(item.group, optgroup);
+      select.appendChild(optgroup);
+    }
+    groups.get(item.group).appendChild(option);
+  }
+
+  const custom = document.createElement("option");
+  custom.value = CUSTOM_ID;
+  custom.textContent = "Outro ID...";
+  select.appendChild(custom);
+
+  const current = input.value.trim();
+  const known = items.some((item) => item.id === current);
+  select.value = known ? current : current ? CUSTOM_ID : "";
+  input.classList.toggle("hidden", select.value !== CUSTOM_ID);
+  select.disabled = input.disabled;
+  select.classList.remove("hidden");
+}
+
+function wirePicker(select, input) {
+  select.addEventListener("change", () => {
+    const custom = select.value === CUSTOM_ID;
+    input.value = custom ? "" : select.value;
+    input.classList.toggle("hidden", !custom);
+    if (custom) {
+      input.focus();
+    }
+  });
+}
+
+wirePicker(els.msgChannelPick, els.msgChannelId);
+wirePicker(els.dmRolePick, els.dmRoleId);
+wirePicker(els.rolePick, els.roleId);
+
+async function loadGuildOptions() {
+  const { channels = [], roles = [] } = await apiRequest("/api/guild/options");
+
+  fillPicker(
+    els.msgChannelPick,
+    els.msgChannelId,
+    channels.map((c) => ({ id: c.id, label: `#${c.name}`, group: c.category || "Sem categoria" })),
+    "Escolha um canal"
+  );
+
+  const roleItems = roles.map((r) => ({ id: r.id, label: `@${r.name}` }));
+  fillPicker(els.dmRolePick, els.dmRoleId, roleItems, "Nenhum cargo (usar ID de usuário)");
+
+  // Gestao de cargos so oferece o que o bot aceita conceder ou tirar.
+  fillPicker(
+    els.rolePick,
+    els.roleId,
+    roles.filter((r) => r.grantable).map((r) => ({ id: r.id, label: `@${r.name}` })),
+    "Escolha um cargo"
+  );
 }
 
 async function loadAudit() {
