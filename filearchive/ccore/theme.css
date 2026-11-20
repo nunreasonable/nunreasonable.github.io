@@ -1,6 +1,8 @@
 /*
  * Tema compartilhado das paginas do ccore (vitrine, status, termos,
  * privacidade, planilha). O painel tem a mesma paleta no proprio style.css.
+ * Mora em filearchive/ porque o roteador da Cloudflare so repassa esse caminho
+ * nos subdominios (spreadsheet.daeese.me servia 404 para cornwallcore/assets).
  *
  * Claro, "livro de ordens": papel cinza de registro, tinta e lacre.
  * Escuro, "casaca escarlate": vinho de casaca de linha com dourado de galao.
