@@ -1,4 +1,5 @@
 export const pt = {
+  "ginrose.release26040": "26.0.4.0 · 20 de novembro de 2026 — As versões agora são numeradas por ano: o ano, depois mudanças grandes, novidades e correções. O Discord pode mostrar o sistema em que você joga, como “Ginrose on Fedora Linux”, numa opção nova que vem desligada. No FreeBSD, o instalador confere se há uma fonte, que o pacote gtk4 do FreeBSD não traz: sem ela, a janela do Ginrose fica sem texto. O Rosemary é o mesmo da 0.3.9.",
   "ginrose.release039": "0.3.9 · 19 de novembro de 2026 — O Ginrose roda no FreeBSD: cada release agora traz builds de FreeBSD do Ginrose e do Rosemary do Ginrose, compiladas no FreeBSD 14.5 para o 14.5 e posteriores. O Rosemary passa para um upstream mais recente, com suporte do FreeBSD a eventos do kqueue, memória compartilhada e informações de thread, teclado em janelas popup e chamadas de OpenGL mais rápidas. O prefixo continua no MiniDarwin 21.",
   "ginrose.release038": "0.3.8 · 18 de novembro de 2026 — O Rosemary passa para um upstream mais recente, com o estado de desenho do Metal refeito só quando muda, menos alocações no envio e um contorno para um bug dos drivers Mesa. O Ginrose segue a conta que a Roblox colocou num canal de deploy fora do LIVE, e compilá-lo do código-fonte no FreeBSD funciona melhor. Na primeira execução, o prefixo passa para MiniDarwin 21; o Ginrose 0.3.7 e anteriores não podem reutilizá-lo.",
   "ginrose.release037": "0.3.7 · 13 de novembro de 2026 — O Rosemary passa para um main mais recente do upstream, com melhorias no Metal e nos shaders, compilação de pipelines fora da thread principal e gesto de pinça no touchpad. Arrastar mantém o destino onde o clique começou, views ocultas não recebem cliques e trazer uma janela para frente preserva o foco do teclado. A primeira execução atualiza o prefixo para MiniDarwin 17; o Ginrose 0.3.6 e anteriores não podem reutilizá-lo.",
@@ -32,7 +33,7 @@ export const pt = {
   "ginrose.lead": "Um launcher comunitário de código aberto para o cliente oficial do Roblox para macOS.",
   "ginrose.intro": "O Ginrose é um projeto independente da comunidade, não um launcher oficial da Roblox. Feito sobre o Rosemary, baixa o cliente oficial do Roblox para macOS e o executa no Linux. Não tem vínculo nem endosso da Roblox Corporation.",
   "ginrose.readDocs": "Ler a documentação ↓",
-  "ginrose.platform": "Linux x86_64 · Flatpak e pacotes nativos v0.3.9 · GPL-3.0 ou posterior",
+  "ginrose.platform": "Linux x86_64 · Flatpak e pacotes nativos v26.0.4.0 · GPL-3.0 ou posterior",
   "ginrose.experimental": "Experimental. Leia antes de instalar.",
   "ginrose.warning": "O Ginrose só foi testado no Fedora com Hyprland e GPU NVIDIA. Outras distribuições, desktops e GPUs não foram testados. O Rosemary e o Roblox rodando por ele também são experimentais. Não há garantia de suporte ou correções.",
   "ginrose.native": "Pacotes nativos",
