@@ -110,7 +110,8 @@ const els = {
   logoutBtn: document.getElementById("logoutBtn"),
   roleUserId: document.getElementById("roleUserId"),
   roleId: document.getElementById("roleId"),
-  rolePick: document.getElementById("rolePick"),
+  roleCategory: document.getElementById("roleCategory"),
+  roleChoice: document.getElementById("roleChoice"),
   roleReason: document.getElementById("roleReason"),
   addRoleBtn: document.getElementById("addRoleBtn"),
   removeRoleBtn: document.getElementById("removeRoleBtn"),
@@ -265,10 +266,22 @@ async function apiRequest(path, options = {}) {
       showLogin();
     }
 
-    throw new Error(data.error || "Erro desconhecido na API");
+    throw new Error(data.error || fallbackApiError(res.status));
   }
 
   return data;
+}
+
+// Resposta sem a mensagem do bot: veio da Cloudflare, quase sempre com o bot
+// reiniciando ou fora do ar (o tunel devolve uma pagina HTML de erro).
+function fallbackApiError(status) {
+  if ([502, 503, 504, 520, 521, 522, 523, 524, 530].includes(status)) {
+    return "O bot está fora do ar ou reiniciando. Tente de novo em alguns segundos.";
+  }
+  if (status === 429) {
+    return "Muitas requisições. Espere um pouco e tente de novo.";
+  }
+  return `A API respondeu com erro ${status}.`;
 }
 
 function parseDiscordSnowflake(value, label) {
@@ -420,8 +433,10 @@ function applyUser(user) {
     "Sua permissão não permite enviar deployments.");
 
   // --- Nivel 2: remove gente, API externa, ou volume -----------------------
-  gate([els.addRoleBtn, els.removeRoleBtn], canFull, els.roleMsg,
-    "Gerenciar cargos exige Captain ou acima.");
+  // Qualquer nivel mexe em cargos, mas so abaixo da propria patente: quem
+  // decide e o bot, e os cargos acima aparecem bloqueados no menu.
+  gate([els.addRoleBtn, els.removeRoleBtn], canBasic, els.roleMsg,
+    "Sua permissão não permite gerenciar cargos.");
 
   gate([els.timeoutBtn], canCommand, els.punishMsg,
     "Punições administrativas exigem oficial (Serjeant Major ou acima).");
@@ -681,7 +696,6 @@ async function loadMe() {
  * nome vira ID. A gestao de cargos fica com um <select>: ali so vale o que o
  * bot aceita mexer.
  */
-const CUSTOM_ID = "__custom";
 const pickMaps = { channel: new Map(), role: new Map() };
 
 function normalizeName(value) {
@@ -726,52 +740,65 @@ function resolvePick(value, map, label) {
   throw new Error(`${label} "${raw}" não encontrado. Escolha da lista ou informe o ID.`);
 }
 
-function fillPicker(select, input, items, placeholder) {
-  select.replaceChildren();
-  if (!items.length) {
-    select.classList.add("hidden");
-    input.classList.remove("hidden");
+/*
+ * Cargos: primeiro a categoria (as mesmas do servidor, com as patentes no
+ * topo), depois o cargo dela. O que o bot recusa aparece desabilitado com o
+ * motivo, em vez de sumir. O campo de ID fica escondido e recebe a escolha;
+ * so aparece se a lista nao carregar.
+ */
+let roleGroups = new Map();
+
+function option(value, text, disabled = false) {
+  const el = document.createElement("option");
+  el.value = value;
+  el.textContent = text;
+  el.disabled = disabled;
+  return el;
+}
+
+function renderRoleChoices() {
+  const roles = roleGroups.get(els.roleCategory.value) || [];
+  els.roleChoice.replaceChildren(option("", "Escolha um cargo"));
+  for (const role of roles) {
+    // Nome vem do Discord: textContent, nunca innerHTML.
+    const label = role.grantable ? `@${role.name}` : `@${role.name} (bloqueado)`;
+    const el = option(role.id, label, !role.grantable);
+    if (!role.grantable && role.refusal) {
+      el.title = role.refusal;
+    }
+    els.roleChoice.appendChild(el);
+  }
+  els.roleId.value = "";
+}
+
+function fillRoleCategories(roles) {
+  roleGroups = new Map();
+  for (const role of roles) {
+    const group = role.category || "Outros";
+    if (!roleGroups.has(group)) {
+      roleGroups.set(group, []);
+    }
+    roleGroups.get(group).push(role);
+  }
+  if (!roleGroups.size) {
+    els.roleCategory.classList.add("hidden");
+    els.roleChoice.classList.add("hidden");
+    els.roleId.classList.remove("hidden");
     return;
   }
-
-  const first = document.createElement("option");
-  first.value = "";
-  first.textContent = placeholder;
-  select.appendChild(first);
-
-  // Nomes de cargo vem do Discord: textContent, nunca innerHTML.
-  for (const item of items) {
-    const option = document.createElement("option");
-    option.value = item.id;
-    option.textContent = `${item.label} (${item.id})`;
-    select.appendChild(option);
-  }
-
-  const custom = document.createElement("option");
-  custom.value = CUSTOM_ID;
-  custom.textContent = "Outro ID...";
-  select.appendChild(custom);
-
-  const current = input.value.trim();
-  const known = items.some((item) => item.id === current);
-  select.value = known ? current : current ? CUSTOM_ID : "";
-  input.classList.toggle("hidden", select.value !== CUSTOM_ID);
-  select.disabled = input.disabled;
-  select.classList.remove("hidden");
+  els.roleCategory.replaceChildren(
+    ...[...roleGroups.keys()].map((name) => option(name, name))
+  );
+  els.roleCategory.classList.remove("hidden");
+  els.roleChoice.classList.remove("hidden");
+  els.roleId.classList.add("hidden");
+  renderRoleChoices();
 }
 
-function wirePicker(select, input) {
-  select.addEventListener("change", () => {
-    const custom = select.value === CUSTOM_ID;
-    input.value = custom ? "" : select.value;
-    input.classList.toggle("hidden", !custom);
-    if (custom) {
-      input.focus();
-    }
-  });
-}
-
-wirePicker(els.rolePick, els.roleId);
+els.roleCategory.addEventListener("change", renderRoleChoices);
+els.roleChoice.addEventListener("change", () => {
+  els.roleId.value = els.roleChoice.value;
+});
 
 async function loadGuildOptions() {
   const { channels = [], roles = [] } = await apiRequest("/api/guild/options");
@@ -784,16 +811,10 @@ async function loadGuildOptions() {
   fillSuggestions(
     els.roleOptions,
     pickMaps.role,
-    roles.map((r) => ({ id: r.id, name: r.name, prefix: "@", group: "" }))
+    roles.map((r) => ({ id: r.id, name: r.name, prefix: "@", group: r.category || "" }))
   );
 
-  // Gestao de cargos so oferece o que o bot aceita conceder ou tirar.
-  fillPicker(
-    els.rolePick,
-    els.roleId,
-    roles.filter((r) => r.grantable).map((r) => ({ id: r.id, label: `@${r.name}` })),
-    "Escolha um cargo"
-  );
+  fillRoleCategories(roles);
 }
 
 async function loadAudit() {

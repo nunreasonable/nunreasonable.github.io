@@ -119,9 +119,10 @@
       <section class="grid tab-panel" id="panel-moderacao" data-panel="moderacao" role="tabpanel" aria-labelledby="tab-moderacao" tabindex="0">
         <article class="panel">
           <h3>Cargos</h3>
-          <p class="hint">Superior (Captain ou acima). Só os cargos que o bot aceita mexer.</p>
+          <p class="hint">Só cargos abaixo da sua patente, e só em quem tem patente menor que a sua. O que você não pode mexer aparece bloqueado.</p>
           <input id="roleUserId" placeholder="ID do usuário" />
-          <select id="rolePick" class="hidden" aria-label="Cargo"></select>
+          <select id="roleCategory" class="hidden" aria-label="Categoria do cargo"></select>
+          <select id="roleChoice" class="hidden" aria-label="Cargo"></select>
           <input id="roleId" placeholder="ID do cargo" />
           <input id="roleReason" placeholder="Motivo (opcional)" />
           <div class="row">
@@ -333,6 +334,6 @@
       </div>
     </section>
   </main>
-  <script src="app.js?v=7d15cf9c"></script>
+  <script src="app.js?v=7ea1d7e7"></script>
 </body>
 </html>
