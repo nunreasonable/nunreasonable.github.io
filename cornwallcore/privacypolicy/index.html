@@ -2,6 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <script>
+      // Esta pagina nunca deve aparecer dentro de outra (ex.: link clicado no
+      // documento embutido): se estiver num quadro, abre na janela inteira.
+      if (window.top !== window.self) {
+        try {
+          window.top.location.href = window.location.href;
+        } catch (e) {}
+      }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ccore Privacy Policy</title>
     <link rel="canonical" href="https://ccore.daeese.me/privacypolicy/" />

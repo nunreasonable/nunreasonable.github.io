@@ -4,6 +4,17 @@
         <script>
           if (window.parent !== window && new URLSearchParams(location.search).get("embedded") === "1") {
             document.documentElement.dataset.embedded = "true";
+            // Embutido, link para outra pagina abre na janela inteira; so os
+            // de secao (#...) continuam rolando aqui dentro.
+            document.addEventListener("DOMContentLoaded", () => {
+              for (const link of document.querySelectorAll("a[href]")) {
+                const url = new URL(link.getAttribute("href"), location.href);
+                const samePage = url.origin === location.origin && url.pathname === location.pathname;
+                if (!samePage || !url.hash) {
+                  link.target = "_top";
+                }
+              }
+            });
           }
         </script>
 		<meta charset="utf-8" />
