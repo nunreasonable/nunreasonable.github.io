@@ -37,6 +37,7 @@ export const pt = {
   "status.roster_total": "soldados no efetivo",
   "status.roster_ready": "prontos pra subir de patente",
   "status.roster_note": "Contado pela auditoria do regimento, com a escada de promoção. Aqui aparecem só os totais.",
+  "status.local_ai": "IA local",
 };
 
 export default pt;

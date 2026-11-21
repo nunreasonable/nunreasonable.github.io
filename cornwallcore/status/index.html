@@ -267,6 +267,7 @@
 				<div class="metric"><dt data-i18n="status.members">Members</dt><dd id="mMembers">—</dd></div>
 				<div class="metric"><dt data-i18n="status.version">Version</dt><dd id="mVersion">—</dd></div>
 				<div class="metric"><dt data-i18n="status.library">Library</dt><dd id="mLibrary">—</dd></div>
+				<div class="metric"><dt data-i18n="status.local_ai">Local AI</dt><dd id="mLlm">—</dd></div>
 			</dl>
 
 			<section class="roster" aria-labelledby="rosterTitle">
@@ -325,8 +326,21 @@
 				measured: document.getElementById("mMeasured"),
 				rosterTotal: document.getElementById("rTotal"),
 				rosterReady: document.getElementById("rReady"),
-				ladder: document.getElementById("rLadder")
+				ladder: document.getElementById("rLadder"),
+				llm: document.getElementById("mLlm")
 			};
+
+			// IA local: so liga quando um operador manda, nunca por padrao.
+			// null = o bot nao tem a IA configurada.
+			let lastLlm = null;
+			function setLlm(llm) {
+				lastLlm = llm ?? null;
+				const s = LIVE_STRINGS[currentLang()];
+				els.llm.textContent = !lastLlm ? "—"
+					: lastLlm.ready ? s.llmOn
+					: lastLlm.enabled ? s.llmStarting
+					: s.llmOff;
+			}
 
 			// Totais do efetivo. Sem dado (bot antigo ou auditoria ilegivel), os
 			// numeros ficam com traco e a barra vazia.
@@ -346,7 +360,8 @@
 					onlineNote: "Connected to the Discord gateway and responding to commands.",
 					offline: "The bot is offline",
 					offlineTimeout: "The API did not answer in time. The bot, or the tunnel that exposes it, may be down.",
-					offlineError: (msg) => `Could not reach the bot's API: ${msg}`
+					offlineError: (msg) => `Could not reach the bot's API: ${msg}`,
+					llmOn: "On", llmStarting: "Starting", llmOff: "Off"
 				},
 				pt: {
 					// As duas vem do dicionario (status.checking_the_bot /
@@ -357,7 +372,8 @@
 					onlineNote: "Conectado ao gateway do Discord e respondendo aos comandos.",
 					offline: "O bot está offline",
 					offlineTimeout: "A API não respondeu a tempo. O bot, ou o túnel que o expõe, pode estar fora do ar.",
-					offlineError: (msg) => `Não foi possível alcançar a API do bot: ${msg}`
+					offlineError: (msg) => `Não foi possível alcançar a API do bot: ${msg}`,
+					llmOn: "Ligada", llmStarting: "Carregando", llmOff: "Desligada"
 				}
 			};
 
@@ -379,6 +395,7 @@
 				const s = LIVE_STRINGS[currentLang()];
 				els.headline.textContent = lastHeadline(s);
 				els.note.textContent = lastNote(s);
+				setLlm(lastLlm);
 			}
 
 			function setState(state) {
@@ -442,6 +459,7 @@
 					els.library.textContent = String(bot.library || "").split("+")[0] || "—";
 					els.measured.textContent = new Date(bot.measuredAtUtc).toLocaleString("en-US");
 					setRoster(data.roster);
+					setLlm(data.llm);
 				} catch (err) {
 					// O fetch falhar E a informacao que esta pagina existe para
 					// dar. Mostrar isso explicitamente vale mais do que uma tela
@@ -458,6 +476,7 @@
 
 					clearMetrics();
 					setRoster(null);
+					setLlm(null);
 					els.measured.textContent = new Date().toLocaleString("en-US");
 				} finally {
                     refreshing = false;
@@ -479,6 +498,6 @@
 		  dicionario de portugues, entao a pagina continua completa e indexavel
 		  sem JavaScript.
 		-->
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/status.js?v=20261120-1"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/status.js?v=20261121-1"></script>
 	</body>
 </html>
