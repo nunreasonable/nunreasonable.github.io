@@ -12,7 +12,7 @@ export const pt = {
 
   "sol_tos.privacy_policy": "Política de Privacidade",
   "sol_tos.terms_of_service": "Termos de Serviço",
-  "sol_tos.last_updated_october_5_2026": "Última atualização: 5 de outubro de 2026",
+  "sol_tos.last_updated_november_21_2026": "Última atualização: 21 de novembro de 2026",
 
   "sol_tos.1_agreement": "1. Aceite",
   "sol_tos.by_adding_sollarety_the_bot":
@@ -23,6 +23,8 @@ export const pt = {
     "O Bot oferece comandos de moderação (banir, expulsar, silenciar, limpar mensagens, modo lento e trancar canal), um registro de advertências, verificação de conta Roblox, música de links do YouTube, do SoundCloud e do Spotify tocada em canais de voz, níveis ganhos conversando, uma economia virtual de SOL$ e um conjunto de comandos de entretenimento e utilidade. Todos são comandos de barra do Discord.",
   "sol_tos.the_bot_is_not_affiliated":
     "O Bot não é afiliado à Roblox Corporation, à Discord Inc., ao YouTube, ao SoundCloud nem ao Spotify, nem endossado ou operado por eles. A verificação Roblox usa o login oficial e a API pública do Roblox, sob os termos do próprio Roblox.",
+  "sol_tos.in_some_servers_ai_chat":
+    "Em alguns servidores escolhidos pelos operadores, o Bot também responde quando alguém o menciona, com respostas escritas por um modelo de linguagem que roda na própria máquina do Bot. Os operadores ligam e desligam esse recurso, e ele pode estar desligado a qualquer momento. Essas respostas são geradas automaticamente e podem estar erradas. Não são conselho e não falam em nome dos operadores nem da equipe do servidor.",
 
   "sol_tos.3_who_may_use_the": "3. Quem pode usar os comandos de moderação",
   "sol_tos.access_is_governed_entirely_by":
@@ -38,6 +40,8 @@ export const pt = {
     "burlar os limites de taxa do Discord, ou automatizar abuso da API do Discord;",
   "sol_tos.impersonate_the_server_staff_through":
     "se passar pela equipe do servidor através do comando say;",
+  "sol_tos.push_the_ai_chat":
+    "forçar a conversa por IA a produzir conteúdo de ódio, sexual, violento ou nocivo de outra forma, ou fazer as respostas dela passarem por algo que uma pessoa real disse;",
   "sol_tos.link_or_try_to_link": "vincular, ou tentar vincular, uma conta Roblox que não é sua;",
   "sol_tos.farm_xp_or_sol_with": "farmar XP ou SOL$ com contas alternativas, scripts ou qualquer outra automação;",
   "sol_tos.break_the": "violar os",
@@ -54,7 +58,7 @@ export const pt = {
 
   "sol_tos.6_data": "6. Dados",
   "sol_tos.the_bot_stores_warnings_you":
-    "O Bot guarda as advertências que você cria, a conta Roblox que você vincula com o comando verify, o XP que os membros ganham onde os níveis estão ligados e as carteiras de SOL$ de quem usa a economia, e registra as ações de moderação num canal de log que você configura. Ele não lê o conteúdo das mensagens. A",
+    "O Bot guarda as advertências que você cria, a conta Roblox que você vincula com o comando verify, o XP que os membros ganham onde os níveis estão ligados e as carteiras de SOL$ de quem usa a economia, e registra as ações de moderação num canal de log que você configura. Ele só lê o texto de uma mensagem quando ela menciona o Bot. A",
   "sol_tos.describes_exactly_what_is_kept":
     "descreve exatamente o que é guardado e por quanto tempo, e faz parte destes Termos.",
 

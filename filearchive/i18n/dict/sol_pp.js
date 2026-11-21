@@ -12,11 +12,11 @@ export const pt = {
 
   "sol_pp.terms_of_service": "Termos de Serviço",
   "sol_pp.privacy_policy": "Política de Privacidade",
-  "sol_pp.last_updated_october_5_2026": "Última atualização: 5 de outubro de 2026",
+  "sol_pp.last_updated_november_21_2026": "Última atualização: 21 de novembro de 2026",
 
-  "sol_pp.the_bot_does_not_read": "O Bot não lê as suas mensagens.",
-  "sol_pp.it_does_not_request_discord":
-    "Ele não pede o intent de Message Content do Discord, o que significa que o Discord nunca lhe envia o texto das mensagens. Ele não tem como guardar, pesquisar ou repassar algo que não recebe.",
+  "sol_pp.the_bot_reads_only_mentions": "O Bot só lê as mensagens que o mencionam.",
+  "sol_pp.it_does_not_request_message_content":
+    "Ele não pede o intent de Message Content do Discord, então o Discord só lhe envia o texto de uma mensagem quando ela menciona o Bot. Todo o resto ele não tem como guardar, pesquisar ou repassar, porque nunca recebe.",
 
   "sol_pp.1_what_is_stored": "1. O que é guardado",
   "sol_pp.only_these_things_outlast_the": "Só estas coisas sobrevivem ao momento em que acontecem:",
@@ -55,8 +55,11 @@ export const pt = {
     "Quando você usa o comando play, o link ou os termos de busca que você digitou são enviados ao serviço a que pertencem — YouTube, SoundCloud ou Spotify — a partir da máquina que hospeda o Bot, pelo programa de código aberto yt-dlp ou, no caso do Spotify, lendo a página pública de embed do Spotify. Uma música do Spotify é então procurada pelo nome e pelo artista no SoundCloud ou no YouTube. Nada que identifique você vai junto em nenhum desses pedidos. O áudio do YouTube é baixado para uma pasta temporária nessa máquina, tocado no canal de voz e apagado assim que a música acaba, é pulada ou a música é parada. O áudio do SoundCloud é transmitido e nunca é salvo.",
   "sol_pp.the_roleplay_commands_ask_the":
     "Os comandos de roleplay pedem ao serviço público nekos.best um GIF aleatório da ação. O pedido informa só a ação; não leva nada sobre você ou o seu servidor.",
+  "sol_pp.in_servers_where_ai_chat":
+    "Nos servidores em que os operadores ligaram a conversa por IA, mencionar o Bot envia o texto da sua mensagem e o seu nome de exibição, mais a mensagem anterior do Bot se você estiver respondendo a ela, para um modelo de linguagem que roda na mesma máquina do Bot. Nada vai para um serviço de IA de fora. O modelo é dividido com o ccore e operado pelas mesmas pessoas, mas nenhum dos dois bots passa conversas para o outro. A resposta é publicada no canal e nada da conversa é registrado. O modelo guarda a última conversa na memória só para responder mais rápido, e a perde quando chega a próxima ou quando ele reinicia; o Bot também lembra, na memória, quando cada pessoa perguntou pela última vez, para espaçar as perguntas.",
   "sol_pp.4_what_is_never_collected": "4. O que nunca é coletado",
-  "sol_pp.message_content_attachments_or_embeds": "conteúdo de mensagens, anexos ou embeds;",
+  "sol_pp.message_content_except_mentions":
+    "conteúdo de mensagens, exceto o texto das mensagens que mencionam o Bot, tratado como descreve a seção 3; anexos ou embeds;",
   "sol_pp.direct_messages": "mensagens diretas;",
   "sol_pp.voice_audio_the_bot_plays": "áudio de voz — o Bot toca música nos canais de voz, mas nunca recebe nem grava o que alguém fala;",
   "sol_pp.email_addresses_ip_addresses_payment":
@@ -64,7 +67,7 @@ export const pt = {
   "sol_pp.your_discord_or_roblox_password":
     "a sua senha do Discord ou do Roblox — os dois logins acontecem nos próprios sites do Discord e do Roblox;",
   "sol_pp.anything_at_all_from_users_who":
-    "absolutamente nada de quem nunca aparece num comando de moderação, nunca verifica uma conta Roblox, nunca conversa num servidor com níveis ligados e nunca usa os comandos de economia.",
+    "absolutamente nada de quem nunca aparece num comando de moderação, nunca verifica uma conta Roblox, nunca conversa num servidor com níveis ligados, nunca usa os comandos de economia e nunca menciona o Bot.",
 
   "sol_pp.5_how_long_it_is": "5. Por quanto tempo fica guardado",
   "sol_pp.until_a_moderator_deletes_them":
