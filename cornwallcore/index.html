@@ -734,7 +734,7 @@
 					</li>
 					<li class="stop" style="--i: 2">
 						<h3 data-i18n="ccore.route_3_title">Fights, on the record</h3>
-						<p><code>/audit-add</code> <span data-i18n="ccore.route_3_body">takes each player's kills, deaths and assists after the battle. Every run counts one battle.</span></p>
+						<p><code>/audit-add</code> <span data-i18n="ccore.route_3_body">takes each player's kills, deaths and assists after the battle, straight from the game's output. Every run counts one battle.</span></p>
 					</li>
 					<li class="stop" style="--i: 3">
 						<h3 data-i18n="ccore.route_4_title">The record goes out</h3>
@@ -841,7 +841,8 @@
 								<div class="cmd-head"><span class="cmd-name">/audit-add</span> <span class="cmd-desc" data-i18n="ccore.audit_add_desc">Records the audit of a battle</span></div>
 								<ul class="cmd-meta">
 									<li data-i18n="ccore.requires_staff_role">Requires: Staff role</li>
-									<li data-i18n="ccore.audit_add_meta">Function: paste one line per player (name k d a), check a preview and queue it; each run counts +1 battle</li>
+									<li data-i18n="ccore.audit_add_meta">Function: paste the game's output, check a preview and queue it; each run counts +1 battle</li>
+									<li><span data-i18n="ccore.audit_add_format">Format: name k d a n, where n is the line break the game writes. One player per line or all on one line both work:</span> <code>ana 12 3 5 n bia 4 1 0 n</code></li>
 								</ul>
 							</li>
 							<li class="cmd">
@@ -1047,7 +1048,7 @@
 		  dicionario de portugues, entao a pagina continua completa e indexavel
 		  sem JavaScript.
 		-->
-		<script type="module" src="../filearchive/i18n/i18n.js" data-dict="dict/ccore.js?v=20261120-1"></script>
+		<script type="module" src="../filearchive/i18n/i18n.js" data-dict="dict/ccore.js?v=20261121-1"></script>
 	<script>
           (() => {
             const search = document.getElementById("commandSearch");
