@@ -14,7 +14,7 @@ export const pt = {
   "ccore_pp.this_page_summarizes_how_the":
     "Esta página resume como o ccore coleta, usa, guarda e protege informações, mantendo o conteúdo original da política legível e fácil de navegar.",
   "ccore_pp.policy_metadata": "Metadados da política",
-  "ccore_pp.last_updated_june_16_2026": "Última atualização: 16 de junho de 2026",
+  "ccore_pp.last_updated_november_22_2026": "Última atualização: 22 de novembro de 2026",
   "ccore_pp.copy_page_link": "Copiar link da página",
   "ccore_pp.collapse_all": "Recolher tudo",
   "ccore_pp.quick_actions": "Ações rápidas",
@@ -190,7 +190,17 @@ export const pt = {
 
   "ccore_pp.by_using_the_ccore_you":
     "Ao usar o ccore, você reconhece que leu e entendeu esta Política de Privacidade.",
-  "ccore_pp.the_terms_page_is_available": "A página de termos está disponível em"
+  "ccore_pp.the_terms_page_is_available": "A página de termos está disponível em",
+
+  // 16. IA local
+  "ccore_pp.16_local_ai": "16. IA local",
+  "ccore_pp.ai_intro": "Alguns recursos opcionais usam um modelo de linguagem que roda numa máquina dos operadores do Bot, e não num serviço de IA de fora. Os operadores ligam e desligam o modelo, e enquanto ele está desligado nada é enviado a ele. O mesmo modelo também atende o Sollarety, outro bot dos mesmos operadores; nenhuma conversa passa de um bot para o outro.",
+  "ccore_pp.ai_chat": "Conversa: quando você menciona o Bot ou responde a uma mensagem dele, o texto da sua mensagem, o seu nome de exibição e as últimas mensagens daquele canal, com o nome de exibição de quem as escreveu, vão para o modelo escrever a resposta, que é publicada no canal.",
+  "ccore_pp.ai_translate": "Traduzir e /resumo: a mensagem que você escolhe, ou as últimas 10 a 100 mensagens do canal, vão para o modelo. O resultado aparece só para você.",
+  "ccore_pp.ai_perf": "/desempenho: os seus números da auditoria vão para o modelo comentar. Os números mostrados vêm da auditoria, não do modelo.",
+  "ccore_pp.ai_announce": "/anuncio e o relatório pós-batalha: os tópicos que você escreveu, ou os nomes e as kills, deaths e assists da batalha recém-registrada, vão para o modelo. O anúncio só é publicado se você confirmar; o relatório é publicado no canal onde a batalha foi registrada.",
+  "ccore_pp.ai_convert": "Converter com IA: o texto que você colou no /audit-add vai para o modelo, e o texto reescrito aparece só para você. Nada é registrado até você mesmo mandar de novo.",
+  "ccore_pp.ai_kept": "Nada do que vai para o modelo é gravado em disco. O modelo guarda o último pedido na memória só para responder mais rápido, e o perde no pedido seguinte ou quando reinicia. Para espaçar as perguntas e barrar spam, o Bot também lembra, na memória e por alguns minutos, quando cada pessoa falou com ele pela última vez. As respostas são geradas automaticamente e podem estar erradas."
 };
 
 export default pt;

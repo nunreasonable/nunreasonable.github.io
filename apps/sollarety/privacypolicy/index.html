@@ -273,14 +273,15 @@
 			<article class="card">
 				<p data-i18n="sol_pp.sollarety" class="eyebrow">Sollarety</p>
 				<h1 data-i18n="sol_pp.privacy_policy">Privacy Policy</h1>
-				<span data-i18n="sol_pp.last_updated_november_21_2026" class="pill">Last updated: November 21, 2026</span>
+				<span data-i18n="sol_pp.last_updated_november_22_2026" class="pill">Last updated: November 22, 2026</span>
 
 				<div class="note">
 					<p style="margin: 0">
-						<strong data-i18n="sol_pp.the_bot_reads_only_mentions">The Bot reads only the messages that mention it.</strong> <span data-i18n="sol_pp.it_does_not_request_message_content">It does not
+						<strong data-i18n="sol_pp.the_bot_reads_only_mentions_translate">The Bot reads only the messages that mention it and the ones you pick with Translate.</strong> <span data-i18n="sol_pp.it_does_not_request_message_content_translate">It does not
 						request Discord's Message Content intent, so Discord sends it the text
-						of a message only when that message mentions the Bot. Everything else
-						it cannot store, search or forward, because it never receives it.</span>
+						of a message only when that message mentions the Bot or when you pick
+						it with Translate. Everything else it cannot store, search or forward,
+						because it never receives it.</span>
 					</p>
 				</div>
 
@@ -382,6 +383,13 @@
 					it when the next one arrives or it restarts; the Bot also remembers, in
 					memory, when each person last asked, to space out questions.
 				</p>
+				<p data-i18n="sol_pp.translate_and_quiz">
+					In those same servers, the Translate menu sends the text of the message
+					you picked to that model, and the translation is shown only to you. The
+					quiz command sends the theme you typed; the questions and who won each
+					round stay in memory until the quiz ends, and prizes go to your SOL$
+					wallet like any other SOL$. Nothing from either is written down.
+				</p>
 				<p data-i18n="sol_pp.the_roleplay_commands_ask_the">
 					The roleplay commands ask the public nekos.best service for a random GIF
 					of the action. The request names only the action; it carries nothing
@@ -390,7 +398,7 @@
 
 				<h2 data-i18n="sol_pp.4_what_is_never_collected">4. What is never collected</h2>
 				<ul>
-					<li data-i18n="sol_pp.message_content_except_mentions">message content, except the text of messages that mention the Bot, handled as section 3 describes; attachments or embeds;</li>
+					<li data-i18n="sol_pp.message_content_except_mentions_translate">message content, except the text of messages that mention the Bot or that you pick with Translate, handled as section 3 describes; attachments or embeds;</li>
 					<li data-i18n="sol_pp.direct_messages">direct messages;</li>
 					<li data-i18n="sol_pp.voice_audio_the_bot_plays">voice audio — the Bot plays music into voice channels but never receives or records what anyone says;</li>
 					<li data-i18n="sol_pp.email_addresses_ip_addresses_payment">email addresses, IP addresses, payment details or any real-world identity;</li>
@@ -564,6 +572,6 @@
 		  Seletor de idioma. O ingles fica no proprio HTML e continua sendo a versao
 		  que vale; o portugues e cortesia, carregado do dicionario.
 		-->
-		<script type="module" src="../../../filearchive/i18n/i18n.js" data-dict="dict/sol_pp.js?v=20261121-1"></script>
+		<script type="module" src="../../../filearchive/i18n/i18n.js" data-dict="dict/sol_pp.js?v=20261122-1"></script>
 	</body>
 </html>

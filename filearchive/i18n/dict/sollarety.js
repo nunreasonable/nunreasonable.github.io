@@ -35,6 +35,10 @@ export const pt = {
   "sollarety.add_to_discord": "Adicionar ao Discord",
   "sollarety.moderation": "Moderação",
   "sollarety.and": "e",
+  "sollarety.ai_quiz_translate": "O /quiz faz algumas perguntas sobre qualquer tema: a primeira resposta certa ganha a rodada, mais 50 SOL$ onde o servidor ligou a economia. O Translate passa inglês para português e o resto para inglês, e só você vê o resultado.",
+  "sollarety.ai_where": ", no menu Apps de qualquer mensagem. Só em alguns servidores escolhidos pelos operadores, e só enquanto a IA está ligada. Ela roda na própria máquina dos operadores, não num serviço de fora.",
+  "sollarety.ai_mention": "Mencione o bot para conversar,",
+  "sollarety.local_ai": "IA local",
   "sollarety.who_may_run_each_one":
     "Quem pode rodar cada um é decidido pelas permissões do próprio servidor no Discord — não há cargo para configurar. Um moderador não consegue agir sobre o dono do servidor, sobre si mesmo, nem sobre alguém cujo cargo mais alto esteja no mesmo nível do dele ou acima.",
   "sollarety.warnings": "Advertências",

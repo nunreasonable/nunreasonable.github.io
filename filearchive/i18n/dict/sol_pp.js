@@ -12,11 +12,10 @@ export const pt = {
 
   "sol_pp.terms_of_service": "Termos de Serviço",
   "sol_pp.privacy_policy": "Política de Privacidade",
-  "sol_pp.last_updated_november_21_2026": "Última atualização: 21 de novembro de 2026",
+  "sol_pp.last_updated_november_22_2026": "Última atualização: 22 de novembro de 2026",
 
-  "sol_pp.the_bot_reads_only_mentions": "O Bot só lê as mensagens que o mencionam.",
-  "sol_pp.it_does_not_request_message_content":
-    "Ele não pede o intent de Message Content do Discord, então o Discord só lhe envia o texto de uma mensagem quando ela menciona o Bot. Todo o resto ele não tem como guardar, pesquisar ou repassar, porque nunca recebe.",
+  "sol_pp.the_bot_reads_only_mentions_translate": "O Bot só lê as mensagens que o mencionam e as que você escolhe com o Translate.",
+  "sol_pp.it_does_not_request_message_content_translate": "Ele não pede o intent de Message Content do Discord, então o Discord só lhe envia o texto de uma mensagem quando ela menciona o Bot ou quando você a escolhe com o Translate. Todo o resto ele não tem como guardar, pesquisar ou repassar, porque nunca recebe.",
 
   "sol_pp.1_what_is_stored": "1. O que é guardado",
   "sol_pp.only_these_things_outlast_the": "Só estas coisas sobrevivem ao momento em que acontecem:",
@@ -57,9 +56,9 @@ export const pt = {
     "Os comandos de roleplay pedem ao serviço público nekos.best um GIF aleatório da ação. O pedido informa só a ação; não leva nada sobre você ou o seu servidor.",
   "sol_pp.in_servers_where_ai_chat":
     "Nos servidores em que os operadores ligaram a conversa por IA, mencionar o Bot envia o texto da sua mensagem e o seu nome de exibição, mais a mensagem anterior do Bot se você estiver respondendo a ela, para um modelo de linguagem que roda na mesma máquina do Bot. Nada vai para um serviço de IA de fora. O modelo é dividido com o ccore e operado pelas mesmas pessoas, mas nenhum dos dois bots passa conversas para o outro. A resposta é publicada no canal e nada da conversa é registrado. O modelo guarda a última conversa na memória só para responder mais rápido, e a perde quando chega a próxima ou quando ele reinicia; o Bot também lembra, na memória, quando cada pessoa perguntou pela última vez, para espaçar as perguntas.",
+  "sol_pp.translate_and_quiz": "Nesses mesmos servidores, o menu Translate envia o texto da mensagem que você escolheu para esse modelo, e a tradução aparece só para você. O comando de quiz envia o tema que você digitou; as perguntas e quem ganhou cada rodada ficam na memória até o quiz acabar, e os prêmios vão para a sua carteira de SOL$ como qualquer outro SOL$. Nada disso é registrado.",
   "sol_pp.4_what_is_never_collected": "4. O que nunca é coletado",
-  "sol_pp.message_content_except_mentions":
-    "conteúdo de mensagens, exceto o texto das mensagens que mencionam o Bot, tratado como descreve a seção 3; anexos ou embeds;",
+  "sol_pp.message_content_except_mentions_translate": "conteúdo de mensagens, exceto o texto das mensagens que mencionam o Bot ou que você escolhe com o Translate, tratado como descreve a seção 3; anexos ou embeds;",
   "sol_pp.direct_messages": "mensagens diretas;",
   "sol_pp.voice_audio_the_bot_plays": "áudio de voz — o Bot toca música nos canais de voz, mas nunca recebe nem grava o que alguém fala;",
   "sol_pp.email_addresses_ip_addresses_payment":

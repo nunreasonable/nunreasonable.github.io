@@ -14,7 +14,7 @@ export const pt = {
   "ccore_tos.these_terms_explain_how_the":
     'Estes termos explicam como o ccore pode ser usado dentro da comunidade do 12° Regt. "Chaves". A página mantém o conteúdo original da política intacto, mas o apresenta num formato mais limpo, com navegação rápida e algumas pequenas interações.',
   "ccore_tos.policy_metadata": "Metadados da política",
-  "ccore_tos.last_updated_june_16_2026": "Última atualização: 16 de junho de 2026",
+  "ccore_tos.last_updated_november_22_2026": "Última atualização: 22 de novembro de 2026",
   "ccore_tos.copy_page_link": "Copiar link da página",
   "ccore_tos.collapse_all": "Recolher tudo",
   "ccore_tos.quick_actions": "Ações rápidas",
@@ -161,7 +161,15 @@ export const pt = {
     "Ao usar o ccore, você reconhece que leu, entendeu e concorda em se vincular a estes Termos de Serviço.",
 
   "ccore_tos.need_the_privacy_page_too":
-    "Precisa também da página de privacidade? Abra em"
+    "Precisa também da página de privacidade? Abra em",
+
+  // 16. IA local
+  "ccore_tos.16_local_ai": "16. IA local",
+  "ccore_tos.ai_intro": "Alguns recursos são respondidos por um modelo de linguagem que os operadores do Bot mantêm (veja a seção 16 da Política de Privacidade). Eles são opcionais e podem estar desligados a qualquer momento.",
+  "ccore_tos.ai_wrong": "As respostas são geradas automaticamente e podem estar erradas. Não são conselho e não falam em nome dos operadores nem da staff do regimento.",
+  "ccore_tos.ai_no_harm": "Não tente fazer a IA produzir conteúdo de ódio, sexual ou violento, ajudar em algo que possa machucar alguém ou quebrar as próprias regras, e não faça as respostas dela passarem por algo que uma pessoa real disse.",
+  "ccore_tos.ai_no_spam": "Não faça spam com ela nem tente fazer ela se repetir. Ela pode recusar sem rodeios e depois te ignorar por alguns minutos.",
+  "ccore_tos.ai_review": "Quem publica um anúncio ou registra uma batalha com ajuda da IA é responsável pelo que foi publicado ou registrado."
 };
 
 export default pt;

@@ -474,6 +474,11 @@
 				font-size: 1.15rem;
 				font-weight: 500;
 			}
+			.cmd-note {
+				margin: 0 0 8px;
+				color: var(--muted);
+				max-width: 70ch;
+			}
 			.cmd-list {
 				margin: 0;
 				padding: 0;
@@ -917,6 +922,61 @@
 					</div>
 
 					<div class="cmd-group">
+						<h3 data-i18n="ccore.ai_group">Local AI</h3>
+						<p class="cmd-note" data-i18n="ccore.ai_group_note">Runs on a machine of its own, not on an outside service. Only the bot operators turn it on and off; while it is off, none of this answers.</p>
+						<ul class="cmd-list">
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">@ccore</span> <span class="cmd-desc" data-i18n="ccore.ai_chat_desc">Chat with the local AI</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.ai_chat_m1">Mention the bot or reply to one of its messages</li>
+									<li data-i18n="ccore.ai_chat_m2">Function: short answers in Portuguese or English, using the last few messages of the channel as context</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">Traduzir</span> <span class="cmd-desc" data-i18n="ccore.ai_translate_desc">Translates a message (right click → Apps)</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.ai_translate_m1">English becomes Portuguese, anything else becomes English</li>
+									<li data-i18n="ccore.ai_translate_m2">Function: only you see the reply</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/resumo</span> <span class="cmd-desc" data-i18n="ccore.ai_summary_desc">Summarizes the latest messages of the channel</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.ai_summary_m1">Optional parameter: how many messages (10 to 100)</li>
+									<li data-i18n="ccore.ai_summary_m2">Function: only you see the reply; one summary per minute</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/desempenho</span> <span class="cmd-desc" data-i18n="ccore.ai_perf_desc">Your audit numbers with a comment from the AI</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.ai_perf_m1">Numbers come from the audit, never from the AI</li>
+									<li data-i18n="ccore.ai_perf_m2">Optional parameters: player (staff only), public</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/anuncio</span> <span class="cmd-desc" data-i18n="ccore.ai_announce_desc">Drafts an announcement from your bullet points</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_staff_role">Requires: Staff role</li>
+									<li data-i18n="ccore.ai_announce_m2">Function: preview first; nothing is posted until you press Post</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/audit-add</span> <span class="cmd-desc" data-i18n="ccore.ai_report_desc">Gets an after-action report from the AI</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.ai_report_m1">Posted in the same channel after a battle is recorded, without pinging anyone</li>
+									<li data-i18n="ccore.ai_report_m2">If the lines can't be read, a Convert with AI button rewrites them for you to review; nothing is recorded by itself</li>
+								</ul>
+							</li>
+							<li class="cmd">
+								<div class="cmd-head"><span class="cmd-name">/llm-status</span> <span class="cmd-desc" data-i18n="ccore.ai_status_desc">Shows whether the local AI is on, plus memory and usage</span></div>
+								<ul class="cmd-meta">
+									<li data-i18n="ccore.requires_staff_role">Requires: Staff role</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+
+					<div class="cmd-group">
 						<h3 data-i18n="ccore.utilities">Utilities</h3>
 						<ul class="cmd-list">
 							<li class="cmd">
@@ -1048,7 +1108,7 @@
 		  dicionario de portugues, entao a pagina continua completa e indexavel
 		  sem JavaScript.
 		-->
-		<script type="module" src="../filearchive/i18n/i18n.js" data-dict="dict/ccore.js?v=20261121-1"></script>
+		<script type="module" src="../filearchive/i18n/i18n.js" data-dict="dict/ccore.js?v=20261121-2"></script>
 	<script>
           (() => {
             const search = document.getElementById("commandSearch");

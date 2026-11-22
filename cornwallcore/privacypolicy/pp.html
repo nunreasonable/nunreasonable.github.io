@@ -322,7 +322,7 @@
 				</p>
 
 				<div data-i18n-attr="aria-label:ccore_pp.policy_metadata" class="doc-meta-row" aria-label="Policy metadata">
-					<span data-i18n="ccore_pp.last_updated_june_16_2026" class="doc-meta-text">Last updated: June 16, 2026</span>
+					<span data-i18n="ccore_pp.last_updated_november_22_2026" class="doc-meta-text">Last updated: November 22, 2026</span>
 					<button data-i18n="ccore_pp.copy_page_link" class="button" id="copy-link" type="button">Copy page link</button>
 					<button data-i18n="ccore_pp.collapse_all" class="button" id="toggle-sections" type="button">Collapse all</button>
 				</div>
@@ -352,6 +352,7 @@
 						<a data-i18n="ccore_pp.13_discord_s_privacy_policy" href="#discord">13. Discord's Privacy Policy</a>
 						<a data-i18n="ccore_pp.14_data_breach_notification" href="#breach">14. Data Breach Notification</a>
 						<a data-i18n="ccore_pp.15_legal_basis_for_processing" href="#legal">15. Legal Basis for Processing</a>
+						<a data-i18n="ccore_pp.16_local_ai" href="#local-ai">16. Local AI</a>
 					</nav>
 				</aside>
 
@@ -585,6 +586,19 @@
 							By using the ccore, you acknowledge that you have read and understood this Privacy Policy.
 						</p>
 					</section>
+
+					<section class="section" id="local-ai">
+						<h2 data-i18n="ccore_pp.16_local_ai">16. Local AI</h2>
+						<p data-i18n="ccore_pp.ai_intro">Some optional features use a language model that runs on a machine of the Bot operators, not on an outside AI service. The operators turn it on and off, and while it is off nothing is sent to it. The same model also serves Sollarety, another bot run by the same operators; no conversation passes between the two bots.</p>
+						<ul>
+							<li data-i18n="ccore_pp.ai_chat">Chat: when you mention the Bot or reply to one of its messages, the text of your message, your display name and the last few messages of that channel, with their authors' display names, are sent to the model so it can write the reply, which is posted in the channel.</li>
+							<li data-i18n="ccore_pp.ai_translate">Translate and /resumo: the message you pick, or the last 10 to 100 messages of the channel, are sent to the model. The result is shown only to you.</li>
+							<li data-i18n="ccore_pp.ai_perf">/desempenho: your audit numbers are sent so the model can comment on them. The numbers shown come from the audit, not from the model.</li>
+							<li data-i18n="ccore_pp.ai_announce">/anuncio and the after-action report: the topics you wrote, or the names and kills, deaths and assists of the battle just recorded, are sent to the model. The announcement is posted only if you confirm it; the report is posted in the channel where the battle was recorded.</li>
+							<li data-i18n="ccore_pp.ai_convert">Convert with AI: the text you pasted in /audit-add is sent to the model and the rewritten text is shown only to you. Nothing is recorded until you send it again yourself.</li>
+						</ul>
+						<p data-i18n="ccore_pp.ai_kept">Nothing sent to the model is written to disk. The model keeps the latest request in memory only to answer faster, and loses it with the next request or when it restarts. To space out questions and stop spam, the Bot also remembers, in memory and for a few minutes, when each person last talked to it. Replies are generated automatically and can be wrong.</p>
+					</section>
 				</article>
 			</section>
 
@@ -652,6 +666,6 @@
 		  Seletor de idioma. O ingles fica no proprio HTML e continua sendo a versao
 		  que vale; o portugues e cortesia, carregado do dicionario.
 		-->
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/ccore_pp.js"></script>
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/ccore_pp.js?v=20261122-1"></script>
 	</body>
 </html>
