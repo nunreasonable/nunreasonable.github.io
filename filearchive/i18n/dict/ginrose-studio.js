@@ -1,4 +1,5 @@
 export const pt = {
+  "studio.release26050": "26.0.5.0 · 23 de novembro de 2026 — Os diálogos do Studio, como o que prepara o servidor ao abrir um place, agora flutuam em compositores de tiling como o Hyprland em vez de irem para o tile ao lado do Studio. O Rosemary passa para um upstream mais recente, com correções nas bibliotecas de shaders do Metal.",
   "studio.release26040": "26.0.4.0 · 20 de novembro de 2026 — As versões agora são numeradas por ano: o ano, depois mudanças grandes, novidades e correções. Nada mais muda no Ginrose Studio; o Rosemary é o mesmo da 0.3.9.",
   "studio.release039": "0.3.9 · 19 de novembro de 2026 — Mesmo Rosemary do Ginrose 0.3.9, com teclado em janelas popup, inclusive métodos de entrada, e chamadas de OpenGL mais rápidas. O prefixo continua no MiniDarwin 21. O Ginrose Studio ainda não tem build de FreeBSD.",
   "studio.release038": "0.3.8 · 18 de novembro de 2026 — Mesmo Rosemary do Ginrose 0.3.8, com a correção do WebKit que travava dentro do Flatpak, onde roda o login do Studio. Na primeira execução, o prefixo passa para MiniDarwin 21, que o Studio 0.3.7 e anteriores não podem reutilizar.",
@@ -11,7 +12,7 @@ export const pt = {
   "studio.intro": "O Ginrose Studio é um projeto independente da comunidade, não uma ferramenta oficial da Roblox. Feito em cima do Rosemary e com o código compartilhado com o Ginrose, ele baixa o Roblox Studio oficial para macOS e o executa no Linux. Não tem vínculo nem endosso da Roblox Corporation.",
   "studio.download": "Baixar Flatpak ↗",
   "studio.readDocs": "Ler a documentação ↓",
-  "studio.platform": "Linux x86_64 · Flatpak e pacotes nativos v26.0.4.0 · GPL-3.0 ou posterior",
+  "studio.platform": "Linux x86_64 · Flatpak e pacotes nativos v26.0.5.0 · GPL-3.0 ou posterior",
   "studio.license": "O Ginrose Studio é software livre e de código aberto sob GPL-3.0 ou posterior, compilado do mesmo código do Ginrose. Versões modificadas precisam usar outro nome; o nome, a logo e o ID de aplicativo do Ginrose Studio estão cobertos pela política de marca do projeto.",
   "studio.experimental": "Experimental. Leia antes.",
   "studio.warning": "O Ginrose Studio só foi testado no Fedora com Hyprland e GPU NVIDIA. O Roblox Studio no Rosemary é mais novo que o cliente do Roblox e menos testado: login, abrir places, Team Create e arrastar modelos funcionam, mas algumas ferramentas podem se comportar mal. Suporte e correções não são garantidos.",
