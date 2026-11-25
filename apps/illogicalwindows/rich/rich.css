@@ -1,5 +1,5 @@
 /*
- * Modo completo da vitrine do II for Windows (rich.js).
+ * Modo completo da vitrine do Illogical Windows (rich.js).
  *
  * Tudo aqui so vale com html.rich (posto no head quando o lite.js nao
  * escolheu o modo leve). Sem essa classe, a pagina e a de sempre: os blocos
@@ -26,20 +26,14 @@
    transicao dos tokens no <html>, e isso recalculava o estilo da pagina inteira
    a cada quadro (~4 ms por quadro, quase o orcamento todo a 200 Hz). */
 
-/* O conteudo animado (historia presa, demo) aparecia de leve atras do
-   cabecalho quase opaco; no modo completo ele fica opaco de vez. */
-.rich .site-header {
-	background: var(--bg);
-}
-
-/* ---------- Botao "Efeitos" no cabecalho (vale nos dois modos) ---------- */
+/* ---------- Botao "Efeitos" na barra do topo (vale nos dois modos) ---------- */
 
 .fx-toggle {
 	display: inline-flex;
 	align-items: center;
 	gap: 8px;
 	flex: none;
-	margin-left: 8px;
+	min-height: 32px;
 	padding: 4px 10px 4px 6px;
 	border: 1px solid var(--line);
 	border-radius: 999px;
@@ -85,20 +79,20 @@
 	transform: translateX(12px);
 }
 
-@media (max-width: 820px) {
+/* Sem espaco, o botao fica so com a chave (o nome segue no title e no
+   texto escondido para leitor de tela). */
+@media (max-width: 1180px) {
 	.fx-toggle {
-		margin-left: auto;
+		padding-right: 6px;
 	}
 
-	.site-header .fx-toggle + [data-i18n-switcher] {
-		margin-left: 8px;
-	}
-}
-
-@media (max-width: 520px) {
-	.fx-toggle [data-i18n],
-	.site-header .brand span {
-		display: none;
+	.fx-toggle [data-i18n] {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
 	}
 }
 
@@ -1850,7 +1844,7 @@
 	height: 12px;
 	border-radius: 50%;
 	border: 2px solid var(--line-strong);
-	background: var(--bg-alt);
+	background: var(--surface);
 	transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s var(--ease);
 }
 

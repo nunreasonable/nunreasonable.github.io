@@ -1,14 +1,14 @@
 /*
- * Modo completo da vitrine do II for Windows.
+ * Modo completo da vitrine do Illogical Windows.
  *
  * A pagina sem este modulo e o modo leve (a pagina de sempre). Ele so e
  * importado quando o lite.js nao marcou html[data-lite], e start()/destroy()
- * ligam e desligam tudo sem recarregar: o botao "Efeitos" do cabecalho e a
+ * ligam e desligam tudo sem recarregar: o botao "Efeitos" da barra do topo e a
  * deteccao automatica do lite.js podem trocar de modo a qualquer momento.
  *
  * Partes:
  *  - o mini ii jogavel (desktop.js) e os papeis de parede/cores (palette.js);
- *  - a apresentacao por cenas (showcase.js), ligada a rolagem;
+ *  - as tres cenas de apresentacao (showcase.js);
  *  - a corrida de inicializacao (mesma VM lenta, versoes diferentes);
  *  - o explorador de recursos (imagens de um recurso so);
  *  - pergunta de publico, "Testar no demo", linha do tempo das versoes e
@@ -16,16 +16,14 @@
  * Tudo que fica em loop para fora da tela ou com a aba escondida.
  */
 
-import { setupShowcase } from "./showcase.js?v=20261107-3";
+import { setupShowcase } from "./showcase.js?v=20261125-1";
 
 import { createDesktop } from "./desktop.js?v=20261107-2";
-import { PRESETS, wallpaperUrl, drawThumb, presetTones, demoScheme, pageScheme, PAGE_KEYS, tonesFromFile } from "./palette.js?v=20261013-1";
+import { PRESETS, wallpaperUrl, drawThumb, presetTones, presetFromTones, demoScheme, pageTokens, tonesFromFile } from "./palette.js?v=20261125-1";
 
 const html = document.documentElement;
 const reduce = matchMedia("(prefers-reduced-motion: reduce)");
 const darkQuery = matchMedia("(prefers-color-scheme: dark)");
-const WALL_KEY = "iw:wall:green";
-
 let cleanups = [];
 let desktop = null;
 
@@ -34,69 +32,70 @@ function on(el, type, fn, o) {
 	cleanups.push(() => el.removeEventListener(type, fn, o));
 }
 
-function readWall() {
-	try {
-		return localStorage.getItem(WALL_KEY);
-	} catch (e) {
-		return null;
-	}
-}
-
-function saveWall(id) {
-	try {
-		localStorage.setItem(WALL_KEY, id);
-	} catch (e) {
-		// Sem armazenamento, a escolha vale so nesta visita.
-	}
-}
-
 // --- Papel de parede e cores ---------------------------------------------
 
+// O demo acompanha o papel de parede da barra do topo (window.iwTheme, no
+// head da pagina): mesmas cores e um papel de parede desenhado com elas. Os
+// presets e a imagem do visitante, aqui embaixo do demo, recolorem o demo e a
+// pagina so nesta visita, sem mudar a escolha salva da barra.
 function setupPalette(area) {
 	const stage = area.querySelector(".demo");
 	const walls = document.querySelectorAll(".demo-wall");
 	const swatches = area.querySelector(".demo-swatches");
 	const fileInput = area.querySelector(".demo-upload input");
-	let tones = presetTones("moss");
+	const theme = window.iwTheme;
+	let tones = null;
 	let demoDark = true;
-	let current = "moss";
+	let current = null;
 	let userUrl = null;
 
-	function applyTones() {
+	function applyTones(own) {
 		const d = demoScheme(tones, demoDark);
 		for (const k in d) {
 			stage.style.setProperty(k, d[k]);
 		}
 		stage.classList.toggle("is-light", !demoDark);
-		if (current === "moss" && !userUrl) {
-			PAGE_KEYS.forEach((k) => html.style.removeProperty(k));
-			return;
-		}
-		const p = pageScheme(tones, true);
-		for (const k in p) html.style.setProperty(k, p[k]);
+		// So escolha feita no demo mexe na pagina; a da barra ja pintou.
+		if (own && theme) theme.preview(pageTokens(tones));
 	}
 
 	function setWallUrl(url) {
 		walls.forEach((el) => (el.style.backgroundImage = `url("${url}")`));
 	}
 
+	function dropUserUrl() {
+		if (userUrl) URL.revokeObjectURL(userUrl);
+		userUrl = null;
+	}
+
+	function check(id) {
+		swatches.querySelectorAll("[data-wall]").forEach((b) => b.setAttribute("aria-checked", String(b.dataset.wall === id)));
+	}
+
+	async function followPage() {
+		const id = theme ? theme.get() : "jade";
+		const t = presetTones(id);
+		if (!t) return;
+		current = "page:" + id;
+		dropUserUrl();
+		tones = t;
+		check(null);
+		applyTones(false);
+		const url = await wallpaperUrl(presetFromTones(id, t));
+		if (current === "page:" + id) setWallUrl(url);
+	}
+
 	async function choose(id, fromUser) {
 		const preset = PRESETS.find((p) => p.id === id) || PRESETS[0];
 		current = preset.id;
-		if (userUrl) {
-			URL.revokeObjectURL(userUrl);
-			userUrl = null;
-		}
+		dropUserUrl();
 		tones = presetTones(preset.id);
-		swatches.querySelectorAll("[data-wall]").forEach((b) => b.setAttribute("aria-checked", String(b.dataset.wall === preset.id)));
+		check(preset.id);
 		const url = await wallpaperUrl(preset);
 		if (current !== preset.id) return;
 		setWallUrl(url);
-		applyTones();
-		if (fromUser) {
-			saveWall(preset.id);
-			desktop && desktop.discover("wall", "coach.wall");
-		}
+		applyTones(true);
+		if (fromUser) desktop && desktop.discover("wall", "coach.wall");
 	}
 
 	async function useFile(file) {
@@ -104,13 +103,13 @@ function setupPalette(area) {
 		stage.classList.add("is-busy");
 		try {
 			const res = await tonesFromFile(file);
-			if (userUrl) URL.revokeObjectURL(userUrl);
+			dropUserUrl();
 			userUrl = res.url;
 			current = "user";
 			tones = res.tones;
-			swatches.querySelectorAll("[data-wall]").forEach((b) => b.setAttribute("aria-checked", "false"));
+			check(null);
 			setWallUrl(res.url);
-			applyTones();
+			applyTones(true);
 			desktop && desktop.discover("wall", "coach.own");
 		} catch (err) {
 			desktop && desktop.discover("wall", "coach.ownFail");
@@ -157,23 +156,26 @@ function setupPalette(area) {
 		stage.classList.remove("is-drop");
 		useFile(e.dataTransfer.files && e.dataTransfer.files[0]);
 	});
-	on(darkQuery, "change", applyTones);
+	// Papel de parede novo na barra do topo: o demo vai junto.
+	on(document, "iw:theme", (e) => {
+		if (e.detail && e.detail.source === "bar") followPage();
+	});
 
-	const saved = readWall();
-	choose(PRESETS.some((p) => p.id === saved) ? saved : "moss", false);
+	followPage();
 
 	return {
 		setDark(dark) {
 			demoDark = dark;
-			applyTones();
+			applyTones(false);
 		},
 		cycle() {
 			const i = PRESETS.findIndex((p) => p.id === current);
 			choose(PRESETS[(i + 1) % PRESETS.length].id, true);
 		},
 		destroy() {
-			PAGE_KEYS.forEach((k) => html.style.removeProperty(k));
-			if (userUrl) URL.revokeObjectURL(userUrl);
+			dropUserUrl();
+			// As cores do demo saem junto com ele; fica o papel de parede da barra.
+			if (theme) theme.reset();
 		}
 	};
 }
@@ -540,12 +542,14 @@ function setupTry(palette) {
 		dropGhost();
 	});
 
-	// Centraliza o desktop do demo abaixo do cabecalho (56px), para o painel
-	// que vai abrir ficar inteiro na tela; se nao couber, encosta no topo.
+	// Centraliza o desktop do demo abaixo do que fica preso no topo (barra ou
+	// navegacao, --sticky-h no CSS), para o painel que vai abrir ficar inteiro
+	// na tela; se nao couber, encosta no topo.
 	function jump() {
+		const top = parseFloat(getComputedStyle(html).getPropertyValue("--sticky-h")) || 64;
 		const r = stage.getBoundingClientRect();
-		const room = innerHeight - 56;
-		scrollTo({ top: scrollY + r.top - 56 - Math.max(0, (room - r.height) / 2), behavior: "instant" });
+		const room = innerHeight - top;
+		scrollTo({ top: scrollY + r.top - top - Math.max(0, (room - r.height) / 2), behavior: "instant" });
 	}
 
 	function open(what) {

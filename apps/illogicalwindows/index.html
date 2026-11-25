@@ -6,11 +6,11 @@
 		<title>Illogical Windows</title>
 		<meta
 			name="description"
-			content="Illogical Windows (codename Illogical Windows): an unofficial port of end-4's illogical-impulse Quickshell desktop to Windows 11 and Windows 10. Free and open source."
+			content="Illogical Windows: an unofficial port of end-4's illogical-impulse Quickshell desktop to Windows 11 and Windows 10. Free and open source."
 		/>
 		<link rel="canonical" href="https://apps.daeese.me/illogicalwindows/" />
 		<meta name="color-scheme" content="dark" />
-		<meta name="theme-color" content="#08080b" />
+		<meta name="theme-color" content="#111413" />
 
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content="daeese.me" />
@@ -20,28 +20,34 @@
 		<meta property="og:image" content="https://daeese.me/filearchive/projects/ii-windows/banner.webp" />
 		<meta property="og:image:width" content="1600" />
 		<meta property="og:image:height" content="900" />
-		<meta property="og:image:alt" content="The illogical-impulse for Windows logo on a black and green gradient" />
+		<meta property="og:image:alt" content="The Illogical Windows logo, four jade window panes crossed by a dark swirl, above the name on a black and green gradient" />
 		<meta property="og:locale" content="en_US" />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content="Illogical Windows" />
 		<meta name="twitter:description" content="end-4's illogical-impulse desktop, running natively on Windows 11 and Windows 10. Unofficial, free and open source." />
 		<meta name="twitter:image" content="https://daeese.me/filearchive/projects/ii-windows/banner.webp" />
 
-		<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png?v=20261031" />
-		<link rel="icon" type="image/png" sizes="180x180" href="assets/icon-180.png?v=20261031" />
-		<link rel="apple-touch-icon" href="assets/icon-180.png?v=20261031" />
+		<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png?v=20261125" />
+		<link rel="icon" type="image/png" sizes="180x180" href="assets/icon-180.png?v=20261125" />
+		<link rel="apple-touch-icon" href="assets/icon-180.png?v=20261125" />
+
+		<!-- Onest so entra onde a Segoe UI Variable nao existe (Linux, macOS): no
+		     Windows a primeira fonte da pilha ja casa e a webfont nem e baixada. -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400..700&amp;display=swap" />
 
 		<link rel="stylesheet" href="../../filearchive/i18n/i18n.css" />
-		<link rel="stylesheet" href="rich/rich.css?v=20261107-4" />
-        <link rel="stylesheet" href="rich/showcase.css?v=20261107-3" />
+		<link rel="stylesheet" href="rich/rich.css?v=20261125-1" />
+		<link rel="stylesheet" href="rich/showcase.css?v=20261125-1" />
 		<script src="../../filearchive/perf/lite.js"></script>
 
 		<script>
 			/*
-			 * Roda antes do primeiro paint: troca no-js por js e decide qual dos
-			 * dois publicos (iniciante/avancado) aparece. Feito aqui, e nao no
-			 * fim do body, para a outra aba nunca piscar na tela antes de sumir.
-			 * Ordem: #ancora na URL > escolha salva > iniciante.
+			 * Roda antes do primeiro paint: troca no-js por js, decide qual dos
+			 * dois publicos (iniciante/avancado) aparece e pinta a pagina com o
+			 * papel de parede escolhido na barra do topo. Feito aqui, e nao no
+			 * fim do body, para nada piscar na tela antes de mudar.
 			 */
 			(function () {
 				var d = document.documentElement;
@@ -60,6 +66,65 @@
 				}
 				d.setAttribute("data-aud", aud || "beginner");
 
+				/*
+				 * Papel de parede -> cores, como o matugen faz no ii. Os tokens de
+				 * cada papel de parede sao o esquema escuro do Material You
+				 * (tonal spot) gerado das miniaturas com material-color-utilities
+				 * e pageTokens() do rich/palette.js, com o contraste ja travado
+				 * (texto >= 7:1, destaque >= 4.5:1). Jade e o do logo.
+				 * Para gerar de novo: pageTokens(presetTones(id)) do palette.js em Node.
+				 */
+				var WALLS = {"jade":{"--bg":"#111413","--bg-alt":"#191c1b","--surface":"#1d201f","--surface-2":"#272b29","--surface-3":"#323634","--surface-tint":"#142f2a","--line":"rgba(191, 201, 196, 0.12)","--line-strong":"rgba(191, 201, 196, 0.24)","--text":"#e1e3e0","--muted":"#bfc9c4","--accent":"#4fdcbc","--accent-ink":"#4fdcbc","--accent-soft":"rgba(79, 220, 188, 0.13)","--on-accent":"#00382d","--accent-container":"#005142","--on-accent-container":"#70f9d7","--header-bg":"rgba(25, 28, 27, 0.96)","--logo-a":"#38c3a7","--logo-b":"#51debd","--logo-c":"#80e6bd","--shot-rot":"-162deg","--theme":"#111413"},"meadow":{"--bg":"#13140f","--bg-alt":"#1b1c17","--surface":"#1f201b","--surface-2":"#2a2a25","--surface-3":"#353530","--surface-tint":"#282d13","--line":"rgba(199, 200, 184, 0.12)","--line-strong":"rgba(199, 200, 184, 0.24)","--text":"#e4e2da","--muted":"#c7c8b8","--accent":"#bad165","--accent-ink":"#bad165","--accent-soft":"rgba(186, 209, 101, 0.13)","--on-accent":"#2a3400","--accent-container":"#3e4c00","--on-accent-container":"#d5ed7e","--header-bg":"rgba(27, 28, 23, 0.96)","--logo-a":"#91a740","--logo-b":"#bad165","--logo-c":"#d5ed7e","--shot-rot":"-255deg","--theme":"#13140f"},"city":{"--bg":"#111416","--bg-alt":"#191c1e","--surface":"#1d2022","--surface-2":"#282a2c","--surface-3":"#333537","--surface-tint":"#142d39","--line":"rgba(193, 199, 206, 0.12)","--line-strong":"rgba(193, 199, 206, 0.24)","--text":"#e2e2e5","--muted":"#c1c7ce","--accent":"#86ceff","--accent-ink":"#86ceff","--accent-soft":"rgba(134, 206, 255, 0.13)","--on-accent":"#00344c","--accent-container":"#004c6d","--on-accent-container":"#c8e6ff","--header-bg":"rgba(25, 28, 30, 0.96)","--logo-a":"#44a7df","--logo-b":"#86ceff","--logo-c":"#c8e6ff","--shot-rot":"-124deg","--theme":"#111416"},"space":{"--bg":"#131316","--bg-alt":"#1c1b1f","--surface":"#201f23","--surface-2":"#2a292d","--surface-3":"#353438","--surface-tint":"#292843","--line":"rgba(200, 197, 208, 0.12)","--line-strong":"rgba(200, 197, 208, 0.24)","--text":"#e5e1e6","--muted":"#c8c5d0","--accent":"#c3c0ff","--accent-ink":"#c3c0ff","--accent-soft":"rgba(195, 192, 255, 0.13)","--on-accent":"#282377","--accent-container":"#3f3c8f","--on-accent-container":"#e3dfff","--header-bg":"rgba(28, 27, 31, 0.96)","--logo-a":"#9894ed","--logo-b":"#c3c0ff","--logo-c":"#e3dfff","--shot-rot":"-85deg","--theme":"#131316"},"pop":{"--bg":"#161215","--bg-alt":"#1e1a1d","--surface":"#231e21","--surface-2":"#2d292c","--surface-3":"#383336","--surface-tint":"#3b2139","--line":"rgba(209, 194, 203, 0.12)","--line-strong":"rgba(209, 194, 203, 0.24)","--text":"#e9e0e4","--muted":"#d1c2cb","--accent":"#ffaaf4","--accent-ink":"#ffaaf4","--accent-soft":"rgba(255, 170, 244, 0.13)","--on-accent":"#580a57","--accent-container":"#732770","--on-accent-container":"#ffd7f5","--header-bg":"rgba(30, 26, 29, 0.96)","--logo-a":"#d77fcd","--logo-b":"#ffaaf4","--logo-c":"#ffd7f5","--shot-rot":"-20deg","--theme":"#161215"}};
+				var KEY = "iw:theme";
+				var current = "jade";
+				try {
+					var saved = localStorage.getItem(KEY);
+					if (WALLS[saved]) current = saved;
+				} catch (e) {
+					// Sem armazenamento, a escolha vale so nesta visita.
+				}
+				function paint(tokens) {
+					for (var k in tokens) d.style.setProperty(k, tokens[k]);
+					var meta = document.querySelector('meta[name="theme-color"]');
+					if (meta && tokens["--theme"]) meta.setAttribute("content", tokens["--theme"]);
+				}
+				function emit(source) {
+					document.dispatchEvent(new CustomEvent("iw:theme", { detail: { id: source === "bar" ? current : null, source: source } }));
+				}
+				window.iwTheme = {
+					ids: Object.keys(WALLS),
+					get: function () {
+						return current;
+					},
+					// Papel de parede da barra: pinta, lembra e avisa o demo.
+					set: function (id, save) {
+						if (!WALLS[id]) return;
+						current = id;
+						d.setAttribute("data-wall", id);
+						d.removeAttribute("data-preview");
+						paint(WALLS[id]);
+						if (save) {
+							try {
+								localStorage.setItem(KEY, id);
+							} catch (e) {}
+						}
+						emit("bar");
+					},
+					// Cores vindas do demo (preset ou imagem do visitante): valem
+					// so nesta visita e nao mudam a escolha salva da barra.
+					preview: function (tokens) {
+						d.setAttribute("data-preview", "");
+						paint(tokens);
+						emit("demo");
+					},
+					reset: function () {
+						if (!d.hasAttribute("data-preview")) return;
+						this.set(current, false);
+					}
+				};
+				d.setAttribute("data-wall", current);
+				paint(WALLS[current]);
+
 				// Modo completo (demo interativo e animacoes), a menos que o
 				// lite.js tenha escolhido o modo leve. Se o modulo nao carregar
 				// em 5 s, a pagina volta a ser a de sempre.
@@ -71,44 +136,65 @@
 				}
 			})();
 		</script>
-
 		<style>
 			/*
-			 * Vitrine do Illogical Windows. Mistura de proposito: superficies e cantos
-			 * do Fluent (cartoes claros, tinta leve tipo acrilico) com o ritmo das
-			 * paginas de produto da Apple (titulo grande, muito respiro, uma imagem
-			 * forte). Nada imita marca de ninguem.
+			 * Vitrine do Illogical Windows. Tres ideias juntas:
+			 *  - uma barra em pilula no topo, como a do proprio ii, com o seletor
+			 *    de papel de parede que recolore a pagina (matugen) e um relogio;
+			 *  - o layout do app Configuracoes do Windows 11: navegacao a esquerda
+			 *    com o item ativo marcado por uma pilula curta, conteudo em
+			 *    cartoes e linhas a direita;
+			 *  - o inicio cortado em quatro paineis, como o logo (quatro vidros
+			 *    separados por uma cruz fina, so os cantos de fora arredondados).
 			 *
 			 * Regras de desempenho do site (monitor de 200 Hz + GPU integrada):
 			 * nada de backdrop-filter, filter ou box-shadow animado, nem camada
 			 * gigante animando. As unicas transicoes sao de transform, opacity e
-			 * cor, e somem com prefers-reduced-motion.
+			 * cor, e somem com prefers-reduced-motion. A troca de cores e
+			 * instantanea (transicao de token no <html> recalcula a pagina toda).
 			 */
 			:root {
 				color-scheme: dark;
-				--bg: #0e1013;
-				--bg-alt: #13161a;
-				--surface: #171a1f;
-				--surface-tint: #142420;
-				--line: rgba(255, 255, 255, 0.08);
-				--line-strong: rgba(255, 255, 255, 0.16);
-				--text: #eceff3;
-				--muted: #9ba4af;
-				--accent: #4fd8b5;
-				--accent-ink: #5fe0bf;
-				--accent-soft: rgba(79, 216, 181, 0.12);
-				--on-accent: #04261d;
-				--header-bg: rgba(14, 16, 19, 0.94);
+				/* Jade do logo. O script do head sobrescreve com o papel de parede escolhido. */
+				--bg: #111413;
+				--bg-alt: #191c1b;
+				--surface: #1d201f;
+				--surface-2: #272b29;
+				--surface-3: #323634;
+				--surface-tint: #142f2a;
+				--line: rgba(191, 201, 196, 0.12);
+				--line-strong: rgba(191, 201, 196, 0.24);
+				--text: #e1e3e0;
+				--muted: #bfc9c4;
+				--accent: #4fdcbc;
+				--accent-ink: #4fdcbc;
+				--accent-soft: rgba(79, 220, 188, 0.13);
+				--on-accent: #00382d;
+				--accent-container: #005142;
+				--on-accent-container: #70f9d7;
+				--header-bg: rgba(25, 28, 27, 0.96);
+				--logo-a: #38c3a7;
+				--logo-b: #51debd;
+				--logo-c: #80e6bd;
+				--shot-rot: -162deg;
+				--hover: color-mix(in srgb, var(--text) 6%, transparent);
+				--selected: color-mix(in srgb, var(--text) 9%, transparent);
 				--shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.3);
 				--shadow-lg: 0 2px 6px rgba(0, 0, 0, 0.35), 0 30px 70px rgba(0, 0, 0, 0.5);
-				--radius: 14px;
-				--radius-sm: 8px;
+				--radius: 8px;
+				--radius-sm: 6px;
+				--radius-pane: 22px;
+				--shell: 1400px;
+				--nav-w: 236px;
+				--bar-h: 48px;
+				/* Altura de tudo que fica preso no topo; o rich.js le daqui. */
+				--sticky-h: 64px;
 				--wrap: 1120px;
-				--gutter: clamp(16px, 4vw, 32px);
+				--gutter: clamp(16px, 3vw, 28px);
 				--ease: cubic-bezier(0.22, 1, 0.36, 1);
-				--font: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont,
+				--font: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI", "Onest", system-ui, -apple-system, BlinkMacSystemFont,
 					"Helvetica Neue", Arial, sans-serif;
-				--font-display: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system,
+				--font-display: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Onest", system-ui, -apple-system,
 					BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
 				--font-mono: "Cascadia Code", "Cascadia Mono", Consolas, ui-monospace, "SF Mono", Menlo, monospace;
 			}
@@ -122,6 +208,7 @@
 			html {
 				-webkit-text-size-adjust: 100%;
 				text-size-adjust: 100%;
+				background: var(--bg);
 			}
 
 			@media (prefers-reduced-motion: no-preference) {
@@ -135,7 +222,7 @@
 				background: var(--bg);
 				color: var(--text);
 				font-family: var(--font);
-				font-size: 1.0625rem;
+				font-size: 1rem;
 				line-height: 1.6;
 				-webkit-font-smoothing: antialiased;
 				overflow-x: hidden;
@@ -168,10 +255,10 @@
 				text-decoration-thickness: 2px;
 			}
 
+			/* O contorno segue o raio do proprio elemento. */
 			:focus-visible {
 				outline: 2px solid var(--accent-ink);
 				outline-offset: 3px;
-				border-radius: 4px;
 			}
 
 			h1,
@@ -179,8 +266,8 @@
 			h3,
 			h4 {
 				font-family: var(--font-display);
-				line-height: 1.15;
-				letter-spacing: -0.015em;
+				line-height: 1.2;
+				letter-spacing: -0.01em;
 				margin: 0;
 			}
 
@@ -197,18 +284,32 @@
 				background: var(--accent-soft);
 			}
 
+			pre {
+				margin: 14px 0 0;
+				border: 1px solid var(--line);
+				border-radius: var(--radius-sm);
+				background: var(--bg);
+			}
+
 			pre code {
 				display: block;
-				padding: 0.6em 0.8em;
+				padding: 0.7em 0.9em;
+				background: none;
 				white-space: pre-wrap;
 				word-break: break-all;
 			}
 
 			.wrap {
 				width: 100%;
-				max-width: var(--wrap);
-				margin-inline: auto;
-				padding-inline: var(--gutter);
+			}
+
+			.visually-hidden {
+				position: absolute;
+				width: 1px;
+				height: 1px;
+				overflow: hidden;
+				clip-path: inset(50%);
+				white-space: nowrap;
 			}
 
 			.skip {
@@ -218,7 +319,7 @@
 				z-index: 100;
 				padding: 8px 14px;
 				border-radius: var(--radius-sm);
-				background: var(--surface);
+				background: var(--surface-3);
 				color: var(--text);
 			}
 
@@ -226,161 +327,537 @@
 				top: 12px;
 			}
 
-			/* ---------- Cabecalho ---------- */
+			/* ---------- Barra do topo (a do ii) ---------- */
 
-			/* Fundo quase opaco SEM backdrop-filter: o conteudo rola por baixo, e
-			   blur sobre algo em movimento e exatamente o que derrubava o fps. */
-			.site-header {
+			/* Faixa opaca atras da pilula, SEM backdrop-filter: o conteudo rola
+			   por baixo, e blur sobre algo em movimento derrubava o fps. */
+			.topbar {
 				position: sticky;
 				top: 0;
 				z-index: 40;
-				background: var(--header-bg);
-				border-bottom: 1px solid var(--line);
+				padding: 8px var(--gutter);
+				background: var(--bg);
 			}
 
-			.header-inner {
-				display: flex;
+			.bar {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+				grid-template-areas: "brand walls tray";
 				align-items: center;
-				gap: 20px;
-				min-height: 56px;
+				gap: 8px 14px;
+				max-width: var(--shell);
+				min-height: var(--bar-h);
+				margin: 0 auto;
+				padding: 4px 6px 4px 12px;
+				border: 1px solid var(--line);
+				border-radius: 999px;
+				background: var(--header-bg);
 			}
 
 			.brand {
+				grid-area: brand;
 				display: inline-flex;
 				align-items: center;
 				gap: 10px;
+				justify-self: start;
+				min-width: 0;
 				color: var(--text);
 				text-decoration: none;
+				font-family: var(--font-display);
 				font-weight: 600;
 				font-size: 0.98rem;
 				white-space: nowrap;
 			}
 
-			.brand img {
+			.logo {
+				flex: none;
 				width: 28px;
 				height: 28px;
 			}
 
-			.nav {
+			.walls {
+				grid-area: walls;
 				display: flex;
+				align-items: center;
 				gap: 4px;
-				margin-left: auto;
+				padding: 3px;
+				border-radius: 999px;
+				background: var(--hover);
 			}
 
-			.nav a {
-				padding: 6px 10px;
-				border-radius: 6px;
-				color: var(--muted);
-				text-decoration: none;
-				font-size: 0.9rem;
-				transition: color 120ms ease, background-color 120ms ease;
+			.wall {
+				position: relative;
+				width: 44px;
+				height: 28px;
+				padding: 0;
+				overflow: hidden;
+				border: 0;
+				border-radius: 999px;
+				background: var(--surface-3);
+				cursor: pointer;
+				transition: transform 140ms var(--ease);
 			}
 
-			.nav a:hover {
-				color: var(--text);
-				background: var(--accent-soft);
+			.wall img,
+			.wall .wall-panes {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
 			}
 
-			.site-header [data-i18n-switcher] {
+			/* O jade nao e captura: sao os quatro vidros do logo. */
+			.wall-panes {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 2px;
+				padding: 5px 11px;
+				background: #1e202b;
+			}
+
+			.wall-panes i {
+				background: linear-gradient(45deg, #38c3a7, #80e6bd);
+			}
+
+			.wall-panes i:nth-child(1) {
+				border-top-left-radius: 4px;
+			}
+
+			.wall-panes i:nth-child(2) {
+				border-top-right-radius: 4px;
+			}
+
+			.wall-panes i:nth-child(3) {
+				border-bottom-left-radius: 4px;
+			}
+
+			.wall-panes i:nth-child(4) {
+				border-bottom-right-radius: 4px;
+			}
+
+			/* Anel fixo (nao anima) por cima da miniatura. */
+			.wall::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+				border-radius: inherit;
+				box-shadow: inset 0 0 0 1px var(--line-strong);
+			}
+
+			.wall[aria-checked="true"]::after {
+				box-shadow: inset 0 0 0 2px var(--accent), inset 0 0 0 4px var(--bg);
+			}
+
+			.wall:focus-visible {
+				outline-offset: 2px;
+			}
+
+			@media (hover: hover) {
+				.wall:hover {
+					transform: translateY(-1px);
+				}
+			}
+
+			.tray {
+				grid-area: tray;
+				display: flex;
+				align-items: center;
+				justify-content: flex-end;
+				gap: 8px;
+				min-width: 0;
+			}
+
+			.tray [data-i18n-switcher] {
 				color: var(--text);
 				flex: none;
 			}
 
-			@media (max-width: 820px) {
-				.nav {
-					display: none;
-				}
-
-				.site-header [data-i18n-switcher] {
-					margin-left: auto;
-				}
+			.clock {
+				display: inline-flex;
+				align-items: baseline;
+				gap: 8px;
+				flex: none;
+				padding: 4px 12px;
+				border-radius: 999px;
+				background: var(--hover);
+				color: var(--text);
+				font-size: 0.88rem;
+				font-variant-numeric: tabular-nums;
+				white-space: nowrap;
 			}
 
-			/* ---------- Hero ---------- */
+			.clock-date {
+				color: var(--muted);
+			}
 
-			/* Gradiente estatico, so dentro do hero: nada anima e nada repete em
-			   ladrilho, entao nao custa nada depois do primeiro paint. */
+			/* ---------- Casca: navegacao das Configuracoes + conteudo ---------- */
+
+			.shell {
+				display: grid;
+				grid-template-columns: var(--nav-w) minmax(0, 1fr);
+				gap: clamp(20px, 3vw, 40px);
+				max-width: var(--shell);
+				margin: 0 auto;
+				padding: 0 var(--gutter);
+			}
+
+			.side-nav {
+				position: sticky;
+				top: var(--sticky-h);
+				align-self: start;
+				max-height: calc(100vh - var(--sticky-h));
+				overflow-y: auto;
+				padding: 18px 2px 24px;
+				scrollbar-width: thin;
+			}
+
+			.side-nav ul {
+				display: grid;
+				gap: 3px;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.side-nav a {
+				position: relative;
+				display: flex;
+				align-items: center;
+				gap: 14px;
+				min-height: 40px;
+				padding: 6px 12px 6px 14px;
+				border-radius: var(--radius-sm);
+				color: var(--text);
+				font-size: 0.93rem;
+				text-decoration: none;
+				transition: background-color 120ms ease;
+			}
+
+			.side-nav a:hover {
+				background: var(--hover);
+			}
+
+			.side-nav a[aria-current="true"] {
+				background: var(--selected);
+				font-weight: 600;
+			}
+
+			/* A pilula curta do item ativo, igual a das Configuracoes. */
+			.side-nav a::before {
+				content: "";
+				position: absolute;
+				left: 0;
+				top: 50%;
+				width: 3px;
+				height: 16px;
+				margin-top: -8px;
+				border-radius: 2px;
+				background: var(--accent);
+				transform: scaleY(0);
+				transition: transform 180ms var(--ease);
+			}
+
+			.side-nav a[aria-current="true"]::before {
+				transform: scaleY(1);
+			}
+
+			.side-nav svg {
+				flex: none;
+				width: 18px;
+				height: 18px;
+				fill: none;
+				stroke: currentColor;
+				stroke-width: 1.6;
+				stroke-linecap: round;
+				stroke-linejoin: round;
+			}
+
+			.side-nav a[aria-current="true"] svg {
+				color: var(--accent-ink);
+			}
+
+			main {
+				min-width: 0;
+				padding-bottom: 24px;
+			}
+
+			/* ---------- Inicio em quatro paineis ---------- */
+
 			.hero {
-				padding-top: clamp(28px, 4vw, 48px);
-				background: radial-gradient(70% 55% at 50% 0%, var(--accent-soft), transparent 70%);
-				text-align: center;
+				padding-top: 18px;
+				scroll-margin-top: var(--sticky-h);
 			}
 
-			.hero-icon {
-				width: 56px;
-				height: 56px;
-				margin: 0 auto 12px;
+			.panes {
+				display: grid;
+				grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.28fr);
+				gap: 6px;
+			}
+
+			.pane {
+				min-width: 0;
+				padding: clamp(22px, 3vw, 36px);
+				border-radius: 4px;
+				background: var(--surface);
+			}
+
+			.pane-head {
+				border-top-left-radius: var(--radius-pane);
+				background: linear-gradient(160deg, var(--surface-tint), var(--surface) 70%);
+			}
+
+			.pane-shot {
+				padding: 0;
+				overflow: hidden;
+				border-top-right-radius: var(--radius-pane);
+				background: var(--bg-alt);
+			}
+
+			.pane-get {
+				border-bottom-left-radius: var(--radius-pane);
+				background: var(--accent-container);
+				color: var(--on-accent-container);
+			}
+
+			.pane-facts {
+				border-bottom-right-radius: var(--radius-pane);
 			}
 
 			.eyebrow {
 				display: inline-block;
 				margin: 0 0 18px;
-				padding: 5px 12px;
-				border: 1px solid var(--line-strong);
+				padding: 3px 12px;
 				border-radius: 999px;
-				background: var(--surface);
-				color: var(--muted);
-				font-size: 0.82rem;
+				background: var(--accent-soft);
+				color: var(--accent-ink);
+				font-size: 0.84rem;
 				font-weight: 600;
-				letter-spacing: 0.02em;
 			}
 
 			.hero h1 {
-				font-size: clamp(2.6rem, 6vw, 4.5rem);
+				font-size: clamp(2.3rem, 4.4vw, 3.7rem);
 				font-weight: 650;
 				letter-spacing: -0.03em;
+				line-height: 1.05;
 			}
 
-			.codename {
-				margin: 10px 0 0;
-				color: var(--muted);
-				font-size: clamp(1rem, 2.2vw, 1.2rem);
+			.tagline {
+				margin: 12px 0 0;
+				font-family: var(--font-display);
+				font-size: clamp(1.25rem, 2.2vw, 1.65rem);
+				font-weight: 600;
+				line-height: 1.2;
+				letter-spacing: -0.015em;
+			}
+
+			.tagline span {
+				display: block;
+			}
+
+			.tagline span + span {
+				color: var(--accent-ink);
 			}
 
 			.pitch {
-				max-width: 34ch;
-				margin: 22px auto 0;
-				font-family: var(--font-display);
-				font-size: clamp(1.15rem, 2.5vw, 1.5rem);
-				line-height: 1.3;
-				font-weight: 500;
-				letter-spacing: -0.01em;
+				max-width: 40ch;
+				margin: 16px 0 0;
+				color: var(--muted);
+				font-size: 1.02rem;
 			}
 
-			.cta {
+			.pane-head .btn {
+				margin-top: 24px;
+			}
+
+			.hero-shot {
+				display: none;
+				margin: 0;
+				height: 100%;
+				flex-direction: column;
+			}
+
+			html:not([data-wall]) .hero-shot[data-shot="jade"],
+			html[data-wall="jade"] .hero-shot[data-shot="jade"],
+			html[data-wall="meadow"] .hero-shot[data-shot="meadow"],
+			html[data-wall="city"] .hero-shot[data-shot="city"],
+			html[data-wall="space"] .hero-shot[data-shot="space"],
+			html[data-wall="pop"] .hero-shot[data-shot="pop"] {
+				display: flex;
+			}
+
+			.hero-shot a {
+				display: block;
+				flex: 1;
+				min-height: 0;
+			}
+
+			.hero-shot img {
+				width: 100%;
+				height: 100%;
+				min-height: 240px;
+				aspect-ratio: 16 / 9;
+				object-fit: cover;
+				object-position: top center;
+			}
+
+			.hero-shot figcaption {
+				padding: 12px 18px 14px;
+				color: var(--muted);
+				font-size: 0.84rem;
+				line-height: 1.45;
+			}
+
+			.version-label {
+				margin: 0;
+				font-size: 0.88rem;
+				font-weight: 600;
+			}
+
+			.version {
+				display: block;
+				margin-top: 2px;
+				font-family: var(--font-display);
+				font-size: clamp(2.2rem, 4vw, 3rem);
+				font-weight: 650;
+				line-height: 1.05;
+				letter-spacing: -0.025em;
+				font-variant-numeric: tabular-nums;
+			}
+
+			.codename {
+				margin: 4px 0 0;
+				font-size: 1.05rem;
+				font-weight: 600;
+			}
+
+			.pane-get .btn-primary {
+				margin-top: 22px;
+				background: var(--on-accent-container);
+				color: var(--accent-container);
+			}
+
+			.pane-get .btn-primary:hover {
+				background: color-mix(in srgb, var(--on-accent-container) 86%, #fff);
+			}
+
+			.pane-get :focus-visible {
+				outline-color: var(--on-accent-container);
+			}
+
+			.hero-note {
+				margin: 18px 0 0;
+				font-size: 0.84rem;
+				line-height: 1.5;
+			}
+
+			.pane-get .hero-note a {
+				color: inherit;
+			}
+
+			.facts {
+				display: grid;
+				gap: 4px;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.facts > li {
+				display: grid;
+				grid-template-columns: 20px minmax(0, 1fr);
+				gap: 14px;
+				align-items: start;
+				padding: 14px 4px;
+				border-top: 1px solid var(--line);
+				color: var(--muted);
+				font-size: 0.93rem;
+			}
+
+			.facts > li:first-child {
+				border-top: 0;
+				padding-top: 0;
+			}
+
+			.facts strong {
+				display: block;
+				color: var(--text);
+				font-weight: 600;
+			}
+
+			.facts svg,
+			.row-icon {
+				width: 20px;
+				height: 20px;
+				margin-top: 2px;
+				fill: none;
+				stroke: var(--accent-ink);
+				stroke-width: 1.6;
+				stroke-linecap: round;
+				stroke-linejoin: round;
+			}
+
+			.chips {
 				display: flex;
 				flex-wrap: wrap;
-				justify-content: center;
-				gap: 12px;
-				margin-top: 32px;
+				gap: 6px;
+				margin: 8px 0 0;
+				padding: 0;
+				list-style: none;
 			}
+
+			.chips li {
+				padding: 2px 10px;
+				border: 1px solid var(--line-strong);
+				border-radius: 999px;
+				color: var(--text);
+				font-size: 0.84rem;
+			}
+
+			@media (max-width: 760px) {
+				.panes {
+					grid-template-columns: minmax(0, 1fr);
+				}
+
+				.pane-head {
+					border-top-right-radius: var(--radius-pane);
+				}
+
+				.pane-shot {
+					border-top-right-radius: 4px;
+				}
+
+				.pane-get {
+					border-bottom-left-radius: 4px;
+				}
+
+				.pane-facts {
+					border-bottom-left-radius: var(--radius-pane);
+				}
+
+				.hero-shot img {
+					min-height: 0;
+				}
+			}
+
+			/* ---------- Botoes ---------- */
 
 			.btn {
 				display: inline-flex;
 				align-items: center;
 				justify-content: center;
 				gap: 8px;
-				min-height: 46px;
-				padding: 10px 24px;
-				border-radius: 999px;
+				min-height: 40px;
+				padding: 8px 20px;
+				border-radius: var(--radius);
+				font-family: inherit;
 				font-weight: 600;
-				font-size: 1rem;
+				font-size: 0.95rem;
 				text-decoration: none;
+				cursor: pointer;
 				transition: transform 140ms var(--ease), background-color 140ms ease, border-color 140ms ease;
 			}
 
 			.btn:hover {
 				text-decoration: none;
-			}
-
-			@media (hover: hover) {
-				.btn:hover {
-					transform: translateY(-1px);
-				}
-			}
-
-			.btn:active {
-				transform: translateY(0);
 			}
 
 			.btn-primary {
@@ -390,102 +867,132 @@
 			}
 
 			.btn-primary:hover {
-				background: color-mix(in srgb, var(--accent) 88%, var(--text));
+				background: color-mix(in srgb, var(--accent) 88%, #fff);
 			}
 
 			.btn-secondary {
-				background: var(--surface);
+				background: var(--surface-2);
 				color: var(--text);
 				border: 1px solid var(--line-strong);
 			}
 
 			.btn-secondary:hover {
-				border-color: var(--accent-ink);
+				background: var(--surface-3);
 			}
 
-			.facts {
+			.cta {
 				display: flex;
 				flex-wrap: wrap;
-				justify-content: center;
-				gap: 8px 22px;
-				margin: 26px auto 0;
-				padding: 0;
-				list-style: none;
+				gap: 10px;
+				margin-top: 22px;
+			}
+
+			/* ---------- Aviso (InfoBar do Windows) ---------- */
+
+			.notice {
+				display: grid;
+				grid-template-columns: 24px minmax(0, 1fr);
+				gap: 4px 14px;
+				align-items: start;
+				margin-top: 6px;
+				padding: 16px 20px;
+				border: 1px solid var(--line);
+				border-radius: var(--radius);
+				background: var(--surface);
+			}
+
+			.notice > :not(.notice-mark) {
+				grid-column: 2;
+				min-width: 0;
+			}
+
+			.notice-mark {
+				grid-column: 1;
+				grid-row: 1 / span 2;
+				width: 22px;
+				height: 22px;
+				margin-top: 1px;
+				border-radius: 50%;
+				display: grid;
+				place-items: center;
+				background: var(--accent);
+				color: var(--on-accent);
+				font-weight: 700;
+				font-size: 0.8rem;
+				font-family: var(--font-display);
+			}
+
+			.notice h2 {
+				font-size: 0.98rem;
+				font-weight: 600;
+				letter-spacing: 0;
+			}
+
+			.notice p {
+				margin: 0;
 				color: var(--muted);
 				font-size: 0.92rem;
 			}
 
-			.facts strong {
-				color: var(--text);
-				font-weight: 600;
-			}
-
-			.hero-note {
-				max-width: 62ch;
-				margin: 12px auto 0;
-				color: var(--muted);
-				font-size: 0.86rem;
-			}
-
-			.hero-shot {
-				margin-top: clamp(40px, 7vw, 72px);
-				margin-bottom: 0;
-			}
-
-			.hero-shot a {
-				display: block;
-				border-radius: var(--radius);
-				overflow: hidden;
-				border: 1px solid var(--line);
-				box-shadow: var(--shadow-lg);
-			}
-
-			.hero-shot figcaption {
-				margin-top: 14px;
-				color: var(--muted);
-				font-size: 0.88rem;
+			.notice p + p {
+				margin-top: 6px;
 			}
 
 			/* ---------- Secoes ---------- */
 
 			.section {
-				padding-block: clamp(64px, 10vw, 112px);
-				scroll-margin-top: 56px;
-			}
-
-			.section.alt {
-				background: var(--bg-alt);
+				padding-top: clamp(56px, 7vw, 88px);
+				scroll-margin-top: calc(var(--sticky-h) - 24px);
 			}
 
 			.section-head {
-				max-width: 720px;
-				margin: 0 auto clamp(32px, 5vw, 52px);
-				text-align: center;
+				max-width: 760px;
+				margin: 0 0 clamp(20px, 3vw, 28px);
+			}
+
+			/* O motivo dos quatro vidros, pequeno, em cima de cada titulo. */
+			.section-head::before {
+				content: "";
+				display: block;
+				width: 18px;
+				height: 18px;
+				margin-bottom: 14px;
+				border-radius: 5px;
+				background:
+					linear-gradient(var(--accent), var(--accent)) 0 0 / 8px 8px no-repeat,
+					linear-gradient(var(--accent), var(--accent)) 10px 0 / 8px 8px no-repeat,
+					linear-gradient(var(--accent), var(--accent)) 0 10px / 8px 8px no-repeat,
+					linear-gradient(var(--accent), var(--accent)) 10px 10px / 8px 8px no-repeat;
 			}
 
 			.section-head h2 {
-				font-size: clamp(1.9rem, 4.6vw, 3rem);
+				font-size: clamp(1.6rem, 3vw, 2.15rem);
 				font-weight: 650;
-				letter-spacing: -0.025em;
+				letter-spacing: -0.02em;
 			}
 
 			.section-head p {
-				margin: 14px 0 0;
+				margin: 10px 0 0;
 				color: var(--muted);
-				font-size: clamp(1.02rem, 2vw, 1.18rem);
+				font-size: 1.02rem;
+			}
+
+			.group-label {
+				margin: 28px 0 10px;
+				font-size: 0.95rem;
+				font-weight: 600;
 			}
 
 			.card {
-				padding: clamp(20px, 3vw, 28px);
+				padding: clamp(18px, 2.4vw, 24px);
 				border: 1px solid var(--line);
 				border-radius: var(--radius);
-				background: linear-gradient(180deg, var(--surface-tint), var(--surface) 140px);
-				box-shadow: var(--shadow);
+				background: var(--surface);
 			}
 
 			.card h3,
 			.card h4 {
-				font-size: 1.15rem;
+				font-size: 1.08rem;
 				font-weight: 600;
 			}
 
@@ -494,7 +1001,8 @@
 				color: var(--muted);
 			}
 
-			.card ul {
+			.card ul,
+			.card ol {
 				margin: 12px 0 0;
 				padding-left: 1.15em;
 				color: var(--muted);
@@ -508,63 +1016,117 @@
 				color: var(--accent-ink);
 			}
 
-			/* ---------- Aviso de projeto nao oficial ---------- */
+			.card > :first-child {
+				margin-top: 0;
+			}
 
-			.notice-band {
-				margin-top: clamp(56px, 8vw, 96px);
-				padding-block: 28px;
-				border-block: 1px solid var(--line);
+			.card .folders {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 6px;
+				margin: 6px 0 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.card .folders li + li {
+				margin-top: 0;
+			}
+
+			.card .race {
+				max-width: none;
+			}
+
+			/* ---------- Linhas (as "setting cards" das Configuracoes) ---------- */
+
+			.rows {
+				display: grid;
+				gap: 4px;
+			}
+
+			.row {
+				display: grid;
+				grid-template-columns: 20px minmax(0, 1fr) auto;
+				align-items: center;
+				gap: 4px 18px;
+				min-height: 68px;
+				padding: 14px 20px;
+				border: 1px solid var(--line);
+				border-radius: var(--radius);
 				background: var(--surface);
 			}
 
-			.notice {
-				display: grid;
-				grid-template-columns: 28px minmax(0, 1fr);
-				gap: 6px 16px;
-				align-items: start;
-			}
-
-            .notice > :not(.notice-mark) {
-                grid-column: 2;
-                min-width: 0;
-            }
-
-			.notice-mark {
-                grid-column: 1;
-				grid-row: 1;
-				width: 28px;
-				height: 28px;
-				border-radius: 50%;
-				display: grid;
-				place-items: center;
-				background: var(--accent-soft);
-				color: var(--accent-ink);
-				font-weight: 700;
-				font-size: 0.95rem;
-				font-family: var(--font-display);
-			}
-
-			.notice h2 {
-				font-size: 1.05rem;
-				font-weight: 600;
-				letter-spacing: 0;
-			}
-
-			.notice p {
+			.row .row-icon {
 				margin: 0;
-				color: var(--muted);
-				font-size: 0.95rem;
+				align-self: center;
 			}
 
-			@media (max-width: 520px) {
-				.notice {
-					grid-template-columns: 1fr;
+			.row-text {
+				min-width: 0;
+			}
+
+			.row-title {
+				display: block;
+				color: var(--text);
+				font-size: 0.97rem;
+			}
+
+			a.row-title {
+				font-weight: 600;
+			}
+
+			.row-sub {
+				display: block;
+				margin: 2px 0 0;
+				color: var(--muted);
+				font-size: 0.86rem;
+			}
+
+			.row-end {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: flex-end;
+				gap: 8px;
+			}
+
+			.row .chips {
+				margin: 0;
+				justify-content: flex-end;
+			}
+
+			a.row {
+				color: inherit;
+				text-decoration: none;
+				transition: background-color 120ms ease;
+			}
+
+			a.row:hover {
+				background: var(--surface-2);
+			}
+
+			.chevron {
+				width: 16px;
+				height: 16px;
+				fill: none;
+				stroke: var(--muted);
+				stroke-width: 1.8;
+				stroke-linecap: round;
+				stroke-linejoin: round;
+			}
+
+			@media (max-width: 640px) {
+				.row {
+					grid-template-columns: 20px minmax(0, 1fr);
 				}
 
-                .notice > :not(.notice-mark) { grid-column: 1; }
+				.row-end,
+				.row .chips {
+					grid-column: 2;
+					justify-content: flex-start;
+				}
 
-				.notice-mark {
-					grid-row: auto;
+				a.row .chevron {
+					display: none;
 				}
 			}
 
@@ -574,7 +1136,7 @@
 				display: flex;
 				width: max-content;
 				max-width: 100%;
-				margin: 0 auto clamp(32px, 5vw, 48px);
+				margin: 0 0 24px;
 				padding: 4px;
 				border: 1px solid var(--line);
 				border-radius: 999px;
@@ -584,14 +1146,14 @@
 			.tabs [role="tab"] {
 				appearance: none;
 				flex: 1 1 0;
-				min-height: 42px;
-				padding: 8px 22px;
+				min-height: 40px;
+				padding: 8px 20px;
 				border: 0;
 				border-radius: 999px;
 				background: transparent;
 				color: var(--muted);
 				font: inherit;
-				font-size: 0.97rem;
+				font-size: 0.95rem;
 				font-weight: 600;
 				white-space: nowrap;
 				cursor: pointer;
@@ -620,11 +1182,11 @@
 			}
 
 			.no-js .panel + .panel {
-				margin-top: 72px;
+				margin-top: 56px;
 			}
 
 			.panel {
-				scroll-margin-top: 72px;
+				scroll-margin-top: var(--sticky-h);
 			}
 
 			.panel:focus-visible {
@@ -633,24 +1195,23 @@
 
 			.panel-head {
 				max-width: 720px;
-				margin: 0 auto 28px;
-				text-align: center;
+				margin: 0 0 20px;
 			}
 
 			.panel-head h3 {
-				font-size: clamp(1.4rem, 3vw, 1.9rem);
+				font-size: clamp(1.3rem, 2.4vw, 1.6rem);
 				font-weight: 650;
 			}
 
 			.panel-head p {
-				margin: 10px 0 0;
+				margin: 8px 0 0;
 				color: var(--muted);
 			}
 
 			.grid-2 {
 				display: grid;
 				grid-template-columns: repeat(2, minmax(0, 1fr));
-				gap: 16px;
+				gap: 8px;
 			}
 
 			.grid-2 .wide {
@@ -661,12 +1222,6 @@
 				.grid-2 {
 					grid-template-columns: minmax(0, 1fr);
 				}
-			}
-
-			/* Painel iniciante: texto maior e mais solto, leitura de conversa. */
-			#beginner .card p,
-			#beginner .card li {
-				font-size: 1.04rem;
 			}
 
 			/* Painel avancado: lista tipo ficha tecnica, termo em mono em cima. */
@@ -729,9 +1284,8 @@
 			thead th {
 				border-top: 0;
 				background: var(--accent-soft);
-				font-size: 0.8rem;
-				text-transform: uppercase;
-				letter-spacing: 0.05em;
+				font-size: 0.86rem;
+				font-weight: 600;
 				color: var(--text);
 			}
 
@@ -756,8 +1310,8 @@
 
 			.features {
 				display: grid;
-				grid-template-columns: repeat(3, minmax(0, 1fr));
-				gap: 16px;
+				grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+				gap: 8px;
 				margin: 0;
 				padding: 0;
 				list-style: none;
@@ -765,7 +1319,7 @@
 
 			.features li {
 				position: relative;
-				padding: 24px;
+				padding: 20px 22px;
 				border: 1px solid var(--line);
 				border-radius: var(--radius);
 				background: var(--surface);
@@ -774,40 +1328,51 @@
 			.features li::before {
 				content: "";
 				display: block;
-				width: 28px;
-				height: 4px;
-				margin-bottom: 16px;
+				width: 24px;
+				height: 3px;
+				margin-bottom: 14px;
 				border-radius: 2px;
 				background: var(--accent);
 			}
 
-			.features li:last-child:nth-child(3n + 1) {
-				grid-column: 1 / -1;
-			}
-
 			.features h3 {
-				font-size: 1.08rem;
+				font-size: 1.02rem;
 				font-weight: 600;
 			}
 
 			.features p {
-				margin: 8px 0 0;
+				margin: 6px 0 0;
 				color: var(--muted);
-				font-size: 0.95rem;
+				font-size: 0.93rem;
 			}
 
-			@media (max-width: 900px) {
-				.features {
-					grid-template-columns: repeat(2, minmax(0, 1fr));
-				}
+			/* ---------- Visuais ---------- */
 
-				.features li:last-child:nth-child(3n + 1) {
-					grid-column: auto;
-				}
+			.looks {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+				gap: 8px;
+				margin-top: 8px;
 			}
 
-			@media (max-width: 560px) {
-				.features {
+			.looks .card p:first-child {
+				margin-top: 0;
+			}
+
+			.looks-shot {
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+			}
+
+			.looks-shot img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			@media (max-width: 860px) {
+				.looks {
 					grid-template-columns: minmax(0, 1fr);
 				}
 			}
@@ -817,7 +1382,7 @@
 			.gallery {
 				display: grid;
 				grid-template-columns: repeat(2, minmax(0, 1fr));
-				gap: clamp(16px, 2.5vw, 28px);
+				gap: clamp(12px, 2vw, 20px);
 			}
 
 			.gallery figure {
@@ -834,7 +1399,6 @@
 				border: 1px solid var(--line);
 				border-radius: var(--radius);
 				background: var(--surface);
-				box-shadow: var(--shadow);
 			}
 
 			/* Zoom leve so na imagem (transform), nunca na sombra. */
@@ -855,9 +1419,9 @@
 			}
 
 			.gallery figcaption {
-				margin-top: 10px;
+				margin-top: 8px;
 				color: var(--muted);
-				font-size: 0.9rem;
+				font-size: 0.88rem;
 			}
 
 			@media (max-width: 640px) {
@@ -893,13 +1457,13 @@
 				cursor: pointer;
 				border-radius: var(--radius);
 				color: #fff;
-				background: rgba(8, 10, 12, 0.38);
+				background: rgba(8, 10, 12, 0.45);
 				transition: background 160ms ease;
 			}
 
 			.reveal:hover,
 			.reveal:focus-visible {
-				background: rgba(8, 10, 12, 0.5);
+				background: rgba(8, 10, 12, 0.58);
 			}
 
 			.reveal:focus-visible {
@@ -918,7 +1482,6 @@
 
 			.reveal span {
 				font-size: 0.88rem;
-				opacity: 0.85;
 			}
 
 			.sensitive.revealed .reveal {
@@ -941,7 +1504,6 @@
 
 			.lightbox::backdrop {
 				background: color-mix(in srgb, var(--bg) 96%, transparent);
-				backdrop-filter: blur(6px);
 			}
 
 			.lightbox[open] {
@@ -1026,7 +1588,8 @@
 			.install {
 				display: grid;
 				grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-				gap: 16px;
+				gap: 8px;
+				margin-top: 8px;
 			}
 
 			@media (max-width: 860px) {
@@ -1042,11 +1605,19 @@
 				padding: 0;
 			}
 
+			.card .steps {
+				padding: 0;
+			}
+
 			.steps li {
 				counter-increment: step;
 				position: relative;
-				padding: 0 0 18px 46px;
+				padding: 0 0 16px 44px;
 				color: var(--muted);
+			}
+
+			.card .steps li + li {
+				margin-top: 0;
 			}
 
 			.steps li::before {
@@ -1054,15 +1625,15 @@
 				position: absolute;
 				left: 0;
 				top: -2px;
-				width: 30px;
-				height: 30px;
+				width: 28px;
+				height: 28px;
 				border-radius: 50%;
 				display: grid;
 				place-items: center;
 				background: var(--accent-soft);
 				color: var(--accent-ink);
 				font-weight: 700;
-				font-size: 0.9rem;
+				font-size: 0.86rem;
 			}
 
 			.keys-list {
@@ -1073,12 +1644,20 @@
 				gap: 10px;
 			}
 
+			.card .keys-list {
+				padding: 0;
+			}
+
 			.keys-list li {
 				display: grid;
 				grid-template-columns: 8.5em minmax(0, 1fr);
 				align-items: center;
 				gap: 12px;
 				color: var(--muted);
+			}
+
+			.card .keys-list li + li {
+				margin-top: 0;
 			}
 
 			.keys {
@@ -1095,14 +1674,9 @@
 				border: 1px solid var(--line-strong);
 				border-bottom-width: 2px;
 				border-radius: 6px;
-				background: var(--surface);
+				background: var(--surface-2);
 				color: var(--text);
 				text-align: center;
-			}
-
-			.card .cta {
-				justify-content: flex-start;
-				margin-top: 22px;
 			}
 
 			.fine {
@@ -1110,18 +1684,25 @@
 				font-size: 0.9rem;
 			}
 
+			/* ---------- Corrida de inicializacao (os dois modos) ---------- */
+
+			/* Sem o modo completo, as faixas ficam paradas no fim, do tamanho do
+			   tempo de cada versao: vira um grafico de barras simples. */
+			html:not(.rich-ready) .race-fill {
+				background: color-mix(in srgb, var(--accent) 60%, transparent);
+				transform: scaleX(var(--share));
+			}
+
+			html:not(.rich-ready) .race-bar {
+				display: none;
+			}
+
 			/* ---------- O que muda no PC ---------- */
 
 			.changes {
 				display: grid;
-				grid-template-columns: repeat(3, minmax(0, 1fr));
-				gap: 16px;
-			}
-
-			@media (max-width: 980px) {
-				.changes {
-					grid-template-columns: minmax(0, 1fr);
-				}
+				grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+				gap: 8px;
 			}
 
 			.card .muted-note {
@@ -1135,21 +1716,22 @@
 
 			.releases {
 				list-style: none;
-				max-width: 820px;
-				margin: 0 auto;
+				margin: 0;
 				padding: 0;
 			}
 
 			.releases li {
 				display: grid;
-				grid-template-columns: 130px minmax(0, 1fr);
+				grid-template-columns: 140px minmax(0, 1fr);
 				gap: 4px 24px;
-				padding: 22px 0;
+				padding: 20px 0;
 				border-top: 1px solid var(--line);
 			}
 
-			.releases li:first-child {
+			/* first-of-type: o rich.js poe um <span> (a linha que enche) antes. */
+			.releases > li:first-of-type {
 				border-top: 0;
+				padding-top: 4px;
 			}
 
 			.releases li > :not(.rel-head) {
@@ -1163,7 +1745,7 @@
 
 			.rel-ver {
 				font-family: var(--font-display);
-				font-size: 1.35rem;
+				font-size: 1.25rem;
 				font-weight: 650;
 			}
 
@@ -1174,7 +1756,7 @@
 				border-radius: 999px;
 				background: var(--accent-soft);
 				color: var(--accent-ink);
-				font-size: 0.74rem;
+				font-size: 0.76rem;
 				font-weight: 700;
 			}
 
@@ -1200,8 +1782,20 @@
 			}
 
 			.center-link {
-				margin: 28px 0 0;
-				text-align: center;
+				margin: 20px 0 0;
+			}
+
+			.releases > li[hidden] {
+				display: none !important;
+			}
+
+			.release-history-toggle {
+				display: flex;
+				margin: 20px 0 0;
+			}
+
+			.release-history-toggle [hidden] {
+				display: none;
 			}
 
 			@media (max-width: 560px) {
@@ -1227,47 +1821,31 @@
 				font-weight: 600;
 			}
 
-			.repos {
-				display: grid;
-				grid-template-columns: repeat(3, minmax(0, 1fr));
-				gap: 16px;
-			}
-
-			@media (max-width: 900px) {
-				.repos {
-					grid-template-columns: minmax(0, 1fr);
-				}
-			}
-
-			.repo {
-				display: block;
-				color: inherit;
-				text-decoration: none;
-				transition: transform 160ms var(--ease), border-color 160ms ease;
-			}
-
-			.repo:hover {
-				text-decoration: none;
-				transform: translateY(-2px);
-				border-color: var(--accent-ink);
-			}
-
 			.repo .api {
 				display: block;
 				color: var(--accent-ink);
-				font-size: 0.84rem;
+				font-size: 0.82rem;
 				font-weight: 600;
 				overflow-wrap: anywhere;
 			}
 
 			.repo h3 {
-				margin-top: 8px;
+				margin: 2px 0 0;
+				font-size: 1rem;
+				font-weight: 600;
+			}
+
+			.repo p {
+				margin: 2px 0 0;
+				color: var(--muted);
+				font-size: 0.9rem;
 			}
 
 			/* ---------- Rodape ---------- */
 
 			.site-footer {
-				padding-block: 40px 56px;
+				margin-top: clamp(56px, 7vw, 88px);
+				padding: 28px 0 40px;
 				border-top: 1px solid var(--line);
 				color: var(--muted);
 				font-size: 0.88rem;
@@ -1294,6 +1872,141 @@
 				white-space: nowrap;
 			}
 
+			/* ---------- Telas menores ---------- */
+
+			/* Ate 1000 px a navegacao vira uma faixa horizontal presa no topo, e
+			   a barra do ii rola junto com a pagina (duas faixas presas comeriam
+			   metade da tela de um celular). */
+			@media (max-width: 1000px) {
+				:root {
+					--sticky-h: 52px;
+				}
+
+				.topbar {
+					position: static;
+				}
+
+				.shell {
+					display: block;
+					padding: 0;
+				}
+
+				.side-nav {
+					top: 0;
+					z-index: 35;
+					max-height: none;
+					overflow-x: auto;
+					overflow-y: hidden;
+					padding: 4px var(--gutter);
+					border-bottom: 1px solid var(--line);
+					background: var(--bg);
+					scrollbar-width: none;
+				}
+
+				.side-nav::-webkit-scrollbar {
+					display: none;
+				}
+
+				.side-nav ul {
+					display: flex;
+					gap: 2px;
+					width: max-content;
+				}
+
+				.side-nav a {
+					gap: 8px;
+					min-height: 43px;
+					padding: 6px 12px;
+					font-size: 0.9rem;
+					white-space: nowrap;
+				}
+
+				.side-nav a::before {
+					left: 50%;
+					top: auto;
+					bottom: 2px;
+					width: 16px;
+					height: 3px;
+					margin: 0 0 0 -8px;
+					transform: scaleX(0);
+				}
+
+				.side-nav a[aria-current="true"]::before {
+					transform: scaleX(1);
+				}
+
+				main {
+					padding: 0 var(--gutter);
+				}
+			}
+
+			@media (max-width: 900px) {
+				.clock-date {
+					display: none;
+				}
+			}
+
+			/* Duas linhas: marca, Efeitos e idioma em cima; papeis de parede e
+			   relogio embaixo. A bandeja some como caixa (display: contents) e
+			   os filhos dela entram direto na grade da barra. */
+			@media (max-width: 640px) {
+				.bar {
+					grid-template-columns: minmax(0, 1fr) auto auto;
+					grid-template-areas:
+						"brand fx lang"
+						"walls walls clock";
+					border-radius: 24px;
+					padding: 8px 8px 8px 12px;
+				}
+
+				.tray {
+					display: contents;
+				}
+
+				.tray .fx-toggle {
+					grid-area: fx;
+				}
+
+				.tray [data-i18n-switcher] {
+					grid-area: lang;
+				}
+
+				.clock {
+					grid-area: clock;
+					justify-self: end;
+				}
+
+				.walls {
+					justify-self: start;
+				}
+			}
+
+			@media (max-width: 420px) {
+				.brand span {
+					display: none;
+				}
+
+				.wall {
+					width: 36px;
+				}
+
+				.walls {
+					gap: 3px;
+				}
+
+				.clock {
+					padding-inline: 10px;
+				}
+			}
+
+			/* Modo leve: nada de movimento decorativo. */
+			:root[data-lite] .wall,
+			:root[data-lite] .btn,
+			:root[data-lite] .gallery img,
+			:root[data-lite] .side-nav a::before {
+				transition: none;
+			}
+
 			@media (prefers-reduced-motion: reduce) {
 				*,
 				*::before,
@@ -1302,149 +2015,200 @@
 				}
 
 				.btn:hover,
-				.repo:hover,
+				.wall:hover,
 				.gallery a:hover img {
 					transform: none;
 				}
 			}
-
-            .releases > li[hidden] { display: none !important; }
-            .release-history-toggle { display: flex; margin: 28px auto 0; cursor: pointer; }
-            .release-history-toggle [hidden] { display: none; }
-            .hero .cta { margin-top: 24px; }
-            .hero .facts { margin-top: 20px; font-size: .85rem; }
-            .hero .hero-note { font-size: .8rem; }
-            @media (max-width: 520px) {
-                .hero .facts { flex-direction: column; gap: 6px; }
-                .hero .cta { gap: 8px; }
-                .hero .btn { padding-inline: 18px; }
-            }
 		</style>
 	</head>
 	<body>
 		<a class="skip" href="#main" data-i18n="iw.skip">Skip to content</a>
 
-		<header class="site-header">
-			<div class="wrap header-inner">
+		<!-- Barra do topo, como a do ii: logo, papel de parede (recolore a pagina) e relogio. -->
+		<header class="topbar">
+			<div class="bar">
 				<a class="brand" href="#top" aria-label="Illogical Windows" data-i18n-attr="aria-label:iw.brand">
-					<img src="assets/icon.webp?v=20261031" width="28" height="28" alt="" />
+					<svg class="logo" viewBox="0 0 128 128" aria-hidden="true" focusable="false">
+						<defs>
+							<path id="iwlogo-panes" d="M10 40Q10 17 33 17H58V57H10Z M63 10H105Q118 10 118 23V66H63Z M10 62H58V117H24Q10 117 10 103Z M63 71H118V89Q118 111 96 111H63Z" />
+							<clipPath id="iwlogo-glass"><use href="#iwlogo-panes" /></clipPath>
+							<linearGradient id="iwlogo-jade" x1="0" y1="1" x2="1" y2="0">
+								<stop style="stop-color: var(--logo-a)" />
+								<stop offset="0.55" style="stop-color: var(--logo-b)" />
+								<stop offset="1" style="stop-color: var(--logo-c)" />
+							</linearGradient>
+						</defs>
+						<use href="#iwlogo-panes" fill="url(#iwlogo-jade)" />
+						<g clip-path="url(#iwlogo-glass)" fill="#1e202b">
+							<path d="M40 74C30 54 45 31 68 30C82 29 96 39 100 54C93 42 81 36 69 38C51 40 41 56 45 71Q47 77 43 78Q41 78 40 74Z" />
+							<path d="M95 54C107 78 88 101 62 99C55 98 49 96 45 92C69 98 90 84 91 64Q91 57 95 54Z" />
+							<g transform="translate(68 63) rotate(15)" fill="none" stroke="#1e202b" stroke-width="6.7" stroke-linecap="round"><path d="M0-15V15 M-13-7.5L13 7.5 M-13 7.5L13-7.5" /></g>
+							<circle cx="40" cy="86" r="3.2" />
+						</g>
+					</svg>
 					<span data-i18n="iw.brand">Illogical Windows</span>
 				</a>
-				<nav class="nav" aria-label="Sections" data-i18n-attr="aria-label:iw.nav.label">
-                    <a class="rich-only" href="#journey" data-i18n="iw.show.nav.tour">Discover</a>
-                    <a class="rich-only" href="#play" data-i18n="iw.show.nav.play">Try it</a>
-					<a href="#learn" data-i18n="iw.nav.learn">Learn</a>
-					<a href="#features" data-i18n="iw.nav.features">Features</a>
-					<a href="#gallery" data-i18n="iw.nav.gallery">Gallery</a>
-					<a href="#install" data-i18n="iw.nav.install">Install</a>
-					<a href="#source" data-i18n="iw.nav.source">Source</a>
-				</nav>
-				<button type="button" class="fx-toggle" aria-pressed="true" title="Turn the animations and the interactive demo on or off" data-i18n-attr="title:iw.nav.fxTitle">
-					<span class="fx-switch" aria-hidden="true"></span><span data-i18n="iw.nav.fx">Effects</span>
-				</button>
-				<div data-i18n-switcher></div>
+
+				<div class="walls" role="radiogroup" aria-label="Wallpaper" aria-describedby="walls-hint" data-i18n-attr="aria-label:iw.demo.walls">
+					<button type="button" class="wall" role="radio" aria-checked="true" data-wall="jade" aria-label="Jade" title="Jade" data-i18n-attr="aria-label:iw.walls.jade,title:iw.walls.jade">
+						<span class="wall-panes" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+					</button>
+					<button type="button" class="wall" role="radio" aria-checked="false" tabindex="-1" data-wall="meadow" aria-label="Meadow" title="Meadow" data-i18n-attr="aria-label:iw.walls.meadow,title:iw.walls.meadow">
+						<img src="../../filearchive/projects/ii-windows/shots/frieren-desktop.thumb.webp" width="480" height="270" decoding="async" alt="" />
+					</button>
+					<button type="button" class="wall" role="radio" aria-checked="false" tabindex="-1" data-wall="city" aria-label="Rainy city" title="Rainy city" data-i18n-attr="aria-label:iw.walls.city,title:iw.walls.city">
+						<img src="../../filearchive/projects/ii-windows/shots/tokyo-desktop.thumb.webp" width="480" height="270" decoding="async" alt="" />
+					</button>
+					<button type="button" class="wall" role="radio" aria-checked="false" tabindex="-1" data-wall="space" aria-label="Space" title="Space" data-i18n-attr="aria-label:iw.walls.space,title:iw.walls.space">
+						<img src="../../filearchive/projects/ii-windows/shots/catppuccin-desktop.thumb.webp" width="480" height="270" decoding="async" alt="" />
+					</button>
+					<button type="button" class="wall" role="radio" aria-checked="false" tabindex="-1" data-wall="pop" aria-label="Pink pop" title="Pink pop" data-i18n-attr="aria-label:iw.walls.pop,title:iw.walls.pop">
+						<img src="../../filearchive/projects/ii-windows/shots/sekaipop-desktop-26120.thumb.webp" width="480" height="270" decoding="async" alt="" />
+					</button>
+				</div>
+				<span class="visually-hidden" id="walls-hint" data-i18n="iw.walls.hint">Pick a wallpaper and the whole page takes its colors, the way ii does with matugen.</span>
+
+				<div class="tray">
+					<button type="button" class="fx-toggle" aria-pressed="true" title="Turn the animations and the interactive demo on or off" data-i18n-attr="title:iw.nav.fxTitle">
+						<span class="fx-switch" aria-hidden="true"></span><span data-i18n="iw.nav.fx">Effects</span>
+					</button>
+					<div data-i18n-switcher></div>
+					<span class="clock" aria-hidden="true"><span class="clock-time">--:--</span><span class="clock-date"></span></span>
+				</div>
 			</div>
 		</header>
 
-		<main id="main">
-			<!-- ================= Hero ================= -->
-			<section class="hero" id="top">
-				<div class="wrap">
-					<img class="hero-icon" src="assets/icon.webp?v=20261031" width="84" height="84" alt="" />
-					<p class="eyebrow" data-i18n="iw.hero.eyebrow">Unofficial port</p>
-					<h1 data-i18n="iw.hero.title">Illogical Windows</h1>
-                    <p class="launch-title rich-only"><span data-i18n="iw.show.hero.a">Your desktop.</span><span data-i18n="iw.show.hero.b">Entirely your own.</span></p>
-					<p class="codename" data-i18n="iw.hero.codename">Trampolining Teapot</p>
-					<p class="pitch" data-i18n="iw.hero.pitch">end-4's illogical-impulse desktop, running natively on Windows 11 and Windows 10.</p>
+		<div class="shell">
+			<!-- Navegacao das Configuracoes. data-spy: secoes que acendem o item (rolagem). -->
+			<nav class="side-nav" aria-label="Sections" data-i18n-attr="aria-label:iw.nav.label">
+				<ul>
+					<li><a href="#top" data-spy="top journey play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5v-6h-6v6H4a.5.5 0 0 1-.5-.5z" /></svg><span data-i18n="iw.nav.home">Home</span></a></li>
+					<li><a href="#features" data-spy="features learn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.1 5.4 5.4 2.1-5.4 2.1L12 18.5l-2.1-5.4L4.5 11l5.4-2.1z" /><path d="M18.5 16.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" /></svg><span data-i18n="iw.nav.features">Features</span></a></li>
+					<li><a href="#looks" data-spy="looks explore gallery"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.2 0 1.8-1 1.3-2-.6-1.2.1-2.5 1.5-2.5h1.7a4 4 0 0 0 4-4c0-4.7-3.8-8.5-8.5-8.5z" /><circle cx="7.8" cy="11.5" r="1.1" /><circle cx="10.5" cy="7.6" r="1.1" /><circle cx="15" cy="8" r="1.1" /></svg><span data-i18n="iw.nav.looks">Looks</span></a></li>
+					<li><a href="#race-section" data-spy="race-section"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.8 17a8.5 8.5 0 1 1 16.4 0" /><path d="m12 15.5 4-5" /><circle cx="12" cy="16" r="1.2" /></svg><span data-i18n="iw.nav.slow">Slow PCs</span></a></li>
+					<li><a href="#install" data-spy="install"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14" /></svg><span data-i18n="iw.nav.install">Install</span></a></li>
+					<li><a href="#defender" data-spy="defender"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 19 6v5.2c0 4.4-2.9 8-7 9.3-4.1-1.3-7-4.9-7-9.3V6z" /><path d="m9 12 2.2 2.2L15.5 10" /></svg><span data-i18n="iw.nav.defender">Defender</span></a></li>
+					<li><a href="#changes" data-spy="changes"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="11.5" rx="1.8" /><path d="M9 20h6m-3-4v4" /></svg><span data-i18n="iw.nav.changes">What changes</span></a></li>
+					<li><a href="#releases" data-spy="releases"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></svg><span data-i18n="iw.nav.releases">Releases</span></a></li>
+					<li><a href="#credits" data-spy="credits source"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19.5s-7.5-4.6-7.5-10.2A4.1 4.1 0 0 1 12 7a4.1 4.1 0 0 1 7.5 2.3c0 5.6-7.5 10.2-7.5 10.2z" /></svg><span data-i18n="iw.nav.credits">Credits</span></a></li>
+				</ul>
+			</nav>
 
-					<div class="cta">
-						<a
-							class="btn btn-primary"
-							href="https://github.com/nunreasonable/ii-windows/releases/download/v26.1.2.1/ii-windows-setup.exe"
-							aria-describedby="hero-note"
-							data-i18n="iw.hero.download"
-							>Download 26.1.2.1</a
-						>
-						<a class="btn btn-secondary" href="https://github.com/nunreasonable/ii-windows" data-i18n="iw.hero.github">View on GitHub</a>
+			<main id="main">
+				<!-- ================= Inicio: quatro paineis, como o logo ================= -->
+				<section class="hero" id="top" aria-labelledby="hero-title">
+					<div class="panes">
+						<div class="pane pane-head">
+							<p class="eyebrow" data-i18n="iw.hero.eyebrow">Unofficial port</p>
+							<h1 id="hero-title" data-i18n="iw.hero.title">Illogical Windows</h1>
+							<p class="tagline"><span data-i18n="iw.show.hero.a">Your desktop.</span> <span data-i18n="iw.show.hero.b">Entirely your own.</span></p>
+							<p class="pitch" data-i18n="iw.hero.pitch">end-4's illogical-impulse desktop, running natively on Windows 11 and Windows 10.</p>
+							<a class="btn btn-secondary" href="https://github.com/nunreasonable/ii-windows" data-i18n="iw.hero.github">View on GitHub</a>
+						</div>
+
+						<!-- Captura do papel de parede escolhido na barra (CSS por html[data-wall]).
+						     Todas lazy: as escondidas (display: none) nao sao baixadas. -->
+						<div class="pane pane-shot">
+							<figure class="hero-shot" data-shot="jade">
+								<a href="../../filearchive/projects/ii-windows/shots/glassy-desktop.webp"><img src="../../filearchive/projects/ii-windows/shots/glassy-desktop.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Focus timer, stopwatch, countdown and resource cards, with the bar floating at the top." data-i18n-attr="alt:iw.gallery.n.glassy_desktop.alt" /></a>
+								<figcaption data-i18n="iw.gallery.n.glassy_desktop.caption">Focus timer, stopwatch, countdown and resource cards, with the bar floating at the top.</figcaption>
+							</figure>
+							<figure class="hero-shot" data-shot="meadow">
+								<a href="../../filearchive/projects/ii-windows/shots/frieren-desktop.webp"><img src="../../filearchive/projects/ii-windows/shots/frieren-desktop.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Windows desktop running ii over a soft green wallpaper, with clock, notes, weather, resource and world clock widgets" data-i18n-attr="alt:iw.hero.shotAlt" /></a>
+								<figcaption data-i18n="iw.hero.shotCaption">Widgets on the desktop and the bar on top, all colored from the wallpaper; the Windows taskbar only shows up at the bottom edge.</figcaption>
+							</figure>
+							<figure class="hero-shot" data-shot="city">
+								<a href="../../filearchive/projects/ii-windows/shots/tokyo-desktop.webp"><img src="../../filearchive/projects/ii-windows/shots/tokyo-desktop.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Another bar style, with calendar and weather cards in a blue palette." data-i18n-attr="alt:iw.gallery.n.tokyo_desktop.alt" /></a>
+								<figcaption data-i18n="iw.gallery.n.tokyo_desktop.caption">Another bar style, with calendar and weather cards in a blue palette.</figcaption>
+							</figure>
+							<figure class="hero-shot" data-shot="space">
+								<a href="../../filearchive/projects/ii-windows/shots/catppuccin-desktop.webp"><img src="../../filearchive/projects/ii-windows/shots/catppuccin-desktop.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="A big split clock, date and weather over a space wallpaper." data-i18n-attr="alt:iw.gallery.n.catppuccin_desktop.alt" /></a>
+								<figcaption data-i18n="iw.gallery.n.catppuccin_desktop.caption">A big split clock, date and weather over a space wallpaper.</figcaption>
+							</figure>
+							<figure class="hero-shot" data-shot="pop">
+								<a href="../../filearchive/projects/ii-windows/shots/sekaipop-desktop-26120.webp"><img src="../../filearchive/projects/ii-windows/shots/sekaipop-desktop-26120.mid.webp" width="1000" height="563" loading="lazy" decoding="async" alt="SekaiPop in 26.1.2.0: outlined bar blocks, a keycap clock and desktop widgets." data-i18n-attr="alt:iw.gallery.n.sekaipop_desktop_26120.alt" /></a>
+								<figcaption data-i18n="iw.gallery.n.sekaipop_desktop_26120.caption">SekaiPop in 26.1.2.0: outlined bar blocks, a keycap clock and desktop widgets.</figcaption>
+							</figure>
+						</div>
+
+						<!-- Versao atual: atualizar junto com cada release (VERSION do ii-windows). -->
+						<div class="pane pane-get">
+							<p class="version-label" data-i18n="iw.hero.versionLabel">Version</p>
+							<strong class="version">26.1.2.1</strong>
+							<p class="codename" data-i18n="iw.hero.codename">Trampolining Teapot</p>
+							<a
+								class="btn btn-primary"
+								href="https://github.com/nunreasonable/ii-windows/releases/download/v26.1.2.1/ii-windows-setup.exe"
+								aria-describedby="hero-note"
+								data-i18n="iw.hero.download"
+								>Download 26.1.2.1</a
+							>
+							<p class="hero-note" id="hero-note" data-i18n="iw.hero.note">ii isn't signed yet, so Microsoft Defender may flag or remove it. Until it is, add ii's folders as exclusions in Windows Security: the setup shows how, and so does the Defender section below.</p>
+						</div>
+
+						<div class="pane pane-facts">
+							<ul class="facts">
+								<li>
+									<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7.5" height="7.5" rx="1" /><rect x="13" y="3.5" width="7.5" height="7.5" rx="1" /><rect x="3.5" y="13" width="7.5" height="7.5" rx="1" /><rect x="13" y="13" width="7.5" height="7.5" rx="1" /></svg>
+									<span data-i18n="iw.hero.requirements">Windows 11, or Windows 10 version 2004+ (22H2 recommended)</span>
+								</li>
+								<li>
+									<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.2 0 1.8-1 1.3-2-.6-1.2.1-2.5 1.5-2.5h1.7a4 4 0 0 0 4-4c0-4.7-3.8-8.5-8.5-8.5z" /><circle cx="7.8" cy="11.5" r="1.1" /><circle cx="10.5" cy="7.6" r="1.1" /><circle cx="15" cy="8" r="1.1" /></svg>
+									<div>
+										<strong data-i18n="iw.features.styles.title">Four looks</strong>
+										<ul class="chips"><li>ii</li><li>end4-pC</li><li>NabyScape</li><li>SekaiPop</li></ul>
+									</div>
+								</li>
+								<li>
+									<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 7.5 4 12l4.5 4.5M15.5 7.5 20 12l-4.5 4.5M13.5 5l-3 14" /></svg>
+									<span data-i18n="iw.hero.free">Free and open source, GPL-3.0</span>
+								</li>
+							</ul>
+						</div>
 					</div>
 
-                    <div class="launch-stage rich-only">
-                      <div class="launch-orbit" aria-hidden="true"></div>
-                      <div class="launch-desktop"><img data-showcase-src="assets/showcase/desktop.webp" width="1000" height="563" fetchpriority="high" decoding="async" alt="ii desktop with clock, calendar, timers and resource widgets in a teal palette" data-i18n-attr="alt:iw.show.desktopAlt" /></div>
-                      <img class="launch-panel launch-search" data-showcase-src="assets/showcase/spotlight.webp" width="896" height="574" decoding="async" alt="" aria-hidden="true" />
-                      <img class="launch-panel launch-side" data-showcase-src="assets/showcase/sidebar.webp" width="460" height="1040" decoding="async" alt="" aria-hidden="true" />
-                      <a href="#journey" class="launch-tour"><span data-i18n="iw.show.tour">Scroll to discover</span><span aria-hidden="true">↓</span></a>
-                    </div>
+					<!-- Aviso: nao oficial (InfoBar) -->
+					<aside class="notice" aria-labelledby="notice-title">
+						<span class="notice-mark" aria-hidden="true">i</span>
+						<h2 id="notice-title" data-i18n="iw.notice.title">Unofficial and not affiliated with Microsoft</h2>
+						<p data-i18n="iw.notice.body">
+							Illogical Windows is an independent community port. It isn't made, endorsed or supported by Microsoft, by end-4 or by the Quickshell developers. Windows is a trademark of the Microsoft group of companies.
+						</p>
+						<p>
+							<span data-i18n="iw.notice.issuesBefore">Found a problem on Windows? Please report it</span>
+							<a href="https://github.com/nunreasonable/ii-windows/issues" data-i18n="iw.notice.issuesLink">on this project's issue tracker</a><span data-i18n="iw.notice.issuesAfter">. Please use this fork’s channels rather than upstream’s general support.</span>
+						</p>
+						<p><a href="https://discord.com/channels/1393080422245863506/1560371137123188738" data-i18n="iw.support.discord">Discord support thread for ii-windows</a> <span data-i18n="iw.support.context">— a dedicated thread in the original ii Discord server, for this independent Windows fork.</span></p>
+					</aside>
+				</section>
 
-					<!-- Versao atual: atualizar junto com cada release (VERSION do ii-windows). -->
-					<ul class="facts">
-						<li><span data-i18n="iw.hero.versionLabel">Version</span> <strong>26.1.2.1</strong> <span class="rel-name">— Trampolining Teapot</span></li>
-						<li data-i18n="iw.hero.requirements">Windows 11, or Windows 10 version 2004+ (22H2 recommended)</li>
-						<li data-i18n="iw.hero.free">Free and open source, GPL-3.0</li>
-					</ul>
-					<p class="hero-note" id="hero-note" data-i18n="iw.hero.note">ii isn't signed yet, so Microsoft Defender may flag or remove it. Until it is, add ii's folders as exclusions in Windows Security: the setup shows how, and so does the Defender section below.</p>
-				</div>
+				<!-- ================= Modo completo: tres cenas ================= -->
+				<section class="section journey rich-only" id="journey" aria-labelledby="journeyTitle">
+					<header class="section-head">
+						<h2 id="journeyTitle" data-i18n="iw.show.journeyTitle">Discover the desktop</h2>
+						<p data-i18n="iw.show.eyebrow">A different kind of everyday</p>
+					</header>
+					<div class="journey-scenes">
+						<article class="journey-scene" data-scene="0">
+							<div class="journey-copy"><h3><span data-i18n="iw.show.search.a">Less searching.</span> <span data-i18n="iw.show.search.b">More doing.</span></h3><p data-i18n="iw.show.search.text">Apps, files, emoji and quick calculations. One place, one key, right when you need it.</p><a href="#demo-area" class="scene-try" data-try="spot" data-i18n="iw.show.search.try">Try Spotlight ↓</a><span class="scene-key"><kbd>Win</kbd><span data-i18n="iw.show.search.key">and start typing</span></span></div>
+							<div class="journey-visual scene-search"><img data-showcase-src="assets/showcase/spotlight.webp" width="896" height="574" loading="lazy" decoding="async" alt="Spotlight finding apps on Windows" data-i18n-attr="alt:iw.show.search.alt" /><span class="scene-label" data-i18n="iw.show.search.label">Everything starts here.</span></div>
+						</article>
+						<article class="journey-scene" data-scene="1">
+							<div class="journey-copy"><h3><span data-i18n="iw.show.controls.a">Small adjustments.</span> <span data-i18n="iw.show.controls.b">Big difference.</span></h3><p data-i18n="iw.show.controls.text">Your music, notifications and everyday controls, together in a sidebar that feels like part of your desktop.</p><a href="#demo-area" class="scene-try" data-try="side" data-i18n="iw.show.controls.try">Open quick settings ↓</a></div>
+							<div class="journey-visual scene-controls"><img data-showcase-src="assets/showcase/sidebar.webp" width="460" height="1040" loading="lazy" decoding="async" alt="Quick settings and notifications in the ii sidebar" data-i18n-attr="alt:iw.show.controls.alt" /></div>
+						</article>
+						<article class="journey-scene" data-scene="2">
+							<div class="journey-copy"><h3><span data-i18n="iw.show.widgets.a">Make room.</span> <span data-i18n="iw.show.widgets.b">For your day.</span></h3><p data-i18n="iw.show.widgets.text">A clock, your notes, the weather, a focus timer. Widgets sit beside your icons, with colors drawn from your wallpaper.</p><a href="#demo-area" class="scene-try" data-try="wall" data-i18n="iw.show.widgets.try">Play with the colors ↓</a></div>
+							<div class="journey-visual scene-widgets"><img data-showcase-src="assets/showcase/desktop.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Desktop widgets arranged around a glass wallpaper" data-i18n-attr="alt:iw.show.widgets.alt" /></div>
+						</article>
+					</div>
+				</section>
 
-				<figure class="wrap hero-shot lite-only">
-					<a href="../../filearchive/projects/ii-windows/shots/frieren-desktop.webp">
-						<img
-							src="../../filearchive/projects/ii-windows/shots/frieren-desktop.mid.webp"
-							width="1000"
-							height="563"
-							fetchpriority="high"
-							decoding="async"
-							alt="Windows desktop running ii over a soft green wallpaper, with clock, notes, weather, resource and world clock widgets"
-							data-i18n-attr="alt:iw.hero.shotAlt"
-						/>
-					</a>
-					<figcaption data-i18n="iw.hero.shotCaption">Widgets on the desktop and the bar on top, all colored from the wallpaper; the Windows taskbar only shows up at the bottom edge.</figcaption>
-				</figure>
-
-			</section>
-
-			<!-- ================= Aviso: nao oficial ================= -->
-			<div class="notice-band">
-				<aside class="wrap notice" aria-labelledby="notice-title">
-					<span class="notice-mark" aria-hidden="true">i</span>
-					<h2 id="notice-title" data-i18n="iw.notice.title">Unofficial and not affiliated with Microsoft</h2>
-					<p data-i18n="iw.notice.body">
-						Illogical Windows is an independent community port. It isn't made, endorsed or supported by Microsoft, by end-4 or by the Quickshell developers. Windows is a trademark of the Microsoft group of companies.
-					</p>
-					<p>
-						<span data-i18n="iw.notice.issuesBefore">Found a problem on Windows? Please report it</span>
-						<a href="https://github.com/nunreasonable/ii-windows/issues" data-i18n="iw.notice.issuesLink">on this project's issue tracker</a><span data-i18n="iw.notice.issuesAfter">. Please use this fork’s channels rather than upstream’s general support.</span>
-					</p>
-                    <p><a href="https://discord.com/channels/1393080422245863506/1560371137123188738" data-i18n="iw.support.discord">Discord support thread for ii-windows</a> <span data-i18n="iw.support.context">— a dedicated thread in the original ii Discord server, for this independent Windows fork.</span></p>
-				</aside>
-			</div>
-
-
-            <section class="journey rich-only" id="journey" aria-labelledby="journeyTitle">
-              <div class="journey-pin">
-                <div class="journey-topline"><span data-i18n="iw.show.eyebrow">A different kind of everyday</span><span class="journey-counter" aria-hidden="true">01 / 03</span></div>
-                <h2 class="visually-hidden" id="journeyTitle" data-i18n="iw.show.journeyTitle">Discover the desktop</h2>
-                <div class="journey-scenes">
-                  <article class="journey-scene is-current" data-scene="0">
-                    <div class="journey-copy"><span class="chapter-number" aria-hidden="true">01</span><h3><span data-i18n="iw.show.search.a">Less searching.</span><span data-i18n="iw.show.search.b">More doing.</span></h3><p data-i18n="iw.show.search.text">Apps, files, emoji and quick calculations. One place, one key, right when you need it.</p><a href="#demo-area" class="scene-try" data-try="spot" data-i18n="iw.show.search.try">Try Spotlight ↓</a><span class="scene-key"><kbd>Win</kbd><span data-i18n="iw.show.search.key">and start typing</span></span></div>
-                    <div class="journey-visual scene-search"><div class="scene-halo"></div><img data-showcase-src="assets/showcase/spotlight.webp" width="896" height="574" loading="lazy" decoding="async" alt="Spotlight finding apps on Windows" data-i18n-attr="alt:iw.show.search.alt" /><span class="scene-label" data-i18n="iw.show.search.label">Everything starts here.</span></div>
-                  </article>
-                  <article class="journey-scene" data-scene="1">
-                    <div class="journey-copy"><span class="chapter-number" aria-hidden="true">02</span><h3><span data-i18n="iw.show.controls.a">Small adjustments.</span><span data-i18n="iw.show.controls.b">Big difference.</span></h3><p data-i18n="iw.show.controls.text">Your music, notifications and everyday controls, together in a sidebar that feels like part of your desktop.</p><a href="#demo-area" class="scene-try" data-try="side" data-i18n="iw.show.controls.try">Open quick settings ↓</a></div>
-                    <div class="journey-visual scene-controls"><div class="scene-halo"></div><img data-showcase-src="assets/showcase/sidebar.webp" width="460" height="1040" loading="lazy" decoding="async" alt="Quick settings and notifications in the ii sidebar" data-i18n-attr="alt:iw.show.controls.alt" /><div class="control-word" aria-hidden="true">ii.</div></div>
-                  </article>
-                  <article class="journey-scene" data-scene="2">
-                    <div class="journey-copy"><span class="chapter-number" aria-hidden="true">03</span><h3><span data-i18n="iw.show.widgets.a">Make room.</span><span data-i18n="iw.show.widgets.b">For your day.</span></h3><p data-i18n="iw.show.widgets.text">A clock, your notes, the weather, a focus timer. Widgets sit beside your icons, with colors drawn from your wallpaper.</p><a href="#demo-area" class="scene-try" data-try="wall" data-i18n="iw.show.widgets.try">Play with the colors ↓</a></div>
-                    <div class="journey-visual scene-widgets"><div class="scene-halo"></div><img data-showcase-src="assets/showcase/desktop.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Desktop widgets arranged around a glass wallpaper" data-i18n-attr="alt:iw.show.widgets.alt" /></div>
-                  </article>
-                </div>
-                <div class="journey-progress" aria-hidden="true"><i></i><i></i><i></i></div>
-              </div>
-            </section>
-            <section class="hands-on rich-only" id="play" aria-labelledby="playTitle">
-              <header class="wrap hands-on-head"><p class="show-kicker" data-i18n="iw.show.play.eyebrow">Your turn</p><h2 id="playTitle"><span data-i18n="iw.show.play.a">Don't just look.</span><span data-i18n="iw.show.play.b">Make yourself at home.</span></h2><p data-i18n="iw.show.play.text">This desktop responds. Open apps, move windows and change the wallpaper. Nothing to install.</p></header>
-
+				<section class="section hands-on rich-only" id="play" aria-labelledby="playTitle">
+					<header class="section-head hands-on-head"><p class="show-kicker" data-i18n="iw.show.play.eyebrow">Your turn</p><h2 id="playTitle"><span data-i18n="iw.show.play.a">Don't just look.</span> <span data-i18n="iw.show.play.b">Make yourself at home.</span></h2><p data-i18n="iw.show.play.text">This desktop responds. Open apps, move windows and change the wallpaper. Nothing to install.</p></header>
 				<!-- Modo completo: o ii jogavel. No modo leve fica escondido e o print acima aparece. -->
-				<div class="wrap demo-area rich-only" id="demo-area">
+				<div class="demo-area" id="demo-area">
 					<div
 						class="demo"
 						tabindex="0"
@@ -1460,7 +2224,7 @@
 							<div class="demo-icons"><i></i><i></i><i></i></div>
 						</div>
 						<div class="demo-bar">
-							<button type="button" class="demo-bar-btn demo-bar-search" data-act="win" aria-label="Search" data-i18n-attr="aria-label:iw.demo.searchBtn"><img src="assets/icon.webp?v=20261031" width="16" height="16" alt="" /></button>
+							<button type="button" class="demo-bar-btn demo-bar-search" data-act="win" aria-label="Search" data-i18n-attr="aria-label:iw.demo.searchBtn"><img src="assets/icon.webp?v=20261125" width="16" height="16" alt="" /></button>
 							<div class="demo-ws" role="group" aria-label="Workspaces" data-i18n-attr="aria-label:iw.demo.wsLabel">
 								<button type="button" data-ws="0" class="on" aria-pressed="true">1</button><button type="button" data-ws="1" aria-pressed="false">2</button><button type="button" data-ws="2" aria-pressed="false">3</button>
 							</div>
@@ -1550,22 +2314,16 @@
 						<span class="demo-private" data-i18n="iw.demo.private">It stays in your browser. Nothing is uploaded.</span>
 					</div>
 				</div>
+				</section>
 
-            </section>
-
-			<!-- ================= Recursos ================= -->
-			<section class="section alt" id="features">
-				<div class="wrap">
+				<!-- ================= Recursos ================= -->
+				<section class="section" id="features" aria-labelledby="features-title">
 					<header class="section-head">
-						<h2 data-i18n="iw.features.title">Everything you'd expect from ii</h2>
+						<h2 id="features-title" data-i18n="iw.features.title">Everything you'd expect from ii</h2>
 						<p data-i18n="iw.features.lead">The same QML as on Linux wherever it could stay the same, with Windows doing the work underneath.</p>
 					</header>
 
 					<ul class="features">
-						<li>
-							<h3 data-i18n="iw.features.styles.title">Four looks</h3>
-							<p data-i18n="iw.features.styles.text">Choose ii, pctrade’s end4-pC, NabyScape inspired by BillyNabil, or SekaiPop based on Blapples’ work, used with permission. SekaiPop combines outlined blocks, hard shadows and springy controls, with mint, indigo, lime, rose, amber, violet, mono or wallpaper colors in light and dark modes.</p><p><a href="https://github.com/Blapples/SekaiPop" data-i18n="iw.styles.credit">SekaiPop by Blapples ↗</a></p><img src="assets/style-sekaipop.webp?v=20261113-1" width="1280" height="720" loading="lazy" style="width:100%;height:auto;border-radius:12px" alt="SekaiPop desktop with outlined blocks, a keycap clock and a phone-shaped sidebar" data-i18n-attr="alt:iw.styles.alt"/>
-						</li>
 						<li>
 							<h3 data-i18n="iw.features.bar.title">Bar and system tray</h3>
 							<p data-i18n="iw.features.bar.text">Rearrange widgets between left, middle and right, with a dynamic island for media and notifications, an optional screen frame, and tray icons shared with Explorer's own tray.</p>
@@ -1641,11 +2399,10 @@
 							<p data-i18n="iw.features.webapps.text">Type a site and get a Start menu app that opens it in its own window. ii checks for new releases when it starts and asks before updating.</p>
 						</li>
 					</ul>
-				</div>
-			</section>
+				</section>
 
-			<!-- ================= Dois publicos ================= -->
-			<section class="section" id="learn">
+				<!-- ================= Dois publicos ================= -->
+				<section class="section" id="learn">
 				<div class="wrap">
 					<header class="section-head lite-only">
 						<h2 data-i18n="iw.learn.title">Explained two ways</h2>
@@ -2018,10 +2775,30 @@
 						</div>
 					</div>
 				</div>
-			</section>
+				</section>
 
-			<!-- ================= Galeria ================= -->
-
+				<!-- ================= Visuais ================= -->
+				<section class="section" id="looks" aria-labelledby="looks-title">
+					<header class="section-head">
+						<h2 id="looks-title" data-i18n="iw.features.styles.title">Four looks</h2>
+					</header>
+					<div class="rows">
+						<div class="row">
+							<svg class="row-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.2 0 1.8-1 1.3-2-.6-1.2.1-2.5 1.5-2.5h1.7a4 4 0 0 0 4-4c0-4.7-3.8-8.5-8.5-8.5z" /><circle cx="7.8" cy="11.5" r="1.1" /><circle cx="10.5" cy="7.6" r="1.1" /><circle cx="15" cy="8" r="1.1" /></svg>
+							<div class="row-text"><span class="row-title" data-i18n="iw.looks.row">Visual style</span></div>
+							<ul class="chips"><li>ii</li><li>end4-pC</li><li>NabyScape</li><li>SekaiPop</li></ul>
+						</div>
+					</div>
+					<div class="looks">
+						<div class="card">
+							<p data-i18n="iw.features.styles.text">Choose ii, pctrade’s end4-pC, NabyScape inspired by BillyNabil, or SekaiPop based on Blapples’ work, used with permission. SekaiPop combines outlined blocks, hard shadows and springy controls, with mint, indigo, lime, rose, amber, violet, mono or wallpaper colors in light and dark modes.</p>
+							<p><a href="https://github.com/Blapples/SekaiPop" data-i18n="iw.styles.credit">SekaiPop by Blapples ↗</a></p>
+						</div>
+						<figure class="card looks-shot">
+							<img src="assets/style-sekaipop.webp?v=20261113-1" width="1280" height="720" loading="lazy" decoding="async" alt="SekaiPop desktop with outlined blocks, a keycap clock and a phone-shaped sidebar" data-i18n-attr="alt:iw.styles.alt" />
+						</figure>
+					</div>
+				</section>
 			<!-- ================= Modo completo: explorador de recursos ================= -->
 			<section class="section explore rich-only" id="explore">
 				<div class="wrap">
@@ -2057,26 +2834,6 @@
 					</div>
 				</div>
 			</section>
-
-			<!-- ================= Modo completo: corrida de inicializacao ================= -->
-			<section class="section alt rich-only" id="race-section">
-				<div class="wrap">
-					<header class="section-head">
-						<h2 data-i18n="iw.race.title">Fast on a slow PC</h2>
-						<p data-i18n="iw.race.lead">The same VM, held to two slow cores and a slow disk, from start to ii's bar. Time runs six times faster here.</p>
-					</header>
-					<div class="race" id="race">
-						<div class="race-lane" data-seconds="43"><span class="race-ver">0.5.0</span><span class="race-screen"><span class="race-fill"></span><span class="race-bar"></span></span><span class="race-time">0.0 s</span></div>
-						<div class="race-lane" data-seconds="4"><span class="race-ver">0.6.0</span><span class="race-screen"><span class="race-fill"></span><span class="race-bar"></span></span><span class="race-time">0.0 s</span></div>
-						<div class="race-lane" data-seconds="1.6"><span class="race-ver">0.7.0+</span><span class="race-screen"><span class="race-fill"></span><span class="race-bar"></span></span><span class="race-time">0.0 s</span></div>
-						<div class="race-foot">
-							<p data-i18n="iw.race.note">Numbers from the release notes: about 43 s, 4 s and 1.6 s.</p>
-							<button type="button" class="race-replay"><span data-i18n="iw.race.replay">Run again</span></button>
-						</div>
-					</div>
-				</div>
-			</section>
-
 			<section class="section" id="gallery">
 				<div class="wrap">
 					<header class="section-head">
@@ -2237,14 +2994,55 @@
 					</div>
 				</div>
 			</section>
-
-			<!-- ================= Instalar ================= -->
-			<section class="section alt" id="install">
+			<!-- ================= Modo completo: corrida de inicializacao ================= -->
+			<section class="section" id="race-section">
 				<div class="wrap">
 					<header class="section-head">
-						<h2 data-i18n="iw.install.title">Get Illogical Windows</h2>
+						<h2 data-i18n="iw.race.title">Fast on a slow PC</h2>
+						<p><span data-i18n="iw.race.leadVm">The same VM, held to two slow cores and a slow disk, from start to ii's bar.</span> <span class="rich-only" data-i18n="iw.race.leadFast">Time runs six times faster here.</span></p>
+					</header>
+					<div class="card"><div class="race" id="race">
+						<div class="race-lane" data-seconds="43" style="--share: 1"><span class="race-ver">0.5.0</span><span class="race-screen"><span class="race-fill"></span><span class="race-bar"></span></span><span class="race-time">43.0 s</span></div>
+						<div class="race-lane" data-seconds="4" style="--share: 0.093"><span class="race-ver">0.6.0</span><span class="race-screen"><span class="race-fill"></span><span class="race-bar"></span></span><span class="race-time">4.0 s</span></div>
+						<div class="race-lane" data-seconds="1.6" style="--share: 0.037"><span class="race-ver">0.7.0+</span><span class="race-screen"><span class="race-fill"></span><span class="race-bar"></span></span><span class="race-time">1.6 s</span></div>
+						<div class="race-foot">
+							<p data-i18n="iw.race.note">Numbers from the release notes: about 43 s, 4 s and 1.6 s.</p>
+							<button type="button" class="race-replay rich-only"><span data-i18n="iw.race.replay">Run again</span></button>
+						</div>
+					</div></div>
+				</div>
+			</section>
+
+				<!-- ================= Instalar ================= -->
+				<section class="section" id="install" aria-labelledby="install-title">
+					<header class="section-head">
+						<h2 id="install-title" data-i18n="iw.install.title">Get Illogical Windows</h2>
 						<p data-i18n="iw.install.lead">One setup installs, updates, repairs and uninstalls it.</p>
 					</header>
+
+					<!-- Versao atual: atualizar junto com cada release. -->
+					<div class="rows">
+						<div class="row">
+							<svg class="row-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14" /></svg>
+							<div class="row-text"><span class="row-title">ii-windows-setup.exe</span><span class="row-sub">26.1.2.1 · Trampolining Teapot</span></div>
+							<div class="row-end"><a class="btn btn-primary" href="https://github.com/nunreasonable/ii-windows/releases/download/v26.1.2.1/ii-windows-setup.exe" data-i18n="iw.install.download">Download for Windows</a></div>
+						</div>
+						<a class="row" href="https://github.com/nunreasonable/ii-windows/releases/download/v26.1.2.1/ii-windows-26.1.2.1.zip">
+							<svg class="row-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8l4 4v13H6z" /><path d="M14 3.5v4h4M10.5 7v1.5m0 1.5v1.5m0 1.5v2" /></svg>
+							<div class="row-text"><span class="row-title" data-i18n="iw.download.x64">Portable x64 ZIP</span><span class="row-sub">ii-windows-26.1.2.1.zip</span></div>
+							<svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" /></svg>
+						</a>
+						<a class="row" href="https://github.com/nunreasonable/ii-windows/releases/download/v26.1.2.1/ii-windows-26.1.2.1-arm64.zip">
+							<svg class="row-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8l4 4v13H6z" /><path d="M14 3.5v4h4M10.5 7v1.5m0 1.5v1.5m0 1.5v2" /></svg>
+							<div class="row-text"><span class="row-title" data-i18n="iw.download.arm64">Experimental ARM64 ZIP</span><span class="row-sub">ii-windows-26.1.2.1-arm64.zip</span></div>
+							<svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" /></svg>
+						</a>
+						<a class="row" href="https://github.com/nunreasonable/ii-windows/releases">
+							<svg class="row-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12.2V4.5a1 1 0 0 1 1-1h7.7l8.3 8.3-8.7 8.7z" /><circle cx="8" cy="8" r="1.3" /></svg>
+							<div class="row-text"><span class="row-title" data-i18n="iw.install.release">All releases and downloads</span></div>
+							<svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" /></svg>
+						</a>
+					</div>
 
 					<div class="install">
 						<article class="card">
@@ -2254,10 +3052,6 @@
 								<li data-i18n="iw.install.step2">Read the page it shows: it lists everything it changes on your PC. Then pick your options.</li>
 								<li data-i18n="iw.install.step3">Install. Everything goes into your Windows user, with no administrator rights needed.</li>
 							</ol>
-							<div class="cta">
-								<a class="btn btn-primary" href="https://github.com/nunreasonable/ii-windows/releases/download/v26.1.2.1/ii-windows-setup.exe" data-i18n="iw.install.download">Download for Windows</a>
-								<a class="btn btn-secondary" href="https://github.com/nunreasonable/ii-windows/releases" data-i18n="iw.install.release">All releases and downloads</a>
-							</div>
 							<p class="fine" data-i18n="iw.install.update">
 								To update, repair or uninstall later: Settings → Apps → Installed apps → illogical-impulse (ii-windows) → Modify. The setup also checks GitHub for a newer version every time it opens and updates itself first.
 							</p>
@@ -2270,37 +3064,48 @@
 								<li><span class="keys"><kbd>Win</kbd>+<kbd>/</kbd></span><span data-i18n="iw.install.keyList">Every keybind</span></li>
 								<li><span class="keys"><kbd>Win</kbd>+<kbd>Enter</kbd></span><span data-i18n="iw.install.keyTerminal">Terminal</span></li>
 							</ul>
-							<h3 data-i18n="iw.install.reqTitle" style="margin-top: 26px">Requirements</h3>
-							<ul>
-								<li data-i18n="iw.install.req11">Windows 11, build 22000 or newer.</li>
-								<li data-i18n="iw.install.req10">Windows 10 version 2004 or newer (build 19041); 22H2 recommended. The setup needs the WebView2 Runtime there.</li>
-								<li data-i18n="iw.install.reqWinget">winget for the optional terminal tools and FFmpeg. On Windows 10 without it, the setup can install it.</li>
-							</ul>
 						</article>
 					</div>
-				</div>
-			</section>
 
-			<!-- ================= O que muda no PC ================= -->
-			<section class="section" id="defender">
-<div class="wrap">
-<header class="section-head"><h2 data-i18n="iw.signing.title">Microsoft Defender and unsigned builds</h2></header>
-<div class="card">
-<p data-i18n="iw.signing.scope">ii isn't signed yet. I've applied for free code signing from the SignPath Foundation and I'm still trying to get it. Until then, Microsoft Defender sometimes takes a new build for a threat and removes qsw.exe, so add ii's folders as exclusions:</p>
-<ol>
-<li data-i18n="iw.signing.step1">Open Windows Security → Virus &amp; threat protection, and under Virus &amp; threat protection settings click Manage settings.</li>
-<li data-i18n="iw.signing.step2">Scroll down to Exclusions, click Add or remove exclusions and allow the administrator prompt.</li>
-<li data-i18n="iw.signing.step3">Click Add an exclusion → Folder, paste one of the folders below into the address bar and click Select Folder, once for each folder.</li>
-<li data-i18n="iw.signing.step4">If Defender already removed a file, open Protection history, pick the item and choose Actions → Restore.</li>
-</ol>
-<p><code>%LOCALAPPDATA%\ii-windows</code> · <code>%LOCALAPPDATA%\quickshell</code> · <code>%LOCALAPPDATA%\illogical-impulse</code> · <code>%TEMP%\quickshell</code></p>
-<p data-i18n="iw.signing.ps">Or in PowerShell as administrator, signed in to the Windows user that uses ii:</p>
-<pre><code>Add-MpPreference -ExclusionPath "$env:LOCALAPPDATA\ii-windows", "$env:LOCALAPPDATA\quickshell", "$env:LOCALAPPDATA\illogical-impulse", "$env:TEMP\quickshell"</code></pre>
+					<h3 class="group-label" data-i18n="iw.install.reqTitle">Requirements</h3>
+					<div class="rows">
+						<div class="row">
+							<svg class="row-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7.5" height="7.5" rx="1" /><rect x="13" y="3.5" width="7.5" height="7.5" rx="1" /><rect x="3.5" y="13" width="7.5" height="7.5" rx="1" /><rect x="13" y="13" width="7.5" height="7.5" rx="1" /></svg>
+							<div class="row-text"><span class="row-title" data-i18n="iw.install.req11">Windows 11, build 22000 or newer.</span></div>
+						</div>
+						<div class="row">
+							<svg class="row-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7.5" height="7.5" rx="1" /><rect x="13" y="3.5" width="7.5" height="7.5" rx="1" /><rect x="3.5" y="13" width="7.5" height="7.5" rx="1" /><rect x="13" y="13" width="7.5" height="7.5" rx="1" /></svg>
+							<div class="row-text"><span class="row-title" data-i18n="iw.install.req10">Windows 10 version 2004 or newer (build 19041); 22H2 recommended. The setup needs the WebView2 Runtime there.</span></div>
+						</div>
+						<div class="row">
+							<svg class="row-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 20 8v8l-8 4.5L4 16V8z" /><path d="M4 8l8 4.5L20 8M12 12.5v8" /></svg>
+							<div class="row-text"><span class="row-title" data-i18n="iw.install.reqWinget">winget for the optional terminal tools and FFmpeg. On Windows 10 without it, the setup can install it.</span></div>
+						</div>
+					</div>
+				</section>
 
-</div>
-</div>
-</section>
-<section class="section" id="changes">
+				<!-- ================= Defender ================= -->
+				<section class="section" id="defender" aria-labelledby="defender-title">
+					<header class="section-head"><h2 id="defender-title" data-i18n="iw.signing.title">Microsoft Defender and unsigned builds</h2></header>
+					<div class="card">
+						<p class="lead-in" data-i18n="iw.signing.scope">ii isn't signed yet. I've applied for free code signing from the SignPath Foundation and I'm still trying to get it. Until then, Microsoft Defender sometimes takes a new build for a threat and removes qsw.exe, so add ii's folders as exclusions:</p>
+						<ol class="steps">
+							<li data-i18n="iw.signing.step1">Open Windows Security → Virus &amp; threat protection, and under Virus &amp; threat protection settings click Manage settings.</li>
+							<li data-i18n="iw.signing.step2">Scroll down to Exclusions, click Add or remove exclusions and allow the administrator prompt.</li>
+							<li data-i18n="iw.signing.step3">Click Add an exclusion → Folder, paste one of the folders below into the address bar and click Select Folder, once for each folder.</li>
+							<li data-i18n="iw.signing.step4">If Defender already removed a file, open Protection history, pick the item and choose Actions → Restore.</li>
+						</ol>
+						<ul class="folders">
+							<li><code>%LOCALAPPDATA%\ii-windows</code></li>
+							<li><code>%LOCALAPPDATA%\quickshell</code></li>
+							<li><code>%LOCALAPPDATA%\illogical-impulse</code></li>
+							<li><code>%TEMP%\quickshell</code></li>
+						</ul>
+						<p data-i18n="iw.signing.ps">Or in PowerShell as administrator, signed in to the Windows user that uses ii:</p>
+						<pre><code>Add-MpPreference -ExclusionPath "$env:LOCALAPPDATA\ii-windows", "$env:LOCALAPPDATA\quickshell", "$env:LOCALAPPDATA\illogical-impulse", "$env:TEMP\quickshell"</code></pre>
+					</div>
+				</section>
+			<section class="section" id="changes">
 				<div class="wrap">
 					<header class="section-head">
 						<h2 data-i18n="iw.changes.title">What changes on my PC</h2>
@@ -2345,9 +3150,8 @@
 					</div>
 				</div>
 			</section>
-
 			<!-- ================= Releases ================= -->
-			<section class="section alt" id="releases">
+			<section class="section" id="releases">
 				<div class="wrap">
 					<header class="section-head">
 						<h2 data-i18n="iw.releases.title">Release notes</h2>
@@ -2355,7 +3159,7 @@
 						<p class="hero-note" data-i18n="iw.releases.namingNote">From now on every release gets a name. Earlier ones are Unnamed.</p>
 					</header>
 
-					<p><a href="https://github.com/nunreasonable/ii-windows/releases/download/v26.1.2.1/ii-windows-26.1.2.1.zip" data-i18n="iw.download.x64">Portable x64 ZIP</a> · <a href="https://github.com/nunreasonable/ii-windows/releases/download/v26.1.2.1/ii-windows-26.1.2.1-arm64.zip" data-i18n="iw.download.arm64">Experimental ARM64 ZIP</a></p><ol class="releases" id="release-history"><li><div class="rel-head"><span class="rel-ver">26.1.2.1</span><span class="rel-name">Trampolining Teapot</span><time datetime="2026-11-14">2026-11-14</time><span class="rel-latest" data-i18n="iw.releases.latest">Stable</span></div><p data-i18n="iw.releases.v26121">Window opacity now has separate values for focused and unfocused apps in Settings → System → Windows; fullscreen windows and apps with their own transparency stay unchanged. Small interface fixes can arrive without a new setup: Apply fix in Settings → About swaps the interface files and briefly restarts the shell, with automatic rollback if it fails. SekaiPop’s outlined blocks and hard shadows now cover the remaining panels, widgets, menus and Settings. Presets restore their wallpaper and style, retain descriptions on Update and report export, import and install results. Fixes preserve other API keys when saving one, verify the setup SHA-256 before auto-update, restrict notification links to web and email, clear recording outlines and improve Spotlight, dock, Waffle and dashboard Settings. Problem reports now go to Documents\ii-windows\reports and copy the issue fields. Still unsigned; ARM64 remains experimental.</p><a href="https://github.com/nunreasonable/ii-windows/releases/tag/v26.1.2.1" data-i18n="iw.releases.finalLink">Full release notes and downloads ↗</a></li><li><div class="rel-head"><span class="rel-ver">26.1.2.0</span><span class="rel-name">Pogo-Sticking Walrus</span><time datetime="2026-11-13">2026-11-13</time></div><p data-i18n="iw.releases.v26120">SekaiPop, the fourth visual style, brings thick outlines, hard shadows and pressable blocks, a bouncing phone-shaped sidebar and keycap clock. Eight color themes work in light and dark modes, with ring, iris, star and block wallpaper transitions. Also new: the Colonies pixel-spread transition, setup without opening PowerShell, optional winget removal, presets that save current settings reliably (thanks to @rubenmarcus), digital-clock color and Scrolling width options. Includes the dock-click, Insider preview blur, draggable-widget, instant Settings and dock-switch fixes planned for the unreleased 26.1.1.1. ARM64 remains experimental and builds remain unsigned; the Defender guidance still applies.</p><a href="https://github.com/nunreasonable/ii-windows/releases/tag/v26.1.2.0" data-i18n="iw.releases.finalLink">Full release notes and downloads ↗</a></li><li><div class="rel-head"><span class="rel-ver">26.1.1.0</span><span class="rel-name">Bureaucratic Hamster</span><time datetime="2026-10-31">2026-10-31</time></div><p data-i18n="iw.releases.v26110final">The first release named Illogical Windows and numbered year.major.feature.fix. Everything from the preview (Scrolling tiling, the NabyScape style inspired by BillyNabil’s work, automatic light/dark mode, panel animations, a wallpaper per virtual desktop, calendar events and birthdays, an app-list context menu and experimental native ARM64), plus dock reordering, previews of minimized windows in the dock, colors that follow each desktop’s wallpaper, the battery in the end4-pC bar, Super + wheel in the Scrolling layout and many fixes. It isn’t signed yet: the setup shows how to add Defender exclusions.</p><a href="https://github.com/nunreasonable/ii-windows/releases/tag/v26.1.1.0" data-i18n="iw.releases.finalLink">Full release notes and downloads ↗</a></li>
+					<div class="card"><ol class="releases" id="release-history"><li><div class="rel-head"><span class="rel-ver">26.1.2.1</span><span class="rel-name">Trampolining Teapot</span><time datetime="2026-11-14">2026-11-14</time><span class="rel-latest" data-i18n="iw.releases.latest">Stable</span></div><p data-i18n="iw.releases.v26121">Window opacity now has separate values for focused and unfocused apps in Settings → System → Windows; fullscreen windows and apps with their own transparency stay unchanged. Small interface fixes can arrive without a new setup: Apply fix in Settings → About swaps the interface files and briefly restarts the shell, with automatic rollback if it fails. SekaiPop’s outlined blocks and hard shadows now cover the remaining panels, widgets, menus and Settings. Presets restore their wallpaper and style, retain descriptions on Update and report export, import and install results. Fixes preserve other API keys when saving one, verify the setup SHA-256 before auto-update, restrict notification links to web and email, clear recording outlines and improve Spotlight, dock, Waffle and dashboard Settings. Problem reports now go to Documents\ii-windows\reports and copy the issue fields. Still unsigned; ARM64 remains experimental.</p><a href="https://github.com/nunreasonable/ii-windows/releases/tag/v26.1.2.1" data-i18n="iw.releases.finalLink">Full release notes and downloads ↗</a></li><li><div class="rel-head"><span class="rel-ver">26.1.2.0</span><span class="rel-name">Pogo-Sticking Walrus</span><time datetime="2026-11-13">2026-11-13</time></div><p data-i18n="iw.releases.v26120">SekaiPop, the fourth visual style, brings thick outlines, hard shadows and pressable blocks, a bouncing phone-shaped sidebar and keycap clock. Eight color themes work in light and dark modes, with ring, iris, star and block wallpaper transitions. Also new: the Colonies pixel-spread transition, setup without opening PowerShell, optional winget removal, presets that save current settings reliably (thanks to @rubenmarcus), digital-clock color and Scrolling width options. Includes the dock-click, Insider preview blur, draggable-widget, instant Settings and dock-switch fixes planned for the unreleased 26.1.1.1. ARM64 remains experimental and builds remain unsigned; the Defender guidance still applies.</p><a href="https://github.com/nunreasonable/ii-windows/releases/tag/v26.1.2.0" data-i18n="iw.releases.finalLink">Full release notes and downloads ↗</a></li><li><div class="rel-head"><span class="rel-ver">26.1.1.0</span><span class="rel-name">Bureaucratic Hamster</span><time datetime="2026-10-31">2026-10-31</time></div><p data-i18n="iw.releases.v26110final">The first release named Illogical Windows and numbered year.major.feature.fix. Everything from the preview (Scrolling tiling, the NabyScape style inspired by BillyNabil’s work, automatic light/dark mode, panel animations, a wallpaper per virtual desktop, calendar events and birthdays, an app-list context menu and experimental native ARM64), plus dock reordering, previews of minimized windows in the dock, colors that follow each desktop’s wallpaper, the battery in the end4-pC bar, Super + wheel in the Scrolling layout and many fixes. It isn’t signed yet: the setup shows how to add Defender exclusions.</p><a href="https://github.com/nunreasonable/ii-windows/releases/tag/v26.1.1.0" data-i18n="iw.releases.finalLink">Full release notes and downloads ↗</a></li>
 <li><div class="rel-head"><span class="rel-ver">26.1.1.0-unstable</span><span class="rel-name">Bureaucratic Hamster</span><time datetime="2026-10-24">2026-10-24</time><span class="rel-latest" data-i18n="iw.releases.preview">Preview · Unstable</span></div><p data-i18n="iw.releases.v26110">Preview of 26.1.1.0 Bureaucratic Hamster, now named Illogical Windows with year.major.feature.fix version numbers. Adds Scrolling tiling, a NabyScape style inspired by BillyNabil’s work, automatic light/dark mode, panel animations, wallpaper per virtual desktop, Google Calendar or iCalendar events and birthdays, an app-list context menu, volume shortcuts and fixes. Built on Quickshell 0.3.2. Unsigned and less tested; Defender may flag or remove it. 1.0.8 remains stable.</p><p data-i18n="iw.releases.arm64">Experimental ARM64: the setup selects the native package on ARM PCs. Requires Windows 11 24H2 (build 26100.2605) or newer; Windows 10 ARM is unsupported. Existing x64 installations on ARM need Reinstall to migrate. Tested on virtual ARM64 runners, not yet on real Snapdragon laptops, Adreno GPUs, touch or battery hardware.</p><a href="https://github.com/nunreasonable/ii-windows/releases/tag/v26.1.1.0-unstable" data-i18n="iw.releases.previewLink">Full preview notes and downloads ↗</a></li>
 <li><div class="rel-head"><span class="rel-ver">1.0.8</span><span class="rel-name">Jazz-Handed Octopus</span><time datetime="2026-10-15">2026-10-15</time></div><p data-i18n="iw.releases.v108">Microsoft reviewed 1.0.7 and removed its malware detection. Microsoft could not reproduce a detection on the 1.0.8 qsw.exe. The submission remains in progress; if a detection persists, Microsoft requests support logs from the affected PC to continue investigating. If Defender removed ii, download the setup and choose Update to restore it while keeping your settings. Spotlight now uses a window sized to its search box and results, so live wallpaper apps no longer mistake it for a fullscreen app.</p></li>
 <li><div class="rel-head"><span class="rel-ver">1.0.7</span><span class="rel-name">Jazz-Handed Octopus</span><time datetime="2026-10-15">2026-10-15</time></div><p data-i18n="iw.releases.v107">Fixes wallpaper transitions showing the old picture zoomed, shifted or split, and Report a problem selecting an empty helper log. Uninstall now keeps settings and data by default; deletion requires Also delete my settings and data. The setup only updates itself on its first page and never during uninstall. Repair and update on Windows 10 no longer install winget unless selected.</p></li>
@@ -2578,6 +3382,7 @@
 							<p data-i18n="iw.releases.v010">First release, Windows 11 only, with a setup that downloads the package, checks its SHA-256 and installs it for the current user.</p>
 						</li>
 					</ol>
+					</div>
                     <button class="btn btn-secondary release-history-toggle" type="button" aria-expanded="false" aria-controls="release-history" id="releaseHistoryToggle"><span class="history-more" data-i18n="iw.releases.showHistory">Explore earlier releases</span><span class="history-less" data-i18n="iw.releases.hideHistory" hidden>Show recent releases</span></button>
 					<p class="center-link"><a href="https://github.com/nunreasonable/ii-windows/releases" data-i18n="iw.releases.all">All releases on GitHub</a></p>
 				</div>
@@ -2598,7 +3403,7 @@
 								<li>
 									<a href="https://github.com/end-4">end-4</a>
 									<span data-i18n="iw.credits.end4">for illogical-impulse and dots-hyprland: every widget here is theirs. If you like it,</span>
-									<a href="https://github.com/sponsors/end-4" data-i18n="iw.credits.end4Support">support them</a><span data-i18n="iw.credits.end4After"> and star the original.</span>
+									<a href="https://github.com/sponsors/end-4" data-i18n="iw.credits.end4Support">support them</a> <span data-i18n="iw.credits.end4After">and star the original.</span>
 								</li>
 								<li>
 									<span data-i18n="iw.credits.dotsBefore">Everyone thanked in</span>
@@ -2646,36 +3451,41 @@
 			</section>
 
 			<!-- ================= Codigo-fonte ================= -->
-			<section class="section alt" id="source">
+			<section class="section" id="source">
 				<div class="wrap">
 					<header class="section-head">
 						<h2 data-i18n="iw.source.title">Source code</h2>
 						<p data-i18n="iw.source.lead">Three repositories, all public.</p>
 					</header>
 
-					<div class="repos">
-						<a class="card repo" href="https://github.com/nunreasonable/ii-windows">
-							<span class="api">nunreasonable/ii-windows</span>
+					<div class="rows repos">
+						<a class="row repo" href="https://github.com/nunreasonable/ii-windows">
+							<svg class="row-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 7.5 4 12l4.5 4.5M15.5 7.5 20 12l-4.5 4.5M13.5 5l-3 14" /></svg>
+							<div class="row-text"><span class="api">nunreasonable/ii-windows</span>
 							<h3 data-i18n="iw.source.pkgTitle">ii-windows</h3>
-							<p data-i18n="iw.source.pkgText">The setup, packaging and releases. Start here.</p>
+							<p data-i18n="iw.source.pkgText">The setup, packaging and releases. Start here.</p></div>
+							<svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" /></svg>
 						</a>
-						<a class="card repo" href="https://github.com/nunreasonable/quickshell/tree/windows">
-							<span class="api">nunreasonable/quickshell · windows</span>
+						<a class="row repo" href="https://github.com/nunreasonable/quickshell/tree/windows">
+							<svg class="row-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 7.5 4 12l4.5 4.5M15.5 7.5 20 12l-4.5 4.5M13.5 5l-3 14" /></svg>
+							<div class="row-text"><span class="api">nunreasonable/quickshell · windows</span>
 							<h3 data-i18n="iw.source.qsTitle">Quickshell for Windows</h3>
-							<p data-i18n="iw.source.qsText">The widget system, with a native Windows backend.</p>
+							<p data-i18n="iw.source.qsText">The widget system, with a native Windows backend.</p></div>
+							<svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" /></svg>
 						</a>
-						<a class="card repo" href="https://github.com/nunreasonable/dots-hyprland/tree/ii-windows">
-							<span class="api">nunreasonable/dots-hyprland · ii-windows</span>
+						<a class="row repo" href="https://github.com/nunreasonable/dots-hyprland/tree/ii-windows">
+							<svg class="row-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 7.5 4 12l4.5 4.5M15.5 7.5 20 12l-4.5 4.5M13.5 5l-3 14" /></svg>
+							<div class="row-text"><span class="api">nunreasonable/dots-hyprland · ii-windows</span>
 							<h3 data-i18n="iw.source.iiTitle">ii for Windows</h3>
-							<p data-i18n="iw.source.iiText">The shell itself: bar, sidebars, settings and the rest.</p>
+							<p data-i18n="iw.source.iiText">The shell itself: bar, sidebars, settings and the rest.</p></div>
+							<svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" /></svg>
 						</a>
 					</div>
 				</div>
 			</section>
-		</main>
 
 		<footer class="site-footer">
-			<div class="wrap footer-inner">
+			<div class="footer-inner">
 				<div>
 					<p data-i18n="iw.footer.disclaimer">Illogical Windows is an unofficial project, not affiliated with or endorsed by Microsoft, end-4 or the Quickshell developers.</p>
 					<p data-i18n="iw.footer.trademark">Windows is a trademark of the Microsoft group of companies.</p>
@@ -2683,6 +3493,8 @@
 				<a class="back" href="https://daeese.me" data-i18n="iw.footer.back">← Back to daeese.me</a>
 			</div>
 		</footer>
+			</main>
+		</div>
 
 
 		<!-- Frases do modo completo (demo, coach). O JS le daqui, entao trocam de idioma com a pagina. -->
@@ -2771,8 +3583,10 @@
 				var links = Array.prototype.slice.call(document.querySelectorAll(".hero-shot a, .gallery figure a"));
 				var index = 0;
 
+				// Das capturas do inicio, so a do papel de parede escolhido esta na tela.
 				function available(link) {
 					var fig = link.closest("figure");
+					if (fig.classList.contains("hero-shot") && !fig.getClientRects().length) return false;
 					return !fig.classList.contains("sensitive") || fig.classList.contains("revealed");
 				}
 
@@ -2940,7 +3754,7 @@
 				if (rich) {
 					root.classList.add("rich");
 					try {
-						mod = mod || (await import("./rich/rich.js?v=20261107-3"));
+						mod = mod || (await import("./rich/rich.js?v=20261125-1"));
                         if (current !== revision || (lite && lite.on)) return;
 						mod.start();
 						// Mede o fps com os efeitos rodando (lite.js, data-lite-watch).
@@ -2961,7 +3775,145 @@
 			sync();
 		</script>
 
-		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261114-1"></script>
+		<script>
+			/*
+			 * Casca da pagina (vale nos dois modos): o seletor de papel de parede
+			 * da barra, o relogio e a navegacao das Configuracoes com o item da
+			 * secao visivel marcado. As cores em si ficam com window.iwTheme
+			 * (script do head), que tambem recebe as cores vindas do demo.
+			 */
+			(function () {
+				var root = document.documentElement;
+				var theme = window.iwTheme;
+
+				// --- Papel de parede (radiogroup: setas trocam, Tab entra e sai) ---
+				var group = document.querySelector(".walls");
+				var walls = Array.prototype.slice.call(group.querySelectorAll("[data-wall]"));
+
+				function syncWalls() {
+					// Cores vindas do demo: nenhum papel de parede da barra vale.
+					var id = root.hasAttribute("data-preview") ? null : theme.get();
+					walls.forEach(function (b) {
+						var on = b.getAttribute("data-wall") === id;
+						b.setAttribute("aria-checked", String(on));
+						b.tabIndex = on || (!id && b === walls[0]) ? 0 : -1;
+					});
+				}
+
+				walls.forEach(function (b, i) {
+					b.addEventListener("click", function () {
+						theme.set(b.getAttribute("data-wall"), true);
+					});
+					b.addEventListener("keydown", function (ev) {
+						var step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[ev.key];
+						var next = null;
+						if (step) next = walls[(i + step + walls.length) % walls.length];
+						else if (ev.key === "Home") next = walls[0];
+						else if (ev.key === "End") next = walls[walls.length - 1];
+						if (!next) return;
+						ev.preventDefault();
+						theme.set(next.getAttribute("data-wall"), true);
+						next.focus();
+					});
+				});
+				document.addEventListener("iw:theme", syncWalls);
+				syncWalls();
+
+				// --- Relogio da barra (para com a aba escondida) ---
+				var clockTime = document.querySelector(".clock-time");
+				var clockDate = document.querySelector(".clock-date");
+				var clockTimer = 0;
+
+				function tick() {
+					clearTimeout(clockTimer);
+					var now = new Date();
+					var lang = root.lang || "en";
+					try {
+						clockTime.textContent = now.toLocaleTimeString(lang, { hour: "2-digit", minute: "2-digit" });
+						clockDate.textContent = now.toLocaleDateString(lang, { weekday: "short", day: "numeric", month: "short" });
+					} catch (e) {
+						clockTime.textContent = now.toTimeString().slice(0, 5);
+					}
+					if (!document.hidden) clockTimer = setTimeout(tick, (60 - now.getSeconds()) * 1000 + 50);
+				}
+				document.addEventListener("visibilitychange", tick);
+				document.addEventListener("i18n:change", tick);
+				tick();
+
+				// --- Navegacao: item da secao visivel (scroll-spy) ---
+				var nav = document.querySelector(".side-nav");
+				var links = Array.prototype.slice.call(nav.querySelectorAll("a[data-spy]"));
+				var targets = [];
+				links.forEach(function (link) {
+					link.getAttribute("data-spy").split(" ").forEach(function (id) {
+						var el = document.getElementById(id);
+						if (el) targets.push({ el: el, link: link });
+					});
+				});
+				var active = null;
+				var frame = 0;
+				var late = 0;
+
+				function stickyHeight() {
+					return parseFloat(getComputedStyle(root).getPropertyValue("--sticky-h")) || 64;
+				}
+
+				function setActive(link) {
+					if (link === active) return;
+					if (active) active.removeAttribute("aria-current");
+					active = link;
+					if (!link) return;
+					link.setAttribute("aria-current", "true");
+					// Faixa horizontal (telas menores): traz o item ativo para a vista
+					// sem mexer na rolagem da pagina.
+					if (nav.scrollWidth > nav.clientWidth + 1) {
+						var left = link.offsetLeft - (nav.clientWidth - link.offsetWidth) / 2;
+						nav.scrollTo({ left: Math.max(0, left), behavior: "auto" });
+					}
+				}
+
+				function spy() {
+					cancelAnimationFrame(frame);
+					clearTimeout(late);
+					frame = 0;
+					var line = stickyHeight() + innerHeight * 0.25;
+					var pick = null;
+					for (var i = 0; i < targets.length; i++) {
+						var r = targets[i].el.getBoundingClientRect();
+						// Secoes escondidas (rich-only no modo leve) nao contam.
+						if (!r.height) continue;
+						if (r.top <= line) pick = targets[i];
+					}
+					// No fim da pagina, a ultima secao vale mesmo sem chegar na linha.
+					if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) {
+						for (var j = targets.length - 1; j >= 0; j--) {
+							if (targets[j].el.getBoundingClientRect().height) {
+								pick = targets[j];
+								break;
+							}
+						}
+					}
+					setActive(pick ? pick.link : links[0]);
+				}
+
+				// Um quadro por rolagem; o setTimeout cobre o caso do quadro que
+				// nao vem (aba em segundo plano, painel oculto).
+				function request() {
+					if (frame) return;
+					frame = requestAnimationFrame(spy);
+					late = setTimeout(spy, 200);
+				}
+
+				window.addEventListener("scroll", request, { passive: true });
+				window.addEventListener("resize", request);
+				document.addEventListener("lite:change", function () {
+					setTimeout(request, 60);
+				});
+				spy();
+			})();
+		</script>
+
+		<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/illogicalwindows.js?v=20261126-1"></script>
 	<script>
           document.getElementById("releaseHistoryToggle").addEventListener("click", function () {
             const expanded = this.getAttribute("aria-expanded") !== "true";

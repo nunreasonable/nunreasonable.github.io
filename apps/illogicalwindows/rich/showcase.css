@@ -1,183 +1,201 @@
-/* Vitrine por cenas. Todo movimento usa transform e opacity. */
+/* Cenas do modo completo ("Discover the desktop") e cabecalho do demo.
+   Cada cena e um cartao das Configuracoes com o texto de um lado e a captura
+   do outro; so transform e opacity se mexem. */
 
-.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-/* Tokens: as cores vem da pagina (palette.js troca --accent com o papel de
-   parede), os tamanhos de titulo sao so tres e o respiro entre secoes e um so. */
-.rich {
-  --show-bg: #08080b;
-  --d1: clamp(3rem, 8vw, 7.5rem);
-  --d2: clamp(2.4rem, 5vw, 4.5rem);
-  --d3: clamp(1.6rem, 2.6vw, 2.2rem);
-  --space-section: clamp(72px, 10vw, 128px);
-  --divider: linear-gradient(90deg, transparent, color-mix(in oklab, var(--accent) 25%, transparent), transparent);
-}
-.rich body { background: var(--show-bg); }
-.rich .nav a[href="#learn"], .rich .nav a[href="#source"] { display: none; }
-.rich .site-header { background: var(--show-bg); border-bottom-color: var(--line); }
-.rich .hero { scroll-margin-top: 56px; overflow: clip; padding: 62px 0 64px; background: radial-gradient(ellipse at 50% 55%, color-mix(in oklab, var(--accent) 11%, transparent), transparent 62%); }
-.rich .hero > .wrap:first-child { max-width: 1320px; }
-.rich .hero-icon, .rich .codename { display: none; }
-.rich .hero .eyebrow { background: transparent; border: 0; color: var(--accent-ink); margin: 0 0 14px; padding: 0; font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; }
-.rich .hero h1 { font-size: 1.05rem; font-weight: 600; letter-spacing: -.02em; color: var(--text); margin: 0 0 24px; }
-.rich .launch-title { font-family: var(--font-display); font-size: var(--d1); font-weight: 650; line-height: 1; letter-spacing: -.045em; margin: 0; color: var(--text); }
-.launch-title span { display: block; }
-.launch-title span:last-child { color: var(--accent-ink); }
-.rich .hero .pitch { font-family: var(--font); font-size: 1rem; font-weight: 400; color: var(--muted); max-width: 54ch; margin-top: 26px; line-height: 1.55; }
-.rich .hero .cta { margin-top: 24px; }
-.rich .hero .btn { font-size: .9rem; min-height: 44px; padding: 10px 22px; }
-.launch-stage { position: relative; aspect-ratio: 16 / 9; width: min(1120px, 90%); margin: 80px auto 58px; perspective: 1800px; }
-.launch-orbit { position: absolute; inset: -12% -8%; border: 1px solid color-mix(in oklab, var(--accent) 14%, transparent); border-radius: 50%; transform: rotate(-14deg); pointer-events: none; }
-.launch-desktop { position: absolute; inset: 0; border: 1px solid color-mix(in oklab, var(--accent-ink) 30%, transparent); border-radius: 18px; overflow: hidden; box-shadow: 0 36px 90px #0009; transform: rotateX(var(--launch-tilt, 9deg)) rotateY(var(--launch-turn, -3deg)) scale(var(--launch-scale, .94)); transform-origin: center; }
-.launch-desktop img { width: 100%; height: 100%; display: block; object-fit: cover; }
-.launch-panel { position: absolute; height: auto; border-radius: 14px; box-shadow: 0 24px 60px #000a; pointer-events: none; }
-.launch-search { width: 37%; left: -6%; bottom: 6%; transform: translateY(var(--search-y, 28px)) rotate(-5deg); }
-.launch-side { width: 20%; right: -4%; top: -7%; transform: translateY(var(--side-y, -18px)) rotate(4deg); }
-.launch-tour { position: absolute; bottom: -64px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 16px; color: var(--muted); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; white-space: nowrap; }
-.launch-tour span:last-child { font-size: 1.2rem; color: var(--accent-ink); }
-.rich .hero .facts { margin-top: 100px; font-size: .75rem; color: var(--muted); }
-.rich .hero .hero-note { font-size: .74rem; max-width: 74ch; }
-.rich .notice-band { background: color-mix(in oklab, var(--surface) 40%, var(--show-bg)); border-block: 1px solid var(--line); }
-.rich .notice { padding-block: 28px; font-size: .8rem; }
-.rich .notice h2 { font-size: .9rem; }
-.journey { scroll-margin-top: 56px; position: relative; overflow: clip; }
-.journey-pin { max-width: 1440px; margin: auto; padding: 36px 6vw; }
-.journey-topline { display: flex; justify-content: space-between; color: var(--muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .18em; }
-.journey-counter { color: var(--accent-ink); font-variant-numeric: tabular-nums; }
-.journey-scenes { position: relative; }
-.journey-scene { display: grid; grid-template-columns: .9fr 1.1fr; align-items: center; gap: 5%; min-height: 680px; }
-.chapter-number { display: block; color: var(--accent-ink); font: .75rem var(--font-mono); margin-bottom: 24px; }
-.journey-copy h3, .hands-on-head h2, .rich .section-head h2, .rich .chooser-q { font-size: var(--d2); line-height: 1.05; letter-spacing: -.035em; }
-.journey-copy h3 { font-weight: 650; margin: 0; }
-.journey-copy h3 span { display: block; }
-.journey-copy h3 span:last-child { color: var(--muted); }
-.journey-copy p { font-size: 1.05rem; line-height: 1.65; color: var(--muted); max-width: 35ch; margin: 28px 0 20px; }
-.scene-try { color: var(--accent-ink); text-underline-offset: 6px; font-size: .9rem; }
-.scene-key { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: .75rem; margin-top: 34px; }
-.scene-key kbd { border: 1px solid var(--line-strong); border-radius: 7px; padding: 8px 14px; color: var(--text); font: .8rem var(--font); }
-.journey-visual { position: relative; min-width: 0; display: grid; place-items: center; perspective: 1200px; }
-.scene-halo { position: absolute; width: 110%; aspect-ratio: 1; background: radial-gradient(ellipse, color-mix(in oklab, var(--accent) 18%, transparent), transparent 66%); pointer-events: none; }
-.journey-visual img { position: relative; width: 100%; height: auto; border-radius: 18px; box-shadow: 0 28px 80px #000a; transform: translateY(var(--scene-y, 0px)) rotateY(var(--scene-turn, -6deg)); }
-.scene-search img { width: 112%; max-width: none; }
-.scene-label { position: absolute; bottom: -64px; color: var(--muted); font-size: .8rem; letter-spacing: .08em; }
-.scene-controls img { width: auto; max-height: 64svh; max-width: 80%; transform: translateY(var(--scene-y, 0px)) rotate(5deg); z-index: 1; }
-.control-word { position: absolute; right: -8%; color: color-mix(in oklab, var(--accent) 10%, var(--show-bg)); font-size: 25vw; font-weight: 700; letter-spacing: -.09em; line-height: 1; }
-.scene-widgets img { width: 122%; max-width: none; transform: translateY(var(--scene-y, 0px)) rotateY(-8deg); }
-.journey-progress { display: none; gap: 8px; }
-.journey-progress i { flex: 1; height: 2px; background: var(--line); }
-.journey-progress i.is-on { background: var(--accent); }
-.showcase-motion .journey { height: 350svh; }
-.showcase-motion .journey-pin { position: sticky; top: 56px; height: calc(100svh - 56px); display: grid; grid-template-rows: auto 1fr auto; padding-bottom: 32px; }
-.showcase-motion .journey-scenes { min-height: 0; }
-.showcase-motion .journey-scene { position: absolute; inset: 0; min-height: 0; opacity: var(--scene-alpha, 0); pointer-events: none; }
-.showcase-motion .journey-scene.is-current { pointer-events: auto; }
-.showcase-motion .journey-scene:first-child { --scene-alpha: 1; }
-.showcase-motion .journey-progress { display: flex; }
-/* Um fundo so para a pagina toda; entre secoes, so um fio de 1px na cor do destaque. */
-.rich main > section + section, .rich main > section + section.alt { background: var(--divider) top / 100% 1px no-repeat; }
-.rich .hands-on { padding-block: var(--space-section); background: var(--divider) top / 100% 1px no-repeat, radial-gradient(ellipse at 50% 48%, color-mix(in oklab, var(--accent) 10%, transparent), transparent 65%); }
-.show-kicker { color: var(--accent-ink); text-transform: uppercase; letter-spacing: .18em; font-size: .72rem; margin-bottom: 24px; }
-.hands-on-head { text-align: center; }
-.hands-on-head h2 { margin: 0; }
-.hands-on-head h2 span { display: block; }
-.hands-on-head h2 span:last-child { color: var(--accent-ink); }
-.hands-on-head > p:last-child { max-width: 52ch; color: var(--muted); margin: 28px auto 0; }
-.rich .hands-on .demo-area { max-width: 1200px; margin-top: 52px; }
-.rich .section { padding-block: var(--space-section); }
-.rich .features { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 40px; }
-.rich .features > li { background: transparent; border: 0; border-top: 1px solid var(--line-strong); border-radius: 0; box-shadow: none; padding: 28px 0; }
-.rich .features h3 { font-size: 1.2rem; }
-.rich .features p { font-size: .9rem; line-height: 1.65; }
-.rich #install { background: var(--divider) top / 100% 1px no-repeat, radial-gradient(ellipse at top, color-mix(in oklab, var(--accent) 12%, transparent), transparent 65%); }
-.rich .launch-title, .rich .launch-stage { animation: none; }
-.rich-ready .launch-title { animation: show-enter 900ms cubic-bezier(.2,.7,.2,1) both; }
-.rich-ready .launch-stage { animation: show-enter 1100ms cubic-bezier(.2,.7,.2,1) 140ms both; }
-@keyframes show-enter { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: none; } }
-@media (max-width: 900px) {
-  .rich .hero { padding-top: 46px; }
-  .launch-stage { margin-top: 58px; width: 88%; }
-  .launch-search { left: -5%; width: 40%; }
-  .launch-side { right: -5%; }
-  .journey-pin { padding: 40px 24px; }
-  .rich-ready .journey-scene { opacity: 0; transform: translateY(32px); transition: opacity 650ms ease, transform 650ms cubic-bezier(.2,.7,.2,1); }
-  .rich-ready .journey-scene.is-seen { opacity: 1; transform: none; }
-  .journey-counter { display: none; }
-  .journey-scene { grid-template-columns: minmax(0, 1fr); min-height: auto; gap: 46px; padding: 64px 0 84px; }
-  .journey-copy p { max-width: 44ch; }
-  .journey-visual { min-height: 280px; }
-  .scene-search img, .scene-widgets img { width: 100%; }
-  .scene-controls img { height: 420px; width: auto; max-height: none; }
-  .scene-label { bottom: -30px; }
-  .control-word { font-size: 60vw; right: 8%; }
-  .rich .features { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; }
-}
-@media (max-width: 520px) {
-  .rich .hero { padding-top: 34px; }
-  .rich .hero h1 { margin-bottom: 22px; font-size: .95rem; }
-  .rich .hero .pitch { font-size: .9rem; margin-top: 22px; }
-  .launch-stage { margin-top: 50px; width: 92%; }
-  .launch-side { display: none; }
-  .launch-search { width: 44%; bottom: -10%; }
-  .launch-orbit { inset: -15% -5%; }
-  .rich .hero .facts { margin-top: 100px; }
-  .rich .hero .hero-note { font-size: .72rem; }
-  .rich .hero .cta { flex-direction: row; }
-  .rich .hero .btn { padding-inline: 16px; font-size: .82rem; }
-  .rich .features { grid-template-columns: minmax(0, 1fr); }
-  .rich .hands-on .demo-area { margin-top: 36px; }
-  .journey-visual { min-height: 200px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .rich-ready .launch-title, .rich-ready .launch-stage { animation: none; }
-  .launch-desktop, .launch-panel, .journey-visual img { transform: none; }
-  .rich-ready .journey-scene { opacity: 1; transform: none; transition: none; }
+.journey-scenes {
+  display: grid;
+  gap: 8px;
 }
 
-/* Rolagem pelo compositor (Chromium): as mesmas curvas do showcase.js, em
-   keyframes lineares presos a view-timeline. A classe showcase-sdt so entra
-   quando o navegador suporta; sem ela (Firefox), o JS continua desenhando.
-   Hero: progresso 0 com o topo do hero no topo da tela, 1 depois de rolar
-   60% da altura dele (exit-crossing 0% a 60%). */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .showcase-sdt .hero { view-timeline: --iw-hero block; view-timeline-inset: 0px; }
-    .showcase-sdt .launch-desktop, .showcase-sdt .launch-search, .showcase-sdt .launch-side {
-      animation-timing-function: linear;
-      animation-fill-mode: both;
-      animation-timeline: --iw-hero;
-      animation-range: exit-crossing 0% exit-crossing 60%;
-    }
-    .showcase-sdt .launch-desktop { animation-name: iw-launch-desktop; }
-    .showcase-sdt .launch-search { animation-name: iw-launch-search; }
-    .showcase-sdt .launch-side { animation-name: iw-launch-side; }
-    /* Jornada: progresso 0 com o topo a 56px (abaixo do cabecalho), 1 com o
-       fim da secao no fim da tela. Cada cena i ocupa d = 3p - i: aparece em
-       d -0.2..0, some em 0.78..1; a imagem desce 65px -> 0 (d -0.2..0.25) e
-       sobe ate -35px (d 0.7..1). A ultima cena nao apaga. */
-    .showcase-sdt.showcase-motion .journey { view-timeline: --iw-journey block; view-timeline-inset: 56px 0px; }
-    .showcase-sdt.showcase-motion .journey-scene, .showcase-sdt.showcase-motion .journey-visual img {
-      animation-timing-function: linear;
-      animation-fill-mode: both;
-      animation-timeline: --iw-journey;
-      animation-range: contain 0% contain 100%;
-    }
-    .showcase-sdt.showcase-motion .journey-scene:nth-child(1) { animation-name: iw-scene-a0; }
-    .showcase-sdt.showcase-motion .journey-scene:nth-child(2) { animation-name: iw-scene-a1; }
-    .showcase-sdt.showcase-motion .journey-scene:nth-child(3) { animation-name: iw-scene-a2; }
-    .showcase-sdt.showcase-motion .journey-scene:nth-child(1) .journey-visual img { animation-name: iw-scene-y0; }
-    .showcase-sdt.showcase-motion .journey-scene:nth-child(2) .journey-visual img { animation-name: iw-scene-y1; }
-    .showcase-sdt.showcase-motion .journey-scene:nth-child(3) .journey-visual img { animation-name: iw-scene-y2; }
+.journey-scene {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: clamp(20px, 4vw, 48px);
+  padding: clamp(22px, 3vw, 36px);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(150deg, var(--surface-tint), var(--surface) 60%);
+}
+
+/* Cantos de fora arredondados como os vidros do logo: o primeiro cartao em
+   cima, o ultimo embaixo. */
+.journey-scene:first-child {
+  border-radius: var(--radius-pane) var(--radius-pane) var(--radius) var(--radius);
+}
+
+.journey-scene:last-child {
+  border-radius: var(--radius) var(--radius) var(--radius-pane) var(--radius-pane);
+}
+
+.journey-scene:nth-child(2) .journey-copy {
+  order: 2;
+}
+
+.journey-copy h3 {
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  font-weight: 650;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.journey-copy h3 span {
+  display: block;
+}
+
+.journey-copy h3 span:last-child {
+  color: var(--accent-ink);
+}
+
+.journey-copy p {
+  max-width: 40ch;
+  margin: 16px 0 18px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.scene-try {
+  color: var(--accent-ink);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-underline-offset: 5px;
+}
+
+.scene-key {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.journey-visual {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto;
+  place-items: center;
+  min-width: 0;
+}
+
+.journey-visual img {
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+}
+
+.scene-controls img {
+  width: auto;
+  max-width: 62%;
+  max-height: 420px;
+}
+
+.scene-label {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+/* Entrada das cenas ao rolar (showcase.js poe is-seen). */
+.rich-ready .journey-scene {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 600ms ease, transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.rich-ready .journey-scene.is-seen {
+  opacity: 1;
+  transform: none;
+}
+
+/* As capturas da apresentacao sao rosas: giram ate o tom do papel de parede
+   escolhido (--shot-rot vem dos tokens). O filtro e fixo, nunca animado. */
+img[data-showcase-src] {
+  filter: hue-rotate(var(--shot-rot, 200deg));
+}
+
+/* Demo ("Make yourself at home"). */
+.show-kicker {
+  margin: 0 0 6px;
+  color: var(--accent-ink);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.hands-on-head h2 span {
+  display: block;
+}
+
+.hands-on-head h2 span:last-child {
+  color: var(--accent-ink);
+}
+
+.rich .hands-on .demo-area {
+  margin-top: 8px;
+}
+
+@media (max-width: 860px) {
+  .journey-scene {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .journey-scene:nth-child(2) .journey-copy {
+    order: 0;
+  }
+
+  .scene-controls img {
+    max-width: 70%;
+    max-height: 360px;
   }
 }
-@keyframes iw-launch-desktop { from { transform: rotateX(9deg) rotateY(-3deg) scale(.94); } to { transform: rotateX(0deg) rotateY(0deg) scale(1); } }
-@keyframes iw-launch-search { from { transform: translateY(28px) rotate(-5deg); } to { transform: translateY(-37px) rotate(-5deg); } }
-@keyframes iw-launch-side { from { transform: translateY(-18px) rotate(4deg); } to { transform: translateY(32px) rotate(4deg); } }
-/* A imagem anda pelo translate; o transform dela (giro da cena) fica parado. */
-@keyframes iw-scene-a0 { 0%, 26% { opacity: 1; } 33.333%, 100% { opacity: 0; } }
-@keyframes iw-scene-a1 { 0%, 26.667% { opacity: 0; } 33.333%, 59.333% { opacity: 1; } 66.667%, 100% { opacity: 0; } }
-@keyframes iw-scene-a2 { 0%, 60% { opacity: 0; } 66.667%, 100% { opacity: 1; } }
-@keyframes iw-scene-y0 { 0% { translate: 0 36.111px; } 8.333%, 23.333% { translate: 0 0; } 33.333%, 100% { translate: 0 -35px; } }
-@keyframes iw-scene-y1 { 0%, 26.667% { translate: 0 65px; } 41.667%, 56.667% { translate: 0 0; } 66.667%, 100% { translate: 0 -35px; } }
-@keyframes iw-scene-y2 { 0%, 60% { translate: 0 65px; } 75%, 90% { translate: 0 0; } 100% { translate: 0 -35px; } }
 
-/* Recolore somente as capturas rosas da apresentacao, sem animar o filtro. */
-img[data-showcase-src] { filter: hue-rotate(200deg); }
+@media (prefers-reduced-motion: reduce) {
+  .rich-ready .journey-scene {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Pergunta de publico ("First time customizing Windows like this?"): alinhada
+   a esquerda como os outros titulos, com o mesmo motivo dos quatro vidros. */
+.rich {
+  --d3: clamp(1.2rem, 2vw, 1.55rem);
+}
+
+.chooser {
+  margin: 0 0 28px;
+  text-align: left;
+}
+
+.chooser::before {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 18px;
+  margin-bottom: 14px;
+  border-radius: 5px;
+  background:
+    linear-gradient(var(--accent), var(--accent)) 0 0 / 8px 8px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 10px 0 / 8px 8px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 0 10px / 8px 8px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 10px 10px / 8px 8px no-repeat;
+}
+
+.chooser-q {
+  max-width: none;
+  margin: 0 0 18px;
+  font-size: clamp(1.6rem, 3vw, 2.15rem);
+  letter-spacing: -0.02em;
+}
+
+.chooser-a {
+  justify-content: flex-start;
+}
+
+.chooser-a button {
+  border-radius: var(--radius);
+}
