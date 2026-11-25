@@ -12,9 +12,6 @@
 export const pt = {
   "sollarety.personal": "Adicione o Sollarety ao servidor ou aos seus My Apps pessoais. Dezenove comandos funcionam em servidores, DMs e conversas em grupo, incluindo comandos de diversão, /profile, /userinfo e /help. Moderação, música e outros comandos exclusivos de servidor precisam do bot no servidor.",
   "sollarety.reference": "Referência de comandos",
-  "sollarety.find_command": "Veja mais de perto.",
-  "sollarety.reference_note": "Abra uma categoria para ver comandos, permissões e como funciona.",
-  "sollarety.overview_title": "Moderação, música e Roblox. Juntos.",
   "sollarety.overview_lead": "Organize sua comunidade, vincule contas Roblox e compartilhe a próxima música — com um único bot.",
   "sollarety.explore_commands": "Explorar comandos",
   "sollarety.example": "Explore um exemplo",
@@ -27,9 +24,6 @@ export const pt = {
   "sollarety.music_example": "Busque pelo nome ou compartilhe um link do YouTube, SoundCloud ou Spotify. Organizem a fila juntos.",
   "sollarety.illustration": "Exemplos ilustrativos. Nenhuma conta do Discord está conectada aqui.",
 
-  "sollarety.discord_bot": "Bot de Discord",
-  "sollarety.a_moderation_and_fun_bot":
-    "Um bot de moderação, verificação Roblox, música e diversão para servidores de comunidade. Roda na mesma infraestrutura do",
   "sollarety.but_the_two_are_separate":
     ", mas os dois são aplicações separadas e não compartilham dado nenhum.",
   "sollarety.add_to_discord": "Adicionar ao Discord",
@@ -64,17 +58,26 @@ export const pt = {
   "sollarety.roleplay_gifs_come_from":
     "Os GIFs do roleplay vêm da API pública do nekos.best, e quem recebe pode devolver com um botão só.",
   "sollarety.utility": "Utilidade",
-  "sollarety.the_bot_never_reads_your": "O bot nunca lê as suas mensagens.",
-  "sollarety.it_does_not_request_discord":
-    "Ele não pede o intent de Message Content do Discord, então o texto das mensagens não é recebido, lido nem guardado. Veja a",
   "sollarety.for_the_full_picture": "para o quadro completo.",
   "sollarety.privacy_policy": "Política de Privacidade",
   "sollarety.links": "Links",
   "sollarety.add_to_a_server": "Adicionar a um servidor",
   "sollarety.terms_of_service": "Termos de Serviço",
   "sollarety.back_to_ccore": "Voltar para o ccore",
-  "sollarety.sollarety_c_hosted_alongside_ccore":
-    "Sollarety · C# / .NET 10 · hospedado junto do ccore em daeese.me"
+  "sollarety.hero_title": "Um bot de Discord para moderação, música e Roblox.",
+  "sollarety.emblem": "Emblema do Sollarety",
+  "sollarety.fig_sun": "Fig. 1. O sol do Sollarety.",
+  "sollarety.reference_index": "Cada categoria com seus comandos, quem pode usá-los e como funcionam.",
+  "sollarety.plate": "Prancha",
+  "sollarety.privacy_title": "O que o bot recebe",
+  "sollarety.privacy_intent":
+    "O Sollarety não pede o intent de Message Content do Discord, então só recebe o texto das mensagens que o mencionam e das que você escolhe com o Translate, no menu Apps.",
+  "sollarety.privacy_ai": "Esse texto vai para a IA local nos servidores onde ela está ligada, e não fica guardado.",
+  "sollarety.privacy_see": "Veja a",
+  "sollarety.about": "Sobre",
+  "sollarety.about_rust":
+    "Um bot de moderação, verificação Roblox, música e diversão para servidores de comunidade. Reescrito em Rust em 2026, roda na mesma infraestrutura do",
+  "sollarety.footer_rust": "Sollarety · Rust · hospedado junto do ccore em daeese.me"
 };
 
 export default pt;
