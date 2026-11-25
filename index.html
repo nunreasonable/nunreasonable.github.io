@@ -3191,7 +3191,7 @@
             ></span>
           </div>
           <div class="hero-id">
-            <p class="artist-role" data-i18n="home.artistRole">Artist and fullstack developer</p>
+            <p class="artist-role" data-i18n="home.devRole">Fullstack developer</p>
             <div class="name-wrap">
               <h1 class="name" id="displayName">daeese</h1>
             </div>
@@ -3404,7 +3404,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261126-3")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261126-4")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -5837,6 +5837,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261126-3"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261126-4"></script>
   </body>
 </html>

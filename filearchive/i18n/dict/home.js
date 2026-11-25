@@ -49,7 +49,7 @@ export const pt = {
   "home.nav.links": "Links",
   "home.nav.contact": "Contato",
   "home.avatarAlt": "Foto de perfil",
-  "home.artistRole": "Artista e desenvolvedor fullstack",
+  "home.devRole": "Desenvolvedor fullstack",
   "home.bioRust":
     "Trabalho com Rust, C#, JS, HTML e CSS. Meu fuso principal é UTC-3, às vezes UTC 0.\nDesenvolvedor fullstack na Vltra Entertainment.",
   "home.link.contactTag": "E-mail",
