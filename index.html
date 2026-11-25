@@ -4195,20 +4195,20 @@
         const states = results
           .filter((result) => result.status === "fulfilled")
           .map((result) => result.value);
+        // Foto, status e Spotify seguem a conta que esta online agora. Com
+        // duas online, vale a que toca; com nenhuma, a principal (a primeira
+        // da lista), sem musica.
+        const online = (s) => s.discordStatus && s.discordStatus !== "offline";
+        const onlineStates = states.filter(online);
         const state =
-          states.find((s) => s.isPlaying) ||
-          states.find((s) => s.discordStatus && s.discordStatus !== "offline") ||
-          states[0];
+          onlineStates.find((s) => s.isPlaying) ||
+          onlineStates[0] ||
+          (states[0] && { ...states[0], isPlaying: false });
         if (!state) {
           setNowPlayingState({ isPlaying: false });
           return;
         }
-        // A foto segue a conta que esta online agora (a que toca primeiro);
-        // com todas offline, fica a da principal, a primeira da lista.
-        const online = (s) => s.discordStatus && s.discordStatus !== "offline";
-        const avatarFrom =
-          [state, ...states].find((s) => online(s) && s.avatarUrl) ||
-          states.find((s) => s.avatarUrl);
+        const avatarFrom = [state, ...states].find((s) => s.avatarUrl);
         setNowPlayingState({ ...state, avatarUrl: avatarFrom ? avatarFrom.avatarUrl : null });
       }
 
