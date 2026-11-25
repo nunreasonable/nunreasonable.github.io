@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>blood-oath cover source</title>
+    <!--
+      Capa quadrada de "Blood Oath: Brazil 1898" (filearchive/covers/blood-oath.webp).
+
+      Variacao do padrao das capas tipograficas da home (ver covers.css): em
+      vez do preto quase total, aqui e uma capa de vinil classica - sleeve de
+      papel bege/empoeirado com o disco espiando pelo furo central, rotulo em
+      vermelho-sangue com o monograma da assinatura (brand/monogram-bold.svg,
+      recolorido). O pedido original foi "bota o monograma e faz parecer uma
+      capa de vinil generica"; o tom de papel velho combina com o cangaco de
+      1898. A marcha "daeese." e o simbolo continuam no mesmo lugar/tamanho
+      do padrao, so a paleta muda - por isso a tinta do titulo e da marca
+      ficou escura (sobre papel claro o branco nao pegava contraste).
+
+      Refazer: ./render.sh blood-oath
+    -->
+    <link rel="stylesheet" href="./covers.css" />
+    <style>
+      .bo .frame {
+        --ink: #2a1206;
+        --mark-ink: #3b2414;
+        --muted: #6b4b2c;
+        --dot: #ff2d62;
+        background:
+          /* vinheta de borda, papel envelhecido */
+          radial-gradient(120% 120% at 50% 50%, transparent 58%, rgba(36, 20, 8, 0.4) 100%),
+          /* brilho diagonal, bem sutil, no papel */
+          linear-gradient(115deg, rgba(255, 248, 224, 0.5) 0%, transparent 28%),
+          /* dois aneis de "ring wear" fora de centro, como papelao usado */
+          radial-gradient(circle at 34% 66%, transparent 30.8%, rgba(60, 38, 16, 0.12) 31%, transparent 31.6%),
+          radial-gradient(circle at 34% 66%, transparent 24.4%, rgba(60, 38, 16, 0.14) 25%, transparent 25.6%),
+          linear-gradient(160deg, #e3cb9c 0%, #caa468 55%, #b4895091 100%);
+      }
+
+      /* Lombada do sleeve: fio de luz vertical perto da borda esquerda. */
+      .bo .frame::after {
+        box-shadow:
+          inset 0 1px 0 rgba(255, 252, 240, 0.5),
+          inset 10px 0 18px -14px rgba(40, 22, 8, 0.55);
+      }
+
+      /* O disco em si: so um triz maior que o rotulo, espiando por tras do
+         furo circular do sleeve - a borda escura da ele profundidade. Essa e
+         a .cv-symbol (so o top/width mudam - o left:50%+translateX(-50%)
+         que centraliza continua vindo do covers.css). */
+      .bo .cv-symbol.disc {
+        top: 23%;
+        width: 50%;
+        border-radius: 50%;
+        background:
+          repeating-conic-gradient(
+            from 0deg,
+            rgba(0, 0, 0, 0.12) 0deg 1.4deg,
+            transparent 1.4deg 3.2deg
+          ),
+          radial-gradient(circle, #1c1416 0 2%, #0c0809 2% 60%, #050304 100%);
+        box-shadow: 0 18px 50px -20px rgba(20, 10, 4, 0.75);
+      }
+
+      /* O rotulo vermelho, centralizado no disco. */
+      .bo .label {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle at 42% 38%, #6c1b20 0%, #43090d 62%, #2a0509 100%);
+        box-shadow:
+          inset 0 0 0 3px rgba(236, 223, 192, 0.65),
+          inset 0 2px 10px rgba(0, 0, 0, 0.5);
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+      }
+
+      /* Furo do eixo, bem no centro. */
+      .bo .label::after {
+        content: "";
+        position: absolute;
+        width: 5.5%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: #0a0506;
+        box-shadow: 0 0 0 2px rgba(236, 223, 192, 0.35);
+      }
+
+      .bo .mono {
+        width: 56%;
+        height: 56%;
+      }
+
+      .bo .mono svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .bo .mono svg g {
+        stroke: #ecdfc0 !important;
+      }
+
+      .bo .cv-title {
+        font-size: 128px;
+      }
+
+      .bo .cv-eyebrow {
+        bottom: 228px;
+      }
+    </style>
+  </head>
+  <body class="bo">
+    <div class="frame" id="frame">
+      <div class="cv-symbol disc">
+        <span class="label">
+          <span class="mono">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="257 105 1000 1000"><g fill="none" stroke="#f2ede4" stroke-linecap="round" stroke-linejoin="round"><path d="M680 212 C683 262 694 330 697 420 C700 520 701 610 706 700 C711 800 713 900 712 1062 M700 1034 L712 1064 M488 396 L489 414 C491 425 500 431 514 434 C548 442 590 449 640 452 L792 452 C808 450 820 442 832 433 M832 433 C800 452 770 473 742 500 L640 602 C600 650 562 700 536 744 C516 778 492 808 465 842 M620 404 L620 419 C621 425 627 428 638 428 L820 428 M492 812 C540 780 580 758 616 740 C652 724 690 716 722 711 C780 700 832 697 910 691 L1006 690 C1040 692 1060 699 1080 709 C1096 716 1094 723 1076 720 M637 780 C652 771 668 765 690 758 C712 752 748 750 860 750" stroke-width="18" transform="translate(0.0 0.0)"></path><path d="M680 212 C683 262 694 330 697 420 C700 520 701 610 706 700 C711 800 713 900 712 1062 M700 1034 L712 1064 M488 396 L489 414 C491 425 500 431 514 434 C548 442 590 449 640 452 L792 452 C808 450 820 442 832 433 M832 433 C800 452 770 473 742 500 L640 602 C600 650 562 700 536 744 C516 778 492 808 465 842 M620 404 L620 419 C621 425 627 428 638 428 L820 428 M492 812 C540 780 580 758 616 740 C652 724 690 716 722 711 C780 700 832 697 910 691 L1006 690 C1040 692 1060 699 1080 709 C1096 716 1094 723 1076 720 M637 780 C652 771 668 765 690 758 C712 752 748 750 860 750" stroke-width="18" transform="translate(2.4 -2.4)"></path><path d="M680 212 C683 262 694 330 697 420 C700 520 701 610 706 700 C711 800 713 900 712 1062 M700 1034 L712 1064 M488 396 L489 414 C491 425 500 431 514 434 C548 442 590 449 640 452 L792 452 C808 450 820 442 832 433 M832 433 C800 452 770 473 742 500 L640 602 C600 650 562 700 536 744 C516 778 492 808 465 842 M620 404 L620 419 C621 425 627 428 638 428 L820 428 M492 812 C540 780 580 758 616 740 C652 724 690 716 722 711 C780 700 832 697 910 691 L1006 690 C1040 692 1060 699 1080 709 C1096 716 1094 723 1076 720 M637 780 C652 771 668 765 690 758 C712 752 748 750 860 750" stroke-width="18" transform="translate(4.8 -4.8)"></path><path d="M762 322 C792 305 820 284 845 256 C866 230 879 192 887 148 M887 148 C873 190 857 226 856 260 L855 305 C866 299 875 290 882 280 C902 255 930 222 960 191 C978 172 990 158 995 143 M995 143 C976 175 951 206 936 240 C925 263 915 285 918 305 L945 310 C966 305 985 291 998 278 C1015 255 1031 224 1052 180 M1052 180 C1035 226 1015 272 1001 320 C991 355 985 390 983 424 M744 330 L744 346 C752 359 762 370 773 378 C801 395 831 405 862 413 L930 415 C940 418 946 423 956 423 L983 424 M744 330 C790 338 840 352 890 368 C930 382 960 395 983 410" stroke-width="15" transform="translate(0 0)"></path><path d="M762 322 C792 305 820 284 845 256 C866 230 879 192 887 148 M887 148 C873 190 857 226 856 260 L855 305 C866 299 875 290 882 280 C902 255 930 222 960 191 C978 172 990 158 995 143 M995 143 C976 175 951 206 936 240 C925 263 915 285 918 305 L945 310 C966 305 985 291 998 278 C1015 255 1031 224 1052 180 M1052 180 C1035 226 1015 272 1001 320 C991 355 985 390 983 424 M744 330 L744 346 C752 359 762 370 773 378 C801 395 831 405 862 413 L930 415 C940 418 946 423 956 423 L983 424 M744 330 C790 338 840 352 890 368 C930 382 960 395 983 410" stroke-width="15" transform="translate(2 -2)"></path><path d="M762 322 C792 305 820 284 845 256 C866 230 879 192 887 148 M887 148 C873 190 857 226 856 260 L855 305 C866 299 875 290 882 280 C902 255 930 222 960 191 C978 172 990 158 995 143 M995 143 C976 175 951 206 936 240 C925 263 915 285 918 305 L945 310 C966 305 985 291 998 278 C1015 255 1031 224 1052 180 M1052 180 C1035 226 1015 272 1001 320 C991 355 985 390 983 424 M744 330 L744 346 C752 359 762 370 773 378 C801 395 831 405 862 413 L930 415 C940 418 946 423 956 423 L983 424 M744 330 C790 338 840 352 890 368 C930 382 960 395 983 410" stroke-width="15" transform="translate(4 -4)"></path></g></svg>
+          </span>
+        </span>
+      </div>
+
+      <span class="cv-mark">daeese<span>.</span></span>
+
+      <p class="cv-eyebrow">Sertão do Nordeste &middot; 1898</p>
+      <h1 class="cv-title">Blood Oath</h1>
+    </div>
+  </body>
+</html>

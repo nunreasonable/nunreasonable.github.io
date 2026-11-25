@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ii-windows cover source</title>
+    <!--
+      Capa quadrada de Illogical Windows (filearchive/covers/ii-windows.webp).
+
+      Padrao das capas tipograficas da home (ver covers.css), com a logo v2
+      (illogical-windows-brand/illogical-windows-v2.svg: quatro paineis jade
+      com o redemoinho escuro) como simbolo, inline e sem alteracao de
+      cor/forma. Fundo quase preto com brilho diagonal em jade em vez do
+      carmim padrao. "Illogical Windows" e grande demais pra uma linha so em
+      118px - a propria quebra em duas linhas (Illogical / Windows) fica com
+      cara de capa de disco. O nome do lancamento ("Trampolining Teapot") fica
+      pequeno acima do titulo, do mesmo jeito que aparece na pagina do app.
+
+      Refazer: ./render.sh ii-windows
+    -->
+    <link rel="stylesheet" href="./covers.css" />
+    <style>
+      .iw .frame {
+        --bg0: #0a0f0d;
+        --bg1: #030504;
+        --sheen: rgba(81, 222, 189, 0.22);
+        --sheen-pos: 82% 10%;
+        --ink: #eafaf3;
+        --mark-ink: #eafaf3;
+        --muted: #8fae9f;
+        --dot: #ff2d62;
+      }
+
+      .iw .cv-symbol {
+        top: 11%;
+        width: 40%;
+      }
+
+      .iw .cv-symbol svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+        filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
+      }
+
+      .iw .cv-title {
+        font-size: 104px;
+      }
+
+      .iw .cv-eyebrow {
+        bottom: 316px;
+      }
+    </style>
+  </head>
+  <body class="iw">
+    <div class="frame" id="frame">
+      <span class="cv-symbol">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img">
+          <defs>
+            <path id="panes" d="M10 40Q10 17 33 17H58V57H10Z M63 10H105Q118 10 118 23V66H63Z M10 62H58V117H24Q10 117 10 103Z M63 71H118V89Q118 111 96 111H63Z" />
+            <clipPath id="glass"><use href="#panes" /></clipPath>
+            <linearGradient id="jade" x1="0" y1="1" x2="1" y2="0">
+              <stop stop-color="#38c3a7" />
+              <stop offset="0.55" stop-color="#51debd" />
+              <stop offset="1" stop-color="#80e6bd" />
+            </linearGradient>
+          </defs>
+          <use href="#panes" fill="url(#jade)" />
+          <g clip-path="url(#glass)" fill="#1e202b">
+            <path d="M40 74C30 54 45 31 68 30C82 29 96 39 100 54C93 42 81 36 69 38C51 40 41 56 45 71Q47 77 43 78Q41 78 40 74Z" />
+            <path d="M95 54C107 78 88 101 62 99C55 98 49 96 45 92C69 98 90 84 91 64Q91 57 95 54Z" />
+            <g transform="translate(68 63) rotate(15)" fill="none" stroke="#1e202b" stroke-width="6.7" stroke-linecap="round"><path d="M0-15V15 M-13-7.5L13 7.5 M-13 7.5L13-7.5" /></g>
+            <circle cx="40" cy="86" r="3.2" />
+          </g>
+        </svg>
+      </span>
+
+      <span class="cv-mark">daeese<span>.</span></span>
+      <p class="cv-eyebrow">Trampolining Teapot</p>
+      <h1 class="cv-title">Illogical Windows</h1>
+    </div>
+  </body>
+</html>

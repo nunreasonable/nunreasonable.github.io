@@ -3613,7 +3613,7 @@
             state: "In development",
             tags: ["Roblox", "Luau", "Rojo"],
             image: "./filearchive/icons/bloodoath-96.webp",
-            cover: { src: "./filearchive/projects/blood-oath/poster.mid.webp", w: 500, h: 625, pos: "50% 0%" },
+            cover: { src: "./filearchive/covers/blood-oath.webp?v=20261126", w: 1200, h: 1200 },
             details: [
               "An open-world online game in the spirit of Red Dead Redemption 2, set in the sertão of northeastern Brazil before 1910: the age of the cangaço, when Antônio Silvino rode the backlands and Lampião was still a name nobody knew.",
               "Players take a side between four factions (cangaceiros, the Volante police, jagunços and sertanejos) and build up fame, bounties and a story told in chapters. Names, clothes, firearms, shops and money in réis all come from the period.",
@@ -3640,7 +3640,7 @@
             state: "Stable",
             tags: ["C++", "C++/WinRT", "Qt 6 / QML", "Quickshell"],
             image: "./filearchive/projects/ii-windows/thumb.webp?v=20261031",
-            cover: { src: "./apps/illogicalwindows/assets/showcase/desktop.webp", w: 1600, h: 900 },
+            cover: { src: "./filearchive/covers/ii-windows.webp?v=20261126", w: 1200, h: 1200 },
             thumbWide: true,
             logo: { src: "./filearchive/projects/ii-windows/logo.webp?v=20261126", w: 1000, h: 310, alt: "Illogical Windows" },
             details: [
@@ -3715,7 +3715,7 @@
             keys: { d0: "d0Rust", d2: "d2Intent", cap0: "capVerify", alt0: "altVerify", cap1: "capPage", alt1: "altPage" },
             tags: ["Rust", "poise", "serenity", "songbird"],
             image: "./filearchive/icons/sollarety-96.webp",
-            cover: { src: "./filearchive/projects/sollarety/page.mid.webp", w: 893, h: 625, pos: "50% 0%" },
+            cover: { src: "./filearchive/covers/sollarety.webp?v=20261126", w: 1200, h: 1200 },
             theme: "sollarety",
             details: [
               "Sollarety is a Discord bot for community servers: moderation, warnings, Roblox verification, music and a pile of fun commands. It was rewritten in Rust in 2026, on poise and serenity, with songbird for voice. It runs on the same infrastructure as ccore, but the two are separate applications and share no data.",
@@ -3739,7 +3739,7 @@
             state: "Fewer updates — not disabled",
             tags: ["Rust", "Slash commands"],
             image: "./filearchive/icons/ccore-badge-96.webp",
-            cover: { src: "./filearchive/projects/ccore/cover.webp", w: 760, h: 475, pos: "0% 50%" },
+            cover: { src: "./filearchive/covers/ccore.webp?v=20261126", w: 1200, h: 1200 },
             details: [
               "ccore is the administration bot of the 12° Regimento de Infantaria \"Chaves\", a regiment of the CONSTANTES community. It takes care of enlistment with automatic Roblox verification, deployments, the regiment's spreadsheet and its announcements.",
               "It's server-locked on purpose: built for one community, not as a public multi-server bot. It's also where Sollarety's infrastructure came from. The two share hosting, not data. Since November 2026 it runs in Rust, rewritten from the original C# / .NET version.",
@@ -3762,7 +3762,7 @@
             format: "Portage overlay",
             tags: ["Gentoo", "Portage", "ebuilds"],
             image: "./filearchive/githublogo.png",
-            cover: { src: "./filearchive/projects/mocktail/cover.webp", w: 760, h: 475, pos: "0% 50%" },
+            cover: { src: "./filearchive/covers/mocktail.webp?v=20261126", w: 1200, h: 1200 },
             details: [
               "Mocktail is the compatibility runtime that runs the Android x86-64 Roblox client on Linux. This is a third-party, unofficial Portage overlay with ebuilds for it, so Gentoo users can install it with emerge like anything else.",
               "The overlay has a source build, a live -9999 ebuild that follows the main branch, and a prebuilt binary package as a fallback. It isn't affiliated with Mocktail, Roblox or VinegarHQ: I maintain the ebuilds, not the software."
@@ -3783,9 +3783,7 @@
             format: "Portage overlay",
             tags: ["Gentoo", "Portage", "ebuilds"],
             image: "./filearchive/githublogo.png",
-            // O icone do GitHub tem 30px: esticado na capa ficaria borrado. A
-            // capa fica so com o nome.
-            sleeveLogo: false,
+            cover: { src: "./filearchive/covers/rosemary-overlay.webp?v=20261126", w: 1200, h: 1200 },
             details: [
               "Rosemary runs macOS applications on Linux. This third-party, unofficial overlay packages its upstream release for Gentoo, so it installs with emerge like anything else. It also packages Ginrose and Ginrose Studio as games-util/ginrose: the player USE flag installs Ginrose, and studio installs Ginrose Studio.",
               "The ebuild builds Rosemary from source with Gentoo's cargo.eclass, offline after Portage fetches the sources, with the Git dependencies pinned to upstream's lockfile. USE flags pick the OpenGL, Vulkan and WebKit backends. It needs Rust 1.99 and SDL 3.4, and is tested in a clean Gentoo container. It isn't affiliated with Rosemary: I maintain the ebuild, not the software."

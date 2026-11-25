@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>sollarety cover source</title>
+    <!--
+      Capa quadrada do Sollarety (filearchive/covers/sollarety.webp).
+
+      Segue o padrao das capas tipograficas da home (ver covers.css): marca
+      "daeese." no canto superior esquerdo, simbolo do projeto perto do topo,
+      nome grande embaixo a esquerda. O simbolo e o proprio sol de prata do
+      Sollarety - as quatro camadas (aneis de fundo, orbita com dois pontos,
+      raios com gradiente e a esfera) tiradas de apps/sollarety/index.html,
+      so que paradas (sem a rotacao do orbit/rays, que so faz sentido com o
+      visitante olhando por mais de um segundo). Paleta preto + prata, fria,
+      em vez do carmim padrao do resto do site.
+
+      Refazer: ./render.sh sollarety
+    -->
+    <link rel="stylesheet" href="./covers.css" />
+    <style>
+      .sol .frame {
+        --bg0: #0c0d10;
+        --bg1: #030304;
+        --sheen: rgba(201, 206, 214, 0.16);
+        --sheen-pos: 86% 8%;
+        --ink: #f1f3f6;
+        --mark-ink: #f1f3f6;
+        --muted: #9096a1;
+        --dot: #ff2d62;
+      }
+
+      .sol .cv-symbol {
+        top: 10%;
+        width: 46%;
+      }
+
+      .sol .sun {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body class="sol">
+    <div class="frame" id="frame">
+      <span class="cv-symbol">
+        <svg class="sun" viewBox="0 0 400 400" aria-hidden="true">
+          <defs>
+            <linearGradient id="ray" x1="0.5" y1="0" x2="0.5" y2="1">
+              <stop offset="0" stop-color="#e9ecf1" />
+              <stop offset="1" stop-color="#9ba0a9" />
+            </linearGradient>
+            <linearGradient id="sphere" x1="0.18" y1="0.08" x2="0.82" y2="0.95">
+              <stop offset="0" stop-color="#ffffff" />
+              <stop offset="0.55" stop-color="#c9ced6" />
+              <stop offset="1" stop-color="#6c7078" />
+            </linearGradient>
+          </defs>
+
+          <g fill="none" stroke="#ffffff" stroke-opacity="0.12">
+            <circle cx="200" cy="200" r="192" />
+            <circle cx="200" cy="200" r="168" />
+            <circle cx="200" cy="200" r="146" />
+          </g>
+
+          <g>
+            <ellipse
+              cx="200" cy="200" rx="190" ry="80"
+              transform="rotate(-16 200 200)"
+              fill="none" stroke="#ffffff" stroke-opacity="0.3"
+            />
+            <circle cx="18" cy="147" r="6.5" fill="#ffffff" fill-opacity="0.9" />
+            <circle cx="382" cy="253" r="9" fill="#ffffff" />
+          </g>
+
+          <g fill="url(#ray)">
+            <polygon points="200.0,34.0 221.2,104.3 178.8,104.3" />
+            <polygon points="317.4,82.6 282.7,147.3 252.7,117.3" />
+            <polygon points="366.0,200.0 295.7,221.2 295.7,178.8" />
+            <polygon points="317.4,317.4 252.7,282.7 282.7,252.7" />
+            <polygon points="200.0,366.0 178.8,295.7 221.2,295.7" />
+            <polygon points="82.6,317.4 117.3,252.7 147.3,282.7" />
+            <polygon points="34.0,200.0 104.3,178.8 104.3,221.2" />
+            <polygon points="82.6,82.6 147.3,117.3 117.3,147.3" />
+          </g>
+
+          <circle cx="200" cy="200" r="110" fill="url(#sphere)" />
+          <circle cx="200" cy="200" r="78" fill="#050506" />
+          <g fill="none" stroke="#ffffff" stroke-opacity="0.22">
+            <circle cx="200" cy="200" r="46" />
+            <circle cx="200" cy="200" r="28" />
+          </g>
+          <circle cx="200" cy="200" r="8" fill="#ffffff" />
+        </svg>
+      </span>
+
+      <span class="cv-mark">daeese<span>.</span></span>
+      <h1 class="cv-title">Sollarety</h1>
+    </div>
+  </body>
+</html>

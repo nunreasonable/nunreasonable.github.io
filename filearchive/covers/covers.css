@@ -1,0 +1,157 @@
+/*
+ * Capas quadradas (sleeves) pro resto da discografia, no mesmo padrao das
+ * capas tipograficas que ja existem na home (Ginrose / Ginrose Studio):
+ * fundo quase preto, brilho diagonal sutil, a marca "daeese." no canto
+ * superior esquerdo, o simbolo do projeto perto do topo e o nome grande e
+ * em negrito no canto inferior esquerdo, em Space Grotesk.
+ *
+ * As proporcoes (posicao/tamanho da marca, do simbolo e do titulo) seguem o
+ * .sleeve-label / .sleeve-logo / .sleeve-word do index.html, so que em %
+ * fixo em vez de cqi: aqui cada capa e renderizada isolada, sempre a 1200px,
+ * entao a unidade de container query nao faz diferenca - e os dois chegam
+ * no mesmo tamanho relativo.
+ *
+ * Cada *.src.html define suas proprias variaveis (--bg0/--bg1/--sheen/--ink
+ * etc.) e o seu .cv-symbol por dentro: a moldura e o texto sao os unicos
+ * elementos realmente compartilhados entre as seis capas.
+ */
+
+/*
+ * Space Grotesk auto-hospedada (variable font da Google Fonts, pesos 400 a
+ * 700 no mesmo arquivo) em vez do <link> pro CDN: a captura e um
+ * `firefox --screenshot` unico, que tira a foto assim que o `load` dispara,
+ * sem esperar nenhum fetch que o load nao bloqueia - e o carregamento da
+ * fonte via rede e um desses. Local, o arquivo chega antes do primeiro
+ * layout, entao a fonte sempre aparece certa na captura.
+ */
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: block;
+  src: url("./fonts/space-grotesk-latin.woff2") format("woff2");
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: #000;
+}
+
+body {
+  display: grid;
+  place-items: start;
+}
+
+.frame {
+  --bg0: #0d0a0b;
+  --bg1: #050304;
+  --sheen: rgba(255, 45, 98, 0.22);
+  --sheen-pos: 80% 10%;
+  --ink: #e7eef7;
+  --mark-ink: #f4f1ee;
+  --muted: #9caac0;
+  --dot: #ff2d62;
+  --radius: 20px;
+
+  position: relative;
+  width: 1200px;
+  height: 1200px;
+  overflow: hidden;
+  border-radius: var(--radius);
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(60% 46% at var(--sheen-pos), var(--sheen) 0%, transparent 72%),
+    linear-gradient(160deg, var(--bg0) 0%, var(--bg1) 100%);
+}
+
+/* Mesma trama de pontos sutil do og-banner / da home. */
+.frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.07;
+  background-image: radial-gradient(#ffffff 1px, transparent 1px);
+  background-size: 5px 5px;
+  pointer-events: none;
+}
+
+/* Fio de luz no canto de cima, como o cartao aberto no index.html. */
+.frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  pointer-events: none;
+}
+
+/* --- Marca "daeese." (sleeve-label) -------------------------------- */
+.cv-mark {
+  position: absolute;
+  z-index: 2;
+  top: 84px;
+  left: 96px;
+  display: flex;
+  align-items: baseline;
+  font-weight: 700;
+  font-size: 40px;
+  letter-spacing: -0.04em;
+  color: var(--mark-ink);
+}
+
+.cv-mark span {
+  color: var(--dot);
+}
+
+/* --- Simbolo do projeto (sleeve-logo) ------------------------------ */
+.cv-symbol {
+  position: absolute;
+  z-index: 1;
+  top: 13%;
+  left: 50%;
+  width: 34%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+}
+
+/* --- Nome do projeto (sleeve-word) ---------------------------------- */
+.cv-title {
+  margin: 0;
+  position: absolute;
+  z-index: 2;
+  left: 96px;
+  right: 96px;
+  bottom: 96px;
+  font-weight: 700;
+  font-size: 118px;
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+/* Legenda pequena opcional acima do titulo (release, subtitulo, ano...).
+   Cada capa posiciona o proprio `bottom` (depende de quantas linhas o
+   titulo quebra), entao aqui so ficam as propriedades que repetem. */
+.cv-eyebrow {
+  margin: 0;
+  position: absolute;
+  z-index: 2;
+  left: 96px;
+  right: 96px;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
