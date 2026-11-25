@@ -50,8 +50,8 @@ export const pt = {
   "home.nav.contact": "Contato",
   "home.avatarAlt": "Foto de perfil",
   "home.role": "Desenvolvedor fullstack",
-  "home.bio":
-    "Trabalho com C#, JS, HTML e CSS. Meu fuso principal é UTC-3, às vezes UTC 0.\nDesenvolvedor fullstack na Vltra Entertainment.",
+  "home.bioRust":
+    "Trabalho com Rust, C#, JS, HTML e CSS. Meu fuso principal é UTC-3, às vezes UTC 0.\nDesenvolvedor fullstack na Vltra Entertainment.",
   "home.getInTouch": "Fale comigo",
   "home.disco.cue": "Discografia",
   "home.link.contact": "Contato",
