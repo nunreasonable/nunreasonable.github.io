@@ -7,7 +7,7 @@
  * Tres familias de chave:
  *   home.*         texto fixo do HTML (nav, hero, secoes, rodape, player)
  *   p.<slug>.*     cards de projeto, gerados pelo JS a partir de profileData
- *   live.*         texto AO VIVO (Now Playing, legendas da galeria, status do
+ *   live.*         texto AO VIVO (Listening now, legendas da galeria, status do
  *                  Discord). Este nao usa data-i18n: o JS da pagina importa
  *                  este mesmo arquivo e reescreve esses textos no evento
  *                  i18n:change.
@@ -32,7 +32,7 @@ export const pt = {
   "p.ginrose-studio.d1v26": "É uma ferramenta de desenvolvimento, então é permissivo: qualquer FastFlag, qualquer variável de ambiente para o Rosemary, argumentos extras e o binário do Rosemary que você quiser, e o Control funciona como Command em todos os atalhos por padrão. A versão 26.0.5.0 deixa os diálogos do Studio flutuando em compositores de tiling como o Hyprland e passa o Rosemary para um upstream mais recente, com correções nas bibliotecas de shaders do Metal. Por enquanto roda só no Linux; ainda não há build para FreeBSD. Login, abrir places e Team Create funcionam; ainda é experimental.",
   "p.ginrose-studio.link0": "Site e download",
   "home.enter": "Entrar no site",
-  "home.viewProjects": "Explorar projetos",
+  "home.exploreDisco": "Explorar a discografia",
   "home.contactAction": "Entre em contato",
   // --- Portao e intro ------------------------------------------------------
   "home.gate": "clique para entrar",
@@ -49,13 +49,15 @@ export const pt = {
   "home.nav.links": "Links",
   "home.nav.contact": "Contato",
   "home.avatarAlt": "Foto de perfil",
-  "home.role": "Desenvolvedor fullstack",
+  "home.artistRole": "Artista e desenvolvedor fullstack",
   "home.bioRust":
     "Trabalho com Rust, C#, JS, HTML e CSS. Meu fuso principal é UTC-3, às vezes UTC 0.\nDesenvolvedor fullstack na Vltra Entertainment.",
-  "home.getInTouch": "Fale comigo",
-  "home.disco.cue": "Discografia",
-  "home.link.contact": "Contato",
   "home.link.contactTag": "E-mail",
+  "home.stat.releases": "Lançamentos",
+  "home.stat.latest": "Último lançamento",
+  "home.stat.genres": "Gêneros",
+  "home.stat.listening": "Ouvindo agora",
+  "home.about": "Sobre",
 
   // --- Secoes ---------------------------------------------------------------
   "home.disco.title": "Discografia",
@@ -88,11 +90,8 @@ export const pt = {
   "home.lightbox.next": "Próxima imagem",
 
   // --- Texto ao vivo --------------------------------------------------------
-  "live.notListening": "Não estou ouvindo nada agora",
-  "live.idle": "Spotify parado",
+  "live.nothingNow": "Nada no momento",
   "live.liveOnSpotify": "Ao vivo no Spotify",
-  "live.nowPlaying": "Tocando agora",
-  "live.live": "Ao vivo",
   "live.notPlaying": "Nada tocando",
   "live.startListening": "Comece a ouvir no Spotify",
   "live.noArtwork": "Sem capa",

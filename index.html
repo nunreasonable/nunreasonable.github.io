@@ -36,7 +36,7 @@
       sem trocar a URL o banner novo nao aparece. Suba o numero a cada vez que
       og-banner.png for refeito.
     -->
-    <meta property="og:image" content="https://daeese.me/filearchive/og-banner.png?v=4" />
+    <meta property="og:image" content="https://daeese.me/filearchive/og-banner.png?v=5" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -54,7 +54,7 @@
       name="twitter:description"
       content="Fullstack developer. Roblox games, Discord bots, desktop shells and launchers, from Luau and Rust to C++."
     />
-    <meta name="twitter:image" content="https://daeese.me/filearchive/og-banner.png?v=4" />
+    <meta name="twitter:image" content="https://daeese.me/filearchive/og-banner.png?v=5" />
     <meta
       name="twitter:image:alt"
       content="daeese portfolio: Blood Oath, Sollarety and Illogical Windows."
@@ -739,28 +739,6 @@
         background: rgba(255, 255, 255, 0.04);
       }
 
-      .section-title {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 0.92rem;
-        font-weight: 500;
-        color: var(--muted);
-        margin: 24px 2px 10px;
-      }
-
-      /* Tracinho em carmim antes do rotulo: diz onde um bloco comeca sem
-         precisar de linha divisoria atravessando o card. */
-      .section-title::before {
-        content: "";
-        width: 14px;
-        height: 2px;
-        border-radius: 2px;
-        background: var(--accent-lit);
-        box-shadow: 0 0 8px var(--accent-glow);
-        flex: 0 0 auto;
-      }
-
       .links {
         display: grid;
         gap: 10px;
@@ -822,15 +800,6 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         transition: color 160ms ease;
-      }
-
-      .now-playing-left {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
       }
 
       .now-playing-cover {
@@ -1347,35 +1316,146 @@
         transform: scaleX(1);
       }
 
-      /* --- Hero --------------------------------------------------------- */
+      /* --- Hero (pagina de artista) -------------------------------------- */
+      /*
+       * Cabecalho no formato da pagina de artista de um app de musica, para
+       * conversar com a discografia logo abaixo: faixa de capa em cima, avatar
+       * cruzando a borda de baixo dela, nome e acoes na mesma linha, e uma
+       * fileira de numeros tirada de profileData (initHeroStats). Nada aqui
+       * anima sozinho: a faixa e um fundo parado, desenhado uma vez.
+       */
       .hero {
-        min-height: 100svh;
-        padding: calc(var(--nav-h) + 48px) 0 96px;
-        display: grid;
-        grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
-        align-items: end;
-        gap: 48px clamp(32px, 6vw, 96px);
+        --avatar: 148px;
+        --hero-inset: clamp(16px, 2.4vw, 28px);
+        padding: calc(var(--nav-h) + 20px) 0 24px;
         position: relative;
       }
 
-      .hero-id {
-        display: flex;
-        align-items: center;
-        gap: 18px;
+      /*
+       * Faixa de capa: um carmim que escurece para baixo e, por cima, o
+       * monograma do daeese passando em correntes - colunas verticais do
+       * monograma emendado, cada uma andando no sentido contrario da vizinha.
+       * Usa apenas as variaveis do tema, entao no Sollarety as correntes ficam
+       * prateadas sozinhas.
+       *
+       * Custo: cada coluna e um elemento com o monograma repetido na vertical
+       * (mask-image, para a cor vir de --accent-lit) e so o transform dela
+       * anima, numa camada propria - o compositor desliza a textura pronta,
+       * sem repintar. O loop anda exatamente uma altura de monograma, por isso
+       * a emenda nao aparece. Fica parada atras do portao, fora da tela
+       * (initBannerChains), no modo leve e com movimento reduzido.
+       */
+      .hero-banner {
+        --chain: 72px;
+        --chain-time: 9s;
+        height: clamp(120px, 12vw, 176px);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+        background:
+          radial-gradient(90% 170% at 100% 0%, color-mix(in srgb, var(--accent-lit) 20%, transparent), transparent 62%),
+          linear-gradient(180deg, color-mix(in srgb, var(--accent-deep) 38%, var(--bg-mid)) 0%, var(--bg-start) 100%);
       }
 
-      /* Linha de artista ao lado do avatar: em caixa normal, como o nome de
-         quem assina um disco, e nao rotulo espacado em maiusculas. */
+      .chains {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        pointer-events: none;
+      }
+
+      /* Altura da faixa + um monograma em cima e um embaixo: andando uma
+         altura para qualquer lado, a coluna continua cobrindo a faixa. */
+      .chain {
+        flex: 0 0 var(--chain);
+        height: calc(100% + 2 * var(--chain));
+        margin-top: calc(-1 * var(--chain));
+        background: color-mix(in srgb, var(--accent-lit) 15%, transparent);
+        -webkit-mask: url("./filearchive/brand/monogram-bold.svg") 50% 0 / var(--chain) var(--chain) repeat-y;
+        mask: url("./filearchive/brand/monogram-bold.svg") 50% 0 / var(--chain) var(--chain) repeat-y;
+        will-change: transform;
+        animation: chain-down var(--chain-time) linear infinite;
+        animation-play-state: paused;
+      }
+
+      .chain:nth-child(even) {
+        animation-name: chain-up;
+      }
+
+      body.has-entered .hero-banner.is-onscreen .chain {
+        animation-play-state: running;
+      }
+
+      @keyframes chain-down {
+        from { transform: translate3d(0, 0, 0); }
+        to { transform: translate3d(0, var(--chain), 0); }
+      }
+
+      @keyframes chain-up {
+        from { transform: translate3d(0, 0, 0); }
+        to { transform: translate3d(0, calc(-1 * var(--chain)), 0); }
+      }
+
+      /* Pe da faixa no fundo da pagina, por cima das correntes: o nome que
+         encosta nela continua legivel. Parado, entao nao custa quadro. */
+      .hero-banner::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 45%, color-mix(in srgb, var(--bg-start) 85%, transparent) 100%);
+        pointer-events: none;
+      }
+
+      .hero-head {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-areas: "avatar id actions";
+        align-items: end;
+        gap: 20px clamp(18px, 2.4vw, 32px);
+        margin-top: calc(var(--avatar) / -2);
+        padding-inline: var(--hero-inset);
+        position: relative;
+      }
+
+      .hero .avatar-shell {
+        grid-area: avatar;
+        width: var(--avatar);
+        height: var(--avatar);
+      }
+
+      /* Anel da cor do fundo em volta do avatar: separa a foto da faixa. */
+      .hero .avatar {
+        width: 100%;
+        height: 100%;
+        box-shadow: 0 0 0 5px var(--bg-start), 0 0 22px -6px var(--accent-glow);
+      }
+
+      .hero .discord-status-badge {
+        width: 22px;
+        height: 22px;
+        right: 10px;
+        bottom: 10px;
+      }
+
+      .hero-id {
+        grid-area: id;
+        min-width: 0;
+      }
+
+      /* Linha de cima do nome: em caixa normal, como o subtitulo de um perfil
+         de artista, e nao rotulo espacado em maiusculas. */
       .artist-role {
-        margin: 0;
-        font-size: 1.05rem;
+        margin: 0 0 4px;
+        font-size: 0.95rem;
         font-weight: 500;
         line-height: 1.35;
         color: var(--soft-text);
       }
 
       .name-wrap {
-        margin-top: 22px;
         min-width: 0;
         container-type: inline-size;
       }
@@ -1389,7 +1469,7 @@
       .hero .name {
         font-family: "Space Grotesk", sans-serif;
         font-weight: 700;
-        font-size: min(11.5rem, calc(100cqi / (var(--name-len, 6) * 0.6)));
+        font-size: min(7.5rem, calc(100cqi / (var(--name-len, 6) * 0.6)));
         line-height: 0.9;
         letter-spacing: -0.055em;
         white-space: nowrap;
@@ -1397,64 +1477,186 @@
            baixo nao pula quando o nick troca, o menor so senta na base. */
         display: flex;
         align-items: flex-end;
-        block-size: calc(min(11.5rem, calc(100cqi / 3.6)) * 0.96);
+        block-size: calc(min(7.5rem, calc(100cqi / 3.6)) * 0.96);
       }
 
       .hero .handle {
-        margin: 10px 0 0;
+        margin: 8px 0 0;
         font-size: 1rem;
       }
 
-      .hero .bio {
-        margin: 26px 0 0;
-        max-width: 54ch;
-        font-size: clamp(1rem, 1.4vw, 1.12rem);
-      }
-
-      .hero .badges {
-        margin-top: 22px;
+      /* id="contact" mora aqui: o link Contato da nav cai no botao do e-mail. */
+      .hero-actions {
+        grid-area: actions;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        padding-bottom: 4px;
+        scroll-margin-top: calc(var(--nav-h) + 24px);
       }
 
       .hero .socials-inline {
-        justify-content: flex-start;
-        margin-top: 26px;
+        gap: 10px;
         padding: 0;
       }
 
-      .hero-side {
+      .hero .socials-inline a {
+        width: 46px;
+        height: 46px;
+      }
+
+      /* "E-mail" ao lado de "Get in touch": diz o que o botao abre. */
+      .hero-action-tag {
+        margin-left: 8px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--muted);
+      }
+
+      /*
+       * Numeros do artista. Um <dl>: cada par rotulo/valor e um dado, e o
+       * leitor de tela le assim. Linhas finas separam os dados; algarismos
+       * tabulares para o numero nao danca quando muda.
+       */
+      .hero-stats {
+        display: grid;
+        grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1.5fr);
+        margin: clamp(24px, 3.4vw, 36px) 0 0;
+        border-block: 1px solid var(--line);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .stat {
         min-width: 0;
-        padding-bottom: 6px;
+        padding: 16px clamp(14px, 2vw, 24px);
       }
 
-      .hero-side .section-title {
-        margin-top: 0;
+      .stat:first-child {
+        padding-inline-start: var(--hero-inset);
       }
 
-      .scroll-cue {
-        position: absolute;
-        left: 0;
-        bottom: 34px;
-        display: inline-flex;
+      .stat + .stat {
+        border-inline-start: 1px solid var(--line);
+      }
+
+      .stat dt {
+        margin: 0 0 6px;
+        font-size: 0.84rem;
+        color: var(--muted);
+      }
+
+      .stat dd {
+        margin: 0;
+        min-width: 0;
+        font-size: 1.12rem;
+        font-weight: 700;
+        line-height: 1.3;
+        color: var(--text);
+      }
+
+      .stat dd.stat-num {
+        font-size: 2rem;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+      }
+
+      .stat-sub {
+        display: block;
+        margin-top: 2px;
+        font-size: 0.86rem;
+        font-weight: 500;
+        color: var(--soft-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .stat-version {
+        font-family: ui-monospace, "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+        font-size: 0.78rem;
+        color: var(--muted);
+      }
+
+      .stat-link,
+      .np-stat {
+        display: block;
+        min-width: 0;
+        color: inherit;
+        text-decoration: none;
+        border-radius: 6px;
+      }
+
+      .stat-link:hover .stat-value,
+      .np-stat:hover .now-playing-title-inner {
+        text-decoration: underline;
+        text-decoration-color: var(--accent-lit);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+      }
+
+      .stat-link:focus-visible,
+      .np-stat:focus-visible {
+        outline: 2px solid var(--accent-lit);
+        outline-offset: 4px;
+      }
+
+      /* Ouvindo agora: a mesma capa e o mesmo letreiro do card antigo. */
+      .np-stat {
+        display: flex;
         align-items: center;
         gap: 10px;
+      }
+
+      .np-stat .now-playing-cover {
+        width: 40px;
+        height: 40px;
+        border-radius: 6px;
+      }
+
+      .np-stat .now-playing-subtitle {
+        margin-top: 2px;
+        font-size: 0.86rem;
+        font-weight: 500;
+        color: var(--soft-text);
+      }
+
+      .np-stat.is-idle .now-playing-cover {
+        opacity: 0.55;
+      }
+
+      .np-stat.is-idle .now-playing-title {
         color: var(--muted);
-        text-decoration: none;
-        font-size: 0.88rem;
+        font-weight: 600;
       }
 
-      .scroll-cue::before {
-        content: "";
-        width: 1px;
-        height: 28px;
-        background: linear-gradient(var(--accent-lit), transparent);
-        animation: cue 2.2s ease-in-out infinite;
-        transform-origin: top;
+      .hero-about {
+        margin-top: 22px;
+        padding-inline: var(--hero-inset);
       }
 
-      @keyframes cue {
-        0% { transform: scaleY(0); opacity: 0; }
-        40% { transform: scaleY(1); opacity: 1; }
-        100% { transform: scaleY(1) translateY(10px); opacity: 0; }
+      .hero-about-title {
+        margin: 0;
+        font-size: 0.84rem;
+        font-weight: 500;
+        color: var(--muted);
+      }
+
+      .hero .bio {
+        margin: 6px 0 0;
+        max-width: 64ch;
+        font-size: 1rem;
+      }
+
+      .hero .badges {
+        gap: 6px;
+        margin-top: 14px;
+      }
+
+      .hero .badges li {
+        font-size: 0.78rem;
+        padding: 4px 9px;
       }
 
       /* --- Secoes ------------------------------------------------------- */
@@ -2324,7 +2526,6 @@
 
       .footer a:focus-visible,
       .nav-brand:focus-visible,
-      .scroll-cue:focus-visible,
       .nav-links a:focus-visible {
         outline: 2px solid var(--accent-lit);
         outline-offset: 4px;
@@ -2395,16 +2596,53 @@
 
       /* --- Responsivo --------------------------------------------------- */
 
-      @media (max-width: 860px) {
+      /* Sem largura para tres colunas: as acoes descem para baixo do nome,
+         ainda alinhadas com ele, e o avatar fica sozinho na coluna da esquerda. */
+      @media (max-width: 1080px) {
         .hero {
-          grid-template-columns: minmax(0, 1fr);
-          align-items: start;
-          min-height: auto;
-          padding-bottom: 72px;
+          --avatar: 128px;
         }
 
-        .scroll-cue {
-          display: none;
+        .hero-head {
+          grid-template-columns: auto minmax(0, 1fr);
+          grid-template-areas:
+            "avatar id"
+            ". actions";
+        }
+
+        .hero-actions {
+          justify-content: flex-start;
+        }
+
+        .hero .discord-status-badge {
+          width: 20px;
+          height: 20px;
+          right: 8px;
+          bottom: 8px;
+        }
+      }
+
+      @media (max-width: 860px) {
+        /* Numeros em 2x2: a linha fina da esquerda so na segunda coluna, e
+           a de cima so na segunda linha. */
+        .hero-stats {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .stat + .stat {
+          border-inline-start: 0;
+        }
+
+        .stat:nth-child(odd) {
+          padding-inline-start: var(--hero-inset);
+        }
+
+        .stat:nth-child(even) {
+          border-inline-start: 1px solid var(--line);
+        }
+
+        .stat:nth-child(n + 3) {
+          border-block-start: 1px solid var(--line);
         }
 
         .project-details {
@@ -2454,21 +2692,50 @@
           letter-spacing: 0.06em;
         }
 
+        /* Celular: avatar cruzando a faixa, e nome, acoes e numeros
+           empilhados embaixo, na largura toda. */
         .hero {
-          padding-top: calc(var(--nav-h) + 28px);
+          --avatar: 96px;
+          padding-top: calc(var(--nav-h) + 12px);
         }
 
-        .avatar,
-        .avatar-shell {
-          width: 76px;
-          height: 76px;
+        .hero-banner {
+          --chain: 56px;
+          height: 112px;
+          border-radius: 14px;
         }
 
-        .discord-status-badge {
-          width: 16px;
-          height: 16px;
-          right: -2px;
-          bottom: -2px;
+        .hero-head {
+          grid-template-columns: minmax(0, 1fr);
+          grid-template-areas:
+            "avatar"
+            "id"
+            "actions";
+          row-gap: 14px;
+        }
+
+        .hero .discord-status-badge {
+          width: 18px;
+          height: 18px;
+          right: 4px;
+          bottom: 4px;
+        }
+
+        .stat {
+          padding-block: 14px;
+        }
+
+        .stat dd {
+          font-size: 1rem;
+        }
+
+        .stat dd.stat-num {
+          font-size: 1.7rem;
+        }
+
+        .np-stat .now-playing-cover {
+          width: 34px;
+          height: 34px;
         }
 
         /* Duas capas por linha ate no celular, como uma estante de discos;
@@ -2610,6 +2877,35 @@
         }
       }
 
+      /*
+       * Celular estreito: os dois numeros curtos (lancamentos e generos)
+       * dividem a primeira linha, e o ultimo lancamento e o que esta tocando
+       * ganham a largura toda - em meia coluna o nome da musica virava
+       * reticencias logo na primeira palavra. So a ordem visual muda; os
+       * pares rotulo/valor continuam inteiros, e os dois links seguem na
+       * mesma ordem de Tab.
+       */
+      @media (max-width: 480px) {
+        .stat:nth-child(1) { order: 1; }
+        .stat:nth-child(3) { order: 2; }
+        .stat:nth-child(2) { order: 3; }
+        .stat:nth-child(4) { order: 4; }
+
+        .stat:nth-child(2),
+        .stat:nth-child(4) {
+          grid-column: 1 / -1;
+          padding-inline-start: var(--hero-inset);
+          border-inline-start: 0;
+          border-block-start: 1px solid var(--line);
+        }
+
+        .stat:nth-child(3) {
+          padding-inline-start: clamp(14px, 2vw, 24px);
+          border-inline-start: 1px solid var(--line);
+          border-block-start: 0;
+        }
+      }
+
       /* O titulo do card e um <h3> em volta do botao (padrao de acordeao):
          heading para quem navega por titulos, botao para quem clica. */
       .project-h {
@@ -2642,7 +2938,8 @@
       }
 
       :root[data-lite] .avatar-shell::after,
-      :root[data-lite] .scroll-cue::before,
+      :root[data-lite] .now-playing-title-inner,
+      :root[data-lite] .chain,
       :root[data-lite] .sol-spin,
       :root[data-lite] .blur-message,
       :root[data-lite] .blur-message::after,
@@ -2680,7 +2977,7 @@
         .intro,
         .intro-line,
         .intro-line .cur,
-        .scroll-cue::before,
+        .chain,
         .sol-spin,
         .project-details,
         body.is-entering .site,
@@ -2725,26 +3022,20 @@
       }
 
       /* Refinamento da vitrine: previews e acesso direto, mantendo os cards. */
-      .hero { min-height: min(820px, 92svh); align-items: center; padding-bottom: 86px; }
-      .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
       .hero-action { min-height: 46px; display: inline-flex; align-items: center; padding: 11px 20px; border: 1px solid var(--accent-line); border-radius: 999px; color: var(--text); text-decoration: none; font-weight: 600; transition: transform 150ms ease-out; }
       .hero-action.is-primary { background: var(--accent-lit); color: var(--bg-start); }
       .hero-action:hover { border-color: var(--text); }
       .hero-action:focus-visible, .blur-overlay:focus-visible .blur-message { outline: 2px solid var(--text); outline-offset: 4px; }
       .now-playing-title-inner { max-width: 100%; overflow: hidden; text-overflow: ellipsis; vertical-align: bottom; }
       .now-playing-title.is-scrolling .now-playing-title-inner { max-width: none; overflow: visible; }
-      @media (max-width: 860px) { .hero { min-height: auto; gap: 36px; padding-bottom: 48px; } }
       @media (max-width: 640px) {
         .nav { gap: 8px; }
         .nav-end, .nav-links { gap: 8px; }
         .nav-brand { font-size: 1.35rem; flex-shrink: 0; }
         .nav-links a { font-size: .76rem; }
         .nav .i18n-switcher__btn { padding: 5px 6px; }
-        .hero .name { font-size: min(8rem, calc(100cqi / (var(--name-len, 6) * 0.6))); block-size: calc(min(8rem, calc(100cqi / 3.6)) * 0.96); }
-        .hero .bio { max-width: 38ch; }
-        .hero-action { flex: 1; justify-content: center; padding-inline: 14px; font-size: .9rem; }
-        .hero-side .link-btn:has(.now-playing-left) { grid-template-columns: minmax(0, 1fr); }
-        .hero-side .link-btn:has(.now-playing-left) > .right { display: none; }
+        .hero .name { font-size: min(5.5rem, calc(100cqi / (var(--name-len, 6) * 0.6))); block-size: calc(min(5.5rem, calc(100cqi / 3.6)) * 0.96); }
+        .hero-action { flex: 1 1 auto; justify-content: center; padding-inline: 14px; font-size: .9rem; }
         .section { padding-top: 40px; }
       }
 
@@ -2878,44 +3169,68 @@
     </header>
 
     <main class="site" inert>
-      <section class="hero" id="top">
-        <div class="hero-main">
-          <div class="hero-id reveal">
-            <div class="avatar-shell">
-              <img
-                class="avatar"
-                id="avatar"
-                src="./filearchive/pfp22.jpeg"
-                alt="Profile avatar"
-                data-i18n-attr="alt:home.avatarAlt"
-              />
-              <span
-                class="discord-status-badge"
-                id="discordStatusBadge"
-                data-status="offline"
-                role="img"
-                aria-label="Discord status: Offline"
-                title="Discord status: Offline"
-              ></span>
-            </div>
-            <p class="artist-role" data-i18n="home.role">Fullstack developer</p>
+      <section class="hero" id="top" aria-labelledby="displayName">
+        <!-- As colunas das correntes vem do initBannerChains. -->
+        <div class="hero-banner reveal" aria-hidden="true"><div class="chains"></div></div>
+        <div class="hero-head reveal">
+          <div class="avatar-shell">
+            <img
+              class="avatar"
+              id="avatar"
+              src="./filearchive/pfp22.jpeg"
+              alt="Profile avatar"
+              data-i18n-attr="alt:home.avatarAlt"
+            />
+            <span
+              class="discord-status-badge"
+              id="discordStatusBadge"
+              data-status="offline"
+              role="img"
+              aria-label="Discord status: Offline"
+              title="Discord status: Offline"
+            ></span>
           </div>
-          <div class="name-wrap reveal">
-            <h1 class="name" id="displayName">daeese</h1>
+          <div class="hero-id">
+            <p class="artist-role" data-i18n="home.artistRole">Artist and fullstack developer</p>
+            <div class="name-wrap">
+              <h1 class="name" id="displayName">daeese</h1>
+            </div>
             <p class="handle" id="handle">@daeese</p>
           </div>
-          <p class="bio reveal" id="bio" data-i18n="home.bioRust"></p>
-          <ul class="badges reveal" id="badges"></ul>
-          <div class="hero-actions reveal"><a class="hero-action is-primary" href="#work" data-i18n="home.viewProjects">Explore projects</a><a class="hero-action" href="#contact" data-i18n="home.contactAction">Get in touch</a></div>
-          <div class="socials-inline reveal" id="socialLinksInline"></div>
+          <div class="hero-actions" id="contact">
+            <a class="hero-action is-primary" href="#work" data-i18n="home.exploreDisco">Explore the discography</a>
+            <!-- O href (mailto) vem de profileData.contact. -->
+            <a class="hero-action" id="contactAction" href="#contact"><span data-i18n="home.contactAction">Get in touch</span><span class="hero-action-tag" data-i18n="home.link.contactTag">E-mail</span></a>
+            <div class="socials-inline" id="socialLinksInline"></div>
+          </div>
         </div>
 
-        <aside class="hero-side reveal" id="contact">
-          <p class="section-title" data-i18n="home.getInTouch">Get in touch</p>
-          <div class="links" id="mainLinks"></div>
-        </aside>
+        <!-- Os valores saem de profileData (initHeroStats) e do Spotify ao
+             vivo (setNowPlayingState); nenhum numero fica escrito aqui. -->
+        <dl class="hero-stats reveal">
+          <div class="stat">
+            <dt data-i18n="home.stat.releases">Releases</dt>
+            <dd class="stat-num" id="statReleases"></dd>
+          </div>
+          <div class="stat">
+            <dt data-i18n="home.stat.latest">Latest release</dt>
+            <dd id="statLatest"></dd>
+          </div>
+          <div class="stat">
+            <dt data-i18n="home.stat.genres">Genres</dt>
+            <dd id="statGenres"></dd>
+          </div>
+          <div class="stat">
+            <dt data-i18n="home.stat.listening">Listening now</dt>
+            <dd><a class="np-stat is-idle" id="nowPlayingStat" href="https://open.spotify.com"></a></dd>
+          </div>
+        </dl>
 
-        <a class="scroll-cue" href="#work" data-i18n="home.disco.cue">Discography</a>
+        <div class="hero-about reveal">
+          <h2 class="hero-about-title" data-i18n="home.about">About</h2>
+          <p class="bio" id="bio" data-i18n="home.bioRust"></p>
+          <ul class="badges" id="badges"></ul>
+        </div>
       </section>
 
       <section class="section" id="work" aria-labelledby="workTitle">
@@ -3064,7 +3379,7 @@
       /*
        * O seletor e o modulo filearchive/i18n/i18n.js, o mesmo das paginas do
        * Sollarety e do ccore. Ele traduz sozinho tudo que tem data-i18n, mas
-       * texto AO VIVO (Now Playing, status do Discord, legenda da galeria) e
+       * texto AO VIVO (Listening now, status do Discord, legenda da galeria) e
        * reescrito por este script e nao pode usar data-i18n - seria
        * sobrescrito pelo dicionario e voltaria no proximo tick. Para esse texto
        * existe homeT(): ele le o mesmo dicionario, importado aqui no primeiro
@@ -3089,7 +3404,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261126-1")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261126-3")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -3276,10 +3591,12 @@
           bio: "I work with Rust, C#, JS, HTML & CSS. Main timezone is UTC-3, sometimes UTC 0.\nFullstack Developer @ Vltra Entertainment.",
         avatar: "./filearchive/pfp22.jpeg",
             badges: ["Rust", "C#", ".NET", "Luau", "C++", "Qt", "Tauri", "JavaScript", "Web Development", "Linux", "Git", "UTC-3"],
-        links: [
-          { label: "Contact Me", href: "mailto:rafaelpasquarella@gmail.com", tag: "E-Mail", i18n: "home.link.contact", i18nTag: "home.link.contactTag" },
-          { id: "nowPlaying", label: "Now Playing", href: "https://open.spotify.com", tag: "Spotify" }
-        ],
+        // Botao "Get in touch" do hero.
+        contact: { href: "mailto:rafaelpasquarella@gmail.com" },
+        // "Genres" nos numeros do hero: as linguagens principais, em ordem.
+        // Nomes de tecnologia, entao sem traducao (mesma chave tag.<nome> das
+        // badges, caso um dia ganhem uma).
+        genres: ["Rust", "C#", "C++", "Luau"],
         spotify: {
           // Contas do Discord escutadas pelo Lanyard. Vale a que estiver
           // tocando; sem musica, a que estiver online; a ordem desempata.
@@ -3325,7 +3642,7 @@
             image: "./filearchive/projects/ii-windows/thumb.webp?v=20261031",
             cover: { src: "./apps/illogicalwindows/assets/showcase/desktop.webp", w: 1600, h: 900 },
             thumbWide: true,
-            logo: { src: "./filearchive/projects/ii-windows/logo.webp?v=20261031", w: 1000, h: 310, alt: "illogical-impulse for Windows" },
+            logo: { src: "./filearchive/projects/ii-windows/logo.webp?v=20261126", w: 1000, h: 310, alt: "Illogical Windows" },
             details: [
               "end-4’s illogical-impulse desktop, running natively on Windows 10 and 11. Your apps and files stay where they are; ii brings a different bar, sidebars and widgets around them.",
               "Search with the Windows key, control music and notifications from the sidebar, and arrange widgets and windows your way. Colors follow your wallpaper, with four looks to choose from.",
@@ -3649,26 +3966,14 @@
         discordStatusBadgeEl.setAttribute("aria-label", label);
       }
 
-      const linksEl = document.getElementById("mainLinks");
-      profileData.links.forEach((link, i) => {
-        const a = document.createElement("a");
-        a.className = "link-btn";
-        a.href = normalizeUrl(link.href) || "#";
-        a.dataset.url = link.href;
-        a.dataset.linkId = link.id || "";
-        a.target = "_blank";
-        a.rel = "noreferrer noopener";
-        a.style.animationDelay = `${100 + i * 75}ms`;
-        a.innerHTML = `<span class="left"${i18nAttr(link.i18n)}>${escapeHtml(link.label)}</span><span class="right"${i18nAttr(link.i18nTag)}>${escapeHtml(link.tag)}</span>`;
-        linksEl.appendChild(a);
-      });
+      // mailto comum, sem target: o navegador entrega ao app de e-mail.
+      document.getElementById("contactAction").href = normalizeUrl(profileData.contact.href);
 
-      function formatNowPlayingLabel(trackTitle, artistName) {
-        return `${homeT("live.nowPlaying", "Now Playing")}: ${trackTitle} - ${artistName}`;
-      }
+      // "Listening now" nos numeros do hero. O clique abre o player.
+      const nowPlayingEl = document.getElementById("nowPlayingStat");
 
       function refreshNowPlayingTitleFit() {
-        const titleEl = linksEl.querySelector('[data-link-id="nowPlaying"] .now-playing-title');
+        const titleEl = nowPlayingEl.querySelector(".now-playing-title");
         if (!titleEl) {
           return;
         }
@@ -3682,9 +3987,10 @@
         titleEl.style.removeProperty("--marquee-distance");
         titleEl.style.removeProperty("--marquee-duration");
 
-        // Letreiro em loop infinito nao combina com menos movimento: o titulo
-        // fica com reticencias, e o nome inteiro aparece no player.
-        if (reduceMotionQuery.matches) {
+        // Letreiro em loop infinito nao combina com menos movimento nem com o
+        // modo leve: o titulo fica com reticencias, e o nome inteiro aparece
+        // no player.
+        if (reduceMotionQuery.matches || isLite()) {
           return;
         }
 
@@ -3729,54 +4035,37 @@
           updatePlayerDisplay();
         }
 
-        const nowPlayingLink = linksEl.querySelector('[data-link-id="nowPlaying"]');
-        if (!nowPlayingLink) {
-          return;
-        }
-
-        const left = nowPlayingLink.querySelector(".left");
-        const right = nowPlayingLink.querySelector(".right");
-        if (!left || !right) {
-          return;
-        }
-
         // Everything below is third-party data from Lanyard, so it is escaped
-        // before it reaches innerHTML.
+        // before it reaches innerHTML. A capa fica nos dois estados, para o
+        // bloco nao mudar de altura quando a musica comeca ou para.
         if (!state || !state.isPlaying) {
-          const idleMessage = state && state.message ? state.message : homeT("live.idle", "Spotify status idle");
-          left.innerHTML = `
-            <span class="now-playing-left">
-              <img
-                class="now-playing-cover"
-                src="${escapeHtml(FALLBACK_ALBUM_ART)}"
-                alt="${escapeHtml(homeT("live.noArtwork", "No track artwork"))}"
-              />
-              <span class="now-playing-text">
-                <span class="now-playing-title"><span class="now-playing-title-inner">${escapeHtml(homeT("live.notListening", "Not listening right now"))}</span></span>
-                <span class="now-playing-subtitle">${escapeHtml(idleMessage)}</span>
-              </span>
+          nowPlayingEl.classList.add("is-idle");
+          nowPlayingEl.innerHTML = `
+            <img
+              class="now-playing-cover"
+              src="${escapeHtml(FALLBACK_ALBUM_ART)}"
+              alt="${escapeHtml(homeT("live.noArtwork", "No track artwork"))}"
+            />
+            <span class="now-playing-text">
+              <span class="now-playing-title"><span class="now-playing-title-inner">${escapeHtml(homeT("live.nothingNow", "Nothing right now"))}</span></span>
+              <span class="now-playing-subtitle">Spotify</span>
             </span>
           `;
-          right.textContent = "Spotify";
-          nowPlayingLink.dataset.url = "https://open.spotify.com";
-          nowPlayingLink.href = "https://open.spotify.com";
+          nowPlayingEl.href = "https://open.spotify.com";
           refreshNowPlayingTitleFit();
           return;
         }
 
         const coverUrl = safeImageUrl(state.imageUrl, FALLBACK_ALBUM_ART);
-        left.innerHTML = `
-          <span class="now-playing-left">
-            <img class="now-playing-cover" src="${escapeHtml(coverUrl)}" alt="${escapeHtml(homeT("live.albumArtwork", "Album artwork"))}" />
-            <span class="now-playing-text">
-              <span class="now-playing-title"><span class="now-playing-title-inner">${escapeHtml(formatNowPlayingLabel(state.title, state.artist))}</span></span>
-              <span class="now-playing-subtitle">${escapeHtml(state.album || homeT("live.liveOnSpotify", "Live on Spotify"))}</span>
-            </span>
+        nowPlayingEl.classList.remove("is-idle");
+        nowPlayingEl.innerHTML = `
+          <img class="now-playing-cover" src="${escapeHtml(coverUrl)}" alt="${escapeHtml(homeT("live.albumArtwork", "Album artwork"))}" />
+          <span class="now-playing-text">
+            <span class="now-playing-title"><span class="now-playing-title-inner">${escapeHtml(state.title)}</span></span>
+            <span class="now-playing-subtitle">${escapeHtml(state.artist)}</span>
           </span>
         `;
-        right.textContent = homeT("live.live", "Live");
-        nowPlayingLink.dataset.url = state.trackUrl;
-        nowPlayingLink.href = normalizeUrl(state.trackUrl) || "https://open.spotify.com";
+        nowPlayingEl.href = normalizeUrl(state.trackUrl) || "https://open.spotify.com";
         refreshNowPlayingTitleFit();
       }
 
@@ -4086,22 +4375,15 @@
         playSFX('click');
       });
 
-      linksEl.addEventListener("click", (event) => {
-        const linkButton = event.target.closest(".link-btn");
-        if (!linkButton) {
+      // O href (a faixa no Spotify) fica para o clique do meio e o "abrir
+      // em nova aba"; o clique comum abre o player, como o card antigo.
+      nowPlayingEl.addEventListener("click", (event) => {
+        if (event.ctrlKey || event.metaKey || event.shiftKey) {
           return;
         }
-
         event.preventDefault();
-
-        // Check if it's the now playing link
-        if (linkButton.dataset.linkId === "nowPlaying") {
-          playSFX('open');
-          openPlayerModal();
-          return;
-        }
-
-        openProfileLink(linkButton.dataset.url);
+        playSFX('open');
+        openPlayerModal();
       });
 
       // Hover SFX, delegated so links rendered later still get it.
@@ -4109,7 +4391,7 @@
         "mouseover",
         (event) => {
           const target = event.target.closest(
-            ".link-btn, .player-listen-btn, .socials-inline a, .project-toggle, .project-action, .gallery-thumb, .nav-links a"
+            ".link-btn, .np-stat, .player-listen-btn, .socials-inline a, .project-toggle, .project-action, .gallery-thumb, .nav-links a"
           );
           if (!target) {
             return;
@@ -4341,6 +4623,47 @@
         projectsEl.appendChild(renderProjectCard(project));
       });
       document.getElementById("releaseCount").textContent = String(profileData.projects.length);
+
+      /*
+       * Numeros do hero, todos tirados de profileData: quantos lancamentos ha,
+       * o ultimo lancamento com nome (o primeiro projeto da lista que tem
+       * `release`, a mesma ordem da discografia) e os generos. Roda antes do
+       * modulo de i18n ler a pagina, entao os data-i18n daqui entram no
+       * dicionario como os do HTML.
+       */
+      (function initHeroStats() {
+        document.getElementById("statReleases").textContent = String(profileData.projects.length);
+
+        const latestEl = document.getElementById("statLatest");
+        const latest = profileData.projects.find((project) => project.release);
+        if (latest) {
+          const version = latest.version
+            ? ` <span class="stat-version">${escapeHtml(latest.version)}</span>`
+            : "";
+          latestEl.innerHTML = `<a class="stat-link" href="#work/${escapeHtml(latest.slug)}"><span class="stat-value">${escapeHtml(latest.release)}</span><span class="stat-sub"><span${i18nAttr(projectKey(latest, "title"))}>${escapeHtml(latest.title)}</span>${version}</span></a>`;
+          // Abre o card do lancamento. Pelo hash sozinho nao daria: com o card
+          // ja aberto o hash nao muda e o clique nao faria nada.
+          latestEl.querySelector("a").addEventListener("click", (event) => {
+            const card = document.getElementById(`work-${latest.slug}`);
+            if (!card) {
+              return;
+            }
+            event.preventDefault();
+            playSFX('click');
+            if (openProjectCard === card) {
+              scrollToProject(card);
+            } else {
+              openProject(card);
+            }
+          });
+        } else {
+          latestEl.textContent = "-";
+        }
+
+        document.getElementById("statGenres").innerHTML = (profileData.genres || [])
+          .map((genre) => `<span${i18nAttr(`tag.${genre}`)}>${escapeHtml(genre)}</span>`)
+          .join(", ");
+      })();
 
       /*
        * Animacao de layout (FLIP): mede onde cada card, a secao de links e o
@@ -5310,6 +5633,48 @@
         document.addEventListener("mouseleave", () => glow.classList.remove("is-live"));
       })();
 
+      // --- Correntes da faixa de capa ---------------------------------------
+      /*
+       * Cria as colunas das correntes (so as que cabem na faixa, mais uma de
+       * folga) e as pausa fora da tela, como o sol do Sollarety: uma camada
+       * que ninguem ve nao precisa custar quadro. O movimento e todo CSS; aqui
+       * nao ha nada por quadro, so a contagem de colunas na carga e quando a
+       * largura muda.
+       */
+      (function initBannerChains() {
+        const banner = document.querySelector(".hero-banner");
+        const holder = banner && banner.querySelector(".chains");
+        if (!holder) {
+          return;
+        }
+
+        function fill() {
+          const tile = parseFloat(getComputedStyle(banner).getPropertyValue("--chain")) || 72;
+          const wanted = Math.ceil(banner.clientWidth / tile) + 1;
+          while (holder.children.length < wanted) {
+            holder.appendChild(document.createElement("span")).className = "chain";
+          }
+          while (holder.children.length > wanted) {
+            holder.lastElementChild.remove();
+          }
+        }
+
+        fill();
+        let fillTimer = 0;
+        window.addEventListener("resize", () => {
+          clearTimeout(fillTimer);
+          fillTimer = setTimeout(fill, 200);
+        });
+
+        if (typeof IntersectionObserver !== "function") {
+          banner.classList.add("is-onscreen");
+          return;
+        }
+        new IntersectionObserver((entries) => {
+          banner.classList.toggle("is-onscreen", entries[0].isIntersecting);
+        }).observe(banner);
+      })();
+
       // --- Maquina de escrever no nome -------------------------------------
       (function initTypewriter() {
         const nameEl = document.getElementById("displayName");
@@ -5472,6 +5837,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261126-2"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261126-3"></script>
   </body>
 </html>
