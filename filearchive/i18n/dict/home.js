@@ -15,17 +15,21 @@
  * As legendas (cap) e os textos alternativos (alt) de cada imagem seguem a
  * ordem de profileData.projects[].images: cap0 e a primeira imagem, e assim
  * por diante. Reordenar as imagens la exige reordenar aqui.
+ *
+ * Quando o sentido de um texto muda, a chave ganha nome novo (o `keys` do
+ * projeto no index.html, como p.ginrose.d1Bsd): um dicionario velho em cache
+ * nunca poe a traducao antiga em cima do ingles novo.
  */
 export const pt = {
-  "p.ginrose.tagline": "Um launcher comunitário de código aberto para o cliente oficial do Roblox para macOS no Linux.",
-  "p.ginrose.status": "v26.0.5.0 · Flatpak e pacotes nativos · Rosemary main",
-  "p.ginrose.d0": "O Ginrose é um launcher independente da comunidade, sem vínculo nem endosso da Roblox Corporation. Baixa o cliente oficial do Roblox para macOS diretamente da Roblox e o executa no Linux pelo Rosemary. Inclui perfis gráficos por jogo, limite de quadros e Discord Rich Presence.",
-  "p.ginrose.d1": "A versão 26.0.5.0 passa o Rosemary para um upstream mais recente e deixa os diálogos flutuando em compositores de tiling como o Hyprland. O aviso opcional da localização do servidor do Roblox continua disponível. Atualizações anteriores passaram a numerar as versões por ano, puderam mostrar o sistema no status do Discord, trouxeram builds de FreeBSD, passaram a seguir contas num canal de deploy da Roblox fora do LIVE, trouxeram melhorias de renderização, shaders e entrada, deixaram o download do Roblox terminar em conexões mais lentas, passaram a avisar quando a escolha do Rosemary não é salva, preservaram o app já associado aos links do Roblox, melhoraram o ritmo dos quadros, reduziram a CPU por desenho e corrigiram a posição do cursor no Wayland. Tem pacotes nativos para Arch, Debian, Ubuntu, Fedora e openSUSE, além de um flake do Nix e um ebuild do Gentoo, no Rosemary com vídeo e som nas experiências. Vem junto com o Ginrose Studio, o irmão dele para o Roblox Studio. O Ginrose é livre e de código aberto sob GPL-3.0 ou posterior, com builds oficiais publicadas pelo projeto Ginrose para Linux x86_64. O site reúne download, instalação e links do fonte.",
+  "p.ginrose.taglineBsd": "Um launcher comunitário de código aberto para o cliente oficial do Roblox para macOS, no Linux e nativamente no FreeBSD e no GhostBSD.",
+  "p.ginrose.format": "Linux, FreeBSD e GhostBSD",
+  "p.ginrose.d0Bsd": "O Ginrose é um launcher independente da comunidade, sem vínculo nem endosso da Roblox Corporation. Baixa o cliente oficial do Roblox para macOS diretamente da Roblox e o executa pelo Rosemary no Linux, e nativamente no FreeBSD e no GhostBSD. Inclui perfis gráficos por jogo, limite de quadros e Discord Rich Presence.",
+  "p.ginrose.d1Bsd": "A versão 26.0.5.0 passa o Rosemary para um upstream mais recente, com correções nas bibliotecas de shaders do Metal e no FreeBSD, e deixa os diálogos flutuando em compositores de tiling como o Hyprland. O aviso opcional da localização do servidor do Roblox continua disponível. Atualizações anteriores passaram a numerar as versões por ano, puderam mostrar o sistema no status do Discord, trouxeram builds de FreeBSD, passaram a seguir contas num canal de deploy da Roblox fora do LIVE, trouxeram melhorias de renderização, shaders e entrada, deixaram o download do Roblox terminar em conexões mais lentas, passaram a avisar quando a escolha do Rosemary não é salva, preservaram o app já associado aos links do Roblox, melhoraram o ritmo dos quadros, reduziram a CPU por desenho e corrigiram a posição do cursor no Wayland. No Linux tem o Flatpak e pacotes nativos para Arch, Debian, Ubuntu, Fedora e openSUSE, além de um flake do Nix e um ebuild do Gentoo; no FreeBSD 14.5 ou mais recente ele instala nativamente, e o GhostBSD roda as mesmas builds. As experiências rodam no Rosemary com vídeo e som. Vem junto com o Ginrose Studio, o irmão dele para o Roblox Studio, que por enquanto roda só no Linux. O Ginrose é livre e de código aberto sob GPL-3.0 ou posterior, com builds oficiais publicadas pelo projeto Ginrose para Linux e FreeBSD x86_64. O site reúne download, instalação e links do fonte.",
   "p.ginrose.link0": "Site e download",
   "p.ginrose-studio.tagline": "Um launcher comunitário de código aberto para o Roblox Studio oficial para macOS no Linux.",
-  "p.ginrose-studio.status": "v26.0.5.0 · Flatpak e pacotes nativos · Rosemary main",
+  "p.ginrose-studio.state": "Experimental",
   "p.ginrose-studio.d0": "O Ginrose Studio é um launcher independente da comunidade, sem vínculo nem endosso da Roblox Corporation. Compilado do mesmo código do Ginrose, ele baixa o Roblox Studio oficial para macOS direto da Roblox e o executa no Linux pelo Rosemary.",
-  "p.ginrose-studio.d1": "É uma ferramenta de desenvolvimento, então é permissivo: qualquer FastFlag, qualquer variável de ambiente para o Rosemary, argumentos extras e o binário do Rosemary que você quiser. A 0.3.7 corrige arrastar na seleção por caixa e nas alças de transformação, e mapeia Control para Command em todos os atalhos por padrão. Seu prefixo MiniDarwin 17 não pode ser reutilizado pela 0.3.6 ou anteriores. Login, abrir places e Team Create funcionam; ainda é experimental.",
+  "p.ginrose-studio.d1v26": "É uma ferramenta de desenvolvimento, então é permissivo: qualquer FastFlag, qualquer variável de ambiente para o Rosemary, argumentos extras e o binário do Rosemary que você quiser, e o Control funciona como Command em todos os atalhos por padrão. A versão 26.0.5.0 deixa os diálogos do Studio flutuando em compositores de tiling como o Hyprland e passa o Rosemary para um upstream mais recente, com correções nas bibliotecas de shaders do Metal. Por enquanto roda só no Linux; ainda não há build para FreeBSD. Login, abrir places e Team Create funcionam; ainda é experimental.",
   "p.ginrose-studio.link0": "Site e download",
   "home.enter": "Entrar no site",
   "home.viewProjects": "Explorar projetos",
@@ -49,20 +53,21 @@ export const pt = {
   "home.bio":
     "Trabalho com C#, JS, HTML e CSS. Meu fuso principal é UTC-3, às vezes UTC 0.\nDesenvolvedor fullstack na Vltra Entertainment.",
   "home.getInTouch": "Fale comigo",
-  "home.scrollCue": "Projetos",
+  "home.disco.cue": "Discografia",
   "home.link.contact": "Contato",
   "home.link.contactTag": "E-mail",
 
   // --- Secoes ---------------------------------------------------------------
-  "home.work.title": "Projetos selecionados",
-  "home.work.lede": "Clique num projeto para abrir.",
+  "home.disco.title": "Discografia",
+  "home.disco.count": "lançamentos",
+  "home.disco.lede": "Escolha uma capa para abrir o lançamento.",
   "home.links.title": "Links",
   "home.links.lede": "Políticas e convites das comunidades.",
   "home.policy.tos": "Termos de Serviço",
   "home.policy.privacy": "Política de Privacidade",
   "home.policy.vltra": "CONVITE VLTRA",
   "home.policy.bloodOath": "CONVITE BLOOD OATH",
-  "home.footer": "Atualizado em 13 de novembro de 2026",
+  "home.footer": "Atualizado em 26 de novembro de 2026",
   "home.backToTop": "Voltar ao topo ↑",
 
   // --- Cards (partes comuns) ------------------------------------------------
@@ -102,7 +107,8 @@ export const pt = {
 
   // --- Blood Oath ------------------------------------------------------------
   "p.blood-oath.tagline": "Um jogo de mundo aberto no Roblox ambientado no sertão nordestino em 1898.",
-  "p.blood-oath.status": "Em desenvolvimento",
+  "p.blood-oath.format": "Jogo de Roblox",
+  "p.blood-oath.state": "Em desenvolvimento",
   "p.blood-oath.d0":
     "Um jogo online de mundo aberto no espírito de Red Dead Redemption 2, ambientado no sertão nordestino antes de 1910: a era do cangaço, quando Antônio Silvino corria o sertão e Lampião ainda era um nome que ninguém conhecia.",
   "p.blood-oath.d1":
@@ -122,7 +128,8 @@ export const pt = {
   "p.ii-windows.tagline":
     "O desktop illogical-impulse do end-4, feito em Quickshell, portado do Hyprland para o Windows 11 e 10.",
   "p.ii-windows.defenderResponse": "O ii ainda não é assinado, então o Microsoft Defender pode detectá-lo. O setup e o site do produto mostram como adicionar exclusões para as pastas do ii.",
-  "p.ii-windows.status": "Estável · v26.1.2.1 — Trampolining Teapot",
+  "p.ii-windows.format": "Windows 11 e 10",
+  "p.ii-windows.state": "Estável",
   "p.ii-windows.d0": "O desktop illogical-impulse do end-4, rodando nativamente no Windows 10 e 11. Seus apps e arquivos continuam onde estão; o ii traz outra barra, barras laterais e widgets ao redor deles.",
   "p.ii-windows.d1": "Busque com a tecla Windows, controle música e notificações pela barra lateral e organize widgets e janelas do seu jeito. As cores acompanham o wallpaper, com quatro visuais para escolher.",
   "p.ii-windows.d2": "Portei o Quickshell para Windows com C++/WinRT, Qt e Direct3D 11 e adaptei o ii aos serviços nativos do Windows: desktops virtuais, áudio, notificações, captura de tela e atalhos globais. O design do desktop é do end-4; o backend e a integração com Windows são meu trabalho.",
@@ -152,25 +159,25 @@ export const pt = {
 
   // --- Sollarety -------------------------------------------------------------
   "p.sollarety.tagline": "Um bot de moderação, verificação Roblox, música e diversão para comunidades no Discord.",
-  "p.sollarety.d0":
-    "O Sollarety é um bot de Discord para servidores de comunidade: moderação, advertências, verificação Roblox, música e um monte de comandos de diversão. Ele roda na mesma infraestrutura do ccore, mas os dois são aplicações separadas e não compartilham dado nenhum.",
+  "p.sollarety.format": "Bot de Discord",
+  "p.sollarety.d0Rust":
+    "O Sollarety é um bot de Discord para servidores de comunidade: moderação, advertências, verificação Roblox, música e um monte de comandos de diversão. Ele foi reescrito em Rust em 2026, com poise e serenity, e songbird para voz. Ele roda na mesma infraestrutura do ccore, mas os dois são aplicações separadas e não compartilham dado nenhum.",
   "p.sollarety.d1":
     "A moderação segue as permissões do próprio servidor no Discord, então não há cargo para configurar, e as advertências ficam registradas por escrito. A verificação Roblox passa pelo login oficial do Roblox, então o bot nunca vê senha nenhuma. Cada servidor decide o que a verificação dá, de cargos por rank de grupo a uma idade mínima de conta que barra contas recém-criadas.",
-  "p.sollarety.d2":
-    "A música toca do YouTube, do SoundCloud ou do Spotify com votação para pular, e nada fica guardado: a fila vive só na memória. O bot também nunca lê as suas mensagens. Ele nem pede o Message Content intent do Discord.",
+  "p.sollarety.d2Intent":
+    "A música toca do YouTube, do SoundCloud ou do Spotify com votação para pular, e nada fica guardado: a fila vive só na memória. O Sollarety não pede o Message Content intent do Discord, então o único texto de mensagem que ele recebe é o das mensagens que o mencionam e o das que você escolhe com o comando Translate dele, no menu Apps. Esse texto é para a IA local, e não fica guardado.",
   "p.sollarety.link0": "Adicionar ao Discord",
   "p.sollarety.link1": "Site",
-  "p.sollarety.cap0": "Um bot de Discord que nunca lê as suas mensagens",
-  "p.sollarety.cap1": "/verify: vincular o Roblox sem nunca digitar uma senha",
-  "p.sollarety.cap2": "A página do Sollarety no daeese.me",
-  "p.sollarety.alt0": "Pôster do Sollarety: um bot de Discord que nunca lê as suas mensagens",
-  "p.sollarety.alt1": "Como o /verify funciona, em três passos",
-  "p.sollarety.alt2": "O site do Sollarety com o emblema do sol prateado",
+  "p.sollarety.capVerify": "/verify: vincular o Roblox sem nunca digitar uma senha",
+  "p.sollarety.capPage": "A página do Sollarety no daeese.me",
+  "p.sollarety.altVerify": "Como o /verify funciona, em três passos",
+  "p.sollarety.altPage": "O site do Sollarety com o emblema do sol prateado",
 
   // --- ccore -------------------------------------------------------------------
   "p.ccore.title": "Aplicação de Discord ccore",
   "p.ccore.tagline": "Bot de utilidade e automação do 12° Regimento de Infantaria no CONSTANTES.",
-  "p.ccore.status": "Menos atualizações — não desativado",
+  "p.ccore.format": "Bot de Discord",
+  "p.ccore.state": "Menos atualizações — não desativado",
   "p.ccore.d0":
     "O ccore é o bot de administração do 12° Regimento de Infantaria \"Chaves\", um regimento da comunidade CONSTANTES. Ele cuida do alistamento com verificação Roblox automática, dos deployments, da planilha do regimento e dos avisos.",
   "p.ccore.d1":
@@ -185,6 +192,7 @@ export const pt = {
   "p.ccore.alt1": "Emblema do ccore",
 
   // --- mocktail ---------------------------------------------------------------
+  "p.mocktail.format": "Overlay do Portage",
   "p.mocktail.tagline":
     "Overlay não oficial do Portage que leva o Mocktail, o cliente Android do Roblox no Linux, para o Gentoo.",
   "p.mocktail.d0":
@@ -194,12 +202,14 @@ export const pt = {
   "p.mocktail.link0": "Ver no GitHub",
   "p.mocktail.cap0": "Roblox, no Gentoo",
   "p.mocktail.alt0": "Roblox, no Gentoo: os passos de instalação e os três ebuilds",
+  "p.rosemary-overlay.format": "Overlay do Portage",
   "p.rosemary-overlay.tagline": "Overlay não oficial do Portage que compila o Rosemary, a camada de compatibilidade com macOS por trás do Ginrose, no Gentoo.",
   "p.rosemary-overlay.d0": "O Rosemary roda aplicativos de macOS no Linux. Este overlay não oficial, de terceiros, empacota a release upstream dele para o Gentoo, para instalar com emerge como qualquer outra coisa. Também oferece Ginrose e Ginrose Studio pelo pacote games-util/ginrose: a USE flag player instala o Ginrose e studio instala o Ginrose Studio.",
   "p.rosemary-overlay.d1": "O ebuild compila o Rosemary do código com o cargo.eclass do Gentoo, offline depois que o Portage baixa as fontes, com as dependências Git fixadas no lockfile do upstream. As USE flags escolhem os backends de OpenGL, Vulkan e WebKit. Precisa do Rust 1.99 e do SDL 3.4, e é testado num contêiner limpo do Gentoo. Não tem vínculo com o Rosemary: eu mantenho o ebuild, não o software.",
   "p.rosemary-overlay.link0": "Ver no GitHub",
 
   // --- VLTRA -------------------------------------------------------------------
+  "p.vltra.format": "Trabalho no estúdio",
   "p.vltra.tagline": "Desenvolvedor fullstack na VLTRA Entertainment.",
   "p.vltra.d0": "Trabalho como desenvolvedor fullstack na VLTRA Entertainment.",
   "p.vltra.d1": "A comunidade do estúdio fica no Discord, e é lá que dá para acompanhar no que ele está trabalhando.",
