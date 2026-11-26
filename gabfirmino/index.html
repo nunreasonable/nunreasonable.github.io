@@ -6,110 +6,127 @@
     <meta name="description" content="Meias UwU - meias confortaveis e ventiladas, um projeto de estudo em HTML e CSS." />
     <link rel="canonical" href="https://daeese.me/gabfirmino/" />
     <link rel="icon" type="image/png" href="assets/img/kitten.png">
-    <link rel="stylesheet" href="alt_style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap">
+    <link rel="stylesheet" href="alt_style.css?v=2">
     <title>Meias UwU</title>
 </head>
 <body>
-    <header>
-        <nav>
-        <a href="#" id="logo" class="nav-item"><h2><img src="assets/img/kitten.png" alt=""> Meias UwU </h2></a>
-        <ul>
-            <li><a class="nav-item" href="#about">Sobre</a></li>
-            <li><a class="nav-item" href="#employees">Funcionários</a></li>
-            <li><a class="nav-item" href="#account">Sua Conta</a></li>
-        </ul>
+    <header class="bar">
+        <a href="#top" class="logo"><img src="assets/img/kitten.png" alt="" width="24" height="24"> Meias UwU</a>
+        <nav aria-label="Seções">
+            <a href="#linha">A linha</a>
+            <a href="#about">Sobre</a>
+            <a href="#employees">Funcionários</a>
+            <a href="#account">Sua conta</a>
         </nav>
     </header>
-    <main>
-        <section id="hero">
-            <section id="explainer">
-            <h2>
-                Diga adeus ao desconforto: Conheça as Meias UwU -
-                    meias
-                    revolucionárias que deixam seus dedos respirar!
-            </h2>
-            <h3>
-                Proporcionadas pelo seu melhor amigo o Blahaj, as Meias UwUs são
-                perfeitas para quem quer deixar seus dedos
-                livres e confortáveis.
-            </h3>
-            <h3> Vai perder essa novidade? </h3>
-            <a id="cta" href="#account">
-                <p> Garanta já as suas </p>
-                <img src="assets/img/arrow-right.png" alt=""> 
-            </a>
-        </section>
-        <aside id="appealing-content">
-        <img src="assets/img/thigh%20highs.jpg" alt="Produtos">
-        <h4> Diga adeus às meias apertadas e pouco ventiladas</h4>
-        </aside>
-        </section>
-        <section id="about">
-            <img src="assets/img/blohaj.jpg" alt="" height="562" width="1000">
-            <h3> As Meias UwU foram criadas com a missão de oferecer aos
-                nossos clientes um produto único, de alta qualidade e que proporcione
-                conforto e estilo ao vestir. Utilizamos algodão egípcio de primeira
-                linha para garantir a suavidade e a respirabilidade dos pés em dias quentes de verão.
-                Além disso, nossas meias são fruto da colaboração entre nossos talentosos femboys e
-                uma equipe de designers habilidosos,
-                que criaram estampas exclusivas de UwUs para dar aquele toque diferenciado ao visual.
-                Com as Meias UwU, você não só terá um produto de qualidade,
-                mas também uma peça exclusiva, criada com paixão e criatividade.
-                Adquira já suas Meias UwU e sinta a diferença que um produto único e de qualidade pode fazer na sua vida!
-            </h3>
-        </section>
-        <section id="employees-container">
-            <h2>Relatos daqueles que movem nosso sonho!!</h2>
-        <section id="employees">
-            <article>
-                <img src="assets/img/astolfo%20thumbs.jpg" alt="Astolfo do ano 1">
-                <p>
-                    Como ganhador do prêmio "Funcionários do Ano - 2026", eu digo: Nós fazemos com amor!
-                </p>
-            </article>
-            <article>
-                <img src="assets/img/ventiiii.png" alt="Venti">
-                <p>
-                    A empresa Meias UwU me permitiu realizar meu sonho de entrar no mercado de trabalho!!
-                    Isso sim é um Great Place to work!
-                </p>
 
-            </article>
+    <main id="top">
+        <section class="hero">
+            <div class="hero-text">
+                <h1>Diga adeus ao desconforto.</h1>
+                <p class="lead">Conheça as Meias UwU: meias revolucionárias que deixam seus dedos respirar!</p>
+                <p>Proporcionadas pelo seu melhor amigo, o Blahaj, as Meias UwU são perfeitas para quem quer deixar os dedos livres e confortáveis.</p>
+                <p class="ask">Vai perder essa novidade?</p>
+                <a class="cta" href="#account">Garanta já as suas <img src="assets/img/arrow-right.png" alt="" width="24" height="24"></a>
+            </div>
+
+            <!-- As duas faixas sao as pernas da foto: uma sobe, a outra desce. -->
+            <div class="legs" aria-hidden="true">
+                <span class="leg leg-night"></span>
+                <figure class="hero-photo">
+                    <img src="assets/img/thigh%20highs.jpg" alt="" width="1600" height="1600">
+                </figure>
+                <span class="leg leg-blahaj"></span>
+            </div>
         </section>
+
+        <section id="linha" class="line">
+            <h2>Diga adeus às meias apertadas e pouco ventiladas</h2>
+            <div class="sleeves">
+                <article class="sleeve">
+                    <div class="cover cover-night"><span class="label">UwU</span></div>
+                    <h3>Listrada Noite</h3>
+                    <p>Preto e branco, até a coxa.</p>
+                </article>
+                <article class="sleeve">
+                    <div class="cover cover-blahaj"><span class="label">UwU</span></div>
+                    <h3>Listrada Blahaj</h3>
+                    <p>Azul e branco, até a coxa.</p>
+                </article>
+            </div>
         </section>
-        <section id="account">
-            <article id="registration-form">
-                <h3>Registre-se para não perder novidades!!</h3>
-                <form id="registration" action="#account" method="post">
-                <div class="input-wrapper"> <!--input é o campo onde coloca seus dados, wrapper embrulha o campo de informação-->
-                <label for="complete-name">Nome completo: </label>
+
+        <section id="about" class="about">
+            <figure class="polaroid">
+                <img src="assets/img/blohaj.jpg" alt="Dois tubarões de pelúcia Blahaj" width="225" height="225">
+                <figcaption>Blahaj, padrinho da marca</figcaption>
+            </figure>
+            <div class="about-text">
+                <h2>Feitas com paixão (e algodão egípcio)</h2>
+                <p>As Meias UwU foram criadas com a missão de oferecer aos nossos clientes um produto único, de alta qualidade, que traga conforto e estilo ao vestir. Usamos algodão egípcio de primeira linha para garantir a suavidade e a respirabilidade dos pés nos dias quentes de verão.</p>
+                <p>Nossas meias são fruto da colaboração entre nossos talentosos femboys e uma equipe de designers habilidosos, que criaram estampas exclusivas de UwUs para dar aquele toque diferenciado ao visual.</p>
+                <p>Com as Meias UwU você não leva só um produto de qualidade, leva uma peça exclusiva. Adquira já as suas e sinta a diferença!</p>
+            </div>
+            <ul class="care-tag" aria-label="Etiqueta da meia">
+                <li>100% algodão egípcio</li>
+                <li>Estampa UwU exclusiva</li>
+                <li>Lavar com carinho</li>
+                <li>Não passar ferro nos UwUs</li>
+            </ul>
+        </section>
+
+        <section id="employees" class="team">
+            <h2>Relatos daqueles que movem nosso sonho!!</h2>
+            <div class="quotes">
+                <article class="quote">
+                    <img src="assets/img/astolfo%20thumbs.jpg" alt="Astolfo fazendo joinha" width="1724" height="1016">
+                    <div>
+                        <p class="badge">Funcionário do Ano, 2026</p>
+                        <blockquote>Como ganhador do prêmio "Funcionários do Ano - 2026", eu digo: nós fazemos com amor!</blockquote>
+                        <p class="who">Astolfo</p>
+                    </div>
+                </article>
+                <article class="quote">
+                    <img src="assets/img/ventiiii.png" alt="Venti sorrindo" width="760" height="660">
+                    <div>
+                        <p class="badge">Recém-contratado</p>
+                        <blockquote>A empresa Meias UwU me permitiu realizar meu sonho de entrar no mercado de trabalho!! Isso sim é um Great Place to Work!</blockquote>
+                        <p class="who">Venti</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section id="account" class="account">
+            <form id="registration" class="signup" action="#account" method="post">
+                <h2>Registre-se para não perder novidades!!</h2>
+                <label for="complete-name">Nome completo</label>
                 <input type="text" id="complete-name" name="complete-name" autocomplete="name" required>
-                </div>
-                <div class="input-wrapper">
-                <label for="mail">Email: </label>
+                <label for="mail">Email</label>
                 <input type="email" id="mail" name="mail" autocomplete="email" required>
-                </div>
-                <button id="register-button" type="submit">Cadastrar </button>
+                <button type="submit">Cadastrar</button>
                 <p id="register-feedback" role="status"></p>
-                </form>
-            </article>
-            <img src="assets/img/tetooo.gif" alt="Tetooo">
+            </form>
+            <img class="teto" src="assets/img/tetooo.gif" alt="Teto dançando" width="373" height="373">
         </section>
     </main>
-    <footer>
-        Visite nossas redes sociais<a href="https://instagram.com" id="insta" target="_blank" rel="noreferrer noopener">
-            <img src="assets/img/instagram.png" alt="Instagram"></a>
+
+    <footer class="bar">
+        <span>Visite nossas redes sociais</span>
+        <a href="https://instagram.com" target="_blank" rel="noreferrer noopener"><img src="assets/img/instagram.png" alt="Instagram" width="24" height="24"></a>
     </footer>
+
     <script>
-      // Esta pagina e uma vitrine estatica: nao ha backend para receber o
-      // cadastro, entao damos um retorno claro em vez de um botao que nao faz nada.
+      // Vitrine estatica: nao ha backend pro cadastro, entao o retorno e local.
       document.getElementById("registration").addEventListener("submit", (event) => {
         event.preventDefault();
         const name = document.getElementById("complete-name").value.trim();
-        const feedback = document.getElementById("register-feedback");
-        feedback.textContent = name
-          ? `Obrigado, ${name}! Este site e uma demonstracao, entao nada foi enviado.`
-          : "Este site e uma demonstracao, entao nada foi enviado.";
+        document.getElementById("register-feedback").textContent = name
+          ? `Obrigado, ${name}! Este site é uma demonstração, então nada foi enviado.`
+          : "Este site é uma demonstração, então nada foi enviado.";
       });
     </script>
 </body>

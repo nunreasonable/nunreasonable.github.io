@@ -1,261 +1,412 @@
 /*
-  Paleta em variaveis.
-
-  O site usava um unico magenta #db0bbf cru como fundo de header, footer, botao,
-  cartoes e formulario, com texto preto por cima. Area grande na saturacao
-  maxima e o que cansa a vista, e preto sobre esse rosa vibra. Aqui o mesmo rosa
-  virou uma escala: tom claro para superficie, tom forte so como acento.
-  Nenhuma regra de layout foi tocada.
-
-  POR QUE HEADER E FOOTER FICARAM CLAROS: o kitten, o instagram e a seta sao
-  glifos PRETOS em PNG transparente (medido: rgb 0,0,0). Em barra escura eles
-  sumiriam. O unico icone que vai sobre cor forte e a seta do botao, e por isso
-  ela leva filter para virar branca.
+  Meias UwU. A pagina toda sai das duas meias da foto: a listrada preta e
+  branca (noite) e a azul e branca (Blahaj). O rosa vem do Astolfo e fica so
+  nos acentos.
 */
 :root {
-    --page:       #fdf7fa; /*fundo da pagina, rosa quase branco*/
-    --surface:    #fdeaf5; /*cartoes e formulario*/
-    --bar:        #f7dcec; /*header e footer*/
-    --line:       #eec8de; /*bordas finas*/
-    --ink:        #3a2438; /*texto*/
-    --brand:      #b4308f; /*acento: botoes e hover*/
-    --brand-deep: #8a1f6c; /*acento no hover*/
-    --on-brand:   #fff5fb; /*texto sobre o acento*/
+    --cotton:  #f3f6fa; /* fundo: branco de algodao, puxado pro azul */
+    --paper:   #ffffff;
+    --ink:     #1c1d2b; /* a listra escura */
+    --muted:   #545670;
+    --blahaj:  #9fd2ee; /* a listra azul */
+    --shark:   #36628c; /* o azul do tubarao */
+    --pink:    #f4b3d0;
+    --pink-ink:#b3306e; /* botoes: 5.6:1 com texto branco */
+    --stripe:  26px;
+
+    --display: "Bagel Fat One", "Arial Rounded MT Bold", system-ui, sans-serif;
+    --body: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
 
 body {
-    background-color: var(--page);
-    color: var(--ink);
-}
-
-*{
-    font-family: sans-serif;
-    box-sizing: border-box;
     margin: 0;
-    scroll-behavior: smooth;
+    background: var(--cotton);
+    color: var(--ink);
+    font: 400 1.0625rem/1.6 var(--body);
 }
 
-header{
-    padding: 2rem; /*espaço dentro de caixa*/
-    box-shadow: 0 6px 18px rgba(58, 36, 56, 0.10); /*shadow sombra e 0 e pq não colocamos horizontal só vertical -- agora com blur: sem ele virava uma faixa cinza dura*/
-    position: sticky; /*posição fixa, grudada nosso header não mexe quando movemos a pagina*/
-    top: 0; /*gruda no topo*/
-    left: 0;
-    background-color: var(--bar);
-    z-index: 1;
+img { max-width: 100%; height: auto; display: block; }
+
+h1, h2, h3 {
+    font-family: var(--display);
+    font-weight: 400;
+    line-height: 1.05;
+    text-wrap: balance;
+    margin: 0;
 }
 
-button {
-    cursor: pointer; /*cursor do mouse*/
-}
-nav{
-    display: flex; /*jogo as ul pro lado direito*/
-    justify-content: space-between; /*garantir espaço da logo para os ul*/
-    align-items: center; /*alinhar os itens no centro*/
+p { margin: 0; }
+
+a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 3px solid var(--shark);
+    outline-offset: 3px;
 }
 
-nav ul{
-    display: flex; /*jogo as ul pro lado direito*/
+/* ---------- barras de cima e de baixo ---------- */
+
+.bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem clamp(1rem, 4vw, 3rem);
+    background: var(--paper);
+}
+
+header.bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 3px solid var(--ink);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font: 1.5rem/1 var(--display);
+    color: var(--ink);
+    text-decoration: none;
+}
+
+nav { display: flex; gap: 0.25rem; flex-wrap: wrap; justify-content: flex-end; }
+
+nav a {
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    color: var(--ink);
+    font-weight: 650;
+    text-decoration: none;
+}
+
+nav a:hover { background: var(--blahaj); }
+
+footer.bar {
+    justify-content: center;
+    border-top: 3px solid var(--ink);
+    font-weight: 650;
+}
+
+footer a { display: flex; padding: 0.4rem; border-radius: 8px; }
+footer a:hover { background: var(--pink); }
+
+main > section {
+    padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 4vw, 3rem);
+    max-width: 1180px;
+    margin-inline: auto;
+}
+
+/* ---------- hero ---------- */
+
+.hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+}
+
+.hero-text { display: grid; gap: 1.1rem; justify-items: start; max-width: 34rem; }
+
+.hero h1 { font-size: clamp(2.8rem, 7vw, 5.4rem); }
+
+.lead { font-size: 1.35rem; font-weight: 650; line-height: 1.35; }
+
+.ask { font-weight: 700; color: var(--pink-ink); }
+
+.cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.4rem;
+    padding: 0.85rem 1.4rem;
+    border: 3px solid var(--ink);
+    border-radius: 999px;
+    background: var(--pink-ink);
+    color: #fff;
+    font-weight: 750;
+    font-size: 1.1rem;
+    text-decoration: none;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: transform .12s, box-shadow .12s;
+}
+
+.cta img { filter: brightness(0) invert(1); }
+
+.cta:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+.cta:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+
+/* As duas pernas listradas correm em sentidos opostos, como as correntes do
+   banner do daeese.me. */
+.legs {
+    display: grid;
+    grid-template-columns: 1fr 3.2fr 1fr;
+    gap: clamp(0.6rem, 1.5vw, 1rem);
+    height: clamp(22rem, 46vw, 34rem);
+}
+
+.leg {
+    border: 3px solid var(--ink);
+    border-radius: 999px;
+    background-size: 100% calc(var(--stripe) * 2);
+    animation: run 2.4s linear infinite;
+}
+
+.leg-night {
+    background-image: linear-gradient(var(--ink) 50%, var(--paper) 50%);
+}
+
+.leg-blahaj {
+    background-image: linear-gradient(var(--blahaj) 50%, var(--paper) 50%);
+    animation-direction: reverse;
+    margin-top: 3rem;
+}
+
+.leg-night { margin-bottom: 3rem; }
+
+@keyframes run {
+    from { background-position: 0 0; }
+    to   { background-position: 0 calc(var(--stripe) * 2); }
+}
+
+.hero-photo {
+    margin: 0;
+    border: 3px solid var(--ink);
+    border-radius: 2rem;
+    overflow: hidden;
+    background: var(--paper);
+    box-shadow: 8px 8px 0 var(--ink);
+}
+
+.hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+
+/* ---------- a linha: as meias como capas de disco ---------- */
+
+.line h2 { font-size: clamp(1.9rem, 4vw, 2.8rem); max-width: 22ch; }
+
+.sleeves {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.5rem, 4vw, 3rem);
+    margin-top: 2.5rem;
+    max-width: 52rem;
+}
+
+.sleeve { display: grid; gap: 0.35rem; }
+
+.sleeve h3 { font-size: 1.6rem; margin-top: 0.8rem; }
+.sleeve p { color: var(--muted); }
+
+.cover {
+    position: relative;
+    aspect-ratio: 1;
+    border: 3px solid var(--ink);
+    border-radius: 0.6rem;
+    box-shadow: 8px 8px 0 var(--ink);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+}
+
+.cover-night {
+    background: repeating-linear-gradient(-35deg, var(--ink) 0 var(--stripe), var(--paper) var(--stripe) calc(var(--stripe) * 2));
+}
+
+.cover-blahaj {
+    background: repeating-linear-gradient(-35deg, var(--blahaj) 0 var(--stripe), var(--paper) var(--stripe) calc(var(--stripe) * 2));
+}
+
+/* O selo redondo no meio, como o rotulo de um vinil. */
+.label {
+    width: 42%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 3px solid var(--ink);
+    background: var(--pink);
+    display: grid;
+    place-items: center;
+    font: clamp(1.6rem, 4.5vw, 3rem)/1 var(--display);
+    color: var(--ink);
+    transition: transform .6s cubic-bezier(.2, .8, .2, 1);
+}
+
+.cover-blahaj .label { background: var(--paper); color: var(--shark); }
+
+.sleeve:hover .label { transform: rotate(200deg); }
+
+/* ---------- sobre ---------- */
+
+.about {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+}
+
+.polaroid {
+    margin: 0;
+    padding: 0.8rem 0.8rem 1rem;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    transform: rotate(-3deg);
+    width: 16rem;
+}
+
+.polaroid img { width: 100%; }
+
+.polaroid figcaption { margin-top: 0.7rem; text-align: center; font-weight: 650; }
+
+.about-text { display: grid; gap: 1rem; max-width: 38rem; }
+.about-text h2 { font-size: clamp(1.8rem, 3.6vw, 2.5rem); }
+
+/* Etiqueta de lavagem costurada na meia. */
+.care-tag {
     list-style: none;
-   
+    margin: 0;
+    padding: 1rem 1.1rem 1.1rem;
+    width: 13rem;
+    background: var(--paper);
+    border: 2px dashed var(--muted);
+    border-radius: 0 0 0.6rem 0.6rem;
+    font-size: 0.9rem;
+    display: grid;
+    gap: 0.5rem;
+    border-top: 10px solid var(--blahaj);
 }
 
-nav ul a{
-   margin-left: 2rem; /*margem esquerda*/
-   font-weight: bold; /*negrito*/
-}
+/* ---------- equipe ---------- */
 
-.nav-item{
-    color: var(--ink); /*cor da letra*/
-    text-decoration: none; /*tirar sublinhado*/
-}
+.team h2 { font-size: clamp(1.8rem, 3.6vw, 2.5rem); text-align: center; }
 
-.nav-item:hover {
-    /* brand-deep, e nao brand: em 16px negrito o link de nav nao conta como
-       "texto grande" na WCAG, entao precisa de 4.5:1 e o tom claro dava 4.36. */
-    color: var(--brand-deep);
-}
-
-main{
-    padding: 1rem;
-    min-height: 100dvh; /*altura mínima disponível nessa janela e o d para ficar responsível*/
-}
-
-footer {
-    background-color: var(--bar);
-    padding: 1rem;
-    /*pra quem quer as letras brancas (color: #fff;)*/
-    position: sticky; /*grudar*/
-    bottom: 0; /*nao tenha unidade de comprimento e grude*/
-    display: flex; /*definir um eixo principal e um eixo auxiliar*/
-    justify-content: space-around; /*organize os elementos em função do espaço que existe em torno deles*/
-    font-size: bold; /*negrito*/
-    box-shadow: 0 -6px 18px rgba(58, 36, 56, 0.10); /* -porque a sombra e ao contrario agora*/
-}
-
-footer a {
-    text-decoration: none;
-    color: var(--ink);
-}
-
-#hero {
-    display: flex; /*define os filhos em uma linha*/
-    color: var(--ink);
-}
-
-#appealing-content {
-    display: flex;
-    flex-direction: column; /*definir os elementos em coluna vertical */
-    align-items: center;
-}
-
-#appealing-content > img{
-    width: 50%; /*para a imagem não transbordar */
-    margin-bottom: 1.5rem;
-    margin-left: 2rem;
-}
-
-#explainer {
-    display: flex;
-    flex-direction: column;
-}
-
-#explainer > h2, #explainer > h3 {
-    margin-bottom: 2rem;
-}
-
-#cta {
-    border: none;
-    padding: 0.8rem 0;
-    display: flex;
-    justify-content: center;
-    background-color: var(--brand);
-    color: var(--on-brand);
-    border-radius: 30px; /*borda circular*/
-    font-weight: bold; /* negrito */
-    text-decoration: none;
-}
-
-#cta > p {
-    padding-top: 1px;
-    font-size: 1rem;
-    /*text-shadow: 2px 2px #000;  negrito */
-}
-
-#cta:hover {
-    background-color: var(--brand-deep);
-}
-
-/* A seta e um PNG preto; sobre o rosa forte ela ficaria suja. O filter
-   transforma qualquer cor em branco puro. */
-#cta > img {
-    filter: brightness(0) invert(1);
-}
-
-#about {
-    display: flex; /*mesma linha*/
-    justify-content: center;
-    align-items: center;
-    margin: 5rem auto;
-    color: var(--ink);
-    scroll-margin-top: 10rem; /*ajusta a posição ao clicar no link*/
-}
-
-#about > h3 {
-    max-width: 60%;
-}
-
-#employees-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#employees-container > h2 {
-    margin: 2rem 0;
-    color: var(--ink);
-}
-#about img {
-    max-width: 300px;
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-    margin-right: 2rem;
-}
-
-#employees {
-    display: flex;
-    flex-wrap: wrap; /*define um contorno, um limite, se tivesse muitos articles*/
-    justify-content: center;
+.quotes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 2rem;
-
+    margin-top: 2.5rem;
 }
 
-#employees > article {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /*alinhar na horizontal*/
-    width: 400px;
-    background-color: var(--surface);
-    color: var(--ink);
-    border: 1px solid var(--line);
-    font-weight: bold; /*negrito*/
-    border-radius: 30px;
-    padding: 1rem; /*espaço do conteúdo para a borda*/
+.quote {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 1.2rem;
+    align-items: start;
+    padding: 1.4rem;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    border-radius: 1.4rem;
 }
 
-#employees > article > img {
-    width: 6rem; /*largura da foto*/
-    clip-path: circle(); /*caminho de recorte*/
-    z-index: 0;
+.quote:first-child { box-shadow: 8px 8px 0 var(--pink); }
+.quote:last-child { box-shadow: 8px 8px 0 var(--blahaj); }
+
+.quote img {
+    width: 7.5rem;
+    height: 7.5rem;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid var(--ink);
+    background: var(--cotton);
 }
 
-#account {
+.quote:first-child img { object-position: 35% 40%; }
+.quote:last-child img { object-position: 50% 20%; }
+
+.badge {
+    display: inline-block;
+    padding: 0.15rem 0.7rem;
+    border-radius: 999px;
+    background: var(--cotton);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.quote blockquote { margin: 0.7rem 0; font-size: 1.1rem; font-weight: 550; }
+
+.who { font: 1.25rem/1 var(--display); }
+
+/* ---------- cadastro ---------- */
+
+.account {
     display: flex;
     justify-content: center;
-    margin: 4rem 0; /*espaço apenas de baixo para cima*/
-}
-
-#account > img {
-    width: 25%;
-}
-
-#registration-form {
-    width: 25%;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--surface);
-    color: var(--ink);
-    border: 1px solid var(--line);
-    height: fit-content; /*altura suficiente para a tag abrigar todo o código dentro dela*/
-    padding: 2rem;
-    border-radius: 30px;
-    gap: 2rem; /*dar espaço dentro da caixa*/
-}
-
-.input-wrapper{
-    display: flex;
     align-items: center;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    flex-wrap: wrap;
 }
 
-.input-wrapper > input {
-    padding: 0.2rem;
-    border: 1px solid var(--line);
+.signup {
+    display: grid;
+    gap: 0.45rem;
+    width: min(100%, 26rem);
+    padding: 1.8rem;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    border-radius: 1.4rem;
+    box-shadow: 8px 8px 0 var(--ink);
+}
+
+.signup h2 { font-size: 1.7rem; margin-bottom: 0.8rem; }
+
+.signup label { font-weight: 700; font-size: 0.95rem; }
+
+.signup input {
+    font: inherit;
+    padding: 0.6rem 0.8rem;
+    border: 2px solid var(--ink);
+    border-radius: 0.7rem;
+    background: var(--cotton);
     color: var(--ink);
-    font-weight: bold
-    /*flex-grow 1; /*cresce quando dá espaço seu pai deixa que você cresça*/
+    margin-bottom: 0.5rem;
 }
 
-.input-wrapper > label { /*rótulos*/
-    width: 150px;
-    text-align: end; /*alinhamento do texto será do final da div*/
+.signup button {
+    font: 750 1.05rem var(--body);
+    margin-top: 0.4rem;
+    padding: 0.75rem 1rem;
+    border: 3px solid var(--ink);
+    border-radius: 999px;
+    background: var(--pink-ink);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--ink);
 }
 
-#register-button{
-    padding: 0.5rem 1rem;
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 1rem;
-    background-color: var(--brand);
-    color: var(--on-brand);
+.signup button:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+
+#register-feedback { min-height: 1.6em; font-weight: 600; color: var(--shark); }
+
+.teto {
+    width: min(16rem, 60vw);
+    border: 3px solid var(--ink);
+    border-radius: 1.4rem;
+    transform: rotate(3deg);
+}
+
+/* ---------- telas menores ---------- */
+
+@media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; }
+    .legs { height: 22rem; }
+    .about { grid-template-columns: 1fr; justify-items: center; }
+    .about-text { justify-self: stretch; }
+    .quotes { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+    header.bar { flex-direction: column; align-items: stretch; gap: 0.4rem; padding-block: 0.6rem; }
+    nav { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; margin-inline: -0.6rem; }
+    nav a { padding: 0.3rem 0.6rem; white-space: nowrap; }
+    .sleeves { gap: 1.2rem; }
+    .cover { box-shadow: 5px 5px 0 var(--ink); }
+    .sleeve h3 { font-size: 1.25rem; }
+    .quote { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .leg { animation: none; }
+    .label, .cta { transition: none; }
 }
