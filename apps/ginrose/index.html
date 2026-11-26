@@ -226,7 +226,8 @@ pre code{font:inherit}
       </div>
       <ol class="timeline">
         <li class="is-latest"><span class="tag" data-i18n="ginrose.latestTag">Latest</span>
-          <p data-i18n="ginrose.release26050">26.0.5.0 · November 23, 2026 — Rosemary moves to newer upstream work, with fixes for Metal shader libraries and for FreeBSD. Dialogs, a window with a title and no minimize button, now float on tiling compositors such as Hyprland instead of being tiled. Two more Rosemary settings can be set in the extra environment: ROSEMARY_REGION_COUNT_REUSE, which helps games on FreeBSD, and ROSEMARY_METAL_MAP_MIX_TO_FMIX.</p></li>
+          <p data-i18n="ginrose.release26051">26.0.5.1 · November 26, 2026 — Ginrose opens on FreeBSD again: its window crashed as soon as it opened, because starting a helper program such as xdg-mime by name corrupted the launcher’s memory there. Helper programs are now started by their full path. Nothing changes on Linux, and Rosemary is the same as in 26.0.5.0.</p></li>
+        <li><p data-i18n="ginrose.release26050">26.0.5.0 · November 23, 2026 — Rosemary moves to newer upstream work, with fixes for Metal shader libraries and for FreeBSD. Dialogs, a window with a title and no minimize button, now float on tiling compositors such as Hyprland instead of being tiled. Two more Rosemary settings can be set in the extra environment: ROSEMARY_REGION_COUNT_REUSE, which helps games on FreeBSD, and ROSEMARY_METAL_MAP_MIX_TO_FMIX.</p></li>
         <li><p data-i18n="ginrose.release26040">26.0.4.0 · November 20, 2026 — Versions are now numbered by year: the year, then major changes, new features and fixes. Discord can show the operating system you play on, as “Ginrose on Fedora Linux”, with a new setting that is off by default. On FreeBSD, the installer checks for a font, which FreeBSD’s gtk4 package doesn’t bring: without one, Ginrose’s window has no text. Rosemary is the same as in 0.3.9.</p></li>
         <li><p data-i18n="ginrose.release039">0.3.9 · November 19, 2026 — Ginrose runs on FreeBSD: each release now has FreeBSD builds of Ginrose and of Ginrose’s Rosemary, built on FreeBSD 14.5 for 14.5 and later. Rosemary moves to newer upstream work, with FreeBSD support for kqueue events, shared memory and thread info, keyboard input in popup windows and faster OpenGL calls. The prefix stays on MiniDarwin 21.</p></li>
         <li><p data-i18n="ginrose.release038">0.3.8 · November 18, 2026 — Rosemary moves to newer upstream work, with Metal draw state rebuilt only when it changes, fewer allocations when submitting and a workaround for a Mesa driver bug. Ginrose follows an account that Roblox put on a deployment channel other than LIVE, and building it from source on FreeBSD works better. First launch upgrades the prefix to MiniDarwin 21; Ginrose 0.3.7 and older cannot reuse it.</p></li>
@@ -289,10 +290,10 @@ flatpak install --user me.daeese.apps.ginrose.flatpak</code></pre>
         <h3 data-i18n="ginrose.native">Native packages</h3>
         <div>
           <p data-i18n="ginrose.nativeText">Each release also has the same build as a distribution package, for those who would rather not use Flatpak. They need glibc 2.39, GTK 4.14 and libadwaita 1.6 or newer: Debian 13, Ubuntu 25.04, Fedora 42 or later, openSUSE Tumbleweed and Arch have them. Download the one for your distribution from the latest release, then run:</p>
-<pre tabindex="0"><code>sudo pacman -U ginrose-bin-26.0.5.0-1-x86_64.pkg.tar.zst   # Arch
-sudo apt install ./ginrose_26.0.5.0_amd64.deb              # Debian, Ubuntu
-sudo dnf install ./ginrose-26.0.5.0-1.x86_64.rpm           # Fedora
-sudo zypper install ./ginrose-26.0.5.0-1.x86_64.rpm        # openSUSE</code></pre>
+<pre tabindex="0"><code>sudo pacman -U ginrose-bin-26.0.5.1-1-x86_64.pkg.tar.zst   # Arch
+sudo apt install ./ginrose_26.0.5.1_amd64.deb              # Debian, Ubuntu
+sudo dnf install ./ginrose-26.0.5.1-1.x86_64.rpm           # Fedora
+sudo zypper install ./ginrose-26.0.5.1-1.x86_64.rpm        # openSUSE</code></pre>
           <p data-i18n="ginrose.nativeRosemary">Rosemary is not part of these packages: Ginrose uses a rosemary on your PATH, such as the one in the AUR, or downloads one in its setup, which then needs SDL 3.4 and OpenAL. NixOS has a flake that builds Ginrose with Rosemary included, and Gentoo has an ebuild in rosemary-gentoo-overlay; both build from source.</p>
           <a data-i18n="ginrose.packaging" href="https://github.com/nunreasonable/ginrose/tree/main/packaging">Packaging recipes ↗</a>
         </div>
@@ -364,7 +365,7 @@ ginrose rosemary rosemary-ginrose-x86_64</code></pre>
         </div>
       </section>
 
-      <p class="man-foot"><span>ginrose 26.0.5.0</span><span data-i18n="ginrose.manDate">November 23, 2026</span><span>GINROSE(1)</span></p>
+      <p class="man-foot"><span>ginrose 26.0.5.1</span><span data-i18n="ginrose.manDate">November 26, 2026</span><span>GINROSE(1)</span></p>
     </div>
   </section>
 
@@ -377,6 +378,6 @@ ginrose rosemary rosemary-ginrose-x86_64</code></pre>
   </div>
 </footer>
 
-<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/ginrose.js?v=20261126-1"></script>
+<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/ginrose.js?v=20261126-2"></script>
 </body>
 </html>

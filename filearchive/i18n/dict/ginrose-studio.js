@@ -1,4 +1,5 @@
 export const pt = {
+  "studio.release26051": "26.0.5.1 · 26 de novembro de 2026 — Os programas auxiliares são iniciados pelo caminho completo, como o Ginrose agora faz para abrir no FreeBSD. Nada muda no Linux, e o Rosemary é o mesmo da 26.0.5.0.",
   "studio.release26050": "26.0.5.0 · 23 de novembro de 2026 — Os diálogos do Studio, como o que prepara o servidor ao abrir um place, agora flutuam em compositores de tiling como o Hyprland em vez de irem para o tile ao lado do Studio. O Rosemary passa para um upstream mais recente, com correções nas bibliotecas de shaders do Metal.",
   "studio.release26040": "26.0.4.0 · 20 de novembro de 2026 — As versões agora são numeradas por ano: o ano, depois mudanças grandes, novidades e correções. Nada mais muda no Ginrose Studio; o Rosemary é o mesmo da 0.3.9.",
   "studio.release039": "0.3.9 · 19 de novembro de 2026 — Mesmo Rosemary do Ginrose 0.3.9, com teclado em janelas popup, inclusive métodos de entrada, e chamadas de OpenGL mais rápidas. O prefixo continua no MiniDarwin 21. O Ginrose Studio ainda não tem build de FreeBSD.",
@@ -67,5 +68,5 @@ export const pt = {
   "studio.seeGinrose": "Ginrose, o launcher do cliente do Roblox.",
   "studio.seeRosemary": "Rosemary, o projeto upstream pelo qual o Ginrose Studio roda o Roblox Studio.",
   "studio.seeSource": "Código-fonte, compartilhado com o Ginrose, com issues e receitas de empacotamento.",
-  "studio.manDate": "23 de novembro de 2026"
+  "studio.manDate": "26 de novembro de 2026"
 };

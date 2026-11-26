@@ -3404,7 +3404,7 @@
             // lugares sempre que o dicionario mudar - o GitHub Pages guarda o
             // arquivo em cache por 10 minutos, e um dicionario velho com o
             // HTML novo trocava legendas de lugar.
-            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261126-4")).pt;
+            pagePt = (await import("./filearchive/i18n/dict/home.js?v=20261126-5")).pt;
           } catch (error) {
             pagePt = null;
           }
@@ -3672,14 +3672,14 @@
             slug: "ginrose",
             title: "Ginrose",
             tagline: "A community open-source launcher for the official Roblox macOS client, on Linux and natively on FreeBSD and GhostBSD.",
-            version: "v26.0.5.0",
+            version: "v26.0.5.1",
             format: "Linux, FreeBSD & GhostBSD",
             keys: { tagline: "taglineBsd", d0: "d0Bsd", d1: "d1Bsd" },
             tags: ["Rust", "Linux", "FreeBSD", "Flatpak"],
             image: "./apps/ginrose/assets/ginrose.webp",
             details: [
               "Ginrose is an independent community launcher, not affiliated with or endorsed by Roblox Corporation. It downloads the official Roblox macOS client directly from Roblox and runs it through Rosemary on Linux, and natively on FreeBSD and GhostBSD. It includes per-game graphics profiles, frame caps and Discord Rich Presence.",
-              "Version 26.0.5.0 moves Rosemary to newer upstream work, with fixes for Metal shader libraries and for FreeBSD, and floats dialogs on tiling compositors such as Hyprland. The optional Roblox server-location notice remains available. Earlier updates numbered versions by year, could show the operating system in the Discord status, added FreeBSD builds, followed accounts on a Roblox deployment channel other than LIVE, brought rendering, shader and input fixes, let the Roblox download finish on slower connections, reported Rosemary selections that could not be saved, kept the app already assigned to Roblox links, improved frame pacing, reduced CPU per draw and corrected cursor positioning on Wayland. On Linux it has the Flatpak and native packages for Arch, Debian, Ubuntu, Fedora and openSUSE, plus a Nix flake and a Gentoo ebuild; on FreeBSD 14.5 and later it installs natively, and GhostBSD runs the same builds. Experiences run on Rosemary with video and sound. It comes with Ginrose Studio, its sibling for Roblox Studio, which runs on Linux only for now. Ginrose is free and open source under GPL-3.0-or-later, with official builds published by the Ginrose project for x86_64 Linux and FreeBSD. The website has downloads, installation instructions and source links."
+              "Version 26.0.5.1 opens on FreeBSD again, after the launcher window crashed there. Version 26.0.5.0 moved Rosemary to newer upstream work, with fixes for Metal shader libraries and for FreeBSD, and made dialogs float on tiling compositors such as Hyprland. The optional Roblox server-location notice remains available. Earlier updates numbered versions by year, could show the operating system in the Discord status, added FreeBSD builds, followed accounts on a Roblox deployment channel other than LIVE, brought rendering, shader and input fixes, let the Roblox download finish on slower connections, reported Rosemary selections that could not be saved, kept the app already assigned to Roblox links, improved frame pacing, reduced CPU per draw and corrected cursor positioning on Wayland. On Linux it has the Flatpak and native packages for Arch, Debian, Ubuntu, Fedora and openSUSE, plus a Nix flake and a Gentoo ebuild; on FreeBSD 14.5 and later it installs natively, and GhostBSD runs the same builds. Experiences run on Rosemary with video and sound. It comes with Ginrose Studio, its sibling for Roblox Studio, which runs on Linux only for now. Ginrose is free and open source under GPL-3.0-or-later, with official builds published by the Ginrose project for x86_64 Linux and FreeBSD. The website has downloads, installation instructions and source links."
             ],
             links: [
               { label: "Website & download", href: "https://apps.daeese.me/ginrose/", primary: true }
@@ -3689,7 +3689,7 @@
             slug: "ginrose-studio",
             title: "Ginrose Studio",
             tagline: "A community open-source launcher for the official Roblox Studio macOS app on Linux.",
-            version: "v26.0.5.0",
+            version: "v26.0.5.1",
             format: "Linux",
             state: "Experimental",
             keys: { d1: "d1v26" },
@@ -3697,7 +3697,7 @@
             image: "./apps/ginrose-studio/assets/ginrose-studio.webp?v=20261031-1",
             details: [
               "Ginrose Studio is an independent community launcher, not affiliated with or endorsed by Roblox Corporation. Built from the same source as Ginrose, it downloads the official Roblox Studio for macOS directly from Roblox and runs it on Linux through Rosemary.",
-              "It is a development tool, so it is permissive: any FastFlag, any environment variable for Rosemary, extra launch arguments and a Rosemary binary of your choice, and Control acts as Command in all shortcuts by default. Version 26.0.5.0 floats Studio's dialogs on tiling compositors such as Hyprland and moves Rosemary to newer upstream work, with fixes for Metal shader libraries. It runs on Linux only for now; there is no FreeBSD build yet. Logging in, opening places and Team Create work; it is still experimental."
+              "It is a development tool, so it is permissive: any FastFlag, any environment variable for Rosemary, extra launch arguments and a Rosemary binary of your choice, and Control acts as Command in all shortcuts by default. Since version 26.0.5.0, Studio's dialogs float on tiling compositors such as Hyprland, and Rosemary has newer upstream work, with fixes for Metal shader libraries. It runs on Linux only for now; there is no FreeBSD build yet. Logging in, opening places and Team Create work; it is still experimental."
             ],
             links: [
               { label: "Website & download", href: "https://apps.daeese.me/ginrose-studio/", primary: true }
@@ -5835,6 +5835,6 @@
     <!-- Seletor EN/PT, o mesmo modulo das paginas do Sollarety e do ccore. Roda
          depois do script acima (modulo e sempre adiado), entao os cards de
          projeto ja existem quando ele le o ingles do DOM. -->
-    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261126-4"></script>
+    <script type="module" src="./filearchive/i18n/i18n.js" data-dict="dict/home.js?v=20261126-5"></script>
   </body>
 </html>

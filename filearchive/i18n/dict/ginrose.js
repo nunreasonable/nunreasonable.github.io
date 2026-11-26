@@ -1,4 +1,5 @@
 export const pt = {
+  "ginrose.release26051": "26.0.5.1 · 26 de novembro de 2026 — O Ginrose volta a abrir no FreeBSD: a janela fechava assim que abria, porque iniciar um programa auxiliar como o xdg-mime pelo nome corrompia a memória do launcher lá. Os programas auxiliares agora são iniciados pelo caminho completo. Nada muda no Linux, e o Rosemary é o mesmo da 26.0.5.0.",
   "ginrose.release26050": "26.0.5.0 · 23 de novembro de 2026 — O Rosemary passa para um upstream mais recente, com correções nas bibliotecas de shaders do Metal e no FreeBSD. Os diálogos, janelas com título e sem botão de minimizar, agora flutuam em compositores de tiling como o Hyprland em vez de irem para o tile. Mais duas opções do Rosemary podem ir no ambiente extra: ROSEMARY_REGION_COUNT_REUSE, que ajuda jogos no FreeBSD, e ROSEMARY_METAL_MAP_MIX_TO_FMIX.",
   "ginrose.release26040": "26.0.4.0 · 20 de novembro de 2026 — As versões agora são numeradas por ano: o ano, depois mudanças grandes, novidades e correções. O Discord pode mostrar o sistema em que você joga, como “Ginrose on Fedora Linux”, numa opção nova que vem desligada. No FreeBSD, o instalador confere se há uma fonte, que o pacote gtk4 do FreeBSD não traz: sem ela, a janela do Ginrose fica sem texto. O Rosemary é o mesmo da 0.3.9.",
   "ginrose.release039": "0.3.9 · 19 de novembro de 2026 — O Ginrose roda no FreeBSD: cada release agora traz builds de FreeBSD do Ginrose e do Rosemary do Ginrose, compiladas no FreeBSD 14.5 para o 14.5 e posteriores. O Rosemary passa para um upstream mais recente, com suporte do FreeBSD a eventos do kqueue, memória compartilhada e informações de thread, teclado em janelas popup e chamadas de OpenGL mais rápidas. O prefixo continua no MiniDarwin 21.",
@@ -82,5 +83,5 @@ export const pt = {
   "ginrose.seeStudio": "Ginrose Studio, o launcher do Roblox Studio.",
   "ginrose.seeRosemary": "Rosemary, o projeto upstream pelo qual o Ginrose roda o cliente do Roblox.",
   "ginrose.seeSource": "Código-fonte, issues e receitas de empacotamento.",
-  "ginrose.manDate": "23 de novembro de 2026"
+  "ginrose.manDate": "26 de novembro de 2026"
 };

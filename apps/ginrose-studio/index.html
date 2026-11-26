@@ -224,7 +224,8 @@ pre code{font:inherit}
       </div>
       <ol class="timeline">
         <li class="is-latest"><span class="tag" data-i18n="studio.latestTag">Latest</span>
-          <p data-i18n="studio.release26050">26.0.5.0 · November 23, 2026 — Studio’s dialogs, such as the one that sets up the server when a place opens, now float on tiling compositors such as Hyprland instead of being tiled next to Studio. Rosemary moves to newer upstream work, with fixes for Metal shader libraries.</p></li>
+          <p data-i18n="studio.release26051">26.0.5.1 · November 26, 2026 — Helper programs are started by their full path, as Ginrose now does to open on FreeBSD. Nothing changes on Linux, and Rosemary is the same as in 26.0.5.0.</p></li>
+        <li><p data-i18n="studio.release26050">26.0.5.0 · November 23, 2026 — Studio’s dialogs, such as the one that sets up the server when a place opens, now float on tiling compositors such as Hyprland instead of being tiled next to Studio. Rosemary moves to newer upstream work, with fixes for Metal shader libraries.</p></li>
         <li><p data-i18n="studio.release26040">26.0.4.0 · November 20, 2026 — Versions are now numbered by year: the year, then major changes, new features and fixes. Nothing else changes in Ginrose Studio; Rosemary is the same as in 0.3.9.</p></li>
         <li><p data-i18n="studio.release039">0.3.9 · November 19, 2026 — Same Rosemary as Ginrose 0.3.9, with keyboard input in popup windows, including input methods there, and faster OpenGL calls. The prefix stays on MiniDarwin 21. Ginrose Studio has no FreeBSD build yet.</p></li>
         <li><p data-i18n="studio.release038">0.3.8 · November 18, 2026 — Same Rosemary as Ginrose 0.3.8, including a fix for WebKit crashing in a Flatpak, which Studio’s login runs in. First launch upgrades the prefix to MiniDarwin 21, which Studio 0.3.7 and older cannot reuse.</p></li>
@@ -283,10 +284,10 @@ flatpak install --user me.daeese.apps.ginrose.studio.flatpak</code></pre>
         <h3 data-i18n="studio.native">Native packages</h3>
         <div>
           <p data-i18n="studio.nativeText">Each release also has the same build as a distribution package, for those who would rather not use Flatpak. They need glibc 2.39, GTK 4.14 and libadwaita 1.6 or newer: Debian 13, Ubuntu 25.04, Fedora 42 or later, openSUSE Tumbleweed and Arch have them. Download the one for your distribution from the latest release, then run:</p>
-<pre tabindex="0"><code>sudo pacman -U ginrose-studio-bin-26.0.5.0-1-x86_64.pkg.tar.zst   # Arch
-sudo apt install ./ginrose-studio_26.0.5.0_amd64.deb              # Debian, Ubuntu
-sudo dnf install ./ginrose-studio-26.0.5.0-1.x86_64.rpm           # Fedora
-sudo zypper install ./ginrose-studio-26.0.5.0-1.x86_64.rpm        # openSUSE</code></pre>
+<pre tabindex="0"><code>sudo pacman -U ginrose-studio-bin-26.0.5.1-1-x86_64.pkg.tar.zst   # Arch
+sudo apt install ./ginrose-studio_26.0.5.1_amd64.deb              # Debian, Ubuntu
+sudo dnf install ./ginrose-studio-26.0.5.1-1.x86_64.rpm           # Fedora
+sudo zypper install ./ginrose-studio-26.0.5.1-1.x86_64.rpm        # openSUSE</code></pre>
           <p data-i18n="studio.nativeRosemary">Rosemary is not part of these packages: Ginrose Studio uses a rosemary on your PATH, such as the one in the AUR, or downloads one in its setup, which then needs SDL 3.4 and OpenAL, and Studio's login needs WebKitGTK 6.0. NixOS has a flake that builds Ginrose Studio with Rosemary included, and Gentoo has an ebuild in rosemary-gentoo-overlay; both build from source.</p>
           <a data-i18n="studio.packaging" href="https://github.com/nunreasonable/ginrose/tree/main/packaging">Packaging recipes ↗</a>
         </div>
@@ -336,7 +337,7 @@ sudo zypper install ./ginrose-studio-26.0.5.0-1.x86_64.rpm        # openSUSE</co
         </div>
       </section>
 
-      <p class="man-foot"><span>ginrose-studio 26.0.5.0</span><span data-i18n="studio.manDate">November 23, 2026</span><span>GINROSE-STUDIO(1)</span></p>
+      <p class="man-foot"><span>ginrose-studio 26.0.5.1</span><span data-i18n="studio.manDate">November 26, 2026</span><span>GINROSE-STUDIO(1)</span></p>
     </div>
   </section>
 
@@ -349,6 +350,6 @@ sudo zypper install ./ginrose-studio-26.0.5.0-1.x86_64.rpm        # openSUSE</co
   </div>
 </footer>
 
-<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/ginrose-studio.js?v=20261126-1"></script>
+<script type="module" src="../../filearchive/i18n/i18n.js" data-dict="dict/ginrose-studio.js?v=20261126-2"></script>
 </body>
 </html>
