@@ -1485,7 +1485,43 @@
 	line-height: 1.45;
 }
 
+.explore-frame figcaption strong {
+	display: block;
+	margin-bottom: 2px;
+	font-size: 1.05rem;
+}
+
+/* Trocador dos visuais novos: mesmas abas e o mesmo cross-fade do
+   explorador, mas a foto e o desktop inteiro (object-fit: cover), nao um
+   recorte de painel flutuando sobre o fundo desfocado. */
+.style-frame.explore-frame {
+	aspect-ratio: 16 / 9;
+	background: var(--bg-alt);
+}
+
+.style-frame.explore-frame img {
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	max-height: none;
+	object-fit: cover;
+	box-shadow: none;
+	transform: none;
+	transition: none;
+}
+
+.style-frame.explore-frame figure.is-on img {
+	transform: none;
+}
+
 @media (max-width: 820px) {
+	.style-frame.explore-frame {
+		aspect-ratio: 16 / 10;
+	}
+
+
 	.explore-grid {
 		grid-template-columns: minmax(0, 1fr);
 	}

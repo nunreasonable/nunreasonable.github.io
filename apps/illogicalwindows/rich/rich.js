@@ -10,7 +10,8 @@
  *  - o mini ii jogavel (desktop.js) e os papeis de parede/cores (palette.js);
  *  - as tres cenas de apresentacao (showcase.js);
  *  - a corrida de inicializacao (mesma VM lenta, versoes diferentes);
- *  - o explorador de recursos (imagens de um recurso so);
+ *  - o explorador de recursos (imagens de um recurso so) e o trocador dos
+ *    visuais novos (mesmo padrao, com a foto cheia do desktop);
  *  - pergunta de publico, "Testar no demo", linha do tempo das versoes e
  *    entradas suaves das secoes.
  * Tudo que fica em loop para fora da tela ou com a aba escondida.
@@ -245,8 +246,8 @@ function setupRace() {
 
 // --- Explorador de recursos --------------------------------------------------
 
-function setupExplorer() {
-	const box = document.getElementById("explore");
+function setupExplorer(id) {
+	const box = document.getElementById(id);
 	if (!box) return;
 	const tabs = [...box.querySelectorAll('[role="tab"]')];
 	const panels = [...box.querySelectorAll('[role="tabpanel"]')];
@@ -656,7 +657,8 @@ export function start() {
 	cleanups.push(() => palette.destroy());
 	cleanups.push(setupShowcase());
 	setupRace();
-	setupExplorer();
+	setupExplorer("explore");
+	setupExplorer("style-switch");
 	setupReleases();
 	setupReveals();
 	setupChooser();
